@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pulung Riswanto | Meta Pertanian</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <a class="nav-brand" href="#">Pulung Riswanto</a>
+    <div class="nav-links">
+      <a href="#about">Tentang</a>
+      <a href="#budidaya">Budidaya</a>
+      <a href="#kontak">Kontak</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero fade-in">
+    <div class="hero-inner">
+      <img src="foto.jpg" alt="Foto Pulung Riswanto" class="profile-photo" />
+      <h1 class="name">Pulung Riswanto</h1>
+      <p class="quote">Menanam Harapan untuk Masa Depan</p>
+      <div class="hero-ctas">
+        <a class="btn whatsapp" href="https://wa.me/6288971344131" target="_blank" rel="noopener">
+          WhatsApp
+        </a>
+        <a class="btn youtube" href="https://www.youtube.com/@MetaPertanian" target="_blank" rel="noopener">
+          YouTube
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about" class="section fade-in">
+    <h2>Tentang Saya</h2>
+    <p class="lead">
+      Saya adalah seorang pemuda desa yang percaya bahwa pertanian adalah kunci masa depan.
+      Di tengah banyaknya anak muda yang mulai meninggalkan ladang, saya memilih kembali ke akar.
+      Bagi saya, bertani bukan sekadar pekerjaan — ini cara menjaga kehidupan dan membangun peluang.
+      Meski belum semua teknologi modern diterapkan, saya yakin langkah-langkah nyata dari desa
+      dapat membuka peluang besar bagi masyarakat sekitar.
+    </p>
+  </section>
+
+  <!-- BUDIDAYA -->
+  <section id="budidaya" class="section fade-in">
+    <h2>Budidaya</h2>
+    <p class="lead">Testimoni hasil panen yang telah saya jalani.</p>
+    <div id="budidaya-container" class="budidaya-grid"></div>
+  </section>
+
+  <!-- KONTAK -->
+  <section id="kontak" class="section fade-in">
+    <h2>Kontak</h2>
+    <p class="lead">Hubungi saya langsung melalui WhatsApp atau cek channel YouTube untuk video edukasi pertanian.</p>
+
+    <div class="contact-row">
+      <a class="contact-card" href="https://wa.me/6288971344131" target="_blank" rel="noopener">
+        <strong>WhatsApp</strong>
+        <div class="sub">+62 889-7134-4131</div>
+      </a>
+      <a class="contact-card" href="https://www.youtube.com/@MetaPertanian" target="_blank" rel="noopener">
+        <strong>YouTube</strong>
+        <div class="sub">MetaPertanian (shorts edukasi)</div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <small>© <span id="year"></span> Pulung Riswanto — Meta Pertanian</small>
+  </footer>
+
+  <!-- Script -->
+  <script src="budidaya.js"></script>
+  <script>
+    // Fade-in scroll
+    const faders = document.querySelectorAll('.fade-in');
+    const appearOptions = { threshold: 0.18, rootMargin: "0px 0px -40px 0px" };
+
+    const appearOnScroll = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, appearOptions);
+
+    faders.forEach(f => appearOnScroll.observe(f));
+
+    // Tahun footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+    </html>
