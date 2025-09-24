@@ -23,7 +23,9 @@ function getPlantIcon(name) {
 const budidayaContainer = document.getElementById("budidaya-container");
 budidayaData.forEach(item => {
   const year = new Date(item.tanggal).getFullYear();
-  const foto = item.foto && item.foto.trim() !== "" ? item.foto : `img/${item.tanaman.toLowerCase().replace(" ", "-")}.png`;
+  const foto = item.foto && item.foto.trim() !== "" 
+    ? item.foto 
+    : `img/${item.tanaman.toLowerCase().replace(" ", "-")}.png`;
 
   const card = document.createElement("div");
   card.className = "budidaya-card";
@@ -112,6 +114,33 @@ const observer = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.5 });
 observer.observe(achievementSection);
+
+// ===== Typing effect per huruf untuk quote =====
+const quoteEl = document.getElementById("quote");
+const fullText = "Menanam Harapan untuk Masa Depan";
+let index = 0;
+let isDeleting = false;
+
+function typeEffect() {
+  if (!quoteEl) return;
+  if (!isDeleting) {
+    quoteEl.textContent = fullText.slice(0, index + 1);
+    index++;
+    if (index === fullText.length) {
+      isDeleting = true;
+      setTimeout(typeEffect, 2000); // jeda setelah selesai ngetik
+      return;
+    }
+  } else {
+    quoteEl.textContent = fullText.slice(0, index - 1);
+    index--;
+    if (index === 0) {
+      isDeleting = false;
+    }
+  }
+  setTimeout(typeEffect, isDeleting ? 80 : 120);
+}
+if (quoteEl) typeEffect();
 
 // ===== Fade-in scroll =====
 const faders = document.querySelectorAll('.fade-in');
