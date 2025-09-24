@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Pulung Riswanto | Meta Pertanian</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://kit.fontawesome.com/73db2f45cc.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <!-- NAVBAR -->
   <nav class="nav">
     <a class="nav-brand" href="#">Meta Pertanian</a>
-    <div class="nav-links">
+    <button class="nav-toggle" id="navToggle"><i class="fas fa-bars"></i></button>
+    <div class="nav-links" id="navLinks">
       <a href="#about">Tentang</a>
       <a href="#budidaya">Budidaya</a>
       <a href="#pencapaian">Pencapaian</a>
@@ -21,7 +23,7 @@
   <!-- HERO -->
   <header class="hero fade-in">
     <div class="hero-inner">
-      <img src="foto.jpg" alt="Foto Pulung Riswanto" class="profile-photo" />
+      <img src="https://tanjungbulan.my.id/risma/img/pulung.png" alt="Foto Pulung Riswanto" class="profile-photo" />
       <h1 class="name">Pulung Riswanto</h1>
       <p class="quote">Menanam Harapan untuk Masa Depan</p>
     </div>
@@ -53,7 +55,13 @@
     <div class="decor-line top"></div>
     <h2>Pencapaian</h2>
     <p class="lead">Total hasil panen dari setiap jenis tanaman.</p>
-    <div id="achievement-container" class="achievement-list"></div>
+    <div id="achievement-container" class="achievement-cards"></div>
+
+    <!-- Omzet -->
+    <div class="omzet-card fade-in">
+      <h3>Omzet</h3>
+      <p id="omzet-value">Rp 0</p>
+    </div>
     <div class="decor-line bottom"></div>
   </section>
 
@@ -80,131 +88,6 @@
 
   <!-- SCRIPT -->
   <script src="budidaya.js"></script>
-  <script>
-    // ===== Format tanggal =====
-    function formatDate(dateStr) {
-      const months = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
-      const d = new Date(dateStr);
-      return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-    }
-
-    // ===== Icon tanaman =====
-    function getPlantIcon(name) {
-      const icons = {
-        "Jagung": "🌽",
-        "Timun": "🥒",
-        "Cabai": "🌶️",
-        "Singkong": "🥔"
-      };
-      return icons[name] || "🌱";
-    }
-
-    // ===== Render Budidaya =====
-    const budidayaContainer = document.getElementById("budidaya-container");
-    budidayaData.forEach(item => {
-      const year = new Date(item.tanggal).getFullYear();
-
-      const card = document.createElement("div");
-      card.className = "budidaya-card";
-
-      card.innerHTML = `
-        <div class="budidaya-photo">
-          <img src="${item.foto}" alt="${item.tanaman} ${year}">
-          <span class="year">${year}</span>
-        </div>
-        <div class="budidaya-info">
-          <p><strong>Tanaman:</strong> ${getPlantIcon(item.tanaman)} ${item.tanaman}</p>
-          <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
-          <p><strong>Umur:</strong> ${item.umur}</p>
-          <p><strong>Luas Lahan:</strong> ${item.luas}</p>
-          <p><strong>Hasil Panen:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
-        </div>
-      `;
-      budidayaContainer.appendChild(card);
-    });
-
-    // ===== Hitung total hasil per tanaman =====
-    function calculateAchievements() {
-      const totals = {};
-      budidayaData.forEach(item => {
-        const { tanaman, hasil } = item;
-        if (!totals[tanaman]) totals[tanaman] = { jumlah: 0, satuan: hasil.satuan };
-        if (totals[tanaman].satuan === hasil.satuan) {
-          totals[tanaman].jumlah += hasil.jumlah;
-        }
-      });
-      return totals;
-    }
-
-    // ===== Render Pencapaian + counter animasi =====
-    const achievementContainer = document.getElementById("achievement-container");
-    const achievements = calculateAchievements();
-
-    function animateCounter(el, target, satuan, delay) {
-      let count = 0;
-      const duration = 1500; // total durasi 1.5s
-      const stepTime = 20;
-      const steps = duration / stepTime;
-      const increment = target / steps;
-
-      function update() {
-        count += increment;
-        if (count >= target) count = target;
-        el.textContent = Math.floor(count) + " " + satuan;
-        if (count < target) {
-          setTimeout(update, stepTime);
-        } else {
-          el.classList.add("glow");
-        }
-      }
-      setTimeout(update, delay);
-    }
-
-    function renderAchievements() {
-      achievementContainer.innerHTML = "";
-      let delay = 0;
-      for (let tanaman in achievements) {
-        const div = document.createElement("div");
-        div.className = "achievement-item";
-        div.innerHTML = `
-          <span class="label">${getPlantIcon(tanaman)} ${tanaman}</span>
-          <span class="value">0</span>
-        `;
-        achievementContainer.appendChild(div);
-
-        const valueEl = div.querySelector(".value");
-        animateCounter(valueEl, achievements[tanaman].jumlah, achievements[tanaman].satuan, delay);
-        delay += 900;
-      }
-    }
-
-    // Observer agar animasi reset tiap scroll
-    const achievementSection = document.getElementById("pencapaian");
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          renderAchievements();
-        }
-      });
-    }, { threshold: 0.5 });
-    observer.observe(achievementSection);
-
-    // ===== Fade-in scroll =====
-    const faders = document.querySelectorAll('.fade-in');
-    const appearOptions = { threshold: 0.2 };
-    const appearOnScroll = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        } else {
-          entry.target.classList.remove('visible');
-        }
-      });
-    }, appearOptions);
-    faders.forEach(f => appearOnScroll.observe(f));
-
-    // Tahun footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  <script src="fungsi.js"></script>
 </body>
 </html>
