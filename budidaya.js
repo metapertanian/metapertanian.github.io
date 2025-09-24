@@ -2,6 +2,42 @@
 const budidayaData = [
 {
   tanaman: "Singkong",
+  tanggal: "2025-08-28",
+  luas: "16 Rante",
+  umur: "9 Bulan",
+  hasil: { jumlah: 15, satuan: "Ton" },
+  omzet: 6000000,
+  foto: ""
+},
+{
+  tanaman: "Timun",
+  tanggal: "2025-08-22",
+  luas: "500 m² (1000 lubang)",
+  umur: "55 Hari",
+  hasil: { jumlah: 685, satuan: "Kg" },
+  omzet: 2047000,
+  foto: ""
+},
+{
+  tanaman: "Terong",
+  tanggal: "2025-07-01",
+  luas: "500 m² (500 pohon)",
+  umur: "4 Bulan",
+  hasil: { jumlah: 50, satuan: "Kg" },
+  omzet: 200000,
+  foto: ""
+},
+{
+  tanaman: "Cabai",
+  tanggal: "2025-04-06",
+  luas: "500 m² (1000 pohon)",
+  umur: "6 Bulan",
+  hasil: { jumlah: 25, satuan: "Kg" },
+  omzet: 1000000,
+  foto: ""
+},
+{
+  tanaman: "Singkong",
   tanggal: "2024-07-05",
   luas: "1.7 Ha",
   umur: "6 Bulan",
