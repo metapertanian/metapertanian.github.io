@@ -1,0 +1,97 @@
+/* ============ Base ============ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:#0f1113;
+  --panel:#151718;
+  --muted:#bfbfbf;
+  --accent-green:#25d366;
+  --accent-red:#ff0000;
+}
+body {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: #fff;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+}
+
+/* NAV */
+.nav {
+  position: sticky; top:0; z-index:80;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px 6%;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(6px);
+}
+.nav-brand { font-weight:700; color:#fff; text-decoration:none; }
+.nav-links a { color: var(--muted); margin-left:18px; text-decoration:none; }
+.nav-links a:hover { color:#fff; }
+
+/* HERO */
+.hero { min-height:80vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:40px 6%; }
+.hero-inner { max-width:760px; width:100%; }
+.profile-photo {
+  width:150px; height:150px; border-radius:50%; object-fit:cover;
+  border:4px solid var(--accent-green); margin-bottom:18px;
+}
+.name { font-size:2rem; margin-bottom:6px; }
+.quote { color:var(--muted); margin-bottom:18px; }
+.hero-ctas { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn {
+  padding:10px 16px; border-radius:28px; font-weight:700; text-decoration:none;
+  color:#fff; transition: transform .16s ease, opacity .16s ease;
+}
+.btn:hover { transform:translateY(-4px); opacity:0.85; }
+.btn.whatsapp { background: var(--accent-green); color:#081307; }
+.btn.youtube { background: var(--accent-red); }
+
+/* Section */
+.section { padding:80px 6%; text-align:center; }
+h2 { font-size:1.4rem; margin-bottom:14px; }
+.lead { max-width:800px; margin:0 auto; color:var(--muted); }
+
+/* Budidaya */
+.budidaya-grid {
+  margin-top:30px;
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:20px;
+}
+.budidaya-card {
+  background: var(--panel);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  transition: transform 0.25s ease;
+}
+.budidaya-card:hover { transform: translateY(-6px); }
+.budidaya-photo { position:relative; width:100%; height:180px; overflow:hidden; }
+.budidaya-photo img { width:100%; height:100%; object-fit:cover; }
+.budidaya-photo .year {
+  position:absolute; top:10px; left:12px;
+  background:rgba(37,211,102,0.9); padding:4px 10px; border-radius:6px;
+  font-weight:bold; font-size:0.9rem; color:#fff;
+}
+.budidaya-info { padding:14px 16px; text-align:left; }
+.budidaya-info p { margin:4px 0; font-size:0.95rem; }
+
+/* Kontak */
+.contact-row { margin-top:20px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+.contact-card {
+  padding:14px 18px; border-radius:10px; text-decoration:none; color:#fff;
+  background:rgba(255,255,255,0.05); min-width:240px; text-align:left;
+}
+.contact-card:hover { background:rgba(255,255,255,0.1); }
+.sub { color:var(--muted); font-size:0.85rem; }
+
+/* Footer */
+.footer { padding:24px 6%; text-align:center; color:var(--muted); }
+
+/* Animasi Fade-in */
+.fade-in { opacity:0; transform:translateY(36px); transition: all 700ms ease; }
+.fade-in.visible { opacity:1; transform:translateY(0); }
+
+/* Responsive */
+@media (max-width:780px){
+  .profile-photo { width:120px; height:120px; }
+  .name { font-size:1.6rem; }
+  .nav-links { display:none; }
+}
