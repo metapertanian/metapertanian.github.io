@@ -75,7 +75,7 @@ function renderBudidaya(page = 1, doScroll = false) {
   const totalPages = Math.ceil(budidayaData.length / itemsPerPage);
   if (totalPages > 1) {
     const prevBtn = document.createElement("button");
-    prevBtn.textContent = "« Lama";
+    prevBtn.textContent = "« Baru";
     prevBtn.disabled = page === 1;
     prevBtn.onclick = () => renderBudidaya(page - 1, true);
     paginationContainer.appendChild(prevBtn);
@@ -89,7 +89,7 @@ function renderBudidaya(page = 1, doScroll = false) {
     }
 
     const nextBtn = document.createElement("button");
-    nextBtn.textContent = "Baru »";
+    nextBtn.textContent = "Lama »";
     nextBtn.disabled = page === totalPages;
     nextBtn.onclick = () => renderBudidaya(page + 1, true);
     paginationContainer.appendChild(nextBtn);
