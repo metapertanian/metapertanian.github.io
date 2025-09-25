@@ -309,3 +309,10 @@ body {
   cursor: not-allowed;
   box-shadow: none;
 }
+
+/* Highlight animasi untuk kartu budidaya */
+.budidaya-card.highlight {
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.9);
+  transform: scale(1.02);
+  transition: all 0.3s ease;
+}
