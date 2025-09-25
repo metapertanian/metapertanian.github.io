@@ -39,8 +39,8 @@ budidayaData.forEach(item => {
 
   card.innerHTML = `
     <div class="budidaya-photo">
-      <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}" 
-           onerror="this.onerror=null; this.src='img/default.jpg'">
+      <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}"
+           onerror="this.onerror=null; this.src='img/default.jpg'; this.style.display='block';">
       <span class="year">${year}</span>
     </div>
     <div class="budidaya-info">
