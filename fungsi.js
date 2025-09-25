@@ -14,7 +14,9 @@ function getPlantIcon(name) {
     "Singkong": "🥔",
     "Padi": "🌾",
     "Terong": "🍆",
-    "Kacang Panjang": "🫘"
+    "Tomat": "🍅",
+    "Semangka": "🍉",
+    "Melon": "🍈
   };
   return icons[name] || "🌱";
 }
