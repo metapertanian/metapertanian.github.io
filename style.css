@@ -116,6 +116,14 @@ body {
 }
 .budidaya-info { padding: 15px; }
 
+
+
+.budidaya-photo img {
+  border: 2px solid red !important;
+}
+
+
+
 /* PENCApaian */
 .decor-line {
   height: 3px;
