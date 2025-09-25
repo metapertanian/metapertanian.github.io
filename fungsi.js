@@ -165,6 +165,11 @@ const appearOnScroll = new IntersectionObserver((entries) => {
 }, appearOptions);
 faders.forEach(f => appearOnScroll.observe(f));
 
+// Fallback: selalu tampil meskipun observer gagal
+window.addEventListener("load", () => {
+  faders.forEach(el => el.classList.add("visible"));
+});
+
 // ===== Navbar toggle =====
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
