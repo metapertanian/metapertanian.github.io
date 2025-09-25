@@ -113,7 +113,7 @@ function renderBudidaya(page = 1) {
   const firstCard = budidayaContainer.querySelector(".budidaya-card");
   if (firstCard) {
     firstCard.classList.add("highlight");
-    setTimeout(() => firstCard.classList.remove("highlight"), 1000);
+    setTimeout(() => firstCard.classList.remove("highlight"), 3000);
   }
 }
 
