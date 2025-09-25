@@ -7,7 +7,7 @@ const budidayaData = [
   umur: "9 Bulan",
   hasil: { jumlah: 15, satuan: "Ton" },
   omzet: 6000000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Timun",
@@ -16,7 +16,7 @@ const budidayaData = [
   umur: "55 Hari",
   hasil: { jumlah: 685, satuan: "Kg" },
   omzet: 2047000,
-  foto: ""
+  foto: "img/timun.jpg"
 },
 {
   tanaman: "Terong",
@@ -25,7 +25,7 @@ const budidayaData = [
   umur: "4 Bulan",
   hasil: { jumlah: 50, satuan: "Kg" },
   omzet: 200000,
-  foto: ""
+  foto: "img/terong.jpg"
 },
 {
   tanaman: "Cabai",
@@ -34,7 +34,7 @@ const budidayaData = [
   umur: "6 Bulan",
   hasil: { jumlah: 25, satuan: "Kg" },
   omzet: 1000000,
-  foto: ""
+  foto: "img/cabai.jpg"
 },
 {
   tanaman: "Singkong",
@@ -43,7 +43,7 @@ const budidayaData = [
   umur: "6 Bulan",
   hasil: { jumlah: 37, satuan: "Ton" },
   omzet: 31500000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -52,7 +52,7 @@ const budidayaData = [
   umur: "5 Bulan",
   hasil: { jumlah: 1, satuan: "Ton" },
   omzet: 1200000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -61,7 +61,7 @@ const budidayaData = [
   umur: "10 Bulan",
   hasil: { jumlah: 4.5, satuan: "Ton" },
   omzet: 3500000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -70,7 +70,7 @@ const budidayaData = [
   umur: "8 Bulan",
   hasil: { jumlah: 6, satuan: "Ton" },
   omzet: 5000000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -79,7 +79,7 @@ const budidayaData = [
   umur: "11 Bulan",
   hasil: { jumlah: 4, satuan: "Ton" },
   omzet: 3000000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -88,7 +88,7 @@ const budidayaData = [
   umur: "5 Bulan",
   hasil: { jumlah: 3, satuan: "Ton" },
   omzet: 2500000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -97,7 +97,7 @@ const budidayaData = [
   umur: "6 Bulan",
   hasil: { jumlah: 6, satuan: "Ton" },
   omzet: 6000000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 {
   tanaman: "Singkong",
@@ -106,7 +106,7 @@ const budidayaData = [
   umur: "10 Bulan",
   hasil: { jumlah: 4, satuan: "Ton" },
   omzet: 3000000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
   {
   tanaman: "Singkong",
@@ -115,6 +115,6 @@ const budidayaData = [
   umur: "5 Bulan",
   hasil: { jumlah: 3, satuan: "Ton" },
   omzet: 2500000,
-  foto: ""
+  foto: "img/singkong.jpg"
 },
 ];
