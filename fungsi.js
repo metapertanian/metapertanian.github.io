@@ -53,7 +53,7 @@ function renderBudidaya(page = 1) {
       : "img/default.jpg";
 
     const card = document.createElement("div");
-    card.className = "budidaya-card fade-in";
+    card.className = "budidaya-card"; // tanpa fade-in
 
     card.innerHTML = `
       <div class="budidaya-photo">
@@ -204,7 +204,7 @@ function typeEffect() {
 }
 if (quoteEl) typeEffect();
 
-// ===== Fade-in scroll =====
+// ===== Fade-in scroll (untuk elemen lain, bukan budidaya) =====
 const faders = document.querySelectorAll('.fade-in');
 const appearOptions = { threshold: 0.2 };
 const appearOnScroll = new IntersectionObserver((entries) => {
