@@ -35,7 +35,7 @@ budidayaContainer.after(paginationContainer);
 let currentPage = 1;
 const itemsPerPage = 4;
 
-function renderBudidaya(page = 1) {
+function renderBudidaya(page = 1, doScroll = false) {
   budidayaContainer.innerHTML = "";
   paginationContainer.innerHTML = "";
   currentPage = page;
@@ -46,14 +46,12 @@ function renderBudidaya(page = 1) {
 
   items.forEach(item => {
     const year = new Date(item.tanggal).getFullYear();
-
-    // Pakai foto dari data, kalau kosong fallback ke default.jpg
     const foto = item.foto && item.foto.trim() !== "" 
       ? item.foto 
       : "img/default.jpg";
 
     const card = document.createElement("div");
-    card.className = "budidaya-card"; // tanpa fade-in
+    card.className = "budidaya-card";
 
     card.innerHTML = `
       <div class="budidaya-photo">
@@ -73,41 +71,36 @@ function renderBudidaya(page = 1) {
     budidayaContainer.appendChild(card);
   });
 
-  // Render pagination
+  // Pagination
   const totalPages = Math.ceil(budidayaData.length / itemsPerPage);
   if (totalPages > 1) {
-    // Prev button
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "« Lama";
     prevBtn.disabled = page === 1;
-    prevBtn.onclick = () => renderBudidaya(page - 1);
+    prevBtn.onclick = () => renderBudidaya(page - 1, true);
     paginationContainer.appendChild(prevBtn);
 
-    // Numbered buttons
     for (let i = 1; i <= totalPages; i++) {
       const pageBtn = document.createElement("button");
       pageBtn.textContent = i;
       if (i === page) pageBtn.classList.add("active");
-      pageBtn.onclick = () => renderBudidaya(i);
+      pageBtn.onclick = () => renderBudidaya(i, true);
       paginationContainer.appendChild(pageBtn);
     }
 
-    // Next button
     const nextBtn = document.createElement("button");
     nextBtn.textContent = "Baru »";
     nextBtn.disabled = page === totalPages;
-    nextBtn.onclick = () => renderBudidaya(page + 1);
+    nextBtn.onclick = () => renderBudidaya(page + 1, true);
     paginationContainer.appendChild(nextBtn);
   }
 
-  // 🔥 Scroll otomatis ke atas kontainer (dengan offset navbar)
-  const navHeight = document.querySelector(".nav")?.offsetHeight || 0;
-  const topPos = budidayaContainer.getBoundingClientRect().top + window.scrollY - navHeight - 10;
-
-  window.scrollTo({
-    top: topPos,
-    behavior: "smooth"
-  });
+  // 🔥 Scroll hanya kalau dipicu pagination
+  if (doScroll) {
+    const navHeight = document.querySelector(".nav")?.offsetHeight || 0;
+    const topPos = budidayaContainer.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+    window.scrollTo({ top: topPos, behavior: "smooth" });
+  }
 
   // ✨ Highlight kartu pertama
   const firstCard = budidayaContainer.querySelector(".budidaya-card");
@@ -116,6 +109,7 @@ function renderBudidaya(page = 1) {
     setTimeout(() => firstCard.classList.remove("highlight"), 3000);
   }
 }
+
 
 // ===== Hitung total hasil per tanaman + Omzet =====
 function calculateAchievements() {
@@ -237,7 +231,7 @@ faders.forEach(f => appearOnScroll.observe(f));
 // Fallback: selalu tampil meskipun observer gagal
 window.addEventListener("load", () => {
   faders.forEach(el => el.classList.add("visible"));
-  renderBudidaya(1); // render halaman pertama saat load
+  renderBudidaya(1); // tidak ada doScroll
 });
 
 // ===== Navbar toggle =====
