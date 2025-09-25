@@ -100,8 +100,21 @@ function renderBudidaya(page = 1) {
     paginationContainer.appendChild(nextBtn);
   }
 
-  // 🔥 Scroll otomatis ke atas kontainer
-  budidayaContainer.scrollIntoView({ behavior: "smooth", block: "start" });
+  // 🔥 Scroll otomatis ke atas kontainer (dengan offset navbar)
+  const navHeight = document.querySelector(".nav")?.offsetHeight || 0;
+  const topPos = budidayaContainer.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+
+  window.scrollTo({
+    top: topPos,
+    behavior: "smooth"
+  });
+
+  // ✨ Highlight kartu pertama
+  const firstCard = budidayaContainer.querySelector(".budidaya-card");
+  if (firstCard) {
+    firstCard.classList.add("highlight");
+    setTimeout(() => firstCard.classList.remove("highlight"), 1000);
+  }
 }
 
 // ===== Hitung total hasil per tanaman + Omzet =====
