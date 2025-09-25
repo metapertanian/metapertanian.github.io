@@ -25,7 +25,7 @@ budidayaData.forEach(item => {
   const year = new Date(item.tanggal).getFullYear();
   const foto = item.foto && item.foto.trim() !== "" 
     ? item.foto 
-    : `img/${item.tanaman.toLowerCase().replace(" ", "-")}.png`;
+    : `img/${item.tanaman.toLowerCase().replace(" ", "-")}.jpg`;
 
   const card = document.createElement("div");
   card.className = "budidaya-card";
