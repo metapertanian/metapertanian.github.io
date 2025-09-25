@@ -26,36 +26,80 @@ function formatRupiah(angka) {
   return "Rp " + angka.toLocaleString("id-ID");
 }
 
-// ===== Render Budidaya =====
+// ===== Render Budidaya dengan Pagination =====
 const budidayaContainer = document.getElementById("budidaya-container");
-budidayaData.forEach(item => {
-  const year = new Date(item.tanggal).getFullYear();
+const paginationContainer = document.createElement("div");
+paginationContainer.className = "pagination";
+budidayaContainer.after(paginationContainer);
 
-  // Pakai foto dari data, kalau kosong fallback ke default.jpg
-  const foto = item.foto && item.foto.trim() !== "" 
-    ? item.foto 
-    : "img/default.jpg";
+let currentPage = 1;
+const itemsPerPage = 5;
 
-  const card = document.createElement("div");
-  card.className = "budidaya-card fade-in";
+function renderBudidaya(page = 1) {
+  budidayaContainer.innerHTML = "";
+  paginationContainer.innerHTML = "";
+  currentPage = page;
 
-  card.innerHTML = `
-    <div class="budidaya-photo">
-      <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}"
-           onerror="this.onerror=null; this.src='img/default.jpg';">
-      <span class="year">${year}</span>
-    </div>
-    <div class="budidaya-info">
-      <p><strong>${getPlantIcon(item.tanaman)} ${item.tanaman || "-"}</strong></p>
-      <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
-      <p><strong>Luas:</strong> ${item.luas || "-"}</p>
-      <p><strong>Umur:</strong> ${item.umur || "-"}</p>
-      <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
-      <p><strong>Omzet:</strong> ${item.omzet ? formatRupiah(item.omzet) : "-"}</p>
-    </div>
-  `;
-  budidayaContainer.appendChild(card);
-});
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const items = budidayaData.slice(start, end);
+
+  items.forEach(item => {
+    const year = new Date(item.tanggal).getFullYear();
+
+    // Pakai foto dari data, kalau kosong fallback ke default.jpg
+    const foto = item.foto && item.foto.trim() !== "" 
+      ? item.foto 
+      : "img/default.jpg";
+
+    const card = document.createElement("div");
+    card.className = "budidaya-card fade-in";
+
+    card.innerHTML = `
+      <div class="budidaya-photo">
+        <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}"
+             onerror="this.onerror=null; this.src='img/default.jpg';">
+        <span class="year">${year}</span>
+      </div>
+      <div class="budidaya-info">
+        <p><strong>${getPlantIcon(item.tanaman)} ${item.tanaman || "-"}</strong></p>
+        <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
+        <p><strong>Luas:</strong> ${item.luas || "-"}</p>
+        <p><strong>Umur:</strong> ${item.umur || "-"}</p>
+        <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
+        <p><strong>Omzet:</strong> ${item.omzet ? formatRupiah(item.omzet) : "-"}</p>
+      </div>
+    `;
+    budidayaContainer.appendChild(card);
+  });
+
+  // Render pagination
+  const totalPages = Math.ceil(budidayaData.length / itemsPerPage);
+  if (totalPages > 1) {
+    // Prev button
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "« Prev";
+    prevBtn.disabled = page === 1;
+    prevBtn.onclick = () => renderBudidaya(page - 1);
+    paginationContainer.appendChild(prevBtn);
+
+    // Numbered buttons
+    for (let i = 1; i <= totalPages; i++) {
+      const pageBtn = document.createElement("button");
+      pageBtn.textContent = i;
+      if (i === page) pageBtn.classList.add("active");
+      pageBtn.onclick = () => renderBudidaya(i);
+      paginationContainer.appendChild(pageBtn);
+    }
+
+    // Next button
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next »";
+    nextBtn.disabled = page === totalPages;
+    nextBtn.onclick = () => renderBudidaya(page + 1);
+    paginationContainer.appendChild(nextBtn);
+  }
+}
 
 // ===== Hitung total hasil per tanaman + Omzet =====
 function calculateAchievements() {
@@ -177,6 +221,7 @@ faders.forEach(f => appearOnScroll.observe(f));
 // Fallback: selalu tampil meskipun observer gagal
 window.addEventListener("load", () => {
   faders.forEach(el => el.classList.add("visible"));
+  renderBudidaya(1); // render halaman pertama saat load
 });
 
 // ===== Navbar toggle =====
