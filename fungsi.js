@@ -23,25 +23,32 @@ function getPlantIcon(name) {
 const budidayaContainer = document.getElementById("budidaya-container");
 budidayaData.forEach(item => {
   const year = new Date(item.tanggal).getFullYear();
+
+  // Nama file gambar fallback
+  const namaFile = item.tanaman 
+    ? item.tanaman.toLowerCase().replace(/\s+/g, "-") 
+    : "default";
+
+  // Tentukan foto (pakai default jika kosong / salah)
   const foto = item.foto && item.foto.trim() !== "" 
     ? item.foto 
-    : `img/${item.tanaman.toLowerCase().replace(" ", "-")}.jpg`;
+    : `img/${namaFile}.jpg`;
 
   const card = document.createElement("div");
   card.className = "budidaya-card";
 
   card.innerHTML = `
     <div class="budidaya-photo">
-      <img src="${foto}" alt="${item.tanaman} ${year}">
+      <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}" 
+           onerror="this.onerror=null; this.src='img/default.jpg'">
       <span class="year">${year}</span>
     </div>
     <div class="budidaya-info">
-      <p><strong>${getPlantIcon(item.tanaman)} ${item.tanaman}</strong></p>
+      <p><strong>${getPlantIcon(item.tanaman)} ${item.tanaman || "-"}</strong></p>
       <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
-      <p><strong>Luas:</strong> ${item.luas}</p>
-      <p><strong>Umur:</strong> ${item.umur}</p>
+      <p><strong>Luas:</strong> ${item.luas || "-"}</p>
+      <p><strong>Umur:</strong> ${item.umur || "-"}</p>
       <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
-      
     </div>
   `;
   budidayaContainer.appendChild(card);
@@ -89,12 +96,13 @@ function renderAchievements() {
   let delay = 0;
   for (let tanaman in totals) {
     const div = document.createElement("div");
-    div.className = "achievement-item";
+    div.className = "achievement-item card";
     div.innerHTML = `
-      <span class="label">${getPlantIcon(tanaman)} ${tanaman}</span>
-      <span class="value">0</span>
+      <div class="label">${getPlantIcon(tanaman)} ${tanaman}</div>
+      <div class="value">0</div>
     `;
     achievementContainer.appendChild(div);
+
     const valueEl = div.querySelector(".value");
     animateCounter(valueEl, totals[tanaman].jumlah, " " + totals[tanaman].satuan, delay);
     delay += 900;
@@ -129,7 +137,7 @@ function typeEffect() {
     index++;
     if (index === fullText.length) {
       isDeleting = true;
-      setTimeout(typeEffect, 2000); // jeda setelah selesai ngetik
+      setTimeout(typeEffect, 2000);
       return;
     }
   } else {
