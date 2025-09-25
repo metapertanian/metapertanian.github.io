@@ -185,8 +185,17 @@ window.addEventListener("load", () => {
 // ===== Navbar toggle =====
 const navToggle = document.getElementById("navToggle");
 const navLinks = document.getElementById("navLinks");
+
 navToggle.addEventListener("click", () => {
   navLinks.classList.toggle("active");
+});
+
+// Tutup navbar otomatis setelah klik link
+const navLinkItems = navLinks.querySelectorAll("a");
+navLinkItems.forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+  });
 });
 
 // Tahun footer
