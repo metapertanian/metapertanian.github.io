@@ -33,7 +33,7 @@ paginationContainer.className = "pagination";
 budidayaContainer.after(paginationContainer);
 
 let currentPage = 1;
-const itemsPerPage = 4;
+const itemsPerPage = 6;
 
 function renderBudidaya(page = 1, doScroll = false) {
   budidayaContainer.innerHTML = "";
