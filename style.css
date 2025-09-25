@@ -121,7 +121,12 @@ body {
 .budidaya-photo img {
   border: 2px solid red !important;
 }
-
+.budidaya-photo img {
+  display: block;
+  min-height: 150px;
+  background: #2e7d32; /* warna hijau biar kelihatan */
+  object-fit: cover;
+}
 
 
 /* PENCApaian */
