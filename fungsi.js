@@ -36,11 +36,12 @@ budidayaData.forEach(item => {
       <span class="year">${year}</span>
     </div>
     <div class="budidaya-info">
-      <p><strong>Tanaman:</strong> ${getPlantIcon(item.tanaman)} ${item.tanaman}</p>
+      <p><strong>${getPlantIcon(item.tanaman)} ${item.tanaman}</strong></p>
       <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
-      <p><strong>Luas Lahan:</strong> ${item.luas}</p>
+      <p><strong>Luas:</strong> ${item.luas}</p>
       <p><strong>Umur:</strong> ${item.umur}</p>
-      <p><strong>Hasil Panen:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
+      <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
+      <p><strong>Omzet:</strong> ${item.omzet}</p>
     </div>
   `;
   budidayaContainer.appendChild(card);
