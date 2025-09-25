@@ -99,6 +99,9 @@ function renderBudidaya(page = 1) {
     nextBtn.onclick = () => renderBudidaya(page + 1);
     paginationContainer.appendChild(nextBtn);
   }
+
+  // 🔥 Scroll otomatis ke atas kontainer
+  budidayaContainer.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 // ===== Hitung total hasil per tanaman + Omzet =====
