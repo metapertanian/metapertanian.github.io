@@ -19,6 +19,11 @@ function getPlantIcon(name) {
   return icons[name] || "🌱";
 }
 
+// ===== Format Rupiah =====
+function formatRupiah(angka) {
+  return "Rp " + angka.toLocaleString("id-ID");
+}
+
 // ===== Render Budidaya =====
 const budidayaContainer = document.getElementById("budidaya-container");
 budidayaData.forEach(item => {
@@ -35,7 +40,7 @@ budidayaData.forEach(item => {
     : `img/${namaFile}.jpg`;
 
   const card = document.createElement("div");
-  card.className = "budidaya-card";
+  card.className = "budidaya-card fade-in";
 
   card.innerHTML = `
     <div class="budidaya-photo">
@@ -49,7 +54,7 @@ budidayaData.forEach(item => {
       <p><strong>Luas:</strong> ${item.luas || "-"}</p>
       <p><strong>Umur:</strong> ${item.umur || "-"}</p>
       <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
-      <p><strong>Omzet:</strong> ${item.omzet || "-"}</p>
+      <p><strong>Omzet:</strong> ${item.omzet ? formatRupiah(item.omzet) : "-"}</p>
     </div>
   `;
   budidayaContainer.appendChild(card);
@@ -71,7 +76,7 @@ function calculateAchievements() {
 }
 
 // ===== Animasi counter =====
-function animateCounter(el, target, suffix, delay) {
+function animateCounter(el, target, suffix, delay, isRupiah = false) {
   let count = 0;
   const duration = 1500;
   const stepTime = 20;
@@ -81,7 +86,13 @@ function animateCounter(el, target, suffix, delay) {
   function update() {
     count += increment;
     if (count >= target) count = target;
-    el.textContent = Math.floor(count).toLocaleString() + (suffix || "");
+
+    if (isRupiah) {
+      el.textContent = formatRupiah(Math.floor(count));
+    } else {
+      el.textContent = Math.floor(count).toLocaleString("id-ID") + (suffix || "");
+    }
+
     if (count < target) setTimeout(update, stepTime);
     else el.classList.add("glow");
   }
@@ -105,13 +116,13 @@ function renderAchievements() {
     achievementContainer.appendChild(div);
 
     const valueEl = div.querySelector(".value");
-    animateCounter(valueEl, totals[tanaman].jumlah, " " + totals[tanaman].satuan, delay);
+    animateCounter(valueEl, totals[tanaman].jumlah, " " + totals[tanaman].satuan, delay, false);
     delay += 900;
   }
 
   // Omzet
   const omzetEl = document.getElementById("omzet-value");
-  animateCounter(omzetEl, totalOmzet, "", delay);
+  animateCounter(omzetEl, totalOmzet, "", delay, true);
 }
 
 // Observer agar animasi reset tiap scroll
