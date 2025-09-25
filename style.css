@@ -252,7 +252,7 @@ body {
 
 /* Foto budidaya: kasih background fallback */
 .budidaya-photo img {  
-  border: 3px solid green !important;  
+  border: 2px solid green !important;  
 }  
 .budidaya-photo img {
   width: 100%;
