@@ -41,7 +41,7 @@ budidayaData.forEach(item => {
       <p><strong>Luas:</strong> ${item.luas}</p>
       <p><strong>Umur:</strong> ${item.umur}</p>
       <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
-      <p><strong>Omzet:</strong> ${item.omzet}</p>
+      
     </div>
   `;
   budidayaContainer.appendChild(card);
