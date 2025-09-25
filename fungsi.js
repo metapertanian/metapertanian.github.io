@@ -29,15 +29,10 @@ const budidayaContainer = document.getElementById("budidaya-container");
 budidayaData.forEach(item => {
   const year = new Date(item.tanggal).getFullYear();
 
-  // Nama file gambar fallback
-  const namaFile = item.tanaman 
-    ? item.tanaman.toLowerCase().replace(/\s+/g, "-") 
-    : "default";
-
-  // Tentukan foto (pakai default jika kosong / salah)
+  // Pakai foto dari data, kalau kosong fallback ke default.jpg
   const foto = item.foto && item.foto.trim() !== "" 
     ? item.foto 
-    : `img/${namaFile}.jpg`;
+    : "img/default.jpg";
 
   const card = document.createElement("div");
   card.className = "budidaya-card fade-in";
@@ -45,7 +40,7 @@ budidayaData.forEach(item => {
   card.innerHTML = `
     <div class="budidaya-photo">
       <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}"
-           onerror="this.onerror=null; this.src='img/default.jpg'; this.style.display='block';">
+           onerror="this.onerror=null; this.src='img/default.jpg';">
       <span class="year">${year}</span>
     </div>
     <div class="budidaya-info">
@@ -120,7 +115,7 @@ function renderAchievements() {
     delay += 900;
   }
 
-  // Omzet
+  // Omzet total
   const omzetEl = document.getElementById("omzet-value");
   animateCounter(omzetEl, totalOmzet, "", delay, true);
 }
