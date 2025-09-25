@@ -14,14 +14,14 @@ function tambahNolOmzet() {
 }
 
 function generateCode() {
-  const tanaman = document.getElementById("tanaman").value;
+  const tanaman = document.getElementById("tanaman").value.trim();
   const tanggalInput = document.getElementById("tanggal").value;
   const luas = document.getElementById("luas").value.trim();
   const umur = document.getElementById("umur").value.trim();
   const hasilJumlah = parseInt(document.getElementById("hasilJumlah").value);
-  const hasilSatuan = document.getElementById("hasilSatuan").value;
+  const hasilSatuan = document.getElementById("hasilSatuan").value.trim();
   const omzet = parseInt(document.getElementById("omzet").value) || 0;
-  const foto = document.getElementById("foto").value.trim();
+  let foto = document.getElementById("foto").value.trim();
 
   if (!tanggalInput || isNaN(hasilJumlah) || !luas || !umur) {
     alert("Mohon isi semua data dengan benar.");
@@ -31,20 +31,22 @@ function generateCode() {
   const date = new Date(tanggalInput);
   const formattedDate = formatTanggal(date);
 
+  // Jika foto kosong → otomatis isi img/[tanaman].jpg
+  if (!foto) {
+    foto = `img/${tanaman.toLowerCase().replace(/\s+/g, "-")}.jpg`;
+  }
+
   // Preview
   document.getElementById("previewTanaman").innerText = tanaman;
   document.getElementById("previewDate").innerText = formattedDate;
   document.getElementById("previewLuas").innerText = luas;
   document.getElementById("previewUmur").innerText = umur;
   document.getElementById("previewHasil").innerText = hasilJumlah + " " + hasilSatuan;
-  document.getElementById("previewOmzet").innerText = "Rp " + omzet.toLocaleString();
+  document.getElementById("previewOmzet").innerText = "Rp " + omzet.toLocaleString("id-ID");
 
-  if (foto) {
-    document.getElementById("previewImage").src = foto;
-    document.getElementById("previewImageContainer").style.display = "block";
-  } else {
-    document.getElementById("previewImageContainer").style.display = "none";
-  }
+  document.getElementById("previewImage").src = foto;
+  document.getElementById("previewImageContainer").style.display = "block";
+
   document.getElementById("preview").style.display = "block";
 
   // Output JSON siap tempel ke budidaya.js
