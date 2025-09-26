@@ -19,6 +19,15 @@ const budidayaData = [
   foto: "img/timun.jpg"
 },
 {
+  tanaman: "Padi",
+  tanggal: "2025-07-30",
+  luas: "6 Rante (Rawa)",
+  umur: "85 Hari",
+  hasil: { jumlah: 160, satuan: "Kg" },
+  omzet: 960000,
+  foto: "img/padi.jpg"
+},
+{
   tanaman: "Terong",
   tanggal: "2025-07-01",
   luas: "500 m² (500 pohon)",
@@ -26,6 +35,15 @@ const budidayaData = [
   hasil: { jumlah: 50, satuan: "Kg" },
   omzet: 200000,
   foto: "img/terong.jpg"
+},
+{
+  tanaman: "Padi",
+  tanggal: "2025-04-15",
+  luas: "6 Rante (Rawa)",
+  umur: "90 Hari",
+  hasil: { jumlah: 720, satuan: "Kg" },
+  omzet: 4320000,
+  foto: "img/padi.jpg"
 },
 {
   tanaman: "Cabai",
