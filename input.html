@@ -69,26 +69,35 @@
       <option value="Melon">🍈 Melon</option>
     </select>
 
+    <label for="kategori">Kategori</label>
+    <select id="kategori"></select>
+
+    <label for="tipe">Tipe</label>
+    <select id="tipe"></select>
+
     <label for="tanggal">Tanggal</label>
     <input type="date" id="tanggal">
 
     <label for="luas">Luas Lahan</label>
-    <input type="text" id="luas" placeholder="Contoh: 0.5 Ha">
+    <div class="d-flex gap-2">
+      <input type="text" id="luas" placeholder="Contoh: 0.5">
+      <select id="luasSatuan"></select>
+    </div>
 
     <label for="umur">Umur Tanaman</label>
-    <input type="text" id="umur" placeholder="Contoh: 90 Hari">
+    <div class="d-flex gap-2">
+      <input type="text" id="umur" placeholder="Contoh: 90">
+      <select id="umurSatuan"></select>
+    </div>
 
     <label for="hasilJumlah">Hasil Panen</label>
-    <input type="number" id="hasilJumlah" placeholder="Contoh: 1200">
+    <div class="d-flex gap-2">
+      <input type="number" id="hasilJumlah" placeholder="Contoh: 1200">
+      <select id="hasilSatuan"></select>
+    </div>
 
-    <label for="hasilSatuan">Satuan</label>
-    <select id="hasilSatuan">
-      <option value="Kg">Kg</option>
-      <option value="Ton">Ton</option>
-    </select>
-
-    <label for="omzet">Omzet : 
-      <button type="button" onclick="tambahNolOmzet()">+000</button>
+    <label for="omzet">Nominal
+      <button type="button" onclick="tambahNolOmzet()" style="margin-left:10px;">+000</button>
     </label>
     <input type="number" id="omzet" placeholder="Contoh: 15000000">
 
@@ -104,7 +113,7 @@
       <p><strong>Luas Lahan:</strong> <span id="previewLuas"></span></p>
       <p><strong>Umur:</strong> <span id="previewUmur"></span></p>
       <p><strong>Hasil:</strong> <span id="previewHasil"></span></p>
-      <p><strong>Omzet:</strong> <span id="previewOmzet"></span></p>
+      <p><strong>Nominal:</strong> <span id="previewOmzet"></span></p>
       <div id="previewImageContainer" style="display:none; margin-top:10px;">
         <img id="previewImage" src="" alt="Foto Budidaya" style="max-width:100%; border-radius:8px;">
       </div>
