@@ -26,6 +26,11 @@ function formatRupiah(angka) {
   return "Rp " + angka.toLocaleString("id-ID");
 }
 
+// ===== Ambil data budidaya dari window.kasData (gabungan semua tahap) =====
+function getBudidayaData() {
+  return Object.values(window.kasData).flatMap(p => p.transaksi || []);
+}
+
 // ===== Render Budidaya dengan Pagination =====
 const budidayaContainer = document.getElementById("budidaya-container");
 const paginationContainer = document.createElement("div");
@@ -36,6 +41,7 @@ let currentPage = 1;
 const itemsPerPage = 6;
 
 function renderBudidaya(page = 1, doScroll = false) {
+  const budidayaData = getBudidayaData();
   budidayaContainer.innerHTML = "";
   paginationContainer.innerHTML = "";
   currentPage = page;
@@ -55,17 +61,17 @@ function renderBudidaya(page = 1, doScroll = false) {
 
     card.innerHTML = `
       <div class="budidaya-photo">
-        <img src="${foto}" alt="${item.tanaman || 'Tanaman'} ${year}"
+        <img src="${foto}" alt="${item.kategori || 'Tanaman'} ${year}"
              onerror="this.onerror=null; this.src='img/default.jpg';">
         <span class="year">${year}</span>
       </div>
       <div class="budidaya-info">
-        <p><strong>${getPlantIcon(item.tanaman)} ${item.tanaman || "-"}</strong></p>
+        <p><strong>${getPlantIcon(item.kategori)} ${item.kategori || "-"}</strong></p>
         <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
-        <p><strong>Luas:</strong> ${item.luas || "-"}</p>
-        <p><strong>Umur:</strong> ${item.umur || "-"}</p>
-        <p><strong>Hasil:</strong> ${item.hasil.jumlah} ${item.hasil.satuan}</p>
-        <p><strong>Omzet:</strong> ${item.omzet ? formatRupiah(item.omzet) : "-"}</p>
+        <p><strong>Luas:</strong> ${item.luas?.jumlah || "-"} ${item.luas?.satuan || ""}</p>
+        <p><strong>Umur:</strong> ${item.umur?.jumlah || "-"} ${item.umur?.satuan || ""}</p>
+        <p><strong>Hasil:</strong> ${item.hasil?.jumlah || "-"} ${item.hasil?.satuan || ""}</p>
+        <p><strong>Omzet:</strong> ${item.nominal ? formatRupiah(item.nominal) : "-"}</p>
       </div>
     `;
     budidayaContainer.appendChild(card);
@@ -110,18 +116,19 @@ function renderBudidaya(page = 1, doScroll = false) {
   }
 }
 
-
 // ===== Hitung total hasil per tanaman + Omzet =====
 function calculateAchievements() {
+  const budidayaData = getBudidayaData();
   const totals = {};
   let totalOmzet = 0;
+
   budidayaData.forEach(item => {
-    const { tanaman, hasil, omzet } = item;
-    if (!totals[tanaman]) totals[tanaman] = { jumlah: 0, satuan: hasil.satuan };
-    if (totals[tanaman].satuan === hasil.satuan) {
-      totals[tanaman].jumlah += hasil.jumlah;
+    const { kategori, hasil, nominal } = item;
+    if (!totals[kategori]) totals[kategori] = { jumlah: 0, satuan: hasil?.satuan || "" };
+    if (hasil && totals[kategori].satuan === hasil.satuan) {
+      totals[kategori].jumlah += hasil.jumlah;
     }
-    if (omzet) totalOmzet += omzet;
+    if (nominal) totalOmzet += nominal;
   });
   return { totals, totalOmzet };
 }
@@ -152,11 +159,11 @@ function animateCounter(el, target, suffix, delay, isRupiah = false) {
 
 // ===== Render Pencapaian =====
 const achievementContainer = document.getElementById("achievement-container");
-const { totals, totalOmzet } = calculateAchievements();
-
 function renderAchievements() {
   achievementContainer.innerHTML = "";
   let delay = 0;
+  const { totals, totalOmzet } = calculateAchievements();
+
   for (let tanaman in totals) {
     const div = document.createElement("div");
     div.className = "achievement-item card";
@@ -214,7 +221,7 @@ function typeEffect() {
 }
 if (quoteEl) typeEffect();
 
-// ===== Fade-in scroll (untuk elemen lain, bukan budidaya) =====
+// ===== Fade-in scroll =====
 const faders = document.querySelectorAll('.fade-in');
 const appearOptions = { threshold: 0.2 };
 const appearOnScroll = new IntersectionObserver((entries) => {
@@ -228,10 +235,9 @@ const appearOnScroll = new IntersectionObserver((entries) => {
 }, appearOptions);
 faders.forEach(f => appearOnScroll.observe(f));
 
-// Fallback: selalu tampil meskipun observer gagal
 window.addEventListener("load", () => {
   faders.forEach(el => el.classList.add("visible"));
-  renderBudidaya(1); // tidak ada doScroll
+  renderBudidaya(1); // awal
 });
 
 // ===== Navbar toggle =====
