@@ -5,6 +5,20 @@ function formatTanggal(tanggal) {
   return `${tahun}-${bulan}-${hari}`;
 }
 
+// Tambah fungsi tombol +000
+function tambahNol() {
+  const nominalInput = document.getElementById("nominal");
+  let nilai = nominalInput.value.trim();
+
+  if (!nilai) {
+    nominalInput.value = "0";
+  } else {
+    // Pastikan hanya angka
+    nilai = nilai.replace(/\D/g, "");
+    nominalInput.value = nilai + "000";
+  }
+}
+
 function generateCode() {
   const tanggalInput = document.getElementById("tanggal").value;
   const keterangan = document.getElementById("keterangan").value.trim();
@@ -34,9 +48,14 @@ function generateCode() {
   const date = new Date(tanggalInput);
   const formattedDate = formatTanggal(date);
 
-  // Jika foto kosong → otomatis isi img/[kategori].jpg
+  // Jika foto kosong → otomatis isi /img/[kategori].jpg
   if (!foto) {
-    foto = `img/${kategori.toLowerCase().replace(/\s+/g, "-")}.jpg`;
+    foto = `/img/${kategori.toLowerCase().replace(/\s+/g, "-")}.jpg`;
+  } else {
+    // Jika user lupa menaruh "/" di awal → tambahkan otomatis
+    if (!foto.startsWith("/")) {
+      foto = "/" + foto;
+    }
   }
 
   // Default kosong untuk opsional
