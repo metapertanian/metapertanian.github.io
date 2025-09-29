@@ -6,11 +6,11 @@ function formatTanggal(tanggal) {
 }
 
 function generateCode() {
+  const tanggalInput = document.getElementById("tanggal").value;
   const keterangan = document.getElementById("keterangan").value.trim();
   const kategori = document.getElementById("kategori").value.trim();
   const tipe = document.getElementById("tipe").value.trim();
-
-  const tanggalInput = document.getElementById("tanggal").value;
+  const nominal = parseInt(document.getElementById("nominal").value) || 0;
 
   const luasJumlah = document.getElementById("luas").value.trim();
   const luasSatuan = document.getElementById("luasSatuan").value.trim();
@@ -18,17 +18,16 @@ function generateCode() {
   const umurJumlah = document.getElementById("umur").value.trim();
   const umurSatuan = document.getElementById("umurSatuan").value.trim();
 
-  const hasilJumlah = parseInt(document.getElementById("hasilJumlah").value);
+  const hasilJumlah = document.getElementById("hasilJumlah").value.trim();
   const hasilSatuan = document.getElementById("hasilSatuan").value.trim();
-
-  const nominal = parseInt(document.getElementById("nominal").value) || 0;
 
   let catatan = document.getElementById("catatan").value.trim();
   let foto = document.getElementById("foto").value.trim();
   let video = document.getElementById("video").value.trim();
 
-  if (!tanggalInput || isNaN(hasilJumlah) || !luasJumlah || !umurJumlah) {
-    alert("Mohon isi semua data dengan benar.");
+  // Validasi wajib isi
+  if (!tanggalInput || !keterangan || !kategori || !tipe || nominal <= 0) {
+    alert("Mohon isi semua data wajib (Tanggal, Keterangan, Kategori, Tipe, Nominal).");
     return;
   }
 
@@ -40,32 +39,36 @@ function generateCode() {
     foto = `img/${kategori.toLowerCase().replace(/\s+/g, "-")}.jpg`;
   }
 
-  // Jika video kosong → default string kosong
+  // Default kosong untuk opsional
+  if (!catatan) catatan = "";
   if (!video) video = "";
 
-  // Preview
-  document.getElementById("previewTanaman").innerText = keterangan + " (" + kategori + ")";
-  document.getElementById("previewDate").innerText = formattedDate;
-  document.getElementById("previewLuas").innerText = luasJumlah + " " + luasSatuan;
-  document.getElementById("previewUmur").innerText = umurJumlah + " " + umurSatuan;
-  document.getElementById("previewHasil").innerText = hasilJumlah + " " + hasilSatuan;
-  document.getElementById("previewOmzet").innerText = tipe + ": Rp " + nominal.toLocaleString("id-ID");
+  // Preview tampilan
+  document.getElementById("previewTanggal").innerText = formattedDate;
+  document.getElementById("previewKeterangan").innerText = keterangan;
+  document.getElementById("previewKategori").innerText = kategori;
+  document.getElementById("previewTipe").innerText = tipe;
+  document.getElementById("previewNominal").innerText = "Rp " + nominal.toLocaleString("id-ID");
+  document.getElementById("previewLuas").innerText = luasJumlah ? (luasJumlah + " " + luasSatuan) : "-";
+  document.getElementById("previewUmur").innerText = umurJumlah ? (umurJumlah + " " + umurSatuan) : "-";
+  document.getElementById("previewHasil").innerText = hasilJumlah ? (hasilJumlah + " " + hasilSatuan) : "-";
+  document.getElementById("previewCatatan").innerText = catatan || "-";
 
   document.getElementById("previewImage").src = foto;
   document.getElementById("previewImageContainer").style.display = "block";
 
   document.getElementById("preview").style.display = "block";
 
-  // Output JSON sesuai struktur baru
+  // Output JSON sesuai struktur
   const output = `{
   tanggal: "${formattedDate}",
   keterangan: "${keterangan}",
   kategori: "${kategori}",
   tipe: "${tipe}",
   nominal: ${nominal},
-  luas: { jumlah: ${luasJumlah}, satuan: "${luasSatuan}" },
-  umur: { jumlah: ${umurJumlah}, satuan: "${umurSatuan}" },
-  hasil: { jumlah: ${hasilJumlah}, satuan: "${hasilSatuan}" },
+  luas: { jumlah: ${luasJumlah || 0}, satuan: "${luasJumlah ? luasSatuan : ""}" },
+  umur: { jumlah: ${umurJumlah || 0}, satuan: "${umurJumlah ? umurSatuan : ""}" },
+  hasil: { jumlah: ${hasilJumlah || 0}, satuan: "${hasilJumlah ? hasilSatuan : ""}" },
   catatan: "${catatan}",
   foto: "${foto}",
   video: "${video}"
@@ -83,47 +86,3 @@ function copyToClipboard() {
     alert("Kode berhasil disalin!");
   });
 }
-
-// Dropdown otomatis saat halaman load
-document.addEventListener("DOMContentLoaded", () => {
-  // Kategori
-  document.getElementById("kategori").innerHTML = `
-    <option value="Timun">Timun</option>
-    <option value="Cabai">Cabai</option>
-    <option value="Terong">Terong</option>
-    <option value="Jagung">Jagung</option>
-    <option value="Singkong">Singkong</option>
-    <option value="Padi">Padi</option>
-    <option value="Melon">Melon</option>
-    <option value="Semangka">Semangka</option>
-  `;
-
-  // Tipe
-  document.getElementById("tipe").innerHTML = `
-    <option value="Biaya">Biaya</option>
-    <option value="Omzet">Omzet</option>
-    <option value="Modal">Modal</option>
-    <option value="Cicilan">Cicilan</option>
-  `;
-
-  // Satuan Luas
-  document.getElementById("luasSatuan").innerHTML = `
-    <option value="M²">M²</option>
-    <option value="Rante">Rante</option>
-    <option value="Ha">Ha</option>
-  `;
-
-  // Satuan Umur
-  document.getElementById("umurSatuan").innerHTML = `
-    <option value="Bulan">Bulan</option>
-    <option value="Hari">Hari</option>
-    <option value="Tahun">Tahun</option>
-  `;
-
-  // Satuan Hasil
-  document.getElementById("hasilSatuan").innerHTML = `
-    <option value="Ton">Ton</option>
-    <option value="Kg">Kg</option>
-    <option value="Ons">Ons</option>
-  `;
-});
