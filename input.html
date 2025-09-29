@@ -49,6 +49,16 @@
     .inline-inputs { display: flex; gap: 10px; }
     .inline-inputs input { flex: 2; }
     .inline-inputs select { flex: 1; }
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 14px;
+      margin-top: 8px;
+      background-color: #007bff;
+      border-radius: 6px;
+    }
+    .btn-small:hover {
+      background-color: #0069d9;
+    }
   </style>
 </head>
 <body class="bg-dark text-light">
@@ -86,6 +96,8 @@
     </select>
 
     <label for="nominal">Nominal (Rp)</label>
+    <!-- Tombol +000 di atas input -->
+    <button type="button" class="btn-small" onclick="tambahNol()">+000</button>
     <input type="number" id="nominal" placeholder="Contoh: 6000000">
 
     <label for="luas">Luas Lahan</label>
@@ -122,7 +134,7 @@
     <textarea id="catatan" placeholder="Tambahkan catatan tambahan di sini..."></textarea>
 
     <label for="foto">Link Foto</label>
-    <input type="url" id="foto" placeholder="Kosongkan untuk default img/[kategori].jpg">
+    <input type="url" id="foto" placeholder="Kosongkan untuk default /img/[kategori].jpg">
 
     <label for="video">Link Video</label>
     <input type="url" id="video" placeholder="Opsional: https://youtube.com/...">
