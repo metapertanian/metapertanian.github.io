@@ -5,19 +5,6 @@ window.kasData = {
     plafond: "Rp 10.000.000",
     transaksi: [
       {
-        tanggal: "2025-08-22",
-        keterangan: "Panen Timun",
-        kategori: "Timun",
-        tipe: "Omzet",
-        nominal: 2047000,
-        luas: { jumlah: 500, satuan: "m² (1000 lubang)" },
-        umur: { jumlah: 55, satuan: "Hari" },
-        hasil: { jumlah: 685, satuan: "Kg" },
-        catatan: "",
-        foto: "img/timun.jpg",
-        video: ""
-      },
-      {
         tanggal: "2025-08-28",
         keterangan: "Panen Singkong",
         kategori: "Singkong",
@@ -28,6 +15,19 @@ window.kasData = {
         hasil: { jumlah: 15, satuan: "Ton" },
         catatan: "",
         foto: "img/singkong.jpg",
+        video: ""
+      },
+      {
+        tanggal: "2025-08-22",
+        keterangan: "Panen Timun",
+        kategori: "Timun",
+        tipe: "Omzet",
+        nominal: 2047000,
+        luas: { jumlah: 500, satuan: "m² (1000 lubang)" },
+        umur: { jumlah: 55, satuan: "Hari" },
+        hasil: { jumlah: 685, satuan: "Kg" },
+        catatan: "",
+        foto: "img/timun.jpg",
         video: ""
       },
       {
