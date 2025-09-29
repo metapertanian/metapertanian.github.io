@@ -115,15 +115,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Satuan Umur
   document.getElementById("umurSatuan").innerHTML = `
-    <option value="Hari">Hari</option>
     <option value="Bulan">Bulan</option>
+    <option value="Hari">Hari</option>
     <option value="Tahun">Tahun</option>
   `;
 
   // Satuan Hasil
   document.getElementById("hasilSatuan").innerHTML = `
-    <option value="Ons">Ons</option>
-    <option value="Kg">Kg</option>
     <option value="Ton">Ton</option>
+    <option value="Kg">Kg</option>
+    <option value="Ons">Ons</option>
   `;
 });
