@@ -51,7 +51,7 @@ function renderBudidaya(page = 1, doScroll = false) {
   const items = budidayaData.slice(start, end);
 
   items.forEach(item => {
-    const year = new Date(item.tanggal).getFullYear();
+    const tanggalLengkap = formatDate(item.tanggal);
     const foto = item.foto && item.foto.trim() !== "" 
       ? item.foto 
       : "img/default.jpg";
@@ -61,17 +61,18 @@ function renderBudidaya(page = 1, doScroll = false) {
 
     card.innerHTML = `
       <div class="budidaya-photo">
-        <img src="${foto}" alt="${item.kategori || 'Tanaman'} ${year}"
+        <img src="${foto}" alt="${item.kategori || 'Tanaman'}"
              onerror="this.onerror=null; this.src='img/default.jpg';">
-        <span class="year">${year}</span>
+        <span class="year">${tanggalLengkap}</span>
       </div>
       <div class="budidaya-info">
         <p><strong>${getPlantIcon(item.kategori)} ${item.kategori || "-"}</strong></p>
-        <p><strong>Tanggal:</strong> ${formatDate(item.tanggal)}</p>
         <p><strong>Luas:</strong> ${item.luas?.jumlah || "-"} ${item.luas?.satuan || ""}</p>
         <p><strong>Umur:</strong> ${item.umur?.jumlah || "-"} ${item.umur?.satuan || ""}</p>
         <p><strong>Hasil:</strong> ${item.hasil?.jumlah || "-"} ${item.hasil?.satuan || ""}</p>
         <p><strong>Omzet:</strong> ${item.nominal ? formatRupiah(item.nominal) : "-"}</p>
+        ${item.catatan && item.catatan.trim() !== "" ? `<p><em>Catatan: ${item.catatan}</em></p>` : ""}
+        ${item.video && item.video.trim() !== "" ? `<p><a href="${item.video}" target="_blank">▶️ Tonton Video Dokumentasi</a></p>` : ""}
       </div>
     `;
     budidayaContainer.appendChild(card);
@@ -101,10 +102,10 @@ function renderBudidaya(page = 1, doScroll = false) {
     paginationContainer.appendChild(nextBtn);
   }
 
-  // 🔥 Scroll hanya kalau dipicu pagination
+  // 🔥 Scroll hanya kalau dipicu pagination (lebih cepat, jarak kecil)
   if (doScroll) {
     const navHeight = document.querySelector(".nav")?.offsetHeight || 0;
-    const topPos = budidayaContainer.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+    const topPos = budidayaContainer.getBoundingClientRect().top + window.scrollY - navHeight - 2;
     window.scrollTo({ top: topPos, behavior: "smooth" });
   }
 
@@ -194,30 +195,38 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.5 });
 observer.observe(achievementSection);
 
-// ===== Typing effect per huruf untuk quote =====
+// ===== Dynamic Quote (3 fitur bergantian) =====
 const quoteEl = document.getElementById("quote");
-const fullText = "Menanam Harapan untuk Masa Depan";
-let index = 0;
+const quotes = [
+  "Kemitraan Pertanian Modern",
+  "Algoritma Catatan Keuangan",
+  "Membenahi Tanah Pertanian"
+];
+let qIndex = 0;
+let charIndex = 0;
 let isDeleting = false;
 
 function typeEffect() {
   if (!quoteEl) return;
+  const currentText = quotes[qIndex];
+  
   if (!isDeleting) {
-    quoteEl.textContent = fullText.slice(0, index + 1);
-    index++;
-    if (index === fullText.length) {
+    quoteEl.textContent = currentText.slice(0, charIndex + 1);
+    charIndex++;
+    if (charIndex === currentText.length) {
       isDeleting = true;
       setTimeout(typeEffect, 2000);
       return;
     }
   } else {
-    quoteEl.textContent = fullText.slice(0, index - 1);
-    index--;
-    if (index === 0) {
+    quoteEl.textContent = currentText.slice(0, charIndex - 1);
+    charIndex--;
+    if (charIndex === 0) {
       isDeleting = false;
+      qIndex = (qIndex + 1) % quotes.length;
     }
   }
-  setTimeout(typeEffect, isDeleting ? 80 : 120);
+  setTimeout(typeEffect, isDeleting ? 60 : 100);
 }
 if (quoteEl) typeEffect();
 
