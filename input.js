@@ -5,33 +5,29 @@ function formatTanggal(tanggal) {
   return `${tahun}-${bulan}-${hari}`;
 }
 
-// Tambah 000 untuk omzet
-function tambahNolOmzet() {
-  const omzetInput = document.getElementById("omzet");
-  let val = omzetInput.value.trim();
-  if (!val) val = "0";
-  omzetInput.value = parseInt(val + "000");
-}
-
 function generateCode() {
-  const tanaman = document.getElementById("tanaman").value.trim();
+  const keterangan = document.getElementById("keterangan").value.trim();
   const kategori = document.getElementById("kategori").value.trim();
   const tipe = document.getElementById("tipe").value.trim();
 
   const tanggalInput = document.getElementById("tanggal").value;
-  const luas = document.getElementById("luas").value.trim();
+
+  const luasJumlah = document.getElementById("luas").value.trim();
   const luasSatuan = document.getElementById("luasSatuan").value.trim();
 
-  const umur = document.getElementById("umur").value.trim();
+  const umurJumlah = document.getElementById("umur").value.trim();
   const umurSatuan = document.getElementById("umurSatuan").value.trim();
 
   const hasilJumlah = parseInt(document.getElementById("hasilJumlah").value);
   const hasilSatuan = document.getElementById("hasilSatuan").value.trim();
 
-  const omzet = parseInt(document.getElementById("omzet").value) || 0;
-  let foto = document.getElementById("foto").value.trim();
+  const nominal = parseInt(document.getElementById("nominal").value) || 0;
 
-  if (!tanggalInput || isNaN(hasilJumlah) || !luas || !umur) {
+  let catatan = document.getElementById("catatan").value.trim();
+  let foto = document.getElementById("foto").value.trim();
+  let video = document.getElementById("video").value.trim();
+
+  if (!tanggalInput || isNaN(hasilJumlah) || !luasJumlah || !umurJumlah) {
     alert("Mohon isi semua data dengan benar.");
     return;
   }
@@ -39,35 +35,40 @@ function generateCode() {
   const date = new Date(tanggalInput);
   const formattedDate = formatTanggal(date);
 
-  // Jika foto kosong → otomatis isi img/[tanaman].jpg
+  // Jika foto kosong → otomatis isi img/[kategori].jpg
   if (!foto) {
-    foto = `img/${tanaman.toLowerCase().replace(/\s+/g, "-")}.jpg`;
+    foto = `img/${kategori.toLowerCase().replace(/\s+/g, "-")}.jpg`;
   }
 
+  // Jika video kosong → default string kosong
+  if (!video) video = "";
+
   // Preview
-  document.getElementById("previewTanaman").innerText = tanaman + " (" + kategori + ")";
+  document.getElementById("previewTanaman").innerText = keterangan + " (" + kategori + ")";
   document.getElementById("previewDate").innerText = formattedDate;
-  document.getElementById("previewLuas").innerText = luas + " " + luasSatuan;
-  document.getElementById("previewUmur").innerText = umur + " " + umurSatuan;
+  document.getElementById("previewLuas").innerText = luasJumlah + " " + luasSatuan;
+  document.getElementById("previewUmur").innerText = umurJumlah + " " + umurSatuan;
   document.getElementById("previewHasil").innerText = hasilJumlah + " " + hasilSatuan;
-  document.getElementById("previewOmzet").innerText = tipe + ": Rp " + omzet.toLocaleString("id-ID");
+  document.getElementById("previewOmzet").innerText = tipe + ": Rp " + nominal.toLocaleString("id-ID");
 
   document.getElementById("previewImage").src = foto;
   document.getElementById("previewImageContainer").style.display = "block";
 
   document.getElementById("preview").style.display = "block";
 
-  // Output JSON siap tempel ke budidaya.js
+  // Output JSON sesuai struktur baru
   const output = `{
-  tanaman: "${tanaman}",
+  tanggal: "${formattedDate}",
+  keterangan: "${keterangan}",
   kategori: "${kategori}",
   tipe: "${tipe}",
-  tanggal: "${formattedDate}",
-  luas: "${luas} ${luasSatuan}",
-  umur: "${umur} ${umurSatuan}",
+  nominal: ${nominal},
+  luas: { jumlah: ${luasJumlah}, satuan: "${luasSatuan}" },
+  umur: { jumlah: ${umurJumlah}, satuan: "${umurSatuan}" },
   hasil: { jumlah: ${hasilJumlah}, satuan: "${hasilSatuan}" },
-  omzet: ${omzet},
-  foto: "${foto}"
+  catatan: "${catatan}",
+  foto: "${foto}",
+  video: "${video}"
 },`;
 
   const resultDiv = document.getElementById("result");
@@ -83,7 +84,7 @@ function copyToClipboard() {
   });
 }
 
-// Tambahkan dropdown otomatis saat halaman load
+// Dropdown otomatis saat halaman load
 document.addEventListener("DOMContentLoaded", () => {
   // Kategori
   document.getElementById("kategori").innerHTML = `
