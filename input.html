@@ -13,22 +13,21 @@
       color: #f5f5f5;
       padding: 20px;
     }
-    h2 { color: #fff; text-align: center; margin-bottom: 20px; }
     .form-container {
       background: #1e1e1e;
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      max-width: 600px;
+      max-width: 650px;
       margin: 20px auto;
     }
     label { margin-top: 12px; font-weight: bold; color: #e0e0e0; }
-    input, select {
+    input, select, textarea {
       width: 100%; padding: 10px; margin-top: 5px;
       background-color: #2a2a2a; border: 1px solid #444;
       color: #fff; border-radius: 8px;
     }
-    input::placeholder { color: #aaa; }
+    textarea { min-height: 70px; resize: vertical; }
     button {
       margin-top: 15px; padding: 12px 20px;
       background-color: #4CAF50; color: white;
@@ -47,6 +46,9 @@
       margin: 10px auto; display: block;
       border: 3px solid #4CAF50;
     }
+    .inline-inputs { display: flex; gap: 10px; }
+    .inline-inputs input { flex: 2; }
+    .inline-inputs select { flex: 1; }
   </style>
 </head>
 <body class="bg-dark text-light">
@@ -56,10 +58,16 @@
   </div>
 
   <div class="form-container">
-    <label for="tanaman">Tanaman</label>
-    <select id="tanaman">
-      <option value="Jagung">🌽 Jagung</option>
+    <label for="tanggal">Tanggal</label>
+    <input type="date" id="tanggal">
+
+    <label for="keterangan">Keterangan</label>
+    <input type="text" id="keterangan" placeholder="Contoh: Panen Singkong">
+
+    <label for="kategori">Kategori</label>
+    <select id="kategori">
       <option value="Singkong">🥔 Singkong</option>
+      <option value="Jagung">🌽 Jagung</option>
       <option value="Padi">🌾 Padi</option>
       <option value="Cabai">🌶️ Cabai</option>
       <option value="Timun">🥒 Timun</option>
@@ -69,51 +77,69 @@
       <option value="Melon">🍈 Melon</option>
     </select>
 
-    <label for="kategori">Kategori</label>
-    <select id="kategori"></select>
-
     <label for="tipe">Tipe</label>
-    <select id="tipe"></select>
+    <select id="tipe">
+      <option value="Biaya">Biaya</option>
+      <option value="Omzet">Omzet</option>
+      <option value="Modal">Modal</option>
+      <option value="Cicilan">Cicilan</option>
+    </select>
 
-    <label for="tanggal">Tanggal</label>
-    <input type="date" id="tanggal">
+    <label for="nominal">Nominal (Rp)</label>
+    <input type="number" id="nominal" placeholder="Contoh: 6000000">
 
     <label for="luas">Luas Lahan</label>
-    <div class="d-flex gap-2">
-      <input type="text" id="luas" placeholder="Contoh: 0.5">
-      <select id="luasSatuan"></select>
+    <div class="inline-inputs">
+      <input type="number" id="luasJumlah" placeholder="Contoh: 16">
+      <select id="luasSatuan">
+        <option value="M²">M²</option>
+        <option value="Rante">Rante</option>
+        <option value="Ha">Ha</option>
+      </select>
     </div>
 
     <label for="umur">Umur Tanaman</label>
-    <div class="d-flex gap-2">
-      <input type="text" id="umur" placeholder="Contoh: 90">
-      <select id="umurSatuan"></select>
+    <div class="inline-inputs">
+      <input type="number" id="umurJumlah" placeholder="Contoh: 9">
+      <select id="umurSatuan">
+        <option value="Hari">Hari</option>
+        <option value="Bulan">Bulan</option>
+        <option value="Tahun">Tahun</option>
+      </select>
     </div>
 
-    <label for="hasilJumlah">Hasil Panen</label>
-    <div class="d-flex gap-2">
-      <input type="number" id="hasilJumlah" placeholder="Contoh: 1200">
-      <select id="hasilSatuan"></select>
+    <label for="hasil">Hasil Panen</label>
+    <div class="inline-inputs">
+      <input type="number" id="hasilJumlah" placeholder="Contoh: 15">
+      <select id="hasilSatuan">
+        <option value="Ons">Ons</option>
+        <option value="Kg">Kg</option>
+        <option value="Ton">Ton</option>
+      </select>
     </div>
 
-    <label for="omzet">Nominal
-      <button type="button" onclick="tambahNolOmzet()" style="margin-left:10px;">+000</button>
-    </label>
-    <input type="number" id="omzet" placeholder="Contoh: 15000000">
+    <label for="catatan">Catatan</label>
+    <textarea id="catatan" placeholder="Tambahkan catatan tambahan di sini..."></textarea>
 
     <label for="foto">Link Foto</label>
-    <input type="url" id="foto" placeholder="Contoh: https://example.com/foto.jpg">
+    <input type="url" id="foto" placeholder="Kosongkan untuk default img/[kategori].jpg">
+
+    <label for="video">Link Video</label>
+    <input type="url" id="video" placeholder="Opsional: https://youtube.com/...">
 
     <button onclick="generateCode()">Buat & Tampilkan Kode</button>
 
     <!-- Preview hasil input -->
     <div id="preview" style="display:none; margin-top:15px; padding:10px; border:1px solid #555; border-radius:8px;">
-      <p><strong>Tanaman:</strong> <span id="previewTanaman"></span></p>
-      <p><strong>Tanggal:</strong> <span id="previewDate"></span></p>
-      <p><strong>Luas Lahan:</strong> <span id="previewLuas"></span></p>
+      <p><strong>Tanggal:</strong> <span id="previewTanggal"></span></p>
+      <p><strong>Keterangan:</strong> <span id="previewKeterangan"></span></p>
+      <p><strong>Kategori:</strong> <span id="previewKategori"></span></p>
+      <p><strong>Tipe:</strong> <span id="previewTipe"></span></p>
+      <p><strong>Nominal:</strong> <span id="previewNominal"></span></p>
+      <p><strong>Luas:</strong> <span id="previewLuas"></span></p>
       <p><strong>Umur:</strong> <span id="previewUmur"></span></p>
       <p><strong>Hasil:</strong> <span id="previewHasil"></span></p>
-      <p><strong>Nominal:</strong> <span id="previewOmzet"></span></p>
+      <p><strong>Catatan:</strong> <span id="previewCatatan"></span></p>
       <div id="previewImageContainer" style="display:none; margin-top:10px;">
         <img id="previewImage" src="" alt="Foto Budidaya" style="max-width:100%; border-radius:8px;">
       </div>
