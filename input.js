@@ -48,14 +48,9 @@ function generateCode() {
   const date = new Date(tanggalInput);
   const formattedDate = formatTanggal(date);
 
-  // Jika foto kosong → otomatis isi /img/[kategori].jpg
-  if (!foto) {
-    foto = `/img/${kategori.toLowerCase().replace(/\s+/g, "-")}.jpg`;
-  } else {
-    // Jika user lupa menaruh "/" di awal → tambahkan otomatis
-    if (!foto.startsWith("/")) {
-      foto = "/" + foto;
-    }
+  // Foto hanya diisi jika user memasukkan link
+  if (foto && !foto.startsWith("/")) {
+    foto = "/" + foto;
   }
 
   // Default kosong untuk opsional
@@ -73,8 +68,13 @@ function generateCode() {
   document.getElementById("previewHasil").innerText = hasilJumlah ? (hasilJumlah + " " + hasilSatuan) : "-";
   document.getElementById("previewCatatan").innerText = catatan || "-";
 
-  document.getElementById("previewImage").src = foto;
-  document.getElementById("previewImageContainer").style.display = "block";
+  // Preview gambar hanya jika ada foto
+  if (foto) {
+    document.getElementById("previewImage").src = foto;
+    document.getElementById("previewImageContainer").style.display = "block";
+  } else {
+    document.getElementById("previewImageContainer").style.display = "none";
+  }
 
   document.getElementById("preview").style.display = "block";
 
