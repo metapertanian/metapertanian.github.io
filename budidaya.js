@@ -5,19 +5,6 @@ window.kasData = {
     plafond: "Rp 10.000.000",
     transaksi: [
       {
-        tanggal: "2025-08-28",
-        keterangan: "Panen Singkong",
-        kategori: "Singkong",
-        tipe: "Omzet",
-        nominal: 6000000,
-        luas: { jumlah: 16, satuan: "Rante" },
-        umur: { jumlah: 9, satuan: "Bulan" },
-        hasil: { jumlah: 15, satuan: "Ton" },
-        catatan: "",
-        foto: "img/singkong.jpg",
-        video: ""
-      },
-      {
         tanggal: "2025-08-22",
         keterangan: "Panen Timun",
         kategori: "Timun",
@@ -28,6 +15,19 @@ window.kasData = {
         hasil: { jumlah: 685, satuan: "Kg" },
         catatan: "",
         foto: "img/timun.jpg",
+        video: ""
+      },
+      {
+        tanggal: "2025-08-28",
+        keterangan: "Panen Singkong",
+        kategori: "Singkong",
+        tipe: "Omzet",
+        nominal: 6000000,
+        luas: { jumlah: 16, satuan: "Rante" },
+        umur: { jumlah: 9, satuan: "Bulan" },
+        hasil: { jumlah: 15, satuan: "Ton" },
+        catatan: "",
+        foto: "img/singkong.jpg",
         video: ""
       },
       {
@@ -203,9 +203,16 @@ window.kasData = {
   }
 };
 
+// ================= Urutkan Data Sekali di Awal =================
+Object.values(window.kasData).forEach(p => {
+  if (Array.isArray(p.transaksi)) {
+    p.transaksi.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+  }
+});
+
 // ================= Fungsi =================
 
-// Ambil semua transaksi dari periode tertentu
+// Ambil semua transaksi dari periode tertentu (sudah urut terbaru → lama)
 function getTransactionsByPeriod(period) {
   return window.kasData[period]?.transaksi || [];
 }
@@ -223,7 +230,7 @@ function getLatestPeriod() {
   return periods[periods.length - 1] || null;
 }
 
-// Ambil semua transaksi dari seluruh periode
+// Ambil semua transaksi dari seluruh periode (sudah urut terbaru → lama)
 function getAllTransactions() {
   return Object.values(window.kasData).flatMap(p => p.transaksi || []);
 }
