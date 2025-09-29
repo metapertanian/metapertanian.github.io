@@ -1,0 +1,294 @@
+/* Reset */
+* { box-sizing:border-box; margin:0; padding:0; }
+
+/* Theme Variables */
+:root {
+  --bg: #0f172a;
+  --surface: #1c2540;
+  --card: #24325f;
+  --radius: 14px;
+  --shadow: 0 20px 60px -15px rgba(0,0,0,0.6);
+  --text: #e4e9f7;
+  --muted: #94a3b8;
+  --border: #334155;
+  --highlight: #3dd598;
+  --danger: #ef4444;
+  --transition: .3s cubic-bezier(.4,.2,.2,1);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 15px;
+}
+
+/* Body */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 1.25rem;
+}
+
+/* Container utama */
+.container {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Heading */
+h1, h2 {
+  margin: 0 0 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+.sub {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+
+/* Table Kas */
+.kas-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+.kas-table th,
+.kas-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.kas-table thead th {
+  background: #111827;
+  text-align: center;
+  color: #f1f5f9;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.kas-table tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.025);
+}
+.kas-table tbody tr:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+.kas-table .income { color: var(--highlight); font-weight: 600; }
+.kas-table .expense { color: var(--danger); font-weight: 600; }
+.kas-table .totals { background: rgba(255,255,255,0.08); font-weight: bold; }
+
+/* Klik nominal */
+.clickable-amount {
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.25s ease;
+}
+.clickable-amount:hover { color: #fff; }
+
+/* Legend */
+.legend {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.income-badge { background: rgba(61,213,152,0.15); color: var(--highlight); }
+.expense-badge { background: rgba(255,107,107,0.15); color: var(--danger); }
+
+/* Riwayat */
+.history-item {
+  background: #1e293b;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+  transition: background 0.3s ease;
+}
+.history-item:hover { background: #273449; }
+.history-item > div:first-child {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #f9fafb;
+}
+.history-item .note {
+  font-size: 0.85rem;
+  margin: 6px 0;
+  color: var(--muted);
+}
+.h-details {
+  margin-top: 8px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+}
+.type.income,
+.type.expense {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.type.income { background: rgba(61,213,152,0.15); color: var(--highlight); }
+.type.expense { background: rgba(255,107,107,0.15); color: var(--danger); }
+
+/* Popup transaksi */
+.date-popup {
+  background: #1e293b;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+.date-popup .popup-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.date-popup .close-btn { cursor: pointer; }
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.pagination button {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+  padding: 7px 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.25s ease;
+}
+.pagination button:hover:not(:disabled) {
+  background: #374151;
+  transform: translateY(-2px);
+}
+.pagination button.active {
+  background: #3dd598;
+  border-color: #3dd598;
+  color: #fff;
+  font-weight: bold;
+}
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* WA Chat Button */
+.chat-wa-btn img {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 2px solid #25D366;
+  background: #fff;
+  padding: 6px;
+  transition: transform 0.25s ease;
+}
+.chat-wa-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  cursor: pointer;
+}
+.chat-wa-btn:hover img {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(37,211,102,0.4);
+}
+
+/* Bantuan Popup */
+.bantuan-popup {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #fff;
+  padding: 10px 16px;
+  border-radius: 50px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  animation: shake 1.5s ease infinite;
+}
+.bantuan-img { width: 38px; height: 38px; border-radius: 50%; }
+.bantuan-teks { font-size: 14px; font-weight: 600; color: #1f2d3a; }
+@keyframes shake {
+  0%,100%{transform:translateX(0);}20%{transform:translateX(-3px);}
+  40%{transform:translateX(3px);}60%{transform:translateX(-3px);}
+  80%{transform:translateX(3px);}
+}
+
+/* Form Popup */
+.form-popup {
+  display: none;
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 340px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+  overflow: hidden;
+  z-index: 1001;
+  color: #1f2d3a;
+}
+.form-header {
+  background: #128C7E;
+  color: #fff;
+  padding: 12px 14px;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-body { padding: 16px; }
+.form-body label { font-size: 13px; margin-top: 8px; display: block; color: #374151; }
+.form-body textarea {
+  width: 100%; margin-top: 6px; padding: 10px;
+  border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;
+  background: #f7f9fc; resize: vertical;
+}
+.form-admin { display: flex; align-items: center; margin-top: 12px; }
+.form-admin img { width: 38px; height: 38px; border-radius: 50%; margin-right: 10px; }
+.kirim-btn {
+  width: 100%; margin-top: 14px; padding: 10px;
+  background: #25D366; border: none; border-radius: 8px;
+  color: #fff; font-weight: 700; cursor: pointer;
+  transition: background .25s ease;
+}
+.kirim-btn:hover { background: #1ebc5e; }
