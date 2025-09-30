@@ -42,8 +42,8 @@ window.kasData = {
   tipe: "Biaya",
   nominal: 3000000,
   luas: { jumlah: 6700, satuan: "M²" },
-  umur: { jumlah: , satuan: "Bulan" },
-  hasil: { jumlah: , satuan: "Ton" },
+  umur: { jumlah: 0, satuan: "Bulan" },
+  hasil: { jumlah: 0, satuan: "Ton" },
   catatan: "catatan tidak ditulis, kira2 pak lurah",
   foto: "",
   video: ""
