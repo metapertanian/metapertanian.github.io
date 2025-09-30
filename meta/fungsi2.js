@@ -47,6 +47,7 @@ function showTransactionPopup(tx, anchorElement) {
   `;
   popup.appendChild(header);
 
+  // foto
   let fotoHTML = "";
   if (tx.foto) {
     fotoHTML = `
@@ -57,6 +58,7 @@ function showTransactionPopup(tx, anchorElement) {
     `;
   }
 
+  // video
   let videoHTML = "";
   if (tx.video) {
     videoHTML = `
@@ -66,12 +68,20 @@ function showTransactionPopup(tx, anchorElement) {
                   padding:6px 10px;border-radius:6px;
                   background:rgba(255,255,255,0.1);color:#4cc9f0;
                   font-weight:500;text-decoration:none;">
-          ▶️ Tonton Video Dokumentasi
+          ▶️ Lihat Video Dokumentasi
         </a>
       </div>
     `;
   }
 
+  const labelJenis = {
+    "Modal": "Modal Usaha",
+    "Biaya": "Biaya Operasional",
+    "Omzet": "Hasil Omzet",
+    "Cicilan": "Pembayaran Cicilan"
+  };
+
+  // isi
   const item = document.createElement("div");
   item.className = "popup-item";
   item.innerHTML = `
@@ -83,8 +93,8 @@ function showTransactionPopup(tx, anchorElement) {
     </div>
     <div class="note">${tx.note || "-"}</div>
     <div class="h-details" style="flex-direction:column;gap:6px;margin-top:8px;">
-      <div class="type ${tx.type === "income" ? "income" : "expense"}">
-        ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"}
+      <div class="type ${tx.type}">
+        ${labelJenis[tx.subType] || tx.subType}
       </div>
       <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
       <div><strong>Sisa Saldo:</strong> ${formatRupiah(tx.balanceAfter)}</div>
@@ -117,76 +127,6 @@ function showTransactionPopup(tx, anchorElement) {
   popup.style.top = `${top}px`;
   popup.style.left = `${left}px`;
   popup.style.zIndex = 9999;
-}
-
-// =================== Render Tabel Ringkasan ===================
-function renderSummaryTable() {
-  const ledger = computeLedger();
-  const tbody = document.querySelector("#summary-body");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  ledger.forEach(row => {
-    const tr = document.createElement("tr");
-
-    const dateTd = document.createElement("td");
-    dateTd.innerHTML = formatTanggalPendekHTML(row.date);
-
-    const incomeTd = document.createElement("td");
-    incomeTd.textContent = row.type === "income" ? (row.amount / 1000).toLocaleString("id-ID") : "-";
-    if (row.type === "income") {
-      incomeTd.classList.add("income");
-      incomeTd.style.cursor = "pointer";
-      incomeTd.style.textDecoration = "underline";
-      incomeTd.addEventListener("click", () => showTransactionPopup(row, incomeTd));
-    }
-
-    const expenseTd = document.createElement("td");
-    expenseTd.textContent = row.type === "expense" ? (row.amount / 1000).toLocaleString("id-ID") : "-";
-    if (row.type === "expense") {
-      expenseTd.classList.add("expense");
-      expenseTd.style.cursor = "pointer";
-      expenseTd.style.textDecoration = "underline";
-      expenseTd.addEventListener("click", () => showTransactionPopup(row, expenseTd));
-    }
-
-    const balanceTd = document.createElement("td");
-    balanceTd.textContent = (row.balanceAfter / 1000).toLocaleString("id-ID");
-
-    tr.append(dateTd, incomeTd, expenseTd, balanceTd);
-    tbody.appendChild(tr);
-  });
-
-  const sums = summary();
-  const tfoot = document.querySelector("#summary-foot");
-  if (!tfoot) return;
-  tfoot.innerHTML = `
-    <tr class="totals">
-      <td><strong>Total</strong></td>
-      <td class="income"><strong>${(sums.income / 1000).toLocaleString("id-ID")}</strong></td>
-      <td class="expense"><strong>${(sums.expense / 1000).toLocaleString("id-ID")}</strong></td>
-      <td><strong>${((sums.income - sums.expense) / 1000).toLocaleString("id-ID")}</strong></td>
-    </tr>
-  `;
-}
-
-// =================== Tabel Ringkasan Per Komoditas ===================
-function renderKomoditasTable() {
-  const data = summaryByKomoditas();
-  const tbody = document.querySelector("#komoditas-body");
-  if (!tbody) return;
-  tbody.innerHTML = "";
-
-  Object.entries(data).forEach(([komoditas, vals]) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${komoditas}</td>
-      <td class="income">${formatRupiah(vals.omzet)}</td>
-      <td class="expense">${formatRupiah(vals.biaya)}</td>
-      <td><strong>${formatRupiah(vals.laba)}</strong></td>
-    `;
-    tbody.appendChild(tr);
-  });
 }
 
 // =================== Riwayat Transaksi ===================
@@ -236,14 +176,21 @@ function renderHistoryList(page = 1, doScroll = false) {
     noteDiv.className = "note";
     noteDiv.textContent = tx.note || "-";
 
+    const labelJenis = {
+      "Modal": "Modal Usaha",
+      "Biaya": "Biaya Operasional",
+      "Omzet": "Hasil Omzet",
+      "Cicilan": "Pembayaran Cicilan"
+    };
+
     const detail = document.createElement("div");
     detail.className = "h-details";
     detail.style.flexDirection = "column";
     detail.style.gap = "6px";
     detail.style.marginTop = "8px";
     detail.innerHTML = `
-      <div class="type ${tx.type === "income" ? "income" : "expense"}">
-        ${tx.type === "income" ? "Pemasukan" : "Pengeluaran"}
+      <div class="type ${tx.type}">
+        ${labelJenis[tx.subType] || tx.subType}
       </div>
       <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
       <div><strong>Sisa Saldo:</strong> ${formatRupiah(tx.balanceAfter)}</div>
@@ -267,7 +214,7 @@ function renderHistoryList(page = 1, doScroll = false) {
       const videoLink = document.createElement("a");
       videoLink.href = tx.video;
       videoLink.target = "_blank";
-      videoLink.innerHTML = "▶️ Tonton Video Dokumentasi";
+      videoLink.innerHTML = "▶️ Lihat Video Dokumentasi";
       videoLink.style.display = "inline-flex";
       videoLink.style.alignItems = "center";
       videoLink.style.gap = "6px";
@@ -291,7 +238,7 @@ function renderHistoryList(page = 1, doScroll = false) {
     historyContainer.appendChild(wrapper);
   });
 
-  // Pagination
+  // pagination
   const paginationContainer = document.getElementById("history-pagination");
   if (paginationContainer) paginationContainer.innerHTML = "";
   else {
@@ -338,7 +285,7 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
 
   container.innerHTML = "";
   const label = document.createElement("label");
-  label.textContent = "Pilih Periode: ";
+  label.textContent = "Pilih Periode Laporan: ";
   label.style.marginRight = "8px";
 
   const select = document.createElement("select");
@@ -353,7 +300,6 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
   select.onchange = () => {
     currentPeriode = select.value;
     renderSummaryTable();
-    renderKomoditasTable();
     renderHistoryList(1, false);
 
     const saldo = summary().net;
@@ -366,16 +312,31 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
     if (allTransactions.length > 0) {
       const latest = allTransactions
         .slice()
-        .sort((a, b) => toDate(b.date) - toDate(a.date))[0];
+        .sort((a, b) => toDate(b.tanggal) - toDate(a.tanggal))[0];
       document.getElementById("last-updated").innerText =
-        "Terakhir diperbarui: " + formatTanggalPanjang(latest.date);
+        "Terakhir diperbarui: " + formatTanggalPanjang(latest.tanggal);
     } else {
-      document.getElementById("last-updated").innerText =
-        "Terakhir diperbarui: -";
+      document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
+    }
+
+    const periodeInfo = document.getElementById("periode-info");
+    if (periodeInfo) {
+      periodeInfo.textContent = `${window.kasData[currentPeriode]?.awal || ""} → ${window.kasData[currentPeriode]?.akhir || ""}`;
     }
   };
 
   container.append(label, select);
+
+  let periodeInfo = document.getElementById("periode-info");
+  if (!periodeInfo) {
+    periodeInfo = document.createElement("div");
+    periodeInfo.id = "periode-info";
+    periodeInfo.style.marginTop = "6px";
+    periodeInfo.style.fontSize = "0.9rem";
+    periodeInfo.style.color = "#ccc";
+    container.appendChild(periodeInfo);
+  }
+  periodeInfo.textContent = `${window.kasData[selectedPeriode]?.awal || ""} → ${window.kasData[selectedPeriode]?.akhir || ""}`;
 }
 
 // =================== Init ===================
@@ -389,7 +350,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       renderPeriodeFilter(currentPeriode, periodes);
       renderSummaryTable();
-      renderKomoditasTable();
       renderHistoryList();
 
       const saldo = summary().net;
@@ -401,15 +361,19 @@ document.addEventListener("DOMContentLoaded", () => {
       if (allTransactions.length > 0) {
         const latest = allTransactions
           .slice()
-          .sort((a, b) => toDate(b.date) - toDate(a.date))[0];
+          .sort((a, b) => toDate(b.tanggal) - toDate(a.tanggal))[0];
         document.getElementById("last-updated").innerText =
-          "Terakhir diperbarui: " + formatTanggalPanjang(latest.date);
+          "Terakhir diperbarui: " + formatTanggalPanjang(latest.tanggal);
       } else {
-        document.getElementById("last-updated").innerText =
-          "Terakhir diperbarui: -";
+        document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
+      }
+
+      const periodeInfo = document.getElementById("periode-info");
+      if (periodeInfo) {
+        periodeInfo.textContent = `${window.kasData[currentPeriode]?.awal || ""} → ${window.kasData[currentPeriode]?.akhir || ""}`;
       }
     } else {
-      console.warn("⚠️ kasData belum tersedia saat init.");
+      console.warn("⚠️ Data kas belum tersedia saat init.");
     }
   }
 
