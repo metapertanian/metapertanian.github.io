@@ -11,7 +11,7 @@ function toDate(str) {
 
 // Sort berdasarkan tanggal
 function sortByDate(a, b) {
-  return toDate(a.date) - toDate(b.date);
+  return toDate(a.tanggal) - toDate(b.tanggal);
 }
 
 // Format tanggal pendek dua baris
@@ -36,39 +36,37 @@ function formatTanggalPanjang(dateStr) {
 // =================== Data & Periode ===================
 let currentPeriode = null;
 
-// Normalisasi data dari bsi.js → income/expense
-function normalizeTransactions(rawTxs) {
-  return rawTxs.map(tx => {
-    let type = "expense";
-    if (tx.tipe && (tx.tipe.toLowerCase() === "omzet" || tx.tipe.toLowerCase() === "modal")) {
-      type = "income";
-    }
-    return {
-      ...tx,
-      date: tx.tanggal,
-      description: tx.keterangan,
-      category: tx.kategori,
-      type: type,
-      amount: tx.nominal,
-      note: tx.catatan,
-      foto: tx.foto,
-      video: tx.video
-    };
-  });
-}
-
+// Ambil data asli dari umi.js
 function getRawTransactions() {
   if (window.kasData && currentPeriode && window.kasData[currentPeriode]) {
-    const raw = window.kasData[currentPeriode].transaksi || [];
-    return normalizeTransactions(raw);
+    return window.kasData[currentPeriode].transaksi || [];
   }
-  console.warn("Tidak ada data kas tersedia atau periode belum dipilih.");
+  console.warn("Tidak ada data transaksi tersedia atau periode belum dipilih.");
   return [];
+}
+
+// Mapping tipe transaksi dari umi.js → income/expense
+function mapTransaction(tx) {
+  let type = "expense"; // default keluar
+  if (tx.tipe === "Modal" || tx.tipe === "Omzet") type = "income";
+  if (tx.tipe === "Biaya" || tx.tipe === "Cicilan") type = "expense";
+
+  return {
+    date: tx.tanggal,
+    description: tx.keterangan,
+    category: tx.kategori,
+    type,
+    subType: tx.tipe, // Modal / Omzet / Biaya / Cicilan
+    amount: tx.nominal,
+    note: tx.catatan,
+    foto: tx.foto,
+    video: tx.video
+  };
 }
 
 // Hitung saldo berjalan
 function computeLedger(startingBalance = 0) {
-  const raw = getRawTransactions();
+  const raw = getRawTransactions().map(mapTransaction);
   const sorted = raw.slice().sort(sortByDate);
   let balance = startingBalance;
 
@@ -81,32 +79,59 @@ function computeLedger(startingBalance = 0) {
 
 // Ringkasan total
 function summary() {
-  const raw = getRawTransactions();
+  const raw = getRawTransactions().map(mapTransaction);
   const income = raw.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
   const expense = raw.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
   return { income, expense, net: income - expense };
 }
 
-// Ringkasan per komoditas
-function summaryByKomoditas() {
-  const raw = getRawTransactions();
-  const grouped = {};
+// =================== Render Tabel ===================
+function renderSummaryTable() {
+  const ledger = computeLedger();
+  const tbody = document.querySelector("#summary-body");
+  if (!tbody) return;
+  tbody.innerHTML = "";
 
-  raw.forEach(tx => {
-    const kategori = tx.category || "Lainnya";
-    if (!grouped[kategori]) {
-      grouped[kategori] = { omzet: 0, biaya: 0 };
+  ledger.forEach(row => {
+    const tr = document.createElement("tr");
+
+    const dateTd = document.createElement("td");
+    dateTd.innerHTML = formatTanggalPendekHTML(row.date);
+
+    const incomeTd = document.createElement("td");
+    incomeTd.textContent = row.type === "income" ? (row.amount / 1000).toLocaleString("id-ID") : "-";
+    if (row.type === "income") {
+      incomeTd.classList.add("income");
+      incomeTd.style.cursor = "pointer";
+      incomeTd.style.textDecoration = "underline";
+      incomeTd.addEventListener("click", () => showTransactionPopup(row, incomeTd));
     }
-    if (tx.type === "income") {
-      grouped[kategori].omzet += tx.amount;
-    } else {
-      grouped[kategori].biaya += tx.amount;
+
+    const expenseTd = document.createElement("td");
+    expenseTd.textContent = row.type === "expense" ? (row.amount / 1000).toLocaleString("id-ID") : "-";
+    if (row.type === "expense") {
+      expenseTd.classList.add("expense");
+      expenseTd.style.cursor = "pointer";
+      expenseTd.style.textDecoration = "underline";
+      expenseTd.addEventListener("click", () => showTransactionPopup(row, expenseTd));
     }
+
+    const balanceTd = document.createElement("td");
+    balanceTd.textContent = (row.balanceAfter / 1000).toLocaleString("id-ID");
+
+    tr.append(dateTd, incomeTd, expenseTd, balanceTd);
+    tbody.appendChild(tr);
   });
 
-  Object.keys(grouped).forEach(k => {
-    grouped[k].laba = grouped[k].omzet - grouped[k].biaya;
-  });
-
-  return grouped;
+  const sums = summary();
+  const tfoot = document.querySelector("#summary-foot");
+  if (!tfoot) return;
+  tfoot.innerHTML = `
+    <tr class="totals">
+      <td><strong>Total</strong></td>
+      <td class="income"><strong>${(sums.income / 1000).toLocaleString("id-ID")}</strong></td>
+      <td class="expense"><strong>${(sums.expense / 1000).toLocaleString("id-ID")}</strong></td>
+      <td><strong>${((sums.income - sums.expense) / 1000).toLocaleString("id-ID")}</strong></td>
+    </tr>
+  `;
 }
