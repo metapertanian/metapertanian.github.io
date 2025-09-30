@@ -16,14 +16,14 @@ window.kasData = {
   catatan: "15 rante x 35.000",
   foto: "",
   video: ""
-},
-    ],
+    }
+    ]
+    },
   "Tanam 1": {
     Luas: "6700 m²",
     Tempat: "Kavlingan Tanjung Bulan RT 01/01",
     transaksi: [
       {
-{
   tanggal: "2025-08-29",
   keterangan: "Hasil Panen",
   kategori: "Singkong",
