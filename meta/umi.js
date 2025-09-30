@@ -17,7 +17,7 @@ window.kasData = {
   foto: "",
   video: ""
 },
-    ]
+    ],
   "Tanam 1": {
     Luas: "6700 m²",
     Tempat: "Kavlingan Tanjung Bulan RT 01/01",
@@ -49,13 +49,7 @@ window.kasData = {
   video: ""
 },
     ]
-  "Tanam 0": {
-    Luas: "6700 m²",
-    Tempat: "Kavlingan Tanjung Bulan RT 01/01",
-    transaksi: [
-      
-    ]
-  }
+    }
 };
 
 // ================= Urutkan Data Sekali di Awal =================
