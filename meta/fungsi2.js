@@ -1,3 +1,10 @@
+// =================== fungsi2.js (rev. urutan) ===================
+
+// Helper ambil tanggal dari objek transaksi (tahan beberapa kemungkinan nama)
+function _getTxDateStr(tx) {
+  return tx.date || tx.tanggal || tx.tanggalStr || "";
+}
+
 // =================== Modal Gambar ===================
 function showImageModal(src) {
   const existing = document.getElementById("imageModal");
@@ -82,23 +89,24 @@ function showTransactionPopup(tx, anchorElement) {
     "Ongkos": "Ongkos Panen"
   };
 
-  // isi
+  // isi popup (pakai properti `date` atau `tanggal`)
+  const dateStr = _getTxDateStr(tx);
   const item = document.createElement("div");
   item.className = "popup-item";
   item.innerHTML = `
     <div style="font-size:0.8rem; color:#aaa; margin-bottom:4px;">
-      ${formatTanggalPanjang(tx.date)}
+      ${typeof formatTanggalPanjang === "function" ? formatTanggalPanjang(dateStr) : dateStr}
     </div>
     <div style="font-size:1rem; font-weight:600; margin-bottom:6px; color:#fff;">
-      ${tx.description}
+      ${tx.description || tx.keterangan || "-"}
     </div>
-    <div class="note">${tx.note || "-"}</div>
+    <div class="note">${tx.note || tx.catatan || "-"}</div>
     <div class="h-details" style="flex-direction:column;gap:6px;margin-top:8px;">
-      <div class="type ${tx.subType.toLowerCase()}">
-        ${labelJenis[tx.subType] || tx.subType}
+      <div class="type ${(tx.subType || tx.tipe || "").toLowerCase()}">
+        ${labelJenis[tx.subType || tx.tipe] || (tx.subType || tx.tipe || "-")}
       </div>
-      <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
-      <div><strong>Sisa Saldo:</strong> ${formatRupiah(tx.balanceAfter)}</div>
+      <div><strong>Nominal:</strong> ${typeof formatRupiah === "function" ? formatRupiah(tx.amount || tx.nominal || 0) : (tx.amount || tx.nominal || 0)}</div>
+      <div><strong>Sisa Saldo:</strong> ${typeof formatRupiah === "function" ? formatRupiah(tx.balanceAfter || tx.saldoAfter || 0) : (tx.balanceAfter || tx.saldoAfter || 0)}</div>
     </div>
     ${fotoHTML}
     ${videoHTML}
@@ -107,7 +115,7 @@ function showTransactionPopup(tx, anchorElement) {
 
   if (tx.foto) {
     const img = item.querySelector("img");
-    img.addEventListener("click", () => showImageModal(tx.foto));
+    if (img) img.addEventListener("click", () => showImageModal(tx.foto));
   }
 
   const closeBtn = header.querySelector(".close-btn");
@@ -115,6 +123,7 @@ function showTransactionPopup(tx, anchorElement) {
 
   document.body.appendChild(popup);
 
+  // posisi popup
   const rect = anchorElement.getBoundingClientRect();
   const top = rect.bottom + window.scrollY + 6;
   let left = rect.left + window.scrollX;
@@ -130,19 +139,93 @@ function showTransactionPopup(tx, anchorElement) {
   popup.style.zIndex = 9999;
 }
 
-// =================== Riwayat Transaksi ===================
-let historyPage = 1;
-const historyPerPage = 5;
+// =================== Pagination state (safe global) ===================
+if (typeof window._mp_historyPage === "undefined") window._mp_historyPage = 1;
+if (typeof window._mp_historyPerPage === "undefined") window._mp_historyPerPage = 5;
 
+// =================== Render Tabel Ringkasan (Arus Keuangan) ===================
+// Urutan: Tanggal terlama -> terbaru (ascending)
+function renderSummaryTable() {
+  // computeLedger harus tersedia (didefinisikan di fungsi1.js)
+  if (typeof computeLedger !== "function") {
+    console.warn("computeLedger() belum tersedia.");
+    return;
+  }
+
+  // ambil ledger lalu pastikan terurut dari terlama -> terbaru
+  const ledgerRaw = computeLedger().slice();
+  ledgerRaw.sort((a, b) => new Date(_getTxDateStr(a)) - new Date(_getTxDateStr(b)));
+
+  const tbody = document.querySelector("#summary-body");
+  if (!tbody) return;
+  tbody.innerHTML = "";
+
+  ledgerRaw.forEach(row => {
+    const tr = document.createElement("tr");
+
+    const dateTd = document.createElement("td");
+    dateTd.innerHTML = (typeof formatTanggalPendekHTML === "function")
+      ? formatTanggalPendekHTML(_getTxDateStr(row))
+      : (_getTxDateStr(row) || "-");
+
+    const incomeTd = document.createElement("td");
+    incomeTd.textContent = row.type === "income" ? ((row.amount || row.nominal) / 1000).toLocaleString("id-ID") : "-";
+    if (row.type === "income") {
+      incomeTd.classList.add("income");
+      incomeTd.style.cursor = "pointer";
+      incomeTd.style.textDecoration = "underline";
+      incomeTd.addEventListener("click", () => showTransactionPopup(row, incomeTd));
+    }
+
+    const expenseTd = document.createElement("td");
+    expenseTd.textContent = row.type === "expense" ? ((row.amount || row.nominal) / 1000).toLocaleString("id-ID") : "-";
+    if (row.type === "expense") {
+      expenseTd.classList.add("expense");
+      expenseTd.style.cursor = "pointer";
+      expenseTd.style.textDecoration = "underline";
+      expenseTd.addEventListener("click", () => showTransactionPopup(row, expenseTd));
+    }
+
+    const balanceTd = document.createElement("td");
+    balanceTd.textContent = ((row.balanceAfter || row.saldoAfter || 0) / 1000).toLocaleString("id-ID");
+
+    tr.append(dateTd, incomeTd, expenseTd, balanceTd);
+    tbody.appendChild(tr);
+  });
+
+  // totals (menggunakan fungsi summary() jika ada)
+  const sums = (typeof summary === "function") ? summary() : {
+    income: ledgerRaw.filter(t => t.type === "income").reduce((s,t)=>s+(t.amount||t.nominal||0),0),
+    expense: ledgerRaw.filter(t => t.type === "expense").reduce((s,t)=>s+(t.amount||t.nominal||0),0)
+  };
+  const tfoot = document.querySelector("#summary-foot");
+  if (!tfoot) return;
+  tfoot.innerHTML = `
+    <tr class="totals">
+      <td><strong>Total</strong></td>
+      <td class="income"><strong>${(sums.income / 1000).toLocaleString("id-ID")}</strong></td>
+      <td class="expense"><strong>${(sums.expense / 1000).toLocaleString("id-ID")}</strong></td>
+      <td><strong>${((sums.income - sums.expense) / 1000).toLocaleString("id-ID")}</strong></td>
+    </tr>
+  `;
+}
+
+// =================== Riwayat Transaksi ===================
+// Urutan: Tanggal terbaru -> terlama (descending)
 function renderHistoryList(page = 1, doScroll = false) {
   const historyContainer = document.querySelector("#history");
   if (!historyContainer) return;
   historyContainer.innerHTML = "";
 
-  // urutkan dari terbaru ke terlama
+  if (typeof computeLedger !== "function") {
+    console.warn("computeLedger() belum tersedia.");
+    return;
+  }
+
+  // dapatkan ledger lalu urutkan descending (terbaru dulu)
   const ledger = computeLedger()
     .slice()
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
+    .sort((a, b) => new Date(_getTxDateStr(b)) - new Date(_getTxDateStr(a)));
 
   if (ledger.length === 0) {
     const msg = document.createElement("div");
@@ -155,9 +238,10 @@ function renderHistoryList(page = 1, doScroll = false) {
     return;
   }
 
-  historyPage = page;
-  const start = (page - 1) * historyPerPage;
-  const end = start + historyPerPage;
+  // pagination (pakai state global yg aman)
+  window._mp_historyPage = page;
+  const start = (page - 1) * window._mp_historyPerPage;
+  const end = start + window._mp_historyPerPage;
   const items = ledger.slice(start, end);
 
   items.forEach(tx => {
@@ -168,18 +252,18 @@ function renderHistoryList(page = 1, doScroll = false) {
     header.style.fontSize = "0.8rem";
     header.style.color = "#aaa";
     header.style.marginBottom = "4px";
-    header.textContent = formatTanggalPanjang(tx.date);
+    header.textContent = (typeof formatTanggalPanjang === "function") ? formatTanggalPanjang(_getTxDateStr(tx)) : _getTxDateStr(tx);
 
     const title = document.createElement("div");
     title.style.fontSize = "1rem";
     title.style.fontWeight = "600";
     title.style.marginBottom = "6px";
     title.style.color = "#fff";
-    title.textContent = tx.description;
+    title.textContent = tx.description || tx.keterangan || "-";
 
     const noteDiv = document.createElement("div");
     noteDiv.className = "note";
-    noteDiv.textContent = tx.note || "-";
+    noteDiv.textContent = tx.note || tx.catatan || "-";
 
     const labelJenis = {
       "Modal": "Modal Usaha",
@@ -189,17 +273,18 @@ function renderHistoryList(page = 1, doScroll = false) {
       "Ongkos": "Ongkos Panen"
     };
 
+    const subtype = (tx.subType || tx.tipe || "").toString();
     const detail = document.createElement("div");
     detail.className = "h-details";
     detail.style.flexDirection = "column";
     detail.style.gap = "6px";
     detail.style.marginTop = "8px";
     detail.innerHTML = `
-      <div class="type ${tx.subType.toLowerCase()}">
-        ${labelJenis[tx.subType] || tx.subType}
+      <div class="type ${subtype.toLowerCase()}">
+        ${labelJenis[subtype] || subtype || "-"}
       </div>
-      <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
-      <div><strong>Sisa Saldo:</strong> ${formatRupiah(tx.balanceAfter)}</div>
+      <div><strong>Nominal:</strong> ${typeof formatRupiah === "function" ? formatRupiah(tx.amount || tx.nominal || 0) : (tx.amount || tx.nominal || 0)}</div>
+      <div><strong>Sisa Saldo:</strong> ${typeof formatRupiah === "function" ? formatRupiah(tx.balanceAfter || tx.saldoAfter || 0) : (tx.balanceAfter || tx.saldoAfter || 0)}</div>
     `;
 
     wrapper.append(header, title, noteDiv, detail);
@@ -244,7 +329,7 @@ function renderHistoryList(page = 1, doScroll = false) {
     historyContainer.appendChild(wrapper);
   });
 
-  // pagination
+  // pagination controls
   const paginationContainer = document.getElementById("history-pagination");
   if (paginationContainer) paginationContainer.innerHTML = "";
   else {
@@ -253,7 +338,7 @@ function renderHistoryList(page = 1, doScroll = false) {
     div.className = "pagination";
     historyContainer.after(div);
   }
-  const totalPages = Math.ceil(ledger.length / historyPerPage);
+  const totalPages = Math.ceil(ledger.length / window._mp_historyPerPage);
   const container = document.getElementById("history-pagination");
 
   if (totalPages > 1) {
@@ -305,24 +390,28 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
 
   select.onchange = () => {
     currentPeriode = select.value;
+    // pastikan summary ditampilkan dari terlama -> terbaru
     renderSummaryTable();
     renderHistoryList(1, false);
 
-    const saldo = summary().net;
+    const saldo = (typeof summary === "function") ? summary().net : 0;
     const saldoEl = document.getElementById("saldoNow");
-    saldoEl.textContent = formatRupiah(saldo);
-    if (saldo < 0) saldoEl.classList.add("negative");
-    else saldoEl.classList.remove("negative");
+    if (saldoEl) {
+      saldoEl.textContent = (typeof formatRupiah === "function") ? formatRupiah(saldo) : saldo;
+      if (saldo < 0) saldoEl.classList.add("negative");
+      else saldoEl.classList.remove("negative");
+    }
 
     const allTransactions = getRawTransactions();
-    if (allTransactions.length > 0) {
+    if (allTransactions && allTransactions.length > 0) {
       const latest = allTransactions
         .slice()
-        .sort((a, b) => toDate(b.tanggal) - toDate(a.tanggal))[0];
-      document.getElementById("last-updated").innerText =
-        "Terakhir diperbarui: " + formatTanggalPanjang(latest.tanggal);
+        .sort((a, b) => new Date(_getTxDateStr(b)) - new Date(_getTxDateStr(a)))[0];
+      const lastUpdatedEl = document.getElementById("last-updated");
+      if (lastUpdatedEl) lastUpdatedEl.innerText = "Terakhir diperbarui: " + (typeof formatTanggalPanjang === "function" ? formatTanggalPanjang(_getTxDateStr(latest)) : _getTxDateStr(latest));
     } else {
-      document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
+      const lastUpdatedEl = document.getElementById("last-updated");
+      if (lastUpdatedEl) lastUpdatedEl.innerText = "Terakhir diperbarui: -";
     }
 
     const periodeInfo = document.getElementById("periode-info");
@@ -355,23 +444,28 @@ document.addEventListener("DOMContentLoaded", () => {
       currentPeriode = periodes[periodes.length - 1];
 
       renderPeriodeFilter(currentPeriode, periodes);
+      // pastikan ringkasan terurut terlama->terbaru
       renderSummaryTable();
+      // riwayat: terbaru->terlama
       renderHistoryList();
 
-      const saldo = summary().net;
+      const saldo = (typeof summary === "function") ? summary().net : 0;
       const saldoEl = document.getElementById("saldoNow");
-      saldoEl.textContent = formatRupiah(saldo);
-      if (saldo < 0) saldoEl.classList.add("negative");
+      if (saldoEl) {
+        saldoEl.textContent = (typeof formatRupiah === "function") ? formatRupiah(saldo) : saldo;
+        if (saldo < 0) saldoEl.classList.add("negative");
+      }
 
       const allTransactions = getRawTransactions();
-      if (allTransactions.length > 0) {
+      if (allTransactions && allTransactions.length > 0) {
         const latest = allTransactions
           .slice()
-          .sort((a, b) => toDate(b.tanggal) - toDate(a.tanggal))[0];
-        document.getElementById("last-updated").innerText =
-          "Terakhir diperbarui: " + formatTanggalPanjang(latest.tanggal);
+          .sort((a, b) => new Date(_getTxDateStr(b)) - new Date(_getTxDateStr(a)))[0];
+        const lastUpdatedEl = document.getElementById("last-updated");
+        if (lastUpdatedEl) lastUpdatedEl.innerText = "Terakhir diperbarui: " + (typeof formatTanggalPanjang === "function" ? formatTanggalPanjang(_getTxDateStr(latest)) : _getTxDateStr(latest));
       } else {
-        document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
+        const lastUpdatedEl = document.getElementById("last-updated");
+        if (lastUpdatedEl) lastUpdatedEl.innerText = "Terakhir diperbarui: -";
       }
 
       const periodeInfo = document.getElementById("periode-info");
@@ -394,3 +488,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
   }
 });
+
+// =================== Inject CSS untuk label tipe ===================
+(function injectTypeStyles(){
+  if (document.getElementById("mp-type-styles")) return; // hindari duplikasi
+  const style = document.createElement("style");
+  style.id = "mp-type-styles";
+  style.innerHTML = `
+.type {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+.type.modal {
+  background: #2e7d32; /* hijau tua */
+}
+.type.omzet {
+  background: #43a047; /* hijau terang */
+}
+.type.biaya {
+  background: #e53935; /* merah */
+}
+.type.cicilan {
+  background: #fb8c00; /* oranye */
+}
+.type.ongkos {
+  background: #6a1b9a; /* ungu */
+}
+/* ringkasan tabel - warna untuk cell income/expense */
+.income { color: #4CAF50; font-weight:600; }
+.expense { color: #f44336; font-weight:600; }
+`;
+  document.head.appendChild(style);
+})();
