@@ -63,7 +63,12 @@ function generateCode() {
   document.getElementById("previewTanggal").innerText = formattedDate;
   document.getElementById("previewKeterangan").innerText = keterangan;
   document.getElementById("previewKategori").innerText = kategori;
-  document.getElementById("previewTipe").innerText = tipe;
+
+  // preview tipe dengan warna class
+  const tipeEl = document.getElementById("previewTipe");
+  tipeEl.innerText = tipe;
+  tipeEl.className = "type " + tipe.toLowerCase(); // sinkron dengan CSS fungsi2.js
+
   document.getElementById("previewNominal").innerText = "Rp " + nominal.toLocaleString("id-ID");
   document.getElementById("previewLuas").innerText = luasJumlah ? (luasJumlah + " " + luasSatuan) : "-";
   document.getElementById("previewUmur").innerText = umurJumlah ? (umurJumlah + " " + umurSatuan) : "-";
@@ -107,3 +112,36 @@ function copyToClipboard() {
     alert("Kode berhasil disalin!");
   });
 }
+
+// ================= Inject CSS untuk Preview =================
+(function injectTypeStyles(){
+  if (document.getElementById("mp-type-styles-input")) return;
+  const style = document.createElement("style");
+  style.id = "mp-type-styles-input";
+  style.innerHTML = `
+.type {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+.type.modal {
+  background: #2e7d32; /* hijau tua */
+}
+.type.omzet {
+  background: #43a047; /* hijau terang */
+}
+.type.biaya {
+  background: #e53935; /* merah */
+}
+.type.cicilan {
+  background: #fb8c00; /* oranye */
+}
+.type.ongkos {
+  background: #6a1b9a; /* ungu */
+}
+`;
+  document.head.appendChild(style);
+})();
