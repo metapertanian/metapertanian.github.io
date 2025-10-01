@@ -139,7 +139,11 @@ function renderHistoryList(page = 1, doScroll = false) {
   if (!historyContainer) return;
   historyContainer.innerHTML = "";
 
-  const ledger = computeLedger().slice().reverse();
+  // urutkan dari terbaru ke terlama
+  const ledger = computeLedger()
+    .slice()
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
   if (ledger.length === 0) {
     const msg = document.createElement("div");
     msg.style.opacity = "0.9";
@@ -323,7 +327,7 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
 
     const periodeInfo = document.getElementById("periode-info");
     if (periodeInfo) {
-      periodeInfo.textContent = `${window.kasData[currentPeriode]?.awal || ""} → ${window.kasData[currentPeriode]?.akhir || ""}`;
+      periodeInfo.textContent = `${window.kasData[selectedPeriode]?.awal || ""} → ${window.kasData[selectedPeriode]?.akhir || ""}`;
     }
   };
 
@@ -390,4 +394,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
   }
 });
-
