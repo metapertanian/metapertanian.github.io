@@ -5,7 +5,7 @@ function formatTanggal(tanggal) {
   return `${tahun}-${bulan}-${hari}`;
 }
 
-// Tambah fungsi tombol +000
+// Tombol +000
 function tambahNol() {
   const nominalInput = document.getElementById("nominal");
   let nilai = nominalInput.value.trim();
@@ -13,7 +13,6 @@ function tambahNol() {
   if (!nilai) {
     nominalInput.value = "0";
   } else {
-    // Pastikan hanya angka
     nilai = nilai.replace(/\D/g, "");
     nominalInput.value = nilai + "000";
   }
@@ -39,7 +38,6 @@ function generateCode() {
   let foto = document.getElementById("foto").value.trim();
   let video = document.getElementById("video").value.trim();
 
-  // Validasi wajib isi
   if (!tanggalInput || !keterangan || !kategori || !tipe || nominal <= 0) {
     alert("Mohon isi semua data wajib (Tanggal, Keterangan, Kategori, Tipe, Nominal).");
     return;
@@ -48,16 +46,13 @@ function generateCode() {
   const date = new Date(tanggalInput);
   const formattedDate = formatTanggal(date);
 
-  // Foto hanya diisi jika user memasukkan link
   if (foto && !foto.startsWith("/")) {
     foto = "/" + foto;
   }
-
-  // Default kosong untuk opsional
   if (!catatan) catatan = "";
   if (!video) video = "";
 
-  // Preview tampilan
+  // Preview
   document.getElementById("previewTanggal").innerText = formattedDate;
   document.getElementById("previewKeterangan").innerText = keterangan;
   document.getElementById("previewKategori").innerText = kategori;
@@ -68,7 +63,6 @@ function generateCode() {
   document.getElementById("previewHasil").innerText = hasilJumlah ? (hasilJumlah + " " + hasilSatuan) : "-";
   document.getElementById("previewCatatan").innerText = catatan || "-";
 
-  // Preview gambar hanya jika ada foto
   if (foto) {
     document.getElementById("previewImage").src = foto;
     document.getElementById("previewImageContainer").style.display = "block";
@@ -78,7 +72,7 @@ function generateCode() {
 
   document.getElementById("preview").style.display = "block";
 
-  // Output JSON sesuai struktur
+  // Output JSON
   const output = `{
   tanggal: "${formattedDate}",
   keterangan: "${keterangan}",
