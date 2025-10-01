@@ -1,15 +1,16 @@
 // =================== Utilitas ===================
+
 // Format angka ke Rupiah
 function formatRupiah(num) {
   return "Rp " + num.toLocaleString("id-ID");
 }
 
-// Parsing tanggal string
+// Parsing tanggal string → Date
 function toDate(str) {
   return new Date(str + "T00:00:00");
 }
 
-// Sort berdasarkan tanggal
+// Sort berdasarkan tanggal (ascending)
 function sortByDate(a, b) {
   return toDate(a.tanggal) - toDate(b.tanggal);
 }
@@ -45,18 +46,18 @@ function getRawTransactions() {
   return [];
 }
 
-// Mapping tipe transaksi dari umi.js → income/expense
+// Mapping tipe transaksi dari umi.js → income / expense
 function mapTransaction(tx) {
   let type = "expense"; // default keluar
   if (tx.tipe === "Modal" || tx.tipe === "Omzet") type = "income";
-  if (tx.tipe === "Biaya" || tx.tipe === "Cicilan") type = "expense";
+  if (tx.tipe === "Biaya" || tx.tipe === "Cicilan" || tx.tipe === "Ongkos") type = "expense";
 
   return {
     date: tx.tanggal,
     description: tx.keterangan,
     category: tx.kategori,
-    type,
-    subType: tx.tipe, // Modal / Omzet / Biaya / Cicilan
+    type,             // income / expense
+    subType: tx.tipe, // Modal / Omzet / Biaya / Cicilan / Ongkos
     amount: tx.nominal,
     note: tx.catatan,
     foto: tx.foto,
@@ -64,30 +65,38 @@ function mapTransaction(tx) {
   };
 }
 
-// Hitung saldo berjalan
+// =================== Hitung Ledger ===================
 function computeLedger(startingBalance = 0) {
   const raw = getRawTransactions().map(mapTransaction);
-  const sorted = raw.slice().sort(sortByDate);
+
+  // Urutkan dari tanggal terlama → terbaru (wajib agar saldo benar)
+  const sorted = raw.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+
   let balance = startingBalance;
 
   return sorted.map(tx => {
-    if (tx.type === "income") balance += tx.amount;
-    else balance -= tx.amount;
+    if (tx.type === "income") {
+      balance += tx.amount;
+    } else {
+      balance -= tx.amount;
+    }
     return { ...tx, balanceAfter: balance };
   });
 }
 
-// Ringkasan total
+// =================== Ringkasan total ===================
 function summary() {
   const raw = getRawTransactions().map(mapTransaction);
-  const income = raw.filter(t => t.type === "income").reduce((s, t) => s + t.amount, 0);
-  const expense = raw.filter(t => t.type === "expense").reduce((s, t) => s + t.amount, 0);
+  const income = raw.filter(t => t.type === "income")
+                    .reduce((s, t) => s + t.amount, 0);
+  const expense = raw.filter(t => t.type === "expense")
+                     .reduce((s, t) => s + t.amount, 0);
   return { income, expense, net: income - expense };
 }
 
-// =================== Render Tabel ===================
+// =================== Render Tabel Ringkasan ===================
 function renderSummaryTable() {
-  const ledger = computeLedger();
+  const ledger = computeLedger(); // sudah ascending dari computeLedger()
   const tbody = document.querySelector("#summary-body");
   if (!tbody) return;
   tbody.innerHTML = "";
@@ -99,7 +108,9 @@ function renderSummaryTable() {
     dateTd.innerHTML = formatTanggalPendekHTML(row.date);
 
     const incomeTd = document.createElement("td");
-    incomeTd.textContent = row.type === "income" ? (row.amount / 1000).toLocaleString("id-ID") : "-";
+    incomeTd.textContent = row.type === "income"
+      ? (row.amount / 1000).toLocaleString("id-ID")
+      : "-";
     if (row.type === "income") {
       incomeTd.classList.add("income");
       incomeTd.style.cursor = "pointer";
@@ -108,7 +119,9 @@ function renderSummaryTable() {
     }
 
     const expenseTd = document.createElement("td");
-    expenseTd.textContent = row.type === "expense" ? (row.amount / 1000).toLocaleString("id-ID") : "-";
+    expenseTd.textContent = row.type === "expense"
+      ? (row.amount / 1000).toLocaleString("id-ID")
+      : "-";
     if (row.type === "expense") {
       expenseTd.classList.add("expense");
       expenseTd.style.cursor = "pointer";
@@ -123,6 +136,7 @@ function renderSummaryTable() {
     tbody.appendChild(tr);
   });
 
+  // Footer total
   const sums = summary();
   const tfoot = document.querySelector("#summary-foot");
   if (!tfoot) return;
