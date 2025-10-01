@@ -78,7 +78,8 @@ function showTransactionPopup(tx, anchorElement) {
     "Modal": "Modal Usaha",
     "Biaya": "Biaya Perawatan",
     "Omzet": "Hasil Omzet",
-    "Cicilan": "Pembayaran Cicilan"
+    "Cicilan": "Pembayaran Cicilan",
+    "Ongkos": "Ongkos Panen"
   };
 
   // isi
@@ -93,7 +94,7 @@ function showTransactionPopup(tx, anchorElement) {
     </div>
     <div class="note">${tx.note || "-"}</div>
     <div class="h-details" style="flex-direction:column;gap:6px;margin-top:8px;">
-      <div class="type ${tx.type}">
+      <div class="type ${tx.subType.toLowerCase()}">
         ${labelJenis[tx.subType] || tx.subType}
       </div>
       <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
@@ -180,7 +181,8 @@ function renderHistoryList(page = 1, doScroll = false) {
       "Modal": "Modal Usaha",
       "Biaya": "Biaya Perawatan",
       "Omzet": "Hasil Omzet",
-      "Cicilan": "Pembayaran Cicilan"
+      "Cicilan": "Pembayaran Cicilan",
+      "Ongkos": "Ongkos Panen"
     };
 
     const detail = document.createElement("div");
@@ -189,7 +191,7 @@ function renderHistoryList(page = 1, doScroll = false) {
     detail.style.gap = "6px";
     detail.style.marginTop = "8px";
     detail.innerHTML = `
-      <div class="type ${tx.type}">
+      <div class="type ${tx.subType.toLowerCase()}">
         ${labelJenis[tx.subType] || tx.subType}
       </div>
       <div><strong>Nominal:</strong> ${formatRupiah(tx.amount)}</div>
