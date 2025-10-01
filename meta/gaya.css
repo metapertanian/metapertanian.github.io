@@ -592,3 +592,14 @@ h1, h2 {
       padding: 4px 8px;
       border-radius: 5px;
     }
+
+
+// Ongkos Panen
+.type.ongkos {
+  background: #ff9800;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+  display: inline-block;
+}
