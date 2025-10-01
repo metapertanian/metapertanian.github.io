@@ -76,7 +76,7 @@ function showTransactionPopup(tx, anchorElement) {
 
   const labelJenis = {
     "Modal": "Modal Usaha",
-    "Biaya": "Biaya Operasional",
+    "Biaya": "Biaya Perawatan",
     "Omzet": "Hasil Omzet",
     "Cicilan": "Pembayaran Cicilan"
   };
@@ -178,7 +178,7 @@ function renderHistoryList(page = 1, doScroll = false) {
 
     const labelJenis = {
       "Modal": "Modal Usaha",
-      "Biaya": "Biaya Operasional",
+      "Biaya": "Biaya Perawatan",
       "Omzet": "Hasil Omzet",
       "Cicilan": "Pembayaran Cicilan"
     };
