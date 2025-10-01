@@ -596,10 +596,38 @@ h1, h2 {
 
 // Ongkos Panen
 .type.ongkos {
-  background: #ff9800;
-  color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: bold;
   display: inline-block;
+}
+
+/* Warna label tipe */
+.type {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.type.modal {
+  background: #2e7d32; /* hijau tua */
+}
+
+.type.omzet {
+  background: #43a047; /* hijau terang */
+}
+
+.type.biaya {
+  background: #e53935; /* merah */
+}
+
+.type.cicilan {
+  background: #fb8c00; /* oranye */
+}
+
+.type.ongkos {
+  background: #6a1b9a; /* ungu */
 }
