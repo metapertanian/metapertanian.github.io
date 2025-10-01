@@ -1,3 +1,4 @@
+// ================= Format Tanggal =================
 function formatTanggal(tanggal) {
   const tahun = tanggal.getFullYear();
   const bulan = String(tanggal.getMonth() + 1).padStart(2, "0");
@@ -5,7 +6,7 @@ function formatTanggal(tanggal) {
   return `${tahun}-${bulan}-${hari}`;
 }
 
-// Tombol +000
+// ================= Tombol +000 =================
 function tambahNol() {
   const nominalInput = document.getElementById("nominal");
   let nilai = nominalInput.value.trim();
@@ -13,16 +14,18 @@ function tambahNol() {
   if (!nilai) {
     nominalInput.value = "0";
   } else {
+    // hanya angka
     nilai = nilai.replace(/\D/g, "");
     nominalInput.value = nilai + "000";
   }
 }
 
+// ================= Generate Kode JSON =================
 function generateCode() {
   const tanggalInput = document.getElementById("tanggal").value;
   const keterangan = document.getElementById("keterangan").value.trim();
   const kategori = document.getElementById("kategori").value.trim();
-  const tipe = document.getElementById("tipe").value.trim();
+  const tipe = document.getElementById("tipe").value.trim(); // Biaya / Omzet / Modal / Cicilan / Ongkos
   const nominal = parseInt(document.getElementById("nominal").value) || 0;
 
   const luasJumlah = document.getElementById("luas").value.trim();
@@ -38,6 +41,7 @@ function generateCode() {
   let foto = document.getElementById("foto").value.trim();
   let video = document.getElementById("video").value.trim();
 
+  // Validasi wajib isi
   if (!tanggalInput || !keterangan || !kategori || !tipe || nominal <= 0) {
     alert("Mohon isi semua data wajib (Tanggal, Keterangan, Kategori, Tipe, Nominal).");
     return;
@@ -46,13 +50,16 @@ function generateCode() {
   const date = new Date(tanggalInput);
   const formattedDate = formatTanggal(date);
 
+  // Foto → jika user isi manual
   if (foto && !foto.startsWith("/")) {
     foto = "/" + foto;
   }
+
+  // Default kosong
   if (!catatan) catatan = "";
   if (!video) video = "";
 
-  // Preview
+  // ================= Preview =================
   document.getElementById("previewTanggal").innerText = formattedDate;
   document.getElementById("previewKeterangan").innerText = keterangan;
   document.getElementById("previewKategori").innerText = kategori;
@@ -72,7 +79,7 @@ function generateCode() {
 
   document.getElementById("preview").style.display = "block";
 
-  // Output JSON
+  // ================= Output JSON =================
   const output = `{
   tanggal: "${formattedDate}",
   keterangan: "${keterangan}",
@@ -93,6 +100,7 @@ function generateCode() {
   document.getElementById("copyBtn").style.display = "block";
 }
 
+// ================= Copy to Clipboard =================
 function copyToClipboard() {
   const resultText = document.getElementById("result").innerText;
   navigator.clipboard.writeText(resultText).then(() => {
