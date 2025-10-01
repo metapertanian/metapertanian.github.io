@@ -390,3 +390,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
   }
 });
+
+// =================== Inject CSS untuk label tipe ===================
+const style = document.createElement("style");
+style.innerHTML = `
+.type {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+}
+.type.modal {
+  background: #2e7d32; /* hijau tua */
+}
+.type.omzet {
+  background: #43a047; /* hijau terang */
+}
+.type.biaya {
+  background: #e53935; /* merah */
+}
+.type.cicilan {
+  background: #fb8c00; /* oranye */
+}
+.type.ongkos {
+  background: #6a1b9a; /* ungu */
+}
+`;
+document.head.appendChild(style);
