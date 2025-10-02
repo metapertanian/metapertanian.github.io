@@ -166,8 +166,8 @@ function renderSummaryTable() {
       infoBox.appendChild(dateRange);
     }
 
-    // Info tambahan dari tanam
-    const tanam = window.kasData[currentPeriode]?.tanam || {};
+    // Info tambahan dari data tanam
+    const tanam = window.kasData[currentPeriode] || {};
     const extra = document.createElement("div");
     extra.style.display = "flex";
     extra.style.flexDirection = "column";
@@ -175,14 +175,14 @@ function renderSummaryTable() {
     extra.style.fontSize = "0.9rem";
     extra.style.color = "#ddd";
 
-    if (tanam.luas) {
+    if (tanam.Luas) {
       const luasDiv = document.createElement("div");
-      luasDiv.innerHTML = `🌱 ${tanam.luas}`;
+      luasDiv.innerHTML = `🌱 ${tanam.Luas}`;
       extra.appendChild(luasDiv);
     }
-    if (tanam.tempat) {
+    if (tanam.Tempat) {
       const tempatDiv = document.createElement("div");
-      tempatDiv.innerHTML = `📍 ${tanam.tempat}`;
+      tempatDiv.innerHTML = `📍 ${tanam.Tempat}`;
       extra.appendChild(tempatDiv);
     }
 
