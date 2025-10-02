@@ -148,4 +148,44 @@ function renderSummaryTable() {
       <td><strong>${((sums.income - sums.expense) / 1000).toLocaleString("id-ID")}</strong></td>
     </tr>
   `;
+
+  // =================== Info Periode ===================
+  const infoBox = document.getElementById("periode-info");
+  if (infoBox) {
+    infoBox.innerHTML = "";
+
+    if (ledger.length > 0) {
+      const firstDate = ledger[0].date;
+      const lastDate = ledger[ledger.length - 1].date;
+
+      const dateRange = document.createElement("div");
+      dateRange.style.fontSize = "0.95rem";
+      dateRange.style.fontWeight = "500";
+      dateRange.style.marginBottom = "6px";
+      dateRange.textContent = `${formatTanggalPanjang(firstDate)} - ${formatTanggalPanjang(lastDate)}`;
+      infoBox.appendChild(dateRange);
+    }
+
+    // Info tambahan dari tanam
+    const tanam = window.kasData[currentPeriode]?.tanam || {};
+    const extra = document.createElement("div");
+    extra.style.display = "flex";
+    extra.style.flexDirection = "column";
+    extra.style.gap = "4px";
+    extra.style.fontSize = "0.9rem";
+    extra.style.color = "#ddd";
+
+    if (tanam.luas) {
+      const luasDiv = document.createElement("div");
+      luasDiv.innerHTML = `🌱 ${tanam.luas}`;
+      extra.appendChild(luasDiv);
+    }
+    if (tanam.tempat) {
+      const tempatDiv = document.createElement("div");
+      tempatDiv.innerHTML = `📍 ${tanam.tempat}`;
+      extra.appendChild(tempatDiv);
+    }
+
+    infoBox.appendChild(extra);
+  }
 }
