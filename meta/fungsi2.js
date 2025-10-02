@@ -313,21 +313,7 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
     if (saldo < 0) saldoEl.classList.add("negative");
     else saldoEl.classList.remove("negative");
 
-    const allTransactions = getRawTransactions();
-    if (allTransactions.length > 0) {
-      const latest = allTransactions
-        .slice()
-        .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal))[0];
-      document.getElementById("last-updated").innerText =
-        "Terakhir diperbarui: " + formatTanggalPanjang(latest.tanggal);
-    } else {
-      document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
-    }
-
-    const periodeInfo = document.getElementById("periode-info");
-    if (periodeInfo) {
-      periodeInfo.textContent = `${window.kasData[currentPeriode]?.awal || ""} → ${window.kasData[currentPeriode]?.akhir || ""}`;
-    }
+    updatePeriodeInfo();
   };
 
   container.append(label, select);
@@ -341,7 +327,37 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
     periodeInfo.style.color = "#ccc";
     container.appendChild(periodeInfo);
   }
-  periodeInfo.textContent = `${window.kasData[selectedPeriode]?.awal || ""} → ${window.kasData[selectedPeriode]?.akhir || ""}`;
+  updatePeriodeInfo();
+}
+
+function updatePeriodeInfo() {
+  const periodeInfo = document.getElementById("periode-info");
+  if (!periodeInfo) return;
+
+  periodeInfo.innerHTML = "";
+  const transaksi = getRawTransactions();
+  if (transaksi.length > 0) {
+    const sorted = transaksi.slice().sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+    const first = sorted[0].tanggal;
+    const last = sorted[sorted.length - 1].tanggal;
+
+    const dateRange = document.createElement("div");
+    dateRange.textContent = `${formatTanggalPanjang(first)} - ${formatTanggalPanjang(last)}`;
+    dateRange.style.marginBottom = "6px";
+    periodeInfo.appendChild(dateRange);
+  }
+
+  const tanam = window.kasData[currentPeriode] || {};
+  if (tanam.Luas) {
+    const luasDiv = document.createElement("div");
+    luasDiv.textContent = `🌱 ${tanam.Luas}`;
+    periodeInfo.appendChild(luasDiv);
+  }
+  if (tanam.Tempat) {
+    const tempatDiv = document.createElement("div");
+    tempatDiv.textContent = `📍 ${tanam.Tempat}`;
+    periodeInfo.appendChild(tempatDiv);
+  }
 }
 
 // =================== Init ===================
@@ -362,21 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saldoEl.textContent = formatRupiah(saldo);
       if (saldo < 0) saldoEl.classList.add("negative");
 
-      const allTransactions = getRawTransactions();
-      if (allTransactions.length > 0) {
-        const latest = allTransactions
-          .slice()
-          .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal))[0];
-        document.getElementById("last-updated").innerText =
-          "Terakhir diperbarui: " + formatTanggalPanjang(latest.tanggal);
-      } else {
-        document.getElementById("last-updated").innerText = "Terakhir diperbarui: -";
-      }
-
-      const periodeInfo = document.getElementById("periode-info");
-      if (periodeInfo) {
-        periodeInfo.textContent = `${window.kasData[currentPeriode]?.awal || ""} → ${window.kasData[currentPeriode]?.akhir || ""}`;
-      }
+      updatePeriodeInfo();
     } else {
       console.warn("⚠️ Data kas belum tersedia saat init.");
     }
