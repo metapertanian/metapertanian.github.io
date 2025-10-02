@@ -112,7 +112,6 @@ function showTransactionPopup(tx, anchorElement) {
   }
 
   header.querySelector(".close-btn").addEventListener("click", () => popup.remove());
-
   document.body.appendChild(popup);
 
   // Posisi popup
@@ -322,9 +321,6 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
   if (!periodeInfo) {
     periodeInfo = document.createElement("div");
     periodeInfo.id = "periode-info";
-    periodeInfo.style.marginTop = "6px";
-    periodeInfo.style.fontSize = "0.9rem";
-    periodeInfo.style.color = "#ccc";
     container.appendChild(periodeInfo);
   }
   updatePeriodeInfo();
@@ -334,7 +330,17 @@ function updatePeriodeInfo() {
   const periodeInfo = document.getElementById("periode-info");
   if (!periodeInfo) return;
 
+  // reset isi + styling elegan
   periodeInfo.innerHTML = "";
+  periodeInfo.style.marginTop = "12px";
+  periodeInfo.style.padding = "12px 16px";
+  periodeInfo.style.borderRadius = "10px";
+  periodeInfo.style.background = "rgba(255,255,255,0.05)";
+  periodeInfo.style.boxShadow = "0 2px 6px rgba(0,0,0,0.3)";
+  periodeInfo.style.display = "flex";
+  periodeInfo.style.flexDirection = "column";
+  periodeInfo.style.gap = "8px";
+
   const transaksi = getRawTransactions();
   if (transaksi.length > 0) {
     const sorted = transaksi.slice().sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
@@ -343,21 +349,33 @@ function updatePeriodeInfo() {
 
     const dateRange = document.createElement("div");
     dateRange.textContent = `${formatTanggalPanjang(first)} - ${formatTanggalPanjang(last)}`;
-    dateRange.style.marginBottom = "6px";
+    dateRange.style.fontSize = "0.95rem";
+    dateRange.style.fontWeight = "600";
+    dateRange.style.textAlign = "center";
+    dateRange.style.color = "#fff";
     periodeInfo.appendChild(dateRange);
   }
 
   const tanam = window.kasData[currentPeriode] || {};
+  const extraBox = document.createElement("div");
+  extraBox.style.display = "flex";
+  extraBox.style.flexDirection = "column";
+  extraBox.style.gap = "6px";
+  extraBox.style.fontSize = "0.9rem";
+  extraBox.style.color = "#ddd";
+
   if (tanam.Luas) {
     const luasDiv = document.createElement("div");
-    luasDiv.textContent = `🌱 ${tanam.Luas}`;
-    periodeInfo.appendChild(luasDiv);
+    luasDiv.innerHTML = `🌱 <span style="margin-left:4px;">${tanam.Luas}</span>`;
+    extraBox.appendChild(luasDiv);
   }
   if (tanam.Tempat) {
     const tempatDiv = document.createElement("div");
-    tempatDiv.textContent = `📍 ${tanam.Tempat}`;
-    periodeInfo.appendChild(tempatDiv);
+    tempatDiv.innerHTML = `📍 <span style="margin-left:4px;">${tanam.Tempat}</span>`;
+    extraBox.appendChild(tempatDiv);
   }
+
+  periodeInfo.appendChild(extraBox);
 }
 
 // =================== Init ===================
