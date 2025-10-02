@@ -129,6 +129,34 @@ function showTransactionPopup(tx, anchorElement) {
   popup.style.zIndex = 9999;
 }
 
+// =================== Animate Saldo ===================
+function animateSaldo(targetValue) {
+  const saldoEl = document.getElementById("saldoNow");
+  if (!saldoEl) return;
+
+  let current = 0;
+  const duration = 3000; // ms
+  const frameRate = 30; // fps
+  const totalFrames = Math.round(duration / (1000 / frameRate));
+  let frame = 0;
+
+  const increment = targetValue / totalFrames;
+
+  const timer = setInterval(() => {
+    frame++;
+    current += increment;
+
+    if (frame >= totalFrames) {
+      current = targetValue;
+      clearInterval(timer);
+    }
+
+    saldoEl.textContent = formatRupiah(Math.round(current));
+    if (targetValue < 0) saldoEl.classList.add("negative");
+    else saldoEl.classList.remove("negative");
+  }, 1000 / frameRate);
+}
+
 // =================== Riwayat Transaksi ===================
 let historyPage = 1;
 const historyPerPage = 5;
@@ -307,10 +335,7 @@ function renderPeriodeFilter(selectedPeriode, periodes) {
     renderHistoryList(1, false);
 
     const saldo = summary().net;
-    const saldoEl = document.getElementById("saldoNow");
-    saldoEl.textContent = formatRupiah(saldo);
-    if (saldo < 0) saldoEl.classList.add("negative");
-    else saldoEl.classList.remove("negative");
+    animateSaldo(saldo);
 
     updatePeriodeInfo();
   };
@@ -392,9 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderHistoryList();   // DESC
 
       const saldo = summary().net;
-      const saldoEl = document.getElementById("saldoNow");
-      saldoEl.textContent = formatRupiah(saldo);
-      if (saldo < 0) saldoEl.classList.add("negative");
+      animateSaldo(saldo);
 
       updatePeriodeInfo();
     } else {
@@ -411,4 +434,4 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }, 500);
   }
-});
+}); yg
