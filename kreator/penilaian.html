@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penilaian Lomba Kreator Tanjung Bulan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #ffd54f;
+    }
+    .peserta {
+      border: 1px solid #333;
+      background: #1e1e1e;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 6px;
+      margin: 4px 0 12px 0;
+      border-radius: 4px;
+      border: none;
+    }
+    input[type=number] {
+      width: 120px;
+    }
+    button {
+      background-color: #ffc107;
+      color: #000;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #ffb300;
+    }
+    #hasil {
+      white-space: pre-wrap;
+      background: #212121;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Penilaian Lomba Kreator - Dusun Tanjung Bulan</h1>
+  <p>Isi penilaian untuk setiap peserta, lalu klik “Tambah Peserta”. Semua data akan diproses di <b>juara.html</b>.</p>
+
+  <div id="form">
+    <div class="peserta">
+      <h2>🧑 Peserta</h2>
+      <label>Nama Peserta:</label>
+      <input type="text" id="nama" placeholder="Masukkan nama peserta">
+
+      <label>Link Video TikTok:</label>
+      <input type="text" id="linkVideo" placeholder="https://www.tiktok.com/...">
+
+      <h2>🔥 Performa Viral</h2>
+      <label>Jumlah Like:</label>
+      <input type="number" id="like" min="0">
+
+      <label>Jumlah Komen:</label>
+      <input type="number" id="komen" min="0">
+
+      <label>Jumlah Share:</label>
+      <input type="number" id="share" min="0">
+
+      <h2>🎨 Kreativitas</h2>
+      <label>Ide Konsep:</label>
+      <select id="ideKonsep">
+        <option value="">-- Pilih Ide --</option>
+        <option value="Humoris">Humoris</option>
+        <option value="Inspiratif">Inspiratif</option>
+        <option value="Edukatif">Edukatif</option>
+      </select>
+
+      <label>Editing (0–100):</label>
+      <input type="number" id="editing" min="0" max="100">
+
+      <label>Karakter (0–100):</label>
+      <input type="number" id="karakter" min="0" max="100">
+
+      <h2>🏡 Dampak Lokal</h2>
+      <label>Nuansa Lokal (0–100):</label>
+      <input type="number" id="nuansaLokal" min="0" max="100">
+
+      <label>Dampak Positif (0–100):</label>
+      <input type="number" id="dampakPositif" min="0" max="100">
+    </div>
+
+    <button onclick="tambahPeserta()">➕ Tambah Peserta</button>
+    <button onclick="salinData()">📋 Salin Semua Data</button>
+
+    <h2>📜 Data Peserta</h2>
+    <div id="hasil"></div>
+  </div>
+
+  <script>
+    const pesertaList = [];
+
+    function tambahPeserta() {
+      const peserta = {
+        nama: document.getElementById("nama").value.trim(),
+        linkVideo: document.getElementById("linkVideo").value.trim(),
+        like: Number(document.getElementById("like").value),
+        komen: Number(document.getElementById("komen").value),
+        share: Number(document.getElementById("share").value),
+        ideKonsep: document.getElementById("ideKonsep").value,
+        editing: Number(document.getElementById("editing").value),
+        karakter: Number(document.getElementById("karakter").value),
+        nuansaLokal: Number(document.getElementById("nuansaLokal").value),
+        dampakPositif: Number(document.getElementById("dampakPositif").value)
+      };
+
+      if (!peserta.nama) {
+        alert("Nama peserta wajib diisi!");
+        return;
+      }
+
+      pesertaList.push(peserta);
+      tampilkanPeserta();
+      resetForm();
+    }
+
+    function tampilkanPeserta() {
+      const hasil = document.getElementById("hasil");
+      hasil.innerHTML = pesertaList.map((p, i) => `
+${i+1}. ${p.nama}
+💬 Like: ${p.like} | Komen: ${p.komen} | Share: ${p.share}
+🎨 Ide: ${p.ideKonsep} | Editing: ${p.editing} | Karakter: ${p.karakter}
+🏡 Nuansa Lokal: ${p.nuansaLokal} | Dampak Positif: ${p.dampakPositif}
+🔗 ${p.linkVideo}
+      `).join("\n\n");
+    }
+
+    function resetForm() {
+      document.querySelectorAll("input, select").forEach(el => el.value = "");
+    }
+
+    function salinData() {
+      const teks = JSON.stringify(pesertaList, null, 2);
+      navigator.clipboard.writeText(teks)
+        .then(() => alert("✅ Semua data peserta disalin ke clipboard!"))
+        .catch(() => alert("❌ Gagal menyalin data."));
+    }
+  </script>
+</body>
+</html>
