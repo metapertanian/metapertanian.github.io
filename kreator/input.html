@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Penilaian Lomba Kreator Tanjung Bulan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background: #1f1f1f;
+    }
+    input {
+      width: 80px;
+      padding: 4px;
+      text-align: center;
+      background: #1c1c1c;
+      border: 1px solid #555;
+      color: #f5f5f5;
+      border-radius: 4px;
+    }
+    button {
+      background: #3a86ff;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #2663d1;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧑‍💻 Penilaian Lomba Kreator Tanjung Bulan</h1>
+
+<table id="tabelPenilaian">
+  <thead>
+    <tr>
+      <th>Nama Peserta</th>
+      <th>Like</th>
+      <th>Komen</th>
+      <th>Share</th>
+      <th>Kreativitas (0–100)</th>
+      <th>Lokal (0–100)</th>
+      <th>Viral Score</th>
+      <th>Total Nilai</th>
+    </tr>
+  </thead>
+  <tbody id="tbody">
+    <!-- Baris peserta akan muncul di sini -->
+  </tbody>
+</table>
+
+<button onclick="tambahPeserta()">+ Tambah Peserta</button>
+<button onclick="hitungSemua()">🔢 Hitung Semua</button>
+
+<script>
+let pesertaCount = 0;
+
+function tambahPeserta() {
+  pesertaCount++;
+  const tbody = document.getElementById('tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td><input type="text" id="nama${pesertaCount}" placeholder="Nama"></td>
+    <td><input type="number" id="like${pesertaCount}" value="0"></td>
+    <td><input type="number" id="komen${pesertaCount}" value="0"></td>
+    <td><input type="number" id="share${pesertaCount}" value="0"></td>
+    <td><input type="number" id="kreatif${pesertaCount}" value="0" max="100"></td>
+    <td><input type="number" id="lokal${pesertaCount}" value="0" max="100"></td>
+    <td id="viral${pesertaCount}">0</td>
+    <td id="total${pesertaCount}">0</td>
+  `;
+  tbody.appendChild(row);
+}
+
+function hitungSemua() {
+  for (let i = 1; i <= pesertaCount; i++) {
+    const like = parseInt(document.getElementById(`like${i}`).value) || 0;
+    const komen = parseInt(document.getElementById(`komen${i}`).value) || 0;
+    const share = parseInt(document.getElementById(`share${i}`).value) || 0;
+    const kreatif = parseInt(document.getElementById(`kreatif${i}`).value) || 0;
+    const lokal = parseInt(document.getElementById(`lokal${i}`).value) || 0;
+
+    const viralScore = like*1 + komen*3 + share*5;
+    const kreativitasNilai = (kreatif / 100) * 300;
+    const lokalNilai = (lokal / 100) * 200;
+
+    const total = viralScore + kreativitasNilai + lokalNilai;
+
+    document.getElementById(`viral${i}`).innerText = viralScore.toFixed(0);
+    document.getElementById(`total${i}`).innerText = total.toFixed(0);
+  }
+}
+</script>
+
+</body>
+</html>
