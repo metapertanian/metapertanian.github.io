@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pendaftaran Lomba Konten Kreator Tanjung Bulan</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #121212;
+      color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #00ffb7;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-container {
+      background: #1e1e1e;
+      border-radius: 15px;
+      padding: 25px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 15px rgba(0, 255, 183, 0.2);
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #2a2a2a;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    input:focus, textarea:focus {
+      outline: 2px solid #00ffb7;
+    }
+
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    button {
+      width: 100%;
+      background: #00ffb7;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #00e0a6;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #aaa;
+      text-align: center;
+    }
+
+    .status {
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    .closed {
+      color: #ff5555;
+    }
+
+    .soon {
+      color: #ffaa00;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pendaftaran Lomba Konten Kreator<br>Tanjung Bulan</h1>
+
+  <div class="form-container">
+    <div id="statusInfo" class="status"></div>
+
+    <label for="tiktok">Nama Akun TikTok *</label>
+    <input type="text" id="tiktok" placeholder="@namapengguna" required />
+
+    <label for="caption">Caption *</label>
+    <textarea id="caption" placeholder="Keterangan video..." required></textarea>
+
+    <label for="hp">Merek HP *</label>
+    <input type="text" id="hp" placeholder="Oppo A78" required />
+
+    <button onclick="kirimWA()">Kirim ke WhatsApp</button>
+  </div>
+
+  <div class="footer">Powered by Karang Taruna Tanjung Bulan 🌙</div>
+
+  <script>
+    // 🟢 PENGATURAN STATUS PENDAFTARAN
+    // Pilihan: "buka", "tutup", "belum"
+    const statusPendaftaran = "belum"; 
+
+    const statusInfo = document.getElementById("statusInfo");
+    if (statusPendaftaran === "buka") {
+      statusInfo.textContent = "🟢 Pendaftaran sedang dibuka!";
+      statusInfo.style.color = "#00ffb7";
+    } else if (statusPendaftaran === "tutup") {
+      statusInfo.textContent = "🔴 Pendaftaran telah ditutup.";
+      statusInfo.classList.add("closed");
+    } else if (statusPendaftaran === "belum") {
+      statusInfo.textContent = "🕓 Pendaftaran belum dibuka.";
+      statusInfo.classList.add("soon");
+    }
+
+    function kirimWA() {
+      // Jika pendaftaran belum dibuka atau sudah ditutup
+      if (statusPendaftaran === "tutup") {
+        alert("⚠️ Maaf, pendaftaran sudah ditutup. Terima kasih atas antusiasmenya!");
+        return;
+      } else if (statusPendaftaran === "belum") {
+        alert("⚠️ Pendaftaran belum dibuka. Silakan cek kembali nanti!");
+        return;
+      }
+
+      const tiktok = document.getElementById('tiktok').value.trim();
+      const caption = document.getElementById('caption').value.trim();
+      const hp = document.getElementById('hp').value.trim();
+
+      if (!tiktok || !caption || !hp) {
+        alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
+        return;
+      }
+
+      const pesan = `*Pendaftaran Lomba Konten Kreator Tanjung Bulan*%0A
+📱 Akun TikTok: ${tiktok}%0A
+📝 Caption: ${caption}%0A
+📸 Merek HP: ${hp}%0A
+%0ASaya mendaftar sebagai peserta lomba.`;
+
+      const nomor = "6288971344131"; // gunakan 62
+      const url = `https://wa.me/${nomor}?text=${pesan}`;
+      window.open(url, "_blank");
+    }
+  </script>
+</body>
+</html>
