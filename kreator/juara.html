@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hasil Juara RISMA</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #f5f5f5;
+      padding: 30px;
+      overflow-x: hidden;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2rem;
+      color: #00ffd0;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px #00ffd0;
+    }
+    .peserta {
+      background: rgba(255,255,255,0.08);
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .peserta:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+    .rank {
+      font-size: 1.2rem;
+      color: #ffb347;
+      font-weight: 600;
+    }
+    .nama {
+      font-size: 1.8rem;
+      color: #fff;
+      font-weight: 700;
+      margin: 5px 0;
+    }
+    .nilai {
+      margin-top: 10px;
+      line-height: 1.6;
+    }
+    .nilai span {
+      font-weight: 600;
+      color: #00ffd0;
+    }
+    .total {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #00ffd0;
+      margin-top: 10px;
+      text-shadow: 0 0 15px #00ffd0;
+    }
+    .link {
+      display: inline-block;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #bbb;
+    }
+    .link:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏆 Hasil Penilaian Peserta RISMA</h1>
+
+  <div id="daftarJuara"></div>
+
+  <script src="juara.js"></script>
+  <script>
+    const container = document.getElementById("daftarJuara");
+
+    // Buat elemen peserta
+    hasilRanking.forEach((p, i) => {
+      const div = document.createElement("div");
+      div.className = "peserta";
+      div.innerHTML = `
+        <div class="rank">#${i + 1}</div>
+        <div class="nama">${p.nama.toUpperCase()}</div>
+        <div class="nilai">
+          💡 Kreatifitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
+          🌾 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
+          🚀 Viral: <span>${p.viral.toFixed(1)}</span>
+        </div>
+        <div class="total" id="total-${i}">0</div>
+        <a class="link" href="${p.linkVideo}" target="_blank">🔗 ${p.linkVideo}</a>
+      `;
+      container.appendChild(div);
+    });
+
+    // Animasi nilai total bergulir (dari 0 ke nilai sebenarnya)
+    function animateValue(el, start, end, duration) {
+      const range = end - start;
+      let startTime = null;
+      function step(timestamp) {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        el.textContent = Math.floor(start + range * progress);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Gunakan IntersectionObserver agar animasi aktif saat peserta muncul di layar
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = entry.target.querySelector(".total").id.split("-")[1];
+          const total = hasilRanking[index].total;
+          const totalEl = entry.target.querySelector(".total");
+          if (!totalEl.classList.contains("animated")) {
+            totalEl.classList.add("animated");
+            animateValue(totalEl, 0, total, 3000);
+          }
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll(".peserta").forEach((el) => observer.observe(el));
+  </script>
+
+</body>
+</html>
