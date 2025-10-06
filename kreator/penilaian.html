@@ -96,7 +96,7 @@
         <option value="Edukatif">Edukatif</option>
       </select>
 
-      <label>Ide Konsep:</label>
+      <label>Nilai Ide Konsep:</label>
       <input type="number" id="ideKonsepNilai" min="0" max="100"><br/>
 
       <label>Editing:</label>
@@ -121,8 +121,8 @@
   </div>
 
   <script>
-    let pesertaList = [];
-    let editIndex = null;
+    let pesertaList = {};
+    let editNama = null;
 
     function ambilDataForm() {
       return {
@@ -142,42 +142,41 @@
 
     function tambahPeserta() {
       const data = ambilDataForm();
-
       if (!data.nama) {
         alert("Nama peserta wajib diisi!");
         return;
       }
 
-      if (editIndex !== null) {
-        pesertaList[editIndex] = data;
-        editIndex = null;
-        alert("✅ Data peserta berhasil diperbarui!");
-      } else {
-        pesertaList.push(data);
-        alert("✅ Peserta ditambahkan!");
+      if (editNama && pesertaList[editNama]) {
+        delete pesertaList[editNama];
       }
 
+      pesertaList[data.nama] = data;
+      editNama = null;
+
+      alert("✅ Data peserta disimpan!");
       resetForm();
       tampilkanPeserta();
     }
 
     function tampilkanPeserta() {
       const hasil = document.getElementById("hasil");
-      hasil.innerHTML = pesertaList.map((p, i) => `
+      const entries = Object.values(pesertaList);
+      hasil.innerHTML = entries.map((p, i) => `
         <div class="item">
           <b>${i + 1}. ${p.nama}</b><br>
           💬 Like: ${p.like} | Komen: ${p.komen} | Share: ${p.share}<br>
           🎨 Ide: ${p.ideKonsepTipe} (${p.ideKonsepNilai}) | Editing: ${p.editing} | Karakter: ${p.karakter}<br>
           🏡 Nuansa Lokal: ${p.nuansaLokal} | Dampak Positif: ${p.dampakPositif}<br>
           🔗 <a href="${p.linkVideo}" target="_blank" style="color:#64b5f6">${p.linkVideo}</a><br>
-          <button class="btn-small" onclick="editPeserta(${i})">✏️ Edit</button>
-          <button class="btn-small" onclick="hapusPeserta(${i})">🗑️ Hapus</button>
+          <button class="btn-small" onclick="editPeserta('${p.nama}')">✏️ Edit</button>
+          <button class="btn-small" onclick="hapusPeserta('${p.nama}')">🗑️ Hapus</button>
         </div>
       `).join("");
     }
 
-    function editPeserta(index) {
-      const p = pesertaList[index];
+    function editPeserta(nama) {
+      const p = pesertaList[nama];
       document.getElementById("nama").value = p.nama;
       document.getElementById("linkVideo").value = p.linkVideo;
       document.getElementById("like").value = p.like;
@@ -189,13 +188,13 @@
       document.getElementById("karakter").value = p.karakter;
       document.getElementById("nuansaLokal").value = p.nuansaLokal;
       document.getElementById("dampakPositif").value = p.dampakPositif;
-      editIndex = index;
+      editNama = nama;
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function hapusPeserta(index) {
-      if (confirm(`Yakin ingin menghapus peserta ${pesertaList[index].nama}?`)) {
-        pesertaList.splice(index, 1);
+    function hapusPeserta(nama) {
+      if (confirm(`Yakin ingin menghapus peserta ${nama}?`)) {
+        delete pesertaList[nama];
         tampilkanPeserta();
       }
     }
@@ -205,7 +204,10 @@
     }
 
     function salinData() {
-      const teks = JSON.stringify(pesertaList, null, 2);
+      // Gabungkan objek menjadi format tanpa array
+      const teks = Object.values(pesertaList)
+        .map(p => JSON.stringify(p, null, 2))
+        .join(",\n\n");
       navigator.clipboard.writeText(teks)
         .then(() => alert("✅ Semua data peserta disalin ke clipboard!"))
         .catch(() => alert("❌ Gagal menyalin data."));
