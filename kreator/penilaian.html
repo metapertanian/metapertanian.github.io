@@ -21,7 +21,7 @@
       margin-bottom: 20px;
       border-radius: 8px;
     }
-    input, select, textarea {
+    input, select {
       width: 100%;
       padding: 6px;
       margin: 4px 0 12px 0;
@@ -43,12 +43,24 @@
     button:hover {
       background-color: #ffb300;
     }
+    .btn-small {
+      font-size: 12px;
+      padding: 4px 8px;
+      margin-left: 4px;
+    }
     #hasil {
       white-space: pre-wrap;
       background: #212121;
       padding: 10px;
       border-radius: 6px;
       margin-top: 20px;
+    }
+    .item {
+      background: #1b1b1b;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      border-left: 4px solid #ffd54f;
     }
   </style>
 </head>
@@ -67,10 +79,10 @@
 
       <h2>🔥 Performa Viral</h2>
       <label>Jumlah Like:</label>
-      <input type="number" id="like" min="0">
+      <input type="number" id="like" min="0"><br/>
 
       <label>Jumlah Komen:</label>
-      <input type="number" id="komen" min="0">
+      <input type="number" id="komen" min="0"><br/>
 
       <label>Jumlah Share:</label>
       <input type="number" id="share" min="0">
@@ -85,23 +97,23 @@
       </select>
 
       <label>Nilai Ide Konsep (0–100):</label>
-      <input type="number" id="ideKonsepNilai" min="0" max="100">
+      <input type="number" id="ideKonsepNilai" min="0" max="100"><br/>
 
       <label>Editing (0–100):</label>
-      <input type="number" id="editing" min="0" max="100">
+      <input type="number" id="editing" min="0" max="100"><br/>
 
       <label>Karakter (0–100):</label>
       <input type="number" id="karakter" min="0" max="100">
 
       <h2>🏡 Dampak Lokal</h2>
       <label>Nuansa Lokal (0–100):</label>
-      <input type="number" id="nuansaLokal" min="0" max="100">
+      <input type="number" id="nuansaLokal" min="0" max="100"><br/>
 
       <label>Dampak Positif (0–100):</label>
       <input type="number" id="dampakPositif" min="0" max="100">
     </div>
 
-    <button onclick="tambahPeserta()">➕ Tambah Peserta</button>
+    <button onclick="tambahPeserta()">➕ Tambah Peserta</button><br/>
     <button onclick="salinData()">📋 Salin Semua Data</button>
 
     <h2>📜 Data Peserta</h2>
@@ -109,10 +121,11 @@
   </div>
 
   <script>
-    const pesertaList = [];
+    let pesertaList = [];
+    let editIndex = null;
 
-    function tambahPeserta() {
-      const peserta = {
+    function ambilDataForm() {
+      return {
         nama: document.getElementById("nama").value.trim(),
         linkVideo: document.getElementById("linkVideo").value.trim(),
         like: Number(document.getElementById("like").value),
@@ -125,26 +138,66 @@
         nuansaLokal: Number(document.getElementById("nuansaLokal").value),
         dampakPositif: Number(document.getElementById("dampakPositif").value)
       };
+    }
 
-      if (!peserta.nama) {
+    function tambahPeserta() {
+      const data = ambilDataForm();
+
+      if (!data.nama) {
         alert("Nama peserta wajib diisi!");
         return;
       }
 
-      pesertaList.push(peserta);
-      tampilkanPeserta();
+      if (editIndex !== null) {
+        pesertaList[editIndex] = data;
+        editIndex = null;
+        alert("✅ Data peserta berhasil diperbarui!");
+      } else {
+        pesertaList.push(data);
+        alert("✅ Peserta ditambahkan!");
+      }
+
       resetForm();
+      tampilkanPeserta();
     }
 
     function tampilkanPeserta() {
       const hasil = document.getElementById("hasil");
       hasil.innerHTML = pesertaList.map((p, i) => `
-${i+1}. ${p.nama}
-💬 Like: ${p.like} | Komen: ${p.komen} | Share: ${p.share}
-🎨 Ide: ${p.ideKonsepTipe} (${p.ideKonsepNilai}) | Editing: ${p.editing} | Karakter: ${p.karakter}
-🏡 Nuansa Lokal: ${p.nuansaLokal} | Dampak Positif: ${p.dampakPositif}
-🔗 ${p.linkVideo}
-      `).join("\n\n");
+        <div class="item">
+          <b>${i + 1}. ${p.nama}</b><br>
+          💬 Like: ${p.like} | Komen: ${p.komen} | Share: ${p.share}<br>
+          🎨 Ide: ${p.ideKonsepTipe} (${p.ideKonsepNilai}) | Editing: ${p.editing} | Karakter: ${p.karakter}<br>
+          🏡 Nuansa Lokal: ${p.nuansaLokal} | Dampak Positif: ${p.dampakPositif}<br>
+          🔗 <a href="${p.linkVideo}" target="_blank" style="color:#64b5f6">${p.linkVideo}</a><br>
+          <button class="btn-small" onclick="editPeserta(${i})">✏️ Edit</button>
+          <button class="btn-small" onclick="hapusPeserta(${i})">🗑️ Hapus</button>
+        </div>
+      `).join("");
+    }
+
+    function editPeserta(index) {
+      const p = pesertaList[index];
+      document.getElementById("nama").value = p.nama;
+      document.getElementById("linkVideo").value = p.linkVideo;
+      document.getElementById("like").value = p.like;
+      document.getElementById("komen").value = p.komen;
+      document.getElementById("share").value = p.share;
+      document.getElementById("ideKonsepTipe").value = p.ideKonsepTipe;
+      document.getElementById("ideKonsepNilai").value = p.ideKonsepNilai;
+      document.getElementById("editing").value = p.editing;
+      document.getElementById("karakter").value = p.karakter;
+      document.getElementById("nuansaLokal").value = p.nuansaLokal;
+      document.getElementById("dampakPositif").value = p.dampakPositif;
+      editIndex = index;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function hapusPeserta(index) {
+      if (confirm(`Yakin ingin menghapus peserta ${pesertaList[index].nama}?`)) {
+        pesertaList.splice(index, 1);
+        tampilkanPeserta();
+      }
     }
 
     function resetForm() {
