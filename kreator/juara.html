@@ -3,89 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hasil Juara RISMA</title>
+  <title>Lomba Konten Kreator Tanjung Bulan</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(160deg, #001f1c, #000);
       color: #f5f5f5;
-      padding: 30px;
+      padding: 40px 20px;
       overflow-x: hidden;
     }
+
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      font-size: 2rem;
-      color: #00ffd0;
+      font-size: 2.2rem;
+      color: #ffca28;
       letter-spacing: 1px;
-      text-shadow: 0 0 10px #00ffd0;
+      text-shadow: 0 0 15px #ffca28;
+      margin-bottom: 50px;
+      animation: fadeIn 1.2s ease-out;
     }
+
     .peserta {
+      opacity: 0;
+      transform: translateY(30px);
       background: rgba(255,255,255,0.08);
       padding: 20px;
       border-radius: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      margin-bottom: 25px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      transition: all 0.8s ease;
     }
-    .peserta:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    .peserta.show {
+      opacity: 1;
+      transform: translateY(0);
     }
+
     .rank {
       font-size: 1.2rem;
-      color: #ffb347;
+      color: #ffd54f;
       font-weight: 600;
+      margin-bottom: 4px;
     }
     .nama {
       font-size: 1.8rem;
       color: #fff;
       font-weight: 700;
-      margin: 5px 0;
     }
     .nilai {
-      margin-top: 10px;
+      margin-top: 12px;
       line-height: 1.6;
+      color: #ddd;
     }
     .nilai span {
       font-weight: 600;
-      color: #00ffd0;
+      color: #ffca28;
     }
     .total {
-      font-size: 2.5rem;
+      font-size: 2.6rem;
       font-weight: 800;
-      color: #00ffd0;
-      margin-top: 10px;
-      text-shadow: 0 0 15px #00ffd0;
+      color: #ffca28;
+      margin-top: 12px;
+      text-shadow: 0 0 15px #ffca28;
     }
     .link {
       display: inline-block;
-      margin-top: 10px;
-      font-size: 0.9rem;
-      color: #bbb;
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #90caf9;
+      text-decoration: none;
     }
-    .link:hover {
-      color: #fff;
-      text-decoration: underline;
+    .link:hover { color: #fff; text-decoration: underline; }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <h1>🏆 Hasil Penilaian Peserta RISMA</h1>
-
+  <h1>🏆 Hasil Lomba Konten Kreator Dusun Tanjung Bulan</h1>
   <div id="daftarJuara"></div>
+
+  <footer>© 2025 Panitia Lomba Konten Kreator Tanjung Bulan</footer>
 
   <script src="juara.js"></script>
   <script>
     const container = document.getElementById("daftarJuara");
 
-    // Buat elemen peserta
+    // 🧩 Buat elemen peserta dari hasilRanking di juara.js
     hasilRanking.forEach((p, i) => {
       const div = document.createElement("div");
       div.className = "peserta";
@@ -94,8 +108,8 @@
         <div class="nama">${p.nama.toUpperCase()}</div>
         <div class="nilai">
           💡 Kreatifitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
-          🌾 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-          🚀 Viral: <span>${p.viral.toFixed(1)}</span>
+          🏡 Dampak Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
+          🚀 Performa Viral: <span>${p.viral.toFixed(1)}</span>
         </div>
         <div class="total" id="total-${i}">0</div>
         <a class="link" href="${p.linkVideo}" target="_blank">🔗 ${p.linkVideo}</a>
@@ -103,7 +117,7 @@
       container.appendChild(div);
     });
 
-    // Animasi nilai total bergulir (dari 0 ke nilai sebenarnya)
+    // 🎞️ Animasi angka bergulir
     function animateValue(el, start, end, duration) {
       const range = end - start;
       let startTime = null;
@@ -116,22 +130,27 @@
       requestAnimationFrame(step);
     }
 
-    // Gunakan IntersectionObserver agar animasi aktif saat peserta muncul di layar
+    // 🌊 Efek bergelombang saat scroll
+    const pesertaEls = document.querySelectorAll(".peserta");
+
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      entries.forEach((entry, idx) => {
         if (entry.isIntersecting) {
-          const index = entry.target.querySelector(".total").id.split("-")[1];
-          const total = hasilRanking[index].total;
-          const totalEl = entry.target.querySelector(".total");
-          if (!totalEl.classList.contains("animated")) {
-            totalEl.classList.add("animated");
-            animateValue(totalEl, 0, total, 3000);
+          const el = entry.target;
+          if (!el.classList.contains("show")) {
+            setTimeout(() => {
+              el.classList.add("show");
+              const index = Array.from(pesertaEls).indexOf(el);
+              const totalEl = el.querySelector(".total");
+              const total = hasilRanking[index].total;
+              animateValue(totalEl, 0, total, 3000);
+            }, idx * 600); // Delay antar peserta (gelombang)
           }
         }
       });
     }, { threshold: 0.3 });
 
-    document.querySelectorAll(".peserta").forEach((el) => observer.observe(el));
+    pesertaEls.forEach((el) => observer.observe(el));
   </script>
 
 </body>
