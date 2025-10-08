@@ -115,16 +115,19 @@
     <label for="caption">Caption *</label>
     <textarea id="caption" placeholder="Keterangan video..." required></textarea>
 
+    <label for="telepon">Nomor Telepon *</label>
+    <input type="tel" id="telepon" placeholder="Contoh: 089512345678" required />
+
     <label for="hp">Merek HP *</label>
     <input type="text" id="hp" placeholder="Oppo A78" required />
 
     <button onclick="kirimWA()">Kirim ke WhatsApp</button>
   </div>
 
-  <div class="footer">Powered by Tanjung Bulan Squad</div>
+  <div class="footer">Powered by Tanjung Bulan Squad 🌙</div>
 
   <script>
-    // 🟢 PENGATURAN STATUS PENDAFTARAN
+    // 🟢 STATUS PENDAFTARAN
     // Pilihan: "buka", "tutup", "belum"
     const statusPendaftaran = "belum"; 
 
@@ -152,9 +155,10 @@
 
       const tiktok = document.getElementById('tiktok').value.trim();
       const caption = document.getElementById('caption').value.trim();
+      const telepon = document.getElementById('telepon').value.trim();
       const hp = document.getElementById('hp').value.trim();
 
-      if (!tiktok || !caption || !hp) {
+      if (!tiktok || !caption || !telepon || !hp) {
         alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
         return;
       }
@@ -162,6 +166,7 @@
       const pesan = `*Pendaftaran Lomba Konten Kreator Tanjung Bulan*%0A
 📱 Akun TikTok: ${tiktok}%0A
 📝 Caption: ${caption}%0A
+📞 Nomor Telepon: ${telepon}%0A
 📸 Merek HP: ${hp}%0A
 %0ASaya mendaftar sebagai peserta lomba.`;
 
