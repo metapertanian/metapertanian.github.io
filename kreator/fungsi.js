@@ -17,7 +17,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 // 💬 Kutipan Bergantian (huruf demi huruf + efek mengetik)
 // ===============================
 const kutipanList = [
-  "Dari satu kamera, menyimpan seribu cerita.",
+  "Dari satu kamera, tersimpan seribu cerita.",
   "Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
   "Jangan tunggu viral, buatlah karya yang bernilai."
 ];
