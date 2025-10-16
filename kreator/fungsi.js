@@ -97,7 +97,7 @@ yang ketahuan curang akan dikurangi poin atau didiskualifikasi.
 // ===============================
 // ⚙️ Pengaturan
 // ===============================
-const tampilkanPoin = false; // ⬅️ ubah true/false untuk mode tampilan
+const tampilkanPoin = true; // ⬅️ ubah true/false untuk mode tampilan
 
 // ===============================
 // 🏅 Fungsi Hitung Nilai
