@@ -61,7 +61,7 @@ const dataPeserta = [
 //
 
 function hitungTotal(p) {
-  const viral = (p.like * 0.2) + (p.komen * 0.5) + (p.share * 1.0);
+  const viral = (p.like * 1.0) + (p.komen * 1.5) + (p.share * 1.5);
 
   // Kreativitas (maks 300)
   const nilaiKreatif = (p.ideKonsepNilai * 1.5) + (p.editing * 1.0) + (p.karakter * 0.5);
