@@ -44,11 +44,11 @@ document.getElementById("aturanText").innerHTML = `
 • Tema: kehidupan, kreativitas, dan inspirasi di Tanjung Bulan.<br>
 • Gaya video: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
 <b>Poin Juri:</b><br>
-💡 Kreativitas: ide konsep (150), editing (100), karakter (50).<br>
-🏡 Dampak Dusun: nuansa dusun (100), dampak positif (100).<br>
-Total: 500 poin.<br><br>
+💡 Kreativitas:<br>• ide konsep (150 poin),<br>• editing (100 poin),<br>• karakter (50 poin).<br>
+🏡 Dampak Dusun:<br>• nuansa dusun (100 poin),<br>• dampak positif (100 poin).<br>
+Poin Maksimal: 500 poin.<br><br>
 <b>Poin TikTok:</b><br>
-🚀 Performa Viral: poin tak terbatas dari like, komen, dan share.<br>
+🚀 Performa Viral: poin tak terbatas<br>Algoritma kami akan menghitung otomatis dari jumlah like, komen, dan share.<br>
 Peserta boleh meminta bantuan teman, tapi dilarang memakai bot atau membeli like/komen/share.
 `;
 
@@ -81,7 +81,7 @@ tampilkanHadiah();
 // ===============================
 // 📊 Tampilkan Poin Kreator
 // ===============================
-const statusPenilaian = "tutup";
+const statusPenilaian = "belum";
 const pesertaPerHalaman = 10;
 
 function tampilkanDataSeason() {
