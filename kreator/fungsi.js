@@ -14,7 +14,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // ===============================
-// 💬 Kutipan Bergantian (huruf demi huruf)
+// 💬 Kutipan Bergantian (huruf demi huruf + efek mengetik)
 // ===============================
 const kutipanList = [
   "📷 Dari satu kamera, menyimpan seribu cerita.",
@@ -31,16 +31,23 @@ function tampilkanKutipanHurufDemiHuruf() {
   const teks = kutipanList[indexKutipan];
   elemen.textContent = "";
 
+  const cursor = document.createElement("span");
+  cursor.className = "cursor";
+  cursor.textContent = "|";
+  elemen.appendChild(cursor);
+
   indexHuruf = 0;
   clearInterval(intervalHuruf);
   intervalHuruf = setInterval(() => {
     if (indexHuruf < teks.length) {
-      elemen.textContent += teks[indexHuruf];
+      cursor.before(teks[indexHuruf]);
       indexHuruf++;
     } else {
       clearInterval(intervalHuruf);
-      indexKutipan = (indexKutipan + 1) % kutipanList.length;
-      setTimeout(tampilkanKutipanHurufDemiHuruf, 2000);
+      setTimeout(() => {
+        indexKutipan = (indexKutipan + 1) % kutipanList.length;
+        tampilkanKutipanHurufDemiHuruf();
+      }, 2000);
     }
   }, 80);
 }
@@ -99,7 +106,7 @@ function tampilkanHadiah() {
 
   hadiahKategori.forEach(h => {
     const juaraData = h.juara
-      ? `<div class="juara">🏆 ${h.juara.nama} (${h.juara.total} pts)</div>`
+      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">(${h.juara.total.toFixed(1)} pts)</span></div>`
       : `<div class="juara">⏳ Belum diumumkan</div>`;
 
     const div = document.createElement("div");
@@ -115,29 +122,37 @@ function tampilkanHadiah() {
 tampilkanHadiah();
 
 // ===============================
-// 📊 Poin Kreator
+// 📊 Poin Kreator (dengan animasi total poin)
 // ===============================
-const tampilkanPoin = false; // true = tampilkan ranking & poin, false = sembunyikan viral & ranking
-const statusPenilaian = "belum"; // “belum” atau “tutup”
+const tampilkanPoin = true; // true = tampilkan semua poin, false = sembunyikan poin viral & ranking
+const statusPenilaian = "tutup"; // “belum” atau “tutup”
 const pesertaPerHalaman = 10;
+
+function animateValue(el, start, end, duration) {
+  let startTime = null;
+  function anim(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const progress = Math.min((currentTime - startTime) / duration, 1);
+    el.textContent = (start + (end - start) * progress).toFixed(1);
+    if (progress < 1) requestAnimationFrame(anim);
+  }
+  requestAnimationFrame(anim);
+}
 
 function tampilkanDataSeason() {
   const season = selectSeason.value;
   let data = dataPeserta[season].kreator;
 
-  // Hitung poin hanya jika tampilkanPoin = true
   const hasilRanking = data.map(p => {
     const viral = tampilkanPoin ? (p.like * 1.0 + p.komen * 1.5 + p.share * 1.5) : 0;
     const nilaiKreatif = (p.ideKonsepNilai * 1.5) + (p.editing * 1.0) + (p.karakter * 0.5);
     const nilaiLokal = (p.nuansaLokal * 1.0) + (p.dampakPositif * 1.0);
-    const total = Math.round(nilaiKreatif + nilaiLokal + viral);
+    const total = nilaiKreatif + nilaiLokal + viral;
     return { ...p, nilaiKreatif, nilaiLokal, viral, total };
   });
 
   if (tampilkanPoin) {
     data = hasilRanking.sort((a, b) => b.total - a.total);
-  } else {
-    data = hasilRanking; // urut sesuai pendataan
   }
 
   let halaman = 1;
@@ -156,14 +171,14 @@ function tampilkanDataSeason() {
 
       const rankHTML = tampilkanPoin ? `<div class="rank">#${start + i + 1}</div>` : "";
 
-      const nilaiHTML = tampilkanPoin
-        ? `<div class="nilai">
-            💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
-            🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-            🚀 Viral: <span>${p.viral.toFixed(1)}</span>
-          </div>
-          <div class="total">⭐ ${p.total}</div>`
-        : `<div class="nilai-tersembunyi">🔒 Poin viral dikunci</div>`;
+      const nilaiHTML = `
+        <div class="nilai">
+          💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
+          🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span>
+          ${tampilkanPoin ? `<br>🚀 Viral: <span>${p.viral.toFixed(1)}</span>` : ""}
+        </div>
+        <div class="total">⭐ <span class="angka">0.0</span></div>
+      `;
 
       div.innerHTML = `
         ${rankHTML}
@@ -171,7 +186,12 @@ function tampilkanDataSeason() {
         ${nilaiHTML}
         <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
       `;
+
       wadah.appendChild(div);
+
+      // animasi total poin
+      const totalEl = div.querySelector(".angka");
+      animateValue(totalEl, 0, p.total, 1500 + i * 200);
     });
 
     // pagination
@@ -203,47 +223,59 @@ tampilkanDataSeason();
 const style = document.createElement("style");
 style.innerHTML = `
 #kutipan {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: #fafafa;
   font-style: italic;
-  margin: 20px auto;
   text-align: center;
-  letter-spacing: 0.5px;
+  margin: 20px auto;
   max-width: 90%;
-  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  min-height: 30px;
+  position: relative;
+}
+.cursor {
+  display: inline-block;
+  animation: blink 0.8s infinite;
+  color: #4caf50;
+}
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
 }
 
 .hadiah-card {
-  background: linear-gradient(145deg,#1b5e20,#2e7d32);
+  background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
   color: #fff;
   border-radius: 14px;
   padding: 16px;
   margin: 12px 0;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   transition: 0.3s;
 }
 .hadiah-card:hover { transform: scale(1.03); }
 .hadiah-card .judul { font-weight: bold; font-size: 1.1em; margin-bottom: 6px; }
 .hadiah-card .isi { font-size: 0.95em; opacity: 0.9; margin-bottom: 6px; }
-.hadiah-card .juara { font-size: 0.9em; background:#fff2; padding:4px 8px; border-radius:8px; }
+.hadiah-card .juara { font-size: 0.9em; background:#ffffff1a; padding:4px 8px; border-radius:8px; }
 
 .peserta {
-  background: #222;
+  background: #181818;
   border-radius: 14px;
   padding: 16px;
   margin: 10px 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   color: #fff;
+  transition: 0.3s ease;
 }
+.peserta:hover { transform: translateY(-3px); background:#1e1e1e; }
 .peserta .rank { font-weight: bold; color: #4caf50; }
 .peserta .nama { font-size: 1.1em; margin: 4px 0; }
-.peserta .total { font-weight: bold; color: #ffd54f; margin-top: 4px; }
+.peserta .total { font-weight: bold; color: #ffd54f; margin-top: 4px; font-size:1.05em; }
 .peserta .link { display:block; margin-top:6px; color:#81d4fa; text-decoration:none; font-size:0.9em; }
-.peserta .nilai-tersembunyi { font-style:italic; opacity:0.8; margin-top:4px; }
+.peserta .nilai { font-size: 0.9em; opacity: 0.95; }
 
 #pagination { text-align:center; margin:15px 0; }
 #pagination button {
-  background:#1b5e20;
+  background:#2e7d32;
   border:none;
   color:#fff;
   padding:6px 12px;
