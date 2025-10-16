@@ -220,8 +220,11 @@ function tampilkanDataSeason() {
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
+
+    const rankDisplay = tampilkanPoin ? `<div class="rank">#${i + 1}</div>` : "";
+
     div.innerHTML = `
-      <div class="rank">#${i + 1}</div>
+      ${rankDisplay}
       <div class="nama">${p.nama.toUpperCase()}</div>
       <div class="nilai">
         💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
