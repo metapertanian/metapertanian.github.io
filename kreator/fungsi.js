@@ -9,7 +9,7 @@ function toggleMenu() {
 // 💬 Kutipan Bergantian
 // ===============================
 const kutipanList = [
-  ​  "📷 Dari satu kamera, menyimpan seribu cerita."
+  "📷 Dari satu kamera, menyimpan seribu cerita.",
   "🔥 Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
   "💫 Jangan tunggu viral, buatlah karya yang bernilai."
 ];
@@ -59,14 +59,13 @@ const hadiahKategori = [
   { kategori: "Juara 1", hadiah: "Paket Data + Uang 100rb + Sertifikat" },
   { kategori: "Juara 2", hadiah: "Paket Data + Uang 75rb + Sertifikat" },
   { kategori: "Juara 3", hadiah: "Paket Data + Uang 50rb + Sertifikat" },
-  { kategori: "Ide Konsep Ter-Baik", hadiah: "Paket Data + Uang 40rb + Sertifikat" },
-  { kategori: "Konten Ter-Favorit", hadiah: "Paket Data + Uang 35rb + Sertifikat" },
-  { kategori: "Konten Ter-Lucu", hadiah: "Paket Data + Uang 30rb + Sertifikat" },
+  { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + Uang 40rb + Sertifikat" },
+  { kategori: "Konten Terfavorit", hadiah: "Paket Data + Uang 35rb + Sertifikat" },
+  { kategori: "Konten Terlucu", hadiah: "Paket Data + Uang 30rb + Sertifikat" },
   { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + Uang 25rb + Sertifikat" },
   { kategori: "Paling Inspiratif", hadiah: "Paket Data + Uang 25rb + Sertifikat" },
 ];
 
-// tampilkan hadiah
 function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
   wadah.innerHTML = "";
@@ -82,12 +81,12 @@ tampilkanHadiah();
 // ===============================
 // 📊 Tampilkan Poin Kreator
 // ===============================
-const statusPenilaian = "belum"; // ubah ke "tutup" jika hasil final
+const statusPenilaian = "tutup";
 const pesertaPerHalaman = 10;
 
 function tampilkanDataSeason() {
   const season = selectSeason.value;
-  const data = dataPeserta[season].transaksi;
+  const data = dataPeserta[season].kreator;
 
   const hasilRanking = data.map(p => {
     const viral = (p.like * 1.0) + (p.komen * 1.5) + (p.share * 1.5);
@@ -97,7 +96,6 @@ function tampilkanDataSeason() {
     return { ...p, nilaiKreatif, nilaiLokal, viral, total };
   }).sort((a, b) => b.total - a.total);
 
-  // pagination
   let halaman = 1;
   const totalHalaman = Math.ceil(hasilRanking.length / pesertaPerHalaman);
 
@@ -115,20 +113,17 @@ function tampilkanDataSeason() {
       div.innerHTML = `
         <div class="rank">#${start + i + 1}</div>
         <div class="nama">${p.nama.toUpperCase()}</div>
-        ${statusPenilaian === "tutup" ? `
-          <div class="nilai">
-            💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
-            🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-            🚀 Viral: <span>${p.viral.toFixed(1)}</span>
-          </div>
-          <div class="total">${p.total}</div>
-        ` : `<div class="nilai">🔒 Poin masih dihitung...</div>`}
+        <div class="nilai">
+          💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
+          🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
+          🚀 Viral: <span>${p.viral.toFixed(1)}</span>
+        </div>
+        <div class="total">${p.total}</div>
         <a href="${p.linkVideo}" target="_blank" class="link">${p.linkVideo}</a>
       `;
       wadah.appendChild(div);
     });
 
-    // pagination
     const pag = document.getElementById("pagination");
     pag.innerHTML = "";
     for (let i = 1; i <= totalHalaman; i++) {
@@ -139,9 +134,7 @@ function tampilkanDataSeason() {
     }
 
     document.getElementById("statusPoin").textContent =
-      statusPenilaian === "tutup"
-        ? "✅ Penilaian telah selesai."
-        : "🕓 Penilaian masih berlangsung.";
+      "✅ Penilaian telah selesai.";
   }
 
   render();
