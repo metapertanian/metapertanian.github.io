@@ -90,14 +90,14 @@ document.getElementById("aturanText").innerHTML = `
 <b>Poin TikTok:</b><br>
 🚀 Performa Viral: poin tak terbatas<br>
 dihitung otomatis dari jumlah like, komen, dan share.<br><br>
-kamu bisa mengajak teman/saudara untuk menaikkan like/komen/share. tapi tidak diperbolehkan melakukan komen spam, membeli atau menggunakan bot.<br><br>
-yang ketahuan curang akan dikurangi poin atau didiskualifikasi.
+Kamu bisa mengajak teman/saudara untuk menaikkan like/komen/share. Tapi tidak diperbolehkan melakukan komen spam, membeli atau menggunakan bot.<br><br>
+Yang ketahuan curang akan dikurangi poin atau didiskualifikasi.
 `;
 
 // ===============================
 // ⚙️ Pengaturan
 // ===============================
-const tampilkanPoin = true; // ⬅️ ubah true/false untuk mode tampilan
+const tampilkanPoin = true; // ubah true/false untuk mode tampilan
 
 // ===============================
 // 🏅 Fungsi Hitung Nilai
@@ -111,7 +111,7 @@ function hitungTotal(p) {
 }
 
 // ===============================
-// 🔢 Ranking (Jika poin aktif)
+// 🔢 Ranking
 // ===============================
 function prosesRanking(data) {
   return data.map(p => ({ ...p, ...hitungTotal(p) }))
@@ -119,39 +119,63 @@ function prosesRanking(data) {
 }
 
 // ===============================
-// 🎁 Hadiah + Juara Otomatis
+// 🎁 Hadiah + Juara Otomatis (1 Orang 1 Hadiah)
 // ===============================
 function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
   wadah.innerHTML = "";
 
-  const data = dataJuara[selectSeason.value].kreator;
-  const ranking = tampilkanPoin ? prosesRanking(data) : data.map(p => ({ ...p, ...hitungTotal(p) }));
+  const season = selectSeason.value;
+  const data = dataJuara[season].kreator;
+  const ranking = prosesRanking(data);
+  const sudahMenang = new Set(); // Cegah 1 orang menang dobel
 
-  const juara1 = ranking[0];
-  const juara2 = ranking[1];
-  const juara3 = ranking[2];
+  function pilihUnik(arr, sorter) {
+    return arr.find(p => !sudahMenang.has(p.nama) && sorter(p));
+  }
 
-  const ideTerbaik = [...ranking].sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
-  const viralTertinggi = [...ranking].sort((a,b)=>b.viral - a.viral)[0];
-  const lucu = ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
-  const lokal = [...ranking].sort((a,b)=>b.nuansaLokal - a.nuansaLokal)[0];
-  const inspiratif = ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
+  const juara1 = pilihUnik(ranking, () => true);
+  sudahMenang.add(juara1.nama);
+  const juara2 = pilihUnik(ranking, p => p !== juara1);
+  sudahMenang.add(juara2.nama);
+  const juara3 = pilihUnik(ranking, p => ![juara1, juara2].includes(p));
+  sudahMenang.add(juara3.nama);
+
+  const ideTerbaik = pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai), () => true);
+  if (ideTerbaik) sudahMenang.add(ideTerbaik.nama);
+
+  const viralTertinggi = pilihUnik(ranking.sort((a,b)=>b.viral - a.viral), () => true);
+  if (viralTertinggi) sudahMenang.add(viralTertinggi.nama);
+
+  const lucu = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris")
+                              .sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai), () => true);
+  if (lucu) sudahMenang.add(lucu.nama);
+
+  const lokal = pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal), () => true);
+  if (lokal) sudahMenang.add(lokal.nama);
+
+  const inspiratif = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif")
+                                     .sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai), () => true);
+  if (inspiratif) sudahMenang.add(inspiratif.nama);
 
   const hadiahKategori = [
-    { kategori: "Juara 1", hadiah: "Paket Data + Uang 100rb + Sertifikat", juara: tampilkanPoin ? juara1 : null },
-    { kategori: "Juara 2", hadiah: "Paket Data + Uang 75rb + Sertifikat", juara: tampilkanPoin ? juara2 : null },
-    { kategori: "Juara 3", hadiah: "Paket Data + Uang 50rb + Sertifikat", juara: tampilkanPoin ? juara3 : null },
-    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + Uang 40rb + Sertifikat", juara: tampilkanPoin ? ideTerbaik : null },
-    { kategori: "Konten Terfavorit", hadiah: "Paket Data + Uang 35rb + Sertifikat", juara: tampilkanPoin ? viralTertinggi : null },
-    { kategori: "Konten Terlucu", hadiah: "Paket Data + Uang 30rb + Sertifikat", juara: tampilkanPoin ? lucu : null },
-    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: tampilkanPoin ? lokal : null },
-    { kategori: "Paling Inspiratif", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: tampilkanPoin ? inspiratif : null }
+    { kategori: "Juara 1", hadiah: "Paket Data + Uang 100rb + Sertifikat", juara: juara1 },
+    { kategori: "Juara 2", hadiah: "Paket Data + Uang 75rb + Sertifikat", juara: juara2 },
+    { kategori: "Juara 3", hadiah: "Paket Data + Uang 50rb + Sertifikat", juara: juara3 },
+    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + Uang 40rb + Sertifikat", juara: ideTerbaik },
+    { kategori: "Konten Terfavorit", hadiah: "Paket Data + Uang 35rb + Sertifikat", juara: viralTertinggi },
+    { kategori: "Konten Terlucu", hadiah: "Paket Data + Uang 30rb + Sertifikat", juara: lucu },
+    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: lokal },
+    { kategori: "Paling Inspiratif", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: inspiratif }
   ];
 
   hadiahKategori.forEach(h => {
-    const juaraData = tampilkanPoin && h.juara
-      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">(${h.juara.total.toFixed(1)} pts)</span></div>`
+    const poinText = tampilkanPoin
+      ? `(${h.juara ? h.juara.total.toFixed(1) : "0"} pts)`
+      : `<span style="color:gold">🔒 Viral Terkunci</span>`;
+
+    const juaraData = h.juara
+      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">${poinText}</span></div>`
       : `<div class="juara">⏳ Belum diumumkan</div>`;
 
     const div = document.createElement("div");
@@ -164,10 +188,11 @@ function tampilkanHadiah() {
     wadah.appendChild(div);
   });
 }
+selectSeason.addEventListener("change", tampilkanHadiah);
 tampilkanHadiah();
 
 // ===============================
-// 📊 Data Peserta
+// 📊 Data Peserta + Animasi Nilai
 // ===============================
 function animateValue(el, start, end, duration) {
   let startTime = null;
@@ -183,25 +208,29 @@ function animateValue(el, start, end, duration) {
 function tampilkanDataSeason() {
   const season = selectSeason.value;
   const data = dataJuara[season].kreator;
-  const ranking = tampilkanPoin ? prosesRanking(data) : data.map(p => ({ ...p, ...hitungTotal(p) }));
+  const ranking = prosesRanking(data);
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
 
   const awal = dataJuara[season].awal || "-";
   const akhir = dataJuara[season].akhir || "-";
-  infoRange.textContent = `periode: ${awal} - ${akhir}`;
+  infoRange.textContent = `Periode: ${awal} - ${akhir}`;
 
   ranking.forEach((p, i) => {
+    const viralText = tampilkanPoin
+      ? `🚀 Viral: <span>${p.viral.toFixed(1)}</span><br>`
+      : `🚀 Viral: <span style="color:gold">🔒</span><br>`;
+
     const div = document.createElement("div");
     div.className = "peserta show";
     div.innerHTML = `
-      ${tampilkanPoin ? `<div class="rank">#${i + 1}</div>` : ""}
+      <div class="rank">#${i + 1}</div>
       <div class="nama">${p.nama.toUpperCase()}</div>
       <div class="nilai">
         💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
         🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-        ${tampilkanPoin ? `🚀 Viral: <span>${p.viral.toFixed(1)}</span><br>` : ""}
+        ${viralText}
       </div>
       <div class="total">⭐ <span class="angka">0.0</span></div>
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
@@ -214,4 +243,3 @@ function tampilkanDataSeason() {
 }
 tampilkanDataSeason();
 selectSeason.addEventListener("change", tampilkanDataSeason);
-
