@@ -5,88 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lomba Konten Kreator Tanjung Bulan</title>
   <link rel="stylesheet" href="gaya.css" />
-  
 </head>
 <body>
 
-  <h1>🏆 Poin Lomba Konten Kreator Dusun Tanjung Bulan</h1>
-  <div id="daftarJuara"></div>
+  <!-- ===== NAVBAR ===== -->
+  <nav class="nav">
+    <div class="nav-brand">🎥 Tanjung Bulan Kreator</div>
+    <button id="navToggle">☰</button>
+    <ul id="navLinks">
+      <li><a href="/kreator/daftar">Daftar Sekarang</a></li>
+      <li><a href="#hadiah">Hadiah Pemenang</a></li>
+      <li><a href="#poin">Poin Kreator</a></li>
+      <li><a href="#aturan">Aturan Lomba</a></li>
+      <li><a href="/kreator/tips">Tips & Trik</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== HEADER ===== -->
+  <header class="hero">
+    <img src="/img/pulung.jpg" alt="Pulung" class="profil-photo">
+    <div class="quote-box">
+      <span id="heroQuote"></span>
+    </div>
+
+    <!-- Dropdown Season -->
+    <div class="season-select">
+      <label for="seasonDropdown">📅 Pilih Season:</label>
+      <select id="seasonDropdown"></select>
+    </div>
+  </header>
+
+  <!-- ===== HADIAH ===== -->
+  <section id="hadiah" class="fade-in">
+    <h2>🎁 Hadiah & Pemenang</h2>
+    <div id="daftarHadiah"></div>
+  </section>
+
+  <!-- ===== POIN KREATOR ===== -->
+  <section id="poin" class="fade-in">
+    <h2>🏆 Poin Kreator</h2>
+    <div id="poinKontainer"></div>
+    <div id="pagination" class="pagination"></div>
+  </section>
+
+  <!-- ===== ATURAN LOMBA ===== -->
+  <section id="aturan" class="fade-in">
+    <h2>📜 Aturan Lomba</h2>
+    <div id="aturanKonten">
+      <p>• Lomba ini untuk umum.<br>
+      • Lokasi video harus berada di Tanjung Bulan.<br>
+      • Pengeditan boleh dilakukan di mana pun.<br>
+      • Konten hasil editan sendiri dan belum pernah diunggah di media sosial mana pun.<br>
+      • <strong>Tema:</strong> Kehidupan, Kreativitas, dan Inspirasi di Tanjung Bulan.<br>
+      • <strong>Gaya video:</strong> lucu, edukatif, dokumenter, cinematic, atau motivasi.</p>
+
+      <p><strong>💡 Poin Juri:</strong><br>
+      Kreatifitas: ide konsep (maks 150 poin), editing (maks 100 poin), karakter (maks 50 poin).<br>
+      🏡 Dampak Dusun: nuansa dusun (maks 100 poin), dampak positif/pesan (maks 100 poin).<br>
+      Total nilai juri maksimal <strong>500 poin</strong>.</p>
+
+      <p><strong>🚀 Poin TikTok:</strong><br>
+      Performa Viral: poin tak terbatas.<br>
+      Dinilai dari like, komen, dan share.<br>
+      Peserta boleh meminta bantuan teman/saudara untuk menaikkan interaksi, 
+      tetapi penggunaan bot atau pembelian like/komen/share akan <strong>diskualifikasi</strong>.<br>
+      Komentar spam juga dilarang.</p>
+    </div>
+  </section>
 
   <footer>© 2025 Tanjung Bulan Cyber™</footer>
 
+  <!-- ===== SCRIPT ===== -->
   <script src="juara.js"></script>
-  <script>
-    // ⚙️ STATUS PENILAIAN
-    // Pilihan: "tutup" (selesai, tampilkan hasil), atau "belum" (masih proses)
-    const statusPenilaian = "belum"; // ubah ke "tutup" jika hasil sudah final
-
-    if (statusPenilaian !== "tutup") {
-      const overlay = document.createElement("div");
-      overlay.id = "overlay";
-      overlay.innerHTML = `
-        <div>🕓 Penilaian masih berlangsung.<br>Hasil juara akan diumumkan setelah penilaian selesai.</div>
-        <button onclick="window.location.href='https://tiktok.com/@tanjung.bulan'">Lihat TikTok Tanjung Bulan</button>
-      `;
-      document.body.appendChild(overlay);
-    }
-
-    const container = document.getElementById("daftarJuara");
-
-    // 🧩 Buat elemen peserta dari hasilRanking di juara.js
-    hasilRanking.forEach((p, i) => {
-      // Hapus https:// atau www. dari link
-      let cleanLink = p.linkVideo.replace(/^https?:\/\/(www\.)?/i, '');
-
-      const div = document.createElement("div");
-      div.className = "peserta";
-      div.innerHTML = `
-        <div class="rank">#${i + 1}</div>
-        <div class="nama">${p.nama.toUpperCase()}</div>
-        <div class="nilai">
-          💡 Kreatifitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
-          🏡 Dampak Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-          🚀 Performa Viral: <span>${p.viral.toFixed(1)}</span>
-        </div>
-        <div class="total" id="total-${i}">0</div>
-        <a class="link" href="${p.linkVideo}" target="_blank">🔗 ${cleanLink}</a>
-      `;
-      container.appendChild(div);
-    });
-
-    // 🎞️ Animasi angka bergulir
-    function animateValue(el, start, end, duration) {
-      const range = end - start;
-      let startTime = null;
-      function step(timestamp) {
-        if (!startTime) startTime = timestamp;
-        const progress = Math.min((timestamp - startTime) / duration, 1);
-        el.textContent = Math.floor(start + range * progress);
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }
-
-    // 🌊 Efek bergelombang saat scroll
-    const pesertaEls = document.querySelectorAll(".peserta");
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, idx) => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          if (!el.classList.contains("show")) {
-            setTimeout(() => {
-              el.classList.add("show");
-              const index = Array.from(pesertaEls).indexOf(el);
-              const totalEl = el.querySelector(".total");
-              const total = hasilRanking[index].total;
-              animateValue(totalEl, 0, total, 3000);
-            }, idx * 600); // Delay antar peserta (gelombang)
-          }
-        }
-      });
-    }, { threshold: 0.3 });
-
-    pesertaEls.forEach((el) => observer.observe(el));
-  </script>
+  <script src="fungsi.js"></script>
 
 </body>
 </html>
