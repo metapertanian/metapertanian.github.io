@@ -12,22 +12,35 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // ===============================
-// 💬 Kutipan Bergantian
+// 💬 Kutipan Bergantian (Font & Style)
 // ===============================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
-  "Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
+  "Kreator hebat lahir dari dusun kecil, tapi mimpi besar.",
   "Jangan tunggu viral, buatlah karya yang bernilai."
 ];
 let indexKutipan = 0, indexHuruf = 0, intervalHuruf;
+
 function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   const teks = kutipanList[indexKutipan];
   elemen.textContent = "";
+
+  // 🌟 gaya font keren
+  elemen.style.fontFamily = "'Poppins', 'Inter', sans-serif";
+  elemen.style.fontSize = "1.6rem";
+  elemen.style.fontWeight = "600";
+  elemen.style.letterSpacing = "0.5px";
+  elemen.style.textAlign = "center";
+  elemen.style.color = "#ffe082";
+  elemen.style.textShadow = "0 0 10px rgba(255,255,255,0.3)";
+
   const cursor = document.createElement("span");
   cursor.className = "cursor";
   cursor.textContent = "|";
+  cursor.style.color = "#ffd54f";
   elemen.appendChild(cursor);
+
   indexHuruf = 0;
   clearInterval(intervalHuruf);
   intervalHuruf = setInterval(() => {
@@ -57,7 +70,6 @@ Object.keys(dataJuara).forEach(s => {
 });
 selectSeason.value = Object.keys(dataJuara)[0];
 
-// Tambahkan elemen info range nilai
 const infoRange = document.createElement("div");
 infoRange.id = "infoRange";
 infoRange.style.color = "#ccc";
@@ -70,10 +82,10 @@ selectSeason.insertAdjacentElement("afterend", infoRange);
 // ===============================
 document.getElementById("aturanText").innerHTML = `
 <ul style="line-height:1.6">
-<li>Lomba ini untuk umum.</li>
-<li>Lokasi video harus berada di <b>Tanjung Bulan</b>.</li>
-<li>Pengeditan boleh dilakukan di mana saja.</li>
-<li>Konten hasil editan sendiri dan belum pernah diunggah.</li>
+<li>Lomba terbuka untuk umum.</li>
+<li>Video harus diambil di <b>Tanjung Bulan</b>.</li>
+<li>Edit boleh dilakukan di mana saja.</li>
+<li>Video hasil karya sendiri (belum pernah diunggah).</li>
 <li>Tema: kehidupan, kreativitas, dan inspirasi di Tanjung Bulan.</li>
 <li>Gaya video: lucu, edukatif, dokumenter, cinematic, atau motivasi.</li>
 </ul>
@@ -88,25 +100,23 @@ document.getElementById("aturanText").innerHTML = `
 • dampak positif (100).<br>
 <b>Total Maksimal:</b> 500 poin.<br><br>
 <b>Poin TikTok:</b><br>
-🚀 Performa Viral: poin tak terbatas<br>
-dihitung otomatis dari jumlah like, komen, dan share.<br><br>
-Kamu bisa mengajak teman/saudara untuk menaikkan like/komen/share. Tapi tidak diperbolehkan melakukan komen spam, membeli atau menggunakan bot.<br><br>
-Yang ketahuan curang akan dikurangi poin atau didiskualifikasi.
+🚀 Viral dihitung otomatis (like, komen, share).<br><br>
+Dilarang spam komen, beli like/share, atau bot.
 `;
 
 // ===============================
 // ⚙️ Pengaturan
 // ===============================
-const tampilkanPoin = false; // ubah true/false untuk mode tampilan
+const tampilkanPoin = false; // ubah ke true jika penilaian sudah selesai
 
 // ===============================
-// 🏅 Fungsi Hitung Nilai (tanpa pembulatan kasar)
+// 🏅 Hitung Nilai Total
 // ===============================
 function hitungTotal(p) {
   const viral = (p.like * 1.0) + (p.komen * 1.5) + (p.share * 1.5);
-  const nilaiKreatif = (p.ideKonsepNilai * 1.5) + (p.editing) + (p.karakter * 0.5);
-  const nilaiLokal = (p.nuansaLokal) + (p.dampakPositif);
-  const total = parseFloat((nilaiKreatif + nilaiLokal + viral).toFixed(2)); // tampilkan 2 desimal
+  const nilaiKreatif = (p.ideKonsepNilai * 1.5) + p.editing + (p.karakter * 0.5);
+  const nilaiLokal = p.nuansaLokal + p.dampakPositif;
+  const total = parseFloat((nilaiKreatif + nilaiLokal + viral).toFixed(1));
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
 
@@ -119,7 +129,7 @@ function prosesRanking(data) {
 }
 
 // ===============================
-// 🎁 Hadiah + Juara Otomatis (1 Orang 1 Hadiah)
+// 🎁 Juara Otomatis
 // ===============================
 function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
@@ -130,52 +140,39 @@ function tampilkanHadiah() {
   const ranking = prosesRanking(data);
   const sudahMenang = new Set();
 
-  function pilihUnik(arr, sorter) {
-    return arr.find(p => !sudahMenang.has(p.nama) && sorter(p));
+  function pilihUnik(arr) {
+    return arr.find(p => !sudahMenang.has(p.nama));
   }
 
-  const juara1 = pilihUnik(ranking, () => true);
+  const juara1 = pilihUnik(ranking);
   sudahMenang.add(juara1.nama);
-  const juara2 = pilihUnik(ranking, p => p !== juara1);
+  const juara2 = pilihUnik(ranking);
   sudahMenang.add(juara2.nama);
-  const juara3 = pilihUnik(ranking, p => ![juara1, juara2].includes(p));
+  const juara3 = pilihUnik(ranking);
   sudahMenang.add(juara3.nama);
 
-  const ideTerbaik = pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai), () => true);
-  if (ideTerbaik) sudahMenang.add(ideTerbaik.nama);
-
-  const viralTertinggi = pilihUnik(ranking.sort((a,b)=>b.viral - a.viral), () => true);
-  if (viralTertinggi) sudahMenang.add(viralTertinggi.nama);
-
+  const ideTerbaik = pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
+  const viralTertinggi = pilihUnik(ranking.sort((a,b)=>b.viral - a.viral));
   const lucu = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris")
-                              .sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai), () => true);
-  if (lucu) sudahMenang.add(lucu.nama);
-
-  const lokal = pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal), () => true);
-  if (lokal) sudahMenang.add(lokal.nama);
-
+                              .sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
+  const lokal = pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal));
   const inspiratif = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif")
-                                     .sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai), () => true);
-  if (inspiratif) sudahMenang.add(inspiratif.nama);
+                                     .sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
 
   const hadiahKategori = [
-    { kategori: "Juara 1", hadiah: "Paket Data + Uang 100rb + Sertifikat", juara: juara1 },
-    { kategori: "Juara 2", hadiah: "Paket Data + Uang 75rb + Sertifikat", juara: juara2 },
-    { kategori: "Juara 3", hadiah: "Paket Data + Uang 50rb + Sertifikat", juara: juara3 },
-    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + Uang 40rb + Sertifikat", juara: ideTerbaik },
-    { kategori: "Konten Terfavorit", hadiah: "Paket Data + Uang 35rb + Sertifikat", juara: viralTertinggi },
-    { kategori: "Konten Terlucu", hadiah: "Paket Data + Uang 30rb + Sertifikat", juara: lucu },
-    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: lokal },
-    { kategori: "Paling Inspiratif", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: inspiratif }
+    { kategori: "Juara 1", hadiah: "Paket Data + 100rb + Sertifikat", juara: juara1 },
+    { kategori: "Juara 2", hadiah: "Paket Data + 75rb + Sertifikat", juara: juara2 },
+    { kategori: "Juara 3", hadiah: "Paket Data + 50rb + Sertifikat", juara: juara3 },
+    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + 40rb + Sertifikat", juara: ideTerbaik },
+    { kategori: "Konten Terfavorit", hadiah: "Paket Data + 35rb + Sertifikat", juara: viralTertinggi },
+    { kategori: "Konten Terlucu", hadiah: "Paket Data + 30rb + Sertifikat", juara: lucu },
+    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + 25rb + Sertifikat", juara: lokal },
+    { kategori: "Paling Inspiratif", hadiah: "Paket Data + 25rb + Sertifikat", juara: inspiratif }
   ];
 
   hadiahKategori.forEach(h => {
-    const poinText = tampilkanPoin
-      ? `(${h.juara ? h.juara.total.toFixed(2) : "0.00"} pts)`
-      : `<span style="color:gold">🔒 Viral Terkunci</span>`;
-
-    const juaraData = h.juara
-      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">${poinText}</span></div>`
+    const juaraData = tampilkanPoin && h.juara
+      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">(${h.juara.total.toFixed(1)} pts)</span></div>`
       : `<div class="juara">⏳ Belum diumumkan</div>`;
 
     const div = document.createElement("div");
@@ -192,19 +189,22 @@ selectSeason.addEventListener("change", tampilkanHadiah);
 tampilkanHadiah();
 
 // ===============================
-// 📊 Data Peserta + Animasi Nilai
+// 🎞️ Animasi Poin Bergulir
 // ===============================
 function animateValue(el, start, end, duration) {
   let startTime = null;
   function anim(currentTime) {
     if (!startTime) startTime = currentTime;
     const progress = Math.min((currentTime - startTime) / duration, 1);
-    el.textContent = (start + (end - start) * progress).toFixed(2);
+    el.textContent = (start + (end - start) * progress).toFixed(1);
     if (progress < 1) requestAnimationFrame(anim);
   }
   requestAnimationFrame(anim);
 }
 
+// ===============================
+// 📊 Tampilkan Data Season
+// ===============================
 function tampilkanDataSeason() {
   const season = selectSeason.value;
   const data = dataJuara[season].kreator;
@@ -218,28 +218,43 @@ function tampilkanDataSeason() {
   infoRange.textContent = `Periode: ${awal} - ${akhir}`;
 
   ranking.forEach((p, i) => {
-    const viralText = tampilkanPoin
-      ? `🚀 Viral: <span>${p.viral.toFixed(2)}</span><br>`
-      : `🚀 Viral: <span style="color:gold">🔒</span><br>`;
-
     const div = document.createElement("div");
     div.className = "peserta show";
     div.innerHTML = `
       <div class="rank">#${i + 1}</div>
       <div class="nama">${p.nama.toUpperCase()}</div>
       <div class="nilai">
-        💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(2)}</span><br>
-        🏡 Lokal: <span>${p.nilaiLokal.toFixed(2)}</span><br>
-        ${viralText}
+        💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
+        🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
+        🚀 Viral: ${tampilkanPoin ? `<span>${p.viral.toFixed(1)}</span>` : `<span style="color:gold">🔒</span>`}<br>
       </div>
-      <div class="total">⭐ <span class="angka">0.00</span></div>
+      <div class="total">⭐ <span class="angka">0.0</span></div>
+      <div class="status">${tampilkanPoin ? "Poin sudah selesai dihitung" : "Poin masih dihitung dan bisa berubah..."}</div>
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
     `;
     wadah.appendChild(div);
 
     const totalEl = div.querySelector(".angka");
-    animateValue(totalEl, 0, p.total, 2000 + i * 250);
+    setTimeout(() => animateValue(totalEl, 0, p.total, 2000), i * 600);
   });
 }
+
+// ===============================
+// 🕹️ Scroll Listener
+// ===============================
+function isInViewport(el) {
+  const rect = el.getBoundingClientRect();
+  return rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
+}
+window.addEventListener("scroll", () => {
+  document.querySelectorAll(".angka").forEach(el => {
+    if (isInViewport(el) && !el.dataset.animated) {
+      el.dataset.animated = "true";
+      const nilai = parseFloat(el.dataset.value || el.textContent);
+      animateValue(el, 0, nilai, 2000);
+    }
+  });
+});
+
 tampilkanDataSeason();
 selectSeason.addEventListener("change", tampilkanDataSeason);
