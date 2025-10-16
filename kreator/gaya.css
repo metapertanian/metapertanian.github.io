@@ -1,266 +1,235 @@
-
+/* ===========================
+   GLOBAL STYLE
+=========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 body {
-      font-family: 'Poppins', sans-serif;
-      background: #121212;
-      color: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 30px;
-      min-height: 100vh;
-    }
-/* NAVBAR */
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(160deg, #001f1c, #000);
+  color: #f5f5f5;
+  padding: 80px 20px 40px; /* ada jarak untuk navbar */
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* ===========================
+   NAVBAR
+=========================== */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   background: linear-gradient(90deg, #1b5e20, #2e7d32);
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 12px 24px;
   z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
+
 .nav-brand {
   font-size: 1.3rem;
   font-weight: bold;
   color: white;
   text-decoration: none;
 }
+
 .nav-links {
-  display: flex; gap: 20px;
+  display: flex;
+  gap: 20px;
 }
+
 .nav-links a {
   color: white;
   text-decoration: none;
   font-weight: 500;
+  transition: opacity 0.3s;
 }
-.nav-links a:hover { text-decoration: underline; }
+
+.nav-links a:hover {
+  opacity: 0.8;
+}
+
+/* Tombol menu (mode HP) */
 .nav-toggle {
   display: none;
-  background: none; border: none;
-  color: white; font-size: 1.6rem;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.6rem;
   cursor: pointer;
 }
 
+/* Responsive Navbar */
 @media (max-width: 768px) {
   .nav-links {
     position: absolute;
-    top: 60px; right: 0;
+    top: 60px;
+    right: 0;
     flex-direction: column;
     background: #2e7d32;
     width: 200px;
     padding: 15px;
     gap: 15px;
 
-    /* Animasi */
+    /* animasi drop-down */
     max-height: 0;
     overflow: hidden;
     opacity: 0;
     transform: translateY(-10px);
     transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
   }
+
   .nav-links.active {
     max-height: 500px;
     opacity: 1;
     transform: translateY(0);
   }
-  .nav-toggle { display: block; }
+
+  .nav-toggle {
+    display: block;
+  }
 }
 
-    h1 {
-      color: #00ffb7;
-      text-align: center;
-      margin-bottom: 20px;
-    }
+/* ===========================
+   HEADING UTAMA
+=========================== */
+h1 {
+  text-align: center;
+  font-size: 2.2rem;
+  color: #ffca28;
+  letter-spacing: 1px;
+  text-shadow: 0 0 15px #ffca28;
+  margin-bottom: 40px;
+  animation: fadeIn 1.2s ease-out;
+}
 
-    .form-container {
-      background: #1e1e1e;
-      border-radius: 15px;
-      padding: 25px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 0 15px rgba(0, 255, 183, 0.2);
-      animation: fadeIn 0.8s ease;
-    }
+/* ===========================
+   KARTU PESERTA
+=========================== */
+.peserta {
+  opacity: 0;
+  transform: translateY(30px);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.8s ease;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+.peserta.show {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
+/* Nama & Rank Peserta */
+.rank {
+  font-size: 1.1rem;
+  color: #ffd54f;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
 
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 8px;
-      background: #2a2a2a;
-      color: #fff;
-      font-size: 15px;
-    }
+.nama {
+  font-size: 1.6rem;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
 
-    input:focus, textarea:focus {
-      outline: 2px solid #00ffb7;
-    }
+/* Informasi Tambahan */
+.nilai {
+  line-height: 1.6;
+  color: #ddd;
+  font-size: 0.95rem;
+}
 
-    textarea {
-      resize: none;
-      height: 100px;
-    }
+.nilai span {
+  font-weight: 600;
+  color: #ffca28;
+}
 
-    button {
-      width: 100%;
-      background: #00ffb7;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+/* Link video TikTok */
+.link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  color: #90caf9;
+  text-decoration: none;
+  word-break: break-all;
+  transition: color 0.3s;
+}
 
-    button:hover {
-      background: #00e0a6;
-    }
+.link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
 
-    .footer {
-      margin-top: 30px;
-      font-size: 14px;
-      color: #aaa;
-      text-align: center;
-    }
+/* ===========================
+   NILAI TOTAL
+=========================== */
+.total {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffca28;
+  margin-top: 12px;
+  text-shadow: 0 0 15px #ffca28;
+}
 
-    .status {
-      margin-bottom: 15px;
-      text-align: center;
-      font-weight: bold;
-      color: #ffcc00;
-    }
+/* ===========================
+   OVERLAY INFO
+=========================== */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  color: #ffcc00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+  text-align: center;
+  z-index: 9999;
+  flex-direction: column;
+  padding: 20px;
+}
 
-    .closed {
-      color: #ff5555;
-    }
+#overlay button {
+  margin-top: 20px;
+  background: #00ffb7;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
 
-    .soon {
-      color: #ffaa00;
-    }
+#overlay button:hover {
+  background: #00e0a6;
+}
 
+/* ===========================
+   FOOTER
+=========================== */
+footer {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 0.9rem;
+  color: #888;
+}
 
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(160deg, #001f1c, #000);
-      color: #f5f5f5;
-      padding: 40px 20px;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2.2rem;
-      color: #ffca28;
-      letter-spacing: 1px;
-      text-shadow: 0 0 15px #ffca28;
-      margin-bottom: 50px;
-      animation: fadeIn 1.2s ease-out;
-    }
-
-    .peserta {
-      opacity: 0;
-      transform: translateY(30px);
-      background: rgba(255,255,255,0.08);
-      padding: 20px;
-      border-radius: 16px;
-      margin-bottom: 25px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-      transition: all 0.8s ease;
-    }
-    .peserta.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .rank {
-      font-size: 1.2rem;
-      color: #ffd54f;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    .nama {
-      font-size: 1.8rem;
-      color: #fff;
-      font-weight: 700;
-    }
-    .nilai {
-      margin-top: 12px;
-      line-height: 1.6;
-      color: #ddd;
-    }
-    .nilai span {
-      font-weight: 600;
-      color: #ffca28;
-    }
-    .total {
-      font-size: 2.6rem;
-      font-weight: 800;
-      color: #ffca28;
-      margin-top: 12px;
-      text-shadow: 0 0 15px #ffca28;
-    }
-    .link {
-      display: inline-block;
-      margin-top: 8px;
-      font-size: 0.95rem;
-      color: #90caf9;
-      text-decoration: none;
-      word-break: break-all;
-    }
-    .link:hover { color: #fff; text-decoration: underline; }
-
-    footer {
-      text-align: center;
-      margin-top: 60px;
-      font-size: 0.9rem;
-      color: #888;
-    }
-
-    /* Overlay jika penilaian belum ditutup */
-    #overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.95);
-      color: #ffcc00;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.4rem;
-      text-align: center;
-      z-index: 9999;
-      flex-direction: column;
-      padding: 20px;
-    }
-
-    #overlay button {
-      margin-top: 20px;
-      background: #00ffb7;
-      color: #000;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+/* ===========================
+   ANIMASI
+=========================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
