@@ -100,13 +100,13 @@ Yang ketahuan curang akan dikurangi poin atau didiskualifikasi.
 const tampilkanPoin = false; // ubah true/false untuk mode tampilan
 
 // ===============================
-// 🏅 Fungsi Hitung Nilai
+// 🏅 Fungsi Hitung Nilai (tanpa pembulatan kasar)
 // ===============================
 function hitungTotal(p) {
   const viral = (p.like * 1.0) + (p.komen * 1.5) + (p.share * 1.5);
   const nilaiKreatif = (p.ideKonsepNilai * 1.5) + (p.editing) + (p.karakter * 0.5);
   const nilaiLokal = (p.nuansaLokal) + (p.dampakPositif);
-  const total = Math.round(nilaiKreatif + nilaiLokal + viral);
+  const total = parseFloat((nilaiKreatif + nilaiLokal + viral).toFixed(2)); // tampilkan 2 desimal
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
 
@@ -128,7 +128,7 @@ function tampilkanHadiah() {
   const season = selectSeason.value;
   const data = dataJuara[season].kreator;
   const ranking = prosesRanking(data);
-  const sudahMenang = new Set(); // Cegah 1 orang menang dobel
+  const sudahMenang = new Set();
 
   function pilihUnik(arr, sorter) {
     return arr.find(p => !sudahMenang.has(p.nama) && sorter(p));
@@ -171,7 +171,7 @@ function tampilkanHadiah() {
 
   hadiahKategori.forEach(h => {
     const poinText = tampilkanPoin
-      ? `(${h.juara ? h.juara.total.toFixed(1) : "0"} pts)`
+      ? `(${h.juara ? h.juara.total.toFixed(2) : "0.00"} pts)`
       : `<span style="color:gold">🔒 Viral Terkunci</span>`;
 
     const juaraData = h.juara
@@ -199,7 +199,7 @@ function animateValue(el, start, end, duration) {
   function anim(currentTime) {
     if (!startTime) startTime = currentTime;
     const progress = Math.min((currentTime - startTime) / duration, 1);
-    el.textContent = (start + (end - start) * progress).toFixed(1);
+    el.textContent = (start + (end - start) * progress).toFixed(2);
     if (progress < 1) requestAnimationFrame(anim);
   }
   requestAnimationFrame(anim);
@@ -219,7 +219,7 @@ function tampilkanDataSeason() {
 
   ranking.forEach((p, i) => {
     const viralText = tampilkanPoin
-      ? `🚀 Viral: <span>${p.viral.toFixed(1)}</span><br>`
+      ? `🚀 Viral: <span>${p.viral.toFixed(2)}</span><br>`
       : `🚀 Viral: <span style="color:gold">🔒</span><br>`;
 
     const div = document.createElement("div");
@@ -228,11 +228,11 @@ function tampilkanDataSeason() {
       <div class="rank">#${i + 1}</div>
       <div class="nama">${p.nama.toUpperCase()}</div>
       <div class="nilai">
-        💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
-        🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
+        💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(2)}</span><br>
+        🏡 Lokal: <span>${p.nilaiLokal.toFixed(2)}</span><br>
         ${viralText}
       </div>
-      <div class="total">⭐ <span class="angka">0.0</span></div>
+      <div class="total">⭐ <span class="angka">0.00</span></div>
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
     `;
     wadah.appendChild(div);
