@@ -97,10 +97,10 @@ yang ketahuan curang akan dikurangi poin atau didiskualifikasi.
 // ===============================
 // ⚙️ Pengaturan
 // ===============================
-const tampilkanPoin = true; // jika false, poin & juara disembunyikan
+const tampilkanPoin = false; // ⬅️ ubah true/false untuk mode tampilan
 
 // ===============================
-// 🏅 Proses Perhitungan & Ranking
+// 🏅 Fungsi Hitung Nilai
 // ===============================
 function hitungTotal(p) {
   const viral = (p.like * 1.0) + (p.komen * 1.5) + (p.share * 1.5);
@@ -110,39 +110,43 @@ function hitungTotal(p) {
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
 
+// ===============================
+// 🔢 Ranking (Jika poin aktif)
+// ===============================
 function prosesRanking(data) {
-  return data.map(p => ({ ...p, ...hitungTotal(p) })).sort((a, b) => b.total - a.total);
+  return data.map(p => ({ ...p, ...hitungTotal(p) }))
+             .sort((a, b) => b.total - a.total);
 }
 
 // ===============================
-// 🎁 Hadiah + Otomatis Juara
+// 🎁 Hadiah + Juara Otomatis
 // ===============================
 function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
   wadah.innerHTML = "";
 
   const data = dataJuara[selectSeason.value].kreator;
-  const ranking = prosesRanking(data);
+  const ranking = tampilkanPoin ? prosesRanking(data) : data.map(p => ({ ...p, ...hitungTotal(p) }));
 
   const juara1 = ranking[0];
   const juara2 = ranking[1];
   const juara3 = ranking[2];
 
-  const ideTerbaik = [...data].sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
+  const ideTerbaik = [...ranking].sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
   const viralTertinggi = [...ranking].sort((a,b)=>b.viral - a.viral)[0];
-  const lucu = data.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
-  const lokal = [...data].sort((a,b)=>b.nuansaLokal - a.nuansaLokal)[0];
-  const inspiratif = data.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
+  const lucu = ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
+  const lokal = [...ranking].sort((a,b)=>b.nuansaLokal - a.nuansaLokal)[0];
+  const inspiratif = ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)[0];
 
   const hadiahKategori = [
-    { kategori: "Juara 1", hadiah: "Paket Data + Uang 100rb + Sertifikat", juara: juara1 },
-    { kategori: "Juara 2", hadiah: "Paket Data + Uang 75rb + Sertifikat", juara: juara2 },
-    { kategori: "Juara 3", hadiah: "Paket Data + Uang 50rb + Sertifikat", juara: juara3 },
-    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + Uang 40rb + Sertifikat", juara: ideTerbaik },
-    { kategori: "Konten Terfavorit", hadiah: "Paket Data + Uang 35rb + Sertifikat", juara: viralTertinggi },
-    { kategori: "Konten Terlucu", hadiah: "Paket Data + Uang 30rb + Sertifikat", juara: lucu },
-    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: lokal },
-    { kategori: "Paling Inspiratif", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: inspiratif }
+    { kategori: "Juara 1", hadiah: "Paket Data + Uang 100rb + Sertifikat", juara: tampilkanPoin ? juara1 : null },
+    { kategori: "Juara 2", hadiah: "Paket Data + Uang 75rb + Sertifikat", juara: tampilkanPoin ? juara2 : null },
+    { kategori: "Juara 3", hadiah: "Paket Data + Uang 50rb + Sertifikat", juara: tampilkanPoin ? juara3 : null },
+    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + Uang 40rb + Sertifikat", juara: tampilkanPoin ? ideTerbaik : null },
+    { kategori: "Konten Terfavorit", hadiah: "Paket Data + Uang 35rb + Sertifikat", juara: tampilkanPoin ? viralTertinggi : null },
+    { kategori: "Konten Terlucu", hadiah: "Paket Data + Uang 30rb + Sertifikat", juara: tampilkanPoin ? lucu : null },
+    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: tampilkanPoin ? lokal : null },
+    { kategori: "Paling Inspiratif", hadiah: "Paket Data + Uang 25rb + Sertifikat", juara: tampilkanPoin ? inspiratif : null }
   ];
 
   hadiahKategori.forEach(h => {
@@ -163,7 +167,7 @@ function tampilkanHadiah() {
 tampilkanHadiah();
 
 // ===============================
-// 📊 Poin Kreator (Animasi)
+// 📊 Data Peserta
 // ===============================
 function animateValue(el, start, end, duration) {
   let startTime = null;
@@ -179,26 +183,25 @@ function animateValue(el, start, end, duration) {
 function tampilkanDataSeason() {
   const season = selectSeason.value;
   const data = dataJuara[season].kreator;
-  const ranking = prosesRanking(data);
+  const ranking = tampilkanPoin ? prosesRanking(data) : data.map(p => ({ ...p, ...hitungTotal(p) }));
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
 
-  // ✅ Menampilkan nilai awal & akhir dari juara.js, bukan dari ranking
-  const awal = dataJuara[season].awal || 0;
-  const akhir = dataJuara[season].akhir || 0;
+  const awal = dataJuara[season].awal || "-";
+  const akhir = dataJuara[season].akhir || "-";
   infoRange.textContent = `periode: ${awal} - ${akhir}`;
 
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
     div.innerHTML = `
-      <div class="rank">#${i + 1}</div>
+      ${tampilkanPoin ? `<div class="rank">#${i + 1}</div>` : ""}
       <div class="nama">${p.nama.toUpperCase()}</div>
       <div class="nilai">
         💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
         🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-        🚀 Viral: <span>${p.viral.toFixed(1)}</span>
+        ${tampilkanPoin ? `🚀 Viral: <span>${p.viral.toFixed(1)}</span><br>` : ""}
       </div>
       <div class="total">⭐ <span class="angka">0.0</span></div>
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
@@ -213,18 +216,13 @@ tampilkanDataSeason();
 selectSeason.addEventListener("change", tampilkanDataSeason);
 
 // ===============================
-// 🎨 Styling Tambahan
+// 🎨 Styling
 // ===============================
 const style = document.createElement("style");
 style.innerHTML = `
-body { background:#111; margin:0; padding:0; overflow-x:hidden; }
-#kutipan {
-  font-size: 1.1rem; color: #fafafa; font-style: italic;
-  text-align: center; margin: 20px auto; max-width: 90%;
-  letter-spacing: 0.5px; min-height: 30px; position: relative;
-}
+body { background:#111; color:#fff; font-family:'Segoe UI',sans-serif; overflow-x:hidden; }
 .cursor { display:inline-block; animation:blink 0.8s infinite; color:#4caf50; }
-@keyframes blink { 0%,50%,100%{opacity:1;}25%,75%{opacity:0;} }
+@keyframes blink {0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
 
 .hadiah-card {
   background: linear-gradient(145deg,#0f2027,#203a43,#2c5364);
