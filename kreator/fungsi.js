@@ -117,9 +117,9 @@ tampilkanHadiah();
 // ===============================
 // 📊 Poin Kreator
 // ===============================
-const tampilkanPoin = true; // true = tampilkan ranking & poin, false = sembunyikan viral & ranking
-const statusPenilaian = "tutup"; // “belum” atau “tutup”
-const pesertaPerHalaman = 8;
+const tampilkanPoin = false; // true = tampilkan ranking & poin, false = sembunyikan viral & ranking
+const statusPenilaian = "belum"; // “belum” atau “tutup”
+const pesertaPerHalaman = 10;
 
 function tampilkanDataSeason() {
   const season = selectSeason.value;
