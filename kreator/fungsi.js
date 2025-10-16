@@ -132,8 +132,8 @@ tampilkanHadiah();
 // ===============================
 // 📊 Poin Kreator (dengan animasi total poin)
 // ===============================
-const tampilkanPoin = false; // true = tampilkan semua poin, false = sembunyikan poin viral & ranking
-const statusPenilaian = "belum"; // “belum” atau “tutup”
+const tampilkanPoin = true; // true = tampilkan semua poin, false = sembunyikan poin viral & ranking
+const statusPenilaian = "tutup"; // “belum” atau “tutup”
 const pesertaPerHalaman = 10;
 
 function animateValue(el, start, end, duration) {
