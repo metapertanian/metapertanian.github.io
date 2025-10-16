@@ -2,7 +2,12 @@
 // 🏆 Data Penilaian Peserta
 // ===============================
 
-const dataPeserta = [
+const dataPeserta =   {
+"Season 1": {
+    awal: "25 Oktober 2025",
+    akhir: "28 Desember 2025",
+    Sponsor: "",
+    transaksi: [
   {
     "nama": "nadia",
     "linkVideo": "https://www.tiktok.com/@nadia123",
@@ -42,7 +47,9 @@ const dataPeserta = [
     "nuansaLokal": 85,
     "dampakPositif": 78
   }
-];
+]
+}
+};
 
 // ===============================
 // 🔢 Fungsi Hitung Nilai Total
