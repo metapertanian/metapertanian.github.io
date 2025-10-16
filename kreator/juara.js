@@ -7,7 +7,7 @@ const dataPeserta =   {
     awal: "25 Oktober 2025",
     akhir: "28 Desember 2025",
     Sponsor: "",
-    transaksi: [
+    kreator: [
   {
     "nama": "nadia",
     "linkVideo": "https://www.tiktok.com/@nadia123",
