@@ -215,34 +215,3 @@ function tampilkanDataSeason() {
 tampilkanDataSeason();
 selectSeason.addEventListener("change", tampilkanDataSeason);
 
-// ===============================
-// 🎨 Styling
-// ===============================
-const style = document.createElement("style");
-style.innerHTML = `
-body { background:#111; color:#fff; font-family:'Segoe UI',sans-serif; overflow-x:hidden; }
-.cursor { display:inline-block; animation:blink 0.8s infinite; color:#4caf50; }
-@keyframes blink {0%,50%,100%{opacity:1;}25%,75%{opacity:0;}}
-
-.hadiah-card {
-  background: linear-gradient(145deg,#0f2027,#203a43,#2c5364);
-  color:#fff; border-radius:14px; padding:16px; margin:12px 0;
-  box-shadow:0 4px 12px rgba(0,0,0,0.3); transition:0.3s;
-}
-.hadiah-card:hover { transform:scale(1.03); }
-.hadiah-card .judul { font-weight:bold; font-size:1.1em; margin-bottom:6px; }
-.hadiah-card .isi { font-size:0.95em; opacity:0.9; margin-bottom:6px; }
-.hadiah-card .juara { font-size:0.9em; background:#ffffff1a; padding:4px 8px; border-radius:8px; }
-
-.peserta {
-  background:#181818; border-radius:14px; padding:16px; margin:10px 0;
-  box-shadow:0 2px 5px rgba(0,0,0,0.3); color:#fff; transition:0.3s ease;
-}
-.peserta:hover { transform:translateY(-3px); background:#1e1e1e; }
-.peserta .rank { font-weight:bold; color:#4caf50; }
-.peserta .nama { font-size:1.1em; margin:4px 0; }
-.peserta .total { font-weight:bold; color:#ffd54f; margin-top:4px; font-size:1.05em; }
-.peserta .link { display:block; margin-top:6px; color:#81d4fa; text-decoration:none; font-size:0.9em; }
-.peserta .nilai { font-size:0.9em; opacity:0.95; }
-`;
-document.head.appendChild(style);
