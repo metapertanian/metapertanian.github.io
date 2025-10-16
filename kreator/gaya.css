@@ -1,25 +1,18 @@
-/* ===========================
-   GLOBAL STYLE
-=========================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(160deg, #001f1c, #000);
   color: #f5f5f5;
-  padding: 80px 20px 40px; /* ada jarak untuk navbar */
+  padding: 80px 20px 40px;
   overflow-x: hidden;
-  position: relative;
   min-height: 100vh;
 }
 
-/* ===========================
-   NAVBAR
-=========================== */
+/* ===================== NAVBAR ===================== */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -29,33 +22,24 @@ body {
   align-items: center;
   padding: 12px 24px;
   z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
-
 .nav-brand {
   font-size: 1.3rem;
   font-weight: bold;
   color: white;
   text-decoration: none;
 }
-
 .nav-links {
   display: flex;
   gap: 20px;
 }
-
 .nav-links a {
   color: white;
   text-decoration: none;
   font-weight: 500;
   transition: opacity 0.3s;
 }
-
-.nav-links a:hover {
-  opacity: 0.8;
-}
-
-/* Tombol menu (mode HP) */
+.nav-links a:hover { opacity: 0.8; }
 .nav-toggle {
   display: none;
   background: none;
@@ -64,8 +48,6 @@ body {
   font-size: 1.6rem;
   cursor: pointer;
 }
-
-/* Responsive Navbar */
 @media (max-width: 768px) {
   .nav-links {
     position: absolute;
@@ -76,149 +58,92 @@ body {
     width: 200px;
     padding: 15px;
     gap: 15px;
-
-    /* animasi drop-down */
     max-height: 0;
     overflow: hidden;
     opacity: 0;
     transform: translateY(-10px);
-    transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+    transition: 0.4s ease;
   }
-
   .nav-links.active {
     max-height: 500px;
     opacity: 1;
     transform: translateY(0);
   }
-
-  .nav-toggle {
-    display: block;
-  }
+  .nav-toggle { display: block; }
 }
 
-/* ===========================
-   HEADING UTAMA
-=========================== */
-h1 {
+/* ===================== HEADER ===================== */
+.header {
   text-align: center;
-  font-size: 2.2rem;
+  margin-top: 30px;
+}
+.profil-img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid #00ffb7;
+  margin-bottom: 10px;
+}
+.kutipan {
+  font-size: 1rem;
   color: #ffca28;
-  letter-spacing: 1px;
-  text-shadow: 0 0 15px #ffca28;
-  margin-bottom: 40px;
-  animation: fadeIn 1.2s ease-out;
+  min-height: 24px;
+  animation: fadeIn 1.5s ease;
+  margin-bottom: 15px;
+}
+.season-select {
+  margin-top: 10px;
 }
 
-/* ===========================
-   KARTU PESERTA
-=========================== */
+/* ===================== BAGIAN LAIN ===================== */
+section {
+  margin-top: 60px;
+}
+h2 {
+  color: #ffca28;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ===================== PESERTA ===================== */
 .peserta {
   opacity: 0;
   transform: translateY(30px);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255,255,255,0.08);
   padding: 20px;
   border-radius: 16px;
   margin-bottom: 25px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.8s ease;
 }
-
 .peserta.show {
   opacity: 1;
   transform: translateY(0);
 }
-
-/* Nama & Rank Peserta */
 .rank {
   font-size: 1.1rem;
   color: #ffd54f;
-  font-weight: 600;
-  margin-bottom: 4px;
 }
-
 .nama {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #fff;
   font-weight: 700;
   margin-bottom: 8px;
 }
-
-/* Informasi Tambahan */
-.nilai {
-  line-height: 1.6;
-  color: #ddd;
-  font-size: 0.95rem;
-}
-
-.nilai span {
-  font-weight: 600;
-  color: #ffca28;
-}
-
-/* Link video TikTok */
+.nilai { line-height: 1.6; color: #ddd; }
+.nilai span { font-weight: 600; color: #ffca28; }
 .link {
-  display: inline-block;
-  margin-top: 8px;
-  font-size: 0.95rem;
   color: #90caf9;
   text-decoration: none;
-  word-break: break-all;
-  transition: color 0.3s;
 }
-
-.link:hover {
-  color: #fff;
-  text-decoration: underline;
-}
-
-/* ===========================
-   NILAI TOTAL
-=========================== */
+.link:hover { text-decoration: underline; }
 .total {
-  font-size: 2.2rem;
+  font-size: 2rem;
   font-weight: 800;
   color: #ffca28;
-  margin-top: 12px;
+  margin-top: 8px;
   text-shadow: 0 0 15px #ffca28;
 }
 
-/* ===========================
-   OVERLAY INFO
-=========================== */
-#overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  color: #ffcc00;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.4rem;
-  text-align: center;
-  z-index: 9999;
-  flex-direction: column;
-  padding: 20px;
-}
-
-#overlay button {
-  margin-top: 20px;
-  background: #00ffb7;
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-#overlay button:hover {
-  background: #00e0a6;
-}
-
-/* ===========================
-   FOOTER
-=========================== */
 footer {
   text-align: center;
   margin-top: 60px;
@@ -226,9 +151,7 @@ footer {
   color: #888;
 }
 
-/* ===========================
-   ANIMASI
-=========================== */
+/* ===================== ANIMASI ===================== */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
