@@ -17,9 +17,9 @@ document.querySelectorAll("#menu a").forEach(link => {
 // 💬 Kutipan Bergantian (huruf demi huruf + efek mengetik)
 // ===============================
 const kutipanList = [
-  "📷 Dari satu kamera, menyimpan seribu cerita.",
-  "🔥 Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
-  "💫 Jangan tunggu viral, buatlah karya yang bernilai."
+  "Dari satu kamera, menyimpan seribu cerita.",
+  "Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
+  "Jangan tunggu viral, buatlah karya yang bernilai."
 ];
 
 let indexKutipan = 0;
@@ -79,11 +79,19 @@ document.getElementById("aturanText").innerHTML = `
 </ul>
 <br>
 <b>Poin Juri:</b><br>
-💡 Kreativitas: ide (150), editing (100), karakter (50).<br>
-🏡 Dampak Dusun: nuansa (100), dampak positif (100).<br>
+💡 Kreativitas:<br>
+• ide konsep (150),<br>
+• editing (100),<br>
+• karakter (50).<br>
+🏡 Dampak Dusun:<br>
+• nuansa (100),<br>
+• dampak positif (100).<br>
 <b>Total Maksimal:</b> 500 poin.<br><br>
 <b>Poin TikTok:</b><br>
-🚀 Performa Viral dihitung otomatis dari jumlah like, komen, dan share.
+🚀 Performa Viral: poin tak terbatas<br>
+dihitung otomatis dari jumlah like, komen, dan share.<br><br>
+kamu bisa mengajak teman/saudara untuk menaikkan like/komen/share. tapi tidak diperbolehkan melakukan komen spam, membeli atau menggunakan bot untuk menaikkan like/komen/share.<br><br>
+siapa saja yg sengaja melakukan kecurangan akan kami kurangi poin atau bahkan kami diskualifikasi.
 `;
 
 // ===============================
