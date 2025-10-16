@@ -4,80 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lomba Konten Kreator Tanjung Bulan</title>
-  <link rel="stylesheet" href="gaya.css" />
+  <link rel="stylesheet" href="gaya.css">
 </head>
 <body>
 
-  <!-- ===== NAVBAR ===== -->
+  <!-- 🔝 NAVBAR -->
   <nav class="nav">
-    <div class="nav-brand">🎥 Tanjung Bulan Kreator</div>
-    <button id="navToggle">☰</button>
-    <ul id="navLinks">
-      <li><a href="/kreator/daftar">Daftar Sekarang</a></li>
-      <li><a href="#hadiah">Hadiah Pemenang</a></li>
-      <li><a href="#poin">Poin Kreator</a></li>
-      <li><a href="#aturan">Aturan Lomba</a></li>
-      <li><a href="/kreator/tips">Tips & Trik</a></li>
-    </ul>
+    <a href="/" class="nav-brand">🎥 Konten Kreator</a>
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="menu">
+      <a href="/kreator/daftar">Daftar Sekarang</a>
+      <a href="#hadiah">Hadiah Pemenang</a>
+      <a href="#poin">Poin Kreator</a>
+      <a href="#aturan">Aturan Lomba</a>
+      <a href="/kreator/tips">Tips & Trik</a>
+    </div>
   </nav>
 
-  <!-- ===== HEADER ===== -->
-  <header class="hero">
-    <img src="/img/pulung.jpg" alt="Pulung" class="profil-photo">
-    <div class="quote-box">
-      <span id="heroQuote"></span>
-    </div>
+  <!-- 👤 HEADER -->
+  <header class="header">
+    <img src="/img/pulung.jpg" alt="Profil" class="profil-img">
+    <div class="kutipan" id="kutipan"></div>
 
-    <!-- Dropdown Season -->
+    <!-- Pilihan Season -->
     <div class="season-select">
-      <label for="seasonDropdown">📅 Pilih Season:</label>
-      <select id="seasonDropdown"></select>
+      <label for="season">📅 Pilih Season:</label>
+      <select id="season" onchange="tampilkanDataSeason()"></select>
     </div>
   </header>
 
-  <!-- ===== HADIAH ===== -->
-  <section id="hadiah" class="fade-in">
-    <h2>🎁 Hadiah & Pemenang</h2>
-    <div id="daftarHadiah"></div>
+  <!-- 🏆 HADIAH PEMENANG -->
+  <section id="hadiah">
+    <h2>🏅 Hadiah Juara</h2>
+    <div id="hadiahList"></div>
   </section>
 
-  <!-- ===== POIN KREATOR ===== -->
-  <section id="poin" class="fade-in">
-    <h2>🏆 Poin Kreator</h2>
-    <div id="poinKontainer"></div>
-    <div id="pagination" class="pagination"></div>
+  <!-- 💥 POIN PESERTA -->
+  <section id="poin">
+    <h2>📊 Poin Kreator</h2>
+    <div id="statusPoin"></div>
+    <div id="daftarPeserta"></div>
+    <div id="pagination"></div>
   </section>
 
-  <!-- ===== ATURAN LOMBA ===== -->
-  <section id="aturan" class="fade-in">
-    <h2>📜 Aturan Lomba</h2>
-    <div id="aturanKonten">
-      <p>• Lomba ini untuk umum.<br>
-      • Lokasi video harus berada di Tanjung Bulan.<br>
-      • Pengeditan boleh dilakukan di mana pun.<br>
-      • Konten hasil editan sendiri dan belum pernah diunggah di media sosial mana pun.<br>
-      • <strong>Tema:</strong> Kehidupan, Kreativitas, dan Inspirasi di Tanjung Bulan.<br>
-      • <strong>Gaya video:</strong> lucu, edukatif, dokumenter, cinematic, atau motivasi.</p>
-
-      <p><strong>💡 Poin Juri:</strong><br>
-      Kreatifitas: ide konsep (maks 150 poin), editing (maks 100 poin), karakter (maks 50 poin).<br>
-      🏡 Dampak Dusun: nuansa dusun (maks 100 poin), dampak positif/pesan (maks 100 poin).<br>
-      Total nilai juri maksimal <strong>500 poin</strong>.</p>
-
-      <p><strong>🚀 Poin TikTok:</strong><br>
-      Performa Viral: poin tak terbatas.<br>
-      Dinilai dari like, komen, dan share.<br>
-      Peserta boleh meminta bantuan teman/saudara untuk menaikkan interaksi, 
-      tetapi penggunaan bot atau pembelian like/komen/share akan <strong>diskualifikasi</strong>.<br>
-      Komentar spam juga dilarang.</p>
-    </div>
+  <!-- 📜 ATURAN -->
+  <section id="aturan">
+    <h2>📖 Aturan Lomba</h2>
+    <div class="aturan-content" id="aturanText"></div>
   </section>
 
   <footer>© 2025 Tanjung Bulan Cyber™</footer>
 
-  <!-- ===== SCRIPT ===== -->
   <script src="juara.js"></script>
   <script src="fungsi.js"></script>
-
 </body>
 </html>
