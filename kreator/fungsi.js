@@ -5,7 +5,6 @@ function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("active");
 }
-
 document.querySelectorAll("#menu a").forEach(link => {
   link.addEventListener("click", () => {
     document.getElementById("menu").classList.remove("active");
@@ -50,13 +49,21 @@ tampilkanKutipanHurufDemiHuruf();
 // 📅 Dropdown Season
 // ===============================
 const selectSeason = document.getElementById("season");
-Object.keys(dataPeserta).forEach(s => {
+Object.keys(dataJuara).forEach(s => {
   const opt = document.createElement("option");
   opt.value = s;
   opt.textContent = s;
   selectSeason.appendChild(opt);
 });
-selectSeason.value = Object.keys(dataPeserta)[0];
+selectSeason.value = Object.keys(dataJuara)[0];
+
+// Tambahkan elemen info range nilai
+const infoRange = document.createElement("div");
+infoRange.id = "infoRange";
+infoRange.style.color = "#ccc";
+infoRange.style.fontSize = "0.9em";
+infoRange.style.marginTop = "6px";
+selectSeason.insertAdjacentElement("afterend", infoRange);
 
 // ===============================
 // 📜 Aturan Lomba
@@ -114,7 +121,7 @@ function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
   wadah.innerHTML = "";
 
-  const data = dataPeserta[selectSeason.value].kreator;
+  const data = dataJuara[selectSeason.value].kreator;
   const ranking = prosesRanking(data);
 
   const juara1 = ranking[0];
@@ -171,11 +178,16 @@ function animateValue(el, start, end, duration) {
 
 function tampilkanDataSeason() {
   const season = selectSeason.value;
-  const data = dataPeserta[season].kreator;
+  const data = dataJuara[season].kreator;
   const ranking = prosesRanking(data);
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
+
+  // ✅ Menampilkan nilai awal & akhir dari juara.js, bukan dari ranking
+  const awal = dataJuara[season].awal || 0;
+  const akhir = dataJuara[season].akhir || 0;
+  infoRange.textContent = `periode: ${awal} - ${akhir}`;
 
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
@@ -198,13 +210,14 @@ function tampilkanDataSeason() {
   });
 }
 tampilkanDataSeason();
+selectSeason.addEventListener("change", tampilkanDataSeason);
 
 // ===============================
 // 🎨 Styling Tambahan
 // ===============================
 const style = document.createElement("style");
 style.innerHTML = `
-body { background:#111; margin:0; padding:0; overflow-x:hidden; } /* hilangkan garis putih */
+body { background:#111; margin:0; padding:0; overflow-x:hidden; }
 #kutipan {
   font-size: 1.1rem; color: #fafafa; font-style: italic;
   text-align: center; margin: 20px auto; max-width: 90%;
