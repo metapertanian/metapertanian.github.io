@@ -12,7 +12,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // ===============================
-// 💬 Kutipan Bergantian (Font & Style)
+// 💬 Kutipan Bergantian
 // ===============================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -25,17 +25,14 @@ function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   const teks = kutipanList[indexKutipan];
   elemen.textContent = "";
-
   elemen.style.fontFamily = "'Poppins', 'Inter', sans-serif";
   elemen.style.fontSize = "1.6rem";
   elemen.style.fontWeight = "600";
-  elemen.style.letterSpacing = "0.5px";
   elemen.style.textAlign = "center";
   elemen.style.color = "#ffe082";
   elemen.style.textShadow = "0 0 10px rgba(255,255,255,0.3)";
 
   const cursor = document.createElement("span");
-  cursor.className = "cursor";
   cursor.textContent = "|";
   cursor.style.color = "#ffd54f";
   elemen.appendChild(cursor);
@@ -107,9 +104,18 @@ Dilarang spam komen, beli like/share, atau bot.
 // 🏅 Hitung Nilai Total
 // ===============================
 function hitungTotal(p, tampilkanPoin) {
-  const viral = (p.like * 1.0) + (p.komen * 1.5) + (p.share * 1.5);
-  const nilaiKreatif = (p.ideKonsepNilai * 1.5) + p.editing + (p.karakter * 0.5);
-  const nilaiLokal = p.nuansaLokal + p.dampakPositif;
+  const like = Number(p.like) || 0;
+  const komen = Number(p.komen) || 0;
+  const share = Number(p.share) || 0;
+  const ide = Number(p.ideKonsepNilai) || 0;
+  const edit = Number(p.editing) || 0;
+  const karakter = Number(p.karakter) || 0;
+  const nuansa = Number(p.nuansaLokal) || 0;
+  const dampak = Number(p.dampakPositif) || 0;
+
+  const viral = (like * 1.0) + (komen * 1.5) + (share * 1.5);
+  const nilaiKreatif = (ide * 1.5) + edit + (karakter * 0.5);
+  const nilaiLokal = nuansa + dampak;
   const total = tampilkanPoin
     ? parseFloat((nilaiKreatif + nilaiLokal + viral).toFixed(1))
     : parseFloat((nilaiKreatif + nilaiLokal).toFixed(1));
@@ -143,26 +149,47 @@ function animateValue(el, start, end, duration) {
 // ===============================
 function tampilkanDataSeason() {
   const season = selectSeason.value;
-  const data = dataJuara[season].kreator;
-  const tampilkanPoin = dataJuara[season].Poin === true || dataJuara[season].Poin === "true";
-  const sponsor = dataJuara[season].Sponsor || "-";
+  const dataSeason = dataJuara[season];
+  if (!dataSeason) return;
+
+  const data = dataSeason.kreator || [];
+  const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
+  const sponsor = dataSeason.Sponsor || "-";
+  const hadiah = dataSeason.Hadiah || {
+    juara1: "Hadiah Utama",
+    juara2: "Hadiah Kedua",
+    juara3: "Hadiah Ketiga"
+  };
   const ranking = prosesRanking(data, tampilkanPoin);
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
 
-  const awal = dataJuara[season].awal || "-";
-  const akhir = dataJuara[season].akhir || "-";
+  const awal = dataSeason.awal || "-";
+  const akhir = dataSeason.akhir || "-";
+
   infoRange.innerHTML = `
-    <div style="font-weight:600;">📅 ${awal} - ${akhir}</div>
-    <div style="color:#ffd54f; font-style:italic; margin-top:2px;">🎗️ Sponsor: ${sponsor}</div>
+    <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-top:8px;">
+      <div style="font-weight:700; color:#fff;">${awal} - ${akhir}</div>
+      <div style="margin-top:4px; font-size:0.95em;">
+        <span style="color:#ffeb3b;">🎗️ Sponsor:</span><br>
+        <span style="font-style:italic; color:#fdd835;">${sponsor}</span>
+      </div>
+      <div style="margin-top:8px; color:#90caf9; font-size:0.9em;">
+        🏆 <b>Hadiah:</b> Juara 1 (${hadiah.juara1}), Juara 2 (${hadiah.juara2}), Juara 3 (${hadiah.juara3})
+      </div>
+    </div>
   `;
 
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
-
     const rankDisplay = tampilkanPoin ? `<div class="rank">#${i + 1}</div>` : "";
+
+    let hadiahText = "";
+    if (i === 0) hadiahText = `<div class="hadiah">🏅 ${hadiah.juara1}</div>`;
+    else if (i === 1) hadiahText = `<div class="hadiah">🥈 ${hadiah.juara2}</div>`;
+    else if (i === 2) hadiahText = `<div class="hadiah">🥉 ${hadiah.juara3}</div>`;
 
     div.innerHTML = `
       ${rankDisplay}
@@ -170,16 +197,18 @@ function tampilkanDataSeason() {
       <div class="nilai">
         💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
         🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-        🚀 Viral: ${tampilkanPoin ? `<span>${p.viral.toFixed(1)}</span>` : `<span style="color:gold">🔒</span>`}<br>
+        🚀 Viral: ${tampilkanPoin ? `<span>${p.viral.toFixed(1)}</span>` : `<span style="color:gold">🔒</span>`}
       </div>
       <div class="total">⭐ <span class="angka">0.0</span></div>
-      <div class="status">${tampilkanPoin ? "Poin sudah selesai dihitung" : "Poin viral belum ditampilkan"}</div>
+      ${hadiahText}
+      <div class="status">${tampilkanPoin ? "✅ Poin sudah dihitung lengkap" : "⏳ Poin viral belum ditampilkan"}</div>
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
     `;
     wadah.appendChild(div);
 
     const totalEl = div.querySelector(".angka");
-    setTimeout(() => animateValue(totalEl, 0, p.total, 2000), i * 600);
+    totalEl.dataset.animated = "false";
+    setTimeout(() => animateValue(totalEl, 0, p.total, 2000), i * 400);
   });
 }
 
@@ -192,9 +221,9 @@ function isInViewport(el) {
 }
 window.addEventListener("scroll", () => {
   document.querySelectorAll(".angka").forEach(el => {
-    if (isInViewport(el) && !el.dataset.animated) {
+    if (isInViewport(el) && el.dataset.animated === "false") {
       el.dataset.animated = "true";
-      const nilai = parseFloat(el.dataset.value || el.textContent);
+      const nilai = parseFloat(el.textContent);
       animateValue(el, 0, nilai, 2000);
     }
   });
