@@ -26,7 +26,7 @@ function tampilkanKutipanHurufDemiHuruf() {
   const teks = kutipanList[indexKutipan];
   elemen.textContent = "";
   elemen.style.fontFamily = "'Poppins', 'Inter', sans-serif";
-  elemen.style.fontSize = "1.6rem";
+  elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
   elemen.style.color = "#ffe082";
@@ -153,9 +153,9 @@ function tampilkanDataSeason() {
   // 🏆 Info Umum
   infoRange.innerHTML = `
     <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-top:8px;">
-      <div style="font-weight:700; color:#fff;">📅 ${awal} - ${akhir}</div>
+      <div style="font-weight:700; color:#fff;">${awal} - ${akhir}</div>
       <div style="margin-top:4px; font-size:0.95em;">
-        <span style="color:#ffeb3b;">🎗️ Sponsor:</span>
+        <span style="color:#ffeb3b;">🎗️ Sponsor:</span><br>
         <span style="font-style:italic; color:#fdd835;">${sponsor}</span>
       </div>
     </div>
