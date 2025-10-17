@@ -116,9 +116,11 @@ function hitungTotal(p, tampilkanPoin) {
   const viral = (like * 1.0) + (komen * 1.5) + (share * 1.5);
   const nilaiKreatif = (ide * 1.5) + edit + (karakter * 0.5);
   const nilaiLokal = nuansa + dampak;
+
   const total = tampilkanPoin
     ? parseFloat((nilaiKreatif + nilaiLokal + viral).toFixed(1))
     : parseFloat((nilaiKreatif + nilaiLokal).toFixed(1));
+
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
 
@@ -126,7 +128,12 @@ function hitungTotal(p, tampilkanPoin) {
 // 🔢 Ranking per Season
 // ===============================
 function prosesRanking(data, tampilkanPoin) {
-  return data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }))
+  if (!tampilkanPoin) {
+    // Jika poin belum dibuka → urut sesuai urutan input
+    return data.map(p => ({ ...p, ...hitungTotal(p, false) }));
+  }
+  // Jika poin dibuka → urut berdasarkan nilai total
+  return data.map(p => ({ ...p, ...hitungTotal(p, true) }))
              .sort((a, b) => b.total - a.total);
 }
 
@@ -141,9 +148,7 @@ function tampilkanDataSeason() {
   const data = dataSeason.kreator || [];
   const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
   const sponsor = dataSeason.Sponsor || "-";
-  const hadiah = dataSeason.Hadiah || {};
   const ranking = prosesRanking(data, tampilkanPoin);
-
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
 
@@ -190,26 +195,28 @@ function tampilkanHadiah() {
   wadah.innerHTML = "";
 
   const season = selectSeason.value;
-  const data = dataJuara[season].kreator;
-  const ranking = prosesRanking(data);
+  const dataSeason = dataJuara[season];
+  const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
+  const data = dataSeason.kreator || [];
+  const ranking = prosesRanking(data, tampilkanPoin);
   const sudahMenang = new Set();
 
   function pilihUnik(arr) {
     return arr.find(p => !sudahMenang.has(p.nama));
   }
 
-  const juara1 = pilihUnik(ranking);
-  sudahMenang.add(juara1.nama);
-  const juara2 = pilihUnik(ranking);
-  sudahMenang.add(juara2.nama);
-  const juara3 = pilihUnik(ranking);
-  sudahMenang.add(juara3.nama);
+  const juara1 = tampilkanPoin ? pilihUnik(ranking) : null;
+  if (juara1) sudahMenang.add(juara1.nama);
+  const juara2 = tampilkanPoin ? pilihUnik(ranking) : null;
+  if (juara2) sudahMenang.add(juara2.nama);
+  const juara3 = tampilkanPoin ? pilihUnik(ranking) : null;
+  if (juara3) sudahMenang.add(juara3.nama);
 
-  const ideTerbaik = pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
-  const viralTertinggi = pilihUnik(ranking.sort((a,b)=>b.viral - a.viral));
-  const lucu = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
-  const lokal = pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal));
-  const inspiratif = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
+  const ideTerbaik = tampilkanPoin ? pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)) : null;
+  const viralTertinggi = tampilkanPoin ? pilihUnik(ranking.sort((a,b)=>b.viral - a.viral)) : null;
+  const lucu = tampilkanPoin ? pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)) : null;
+  const lokal = tampilkanPoin ? pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal)) : null;
+  const inspiratif = tampilkanPoin ? pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)) : null;
 
   const hadiahKategori = [
     { kategori: "Juara 1", hadiah: "Paket Data + 100rb + Sertifikat", juara: juara1 },
@@ -223,7 +230,7 @@ function tampilkanHadiah() {
   ];
 
   hadiahKategori.forEach(h => {
-    const juaraData = h.juara
+    const juaraData = tampilkanPoin && h.juara
       ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">(${h.juara.total.toFixed(1)} pts)</span></div>`
       : `<div class="juara">⏳ Belum diumumkan</div>`;
 
