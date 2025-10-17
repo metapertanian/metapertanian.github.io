@@ -131,20 +131,6 @@ function prosesRanking(data, tampilkanPoin) {
 }
 
 // ===============================
-// 🎞️ Animasi Nilai Bergulir
-// ===============================
-function animateValue(el, start, end, duration) {
-  let startTime = null;
-  function anim(currentTime) {
-    if (!startTime) startTime = currentTime;
-    const progress = Math.min((currentTime - startTime) / duration, 1);
-    el.textContent = (start + (end - start) * progress).toFixed(1);
-    if (progress < 1) requestAnimationFrame(anim);
-  }
-  requestAnimationFrame(anim);
-}
-
-// ===============================
 // 📊 Tampilkan Data Season
 // ===============================
 function tampilkanDataSeason() {
@@ -155,11 +141,7 @@ function tampilkanDataSeason() {
   const data = dataSeason.kreator || [];
   const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
   const sponsor = dataSeason.Sponsor || "-";
-  const hadiah = dataSeason.Hadiah || {
-    juara1: "Hadiah Utama",
-    juara2: "Hadiah Kedua",
-    juara3: "Hadiah Ketiga"
-  };
+  const hadiah = dataSeason.Hadiah || {};
   const ranking = prosesRanking(data, tampilkanPoin);
 
   const wadah = document.getElementById("daftarPeserta");
@@ -168,28 +150,22 @@ function tampilkanDataSeason() {
   const awal = dataSeason.awal || "-";
   const akhir = dataSeason.akhir || "-";
 
+  // 🏆 Info Umum
   infoRange.innerHTML = `
     <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-top:8px;">
-      <div style="font-weight:700; color:#fff;">${awal} - ${akhir}</div>
+      <div style="font-weight:700; color:#fff;">📅 ${awal} - ${akhir}</div>
       <div style="margin-top:4px; font-size:0.95em;">
-        <span style="color:#ffeb3b;">🎗️ Sponsor:</span><br>
+        <span style="color:#ffeb3b;">🎗️ Sponsor:</span>
         <span style="font-style:italic; color:#fdd835;">${sponsor}</span>
-      </div>
-      <div style="margin-top:8px; color:#90caf9; font-size:0.9em;">
-        🏆 <b>Hadiah:</b> Juara 1 (${hadiah.juara1}), Juara 2 (${hadiah.juara2}), Juara 3 (${hadiah.juara3})
       </div>
     </div>
   `;
 
+  // 🧑‍🎨 Daftar Peserta
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
     const rankDisplay = tampilkanPoin ? `<div class="rank">#${i + 1}</div>` : "";
-
-    let hadiahText = "";
-    if (i === 0) hadiahText = `<div class="hadiah">🏅 ${hadiah.juara1}</div>`;
-    else if (i === 1) hadiahText = `<div class="hadiah">🥈 ${hadiah.juara2}</div>`;
-    else if (i === 2) hadiahText = `<div class="hadiah">🥉 ${hadiah.juara3}</div>`;
 
     div.innerHTML = `
       ${rankDisplay}
@@ -199,35 +175,73 @@ function tampilkanDataSeason() {
         🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
         🚀 Viral: ${tampilkanPoin ? `<span>${p.viral.toFixed(1)}</span>` : `<span style="color:gold">🔒</span>`}
       </div>
-      <div class="total">⭐ <span class="angka">0.0</span></div>
-      ${hadiahText}
-      <div class="status">${tampilkanPoin ? "✅ Poin sudah dihitung lengkap" : "⏳ Poin viral belum ditampilkan"}</div>
+      <div class="total">⭐ <span>${p.total.toFixed(1)}</span></div>
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>
     `;
     wadah.appendChild(div);
-
-    const totalEl = div.querySelector(".angka");
-    totalEl.dataset.animated = "false";
-    setTimeout(() => animateValue(totalEl, 0, p.total, 2000), i * 400);
   });
 }
 
 // ===============================
-// 🕹️ Scroll Listener
+// 🎁 Juara Otomatis
 // ===============================
-function isInViewport(el) {
-  const rect = el.getBoundingClientRect();
-  return rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight);
-}
-window.addEventListener("scroll", () => {
-  document.querySelectorAll(".angka").forEach(el => {
-    if (isInViewport(el) && el.dataset.animated === "false") {
-      el.dataset.animated = "true";
-      const nilai = parseFloat(el.textContent);
-      animateValue(el, 0, nilai, 2000);
-    }
+function tampilkanHadiah() {
+  const wadah = document.getElementById("hadiahList");
+  wadah.innerHTML = "";
+
+  const season = selectSeason.value;
+  const data = dataJuara[season].kreator;
+  const ranking = prosesRanking(data);
+  const sudahMenang = new Set();
+
+  function pilihUnik(arr) {
+    return arr.find(p => !sudahMenang.has(p.nama));
+  }
+
+  const juara1 = pilihUnik(ranking);
+  sudahMenang.add(juara1.nama);
+  const juara2 = pilihUnik(ranking);
+  sudahMenang.add(juara2.nama);
+  const juara3 = pilihUnik(ranking);
+  sudahMenang.add(juara3.nama);
+
+  const ideTerbaik = pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
+  const viralTertinggi = pilihUnik(ranking.sort((a,b)=>b.viral - a.viral));
+  const lucu = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
+  const lokal = pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal));
+  const inspiratif = pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai));
+
+  const hadiahKategori = [
+    { kategori: "Juara 1", hadiah: "Paket Data + 100rb + Sertifikat", juara: juara1 },
+    { kategori: "Juara 2", hadiah: "Paket Data + 75rb + Sertifikat", juara: juara2 },
+    { kategori: "Juara 3", hadiah: "Paket Data + 50rb + Sertifikat", juara: juara3 },
+    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + 40rb + Sertifikat", juara: ideTerbaik },
+    { kategori: "Konten Terfavorit", hadiah: "Paket Data + 35rb + Sertifikat", juara: viralTertinggi },
+    { kategori: "Konten Terlucu", hadiah: "Paket Data + 30rb + Sertifikat", juara: lucu },
+    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + 25rb + Sertifikat", juara: lokal },
+    { kategori: "Paling Inspiratif", hadiah: "Paket Data + 25rb + Sertifikat", juara: inspiratif }
+  ];
+
+  hadiahKategori.forEach(h => {
+    const juaraData = h.juara
+      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">(${h.juara.total.toFixed(1)} pts)</span></div>`
+      : `<div class="juara">⏳ Belum diumumkan</div>`;
+
+    const div = document.createElement("div");
+    div.className = "hadiah-card";
+    div.innerHTML = `
+      <div class="judul">${h.kategori}</div>
+      <div class="isi">${h.hadiah}</div>
+      ${juaraData}
+    `;
+    wadah.appendChild(div);
   });
+}
+
+selectSeason.addEventListener("change", () => {
+  tampilkanDataSeason();
+  tampilkanHadiah();
 });
 
 tampilkanDataSeason();
-selectSeason.addEventListener("change", tampilkanDataSeason);
+tampilkanHadiah();
