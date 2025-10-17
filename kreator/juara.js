@@ -8,6 +8,7 @@ const dataJuara = {
     awal: "10 Januari 2026",
     akhir: "20 Maret 2026",
     Sponsor: "Bank Desa Nusantara",
+    Poin: "false",
     kreator: [
       { nama: "Mulyono", linkVideo: "https://www.tiktok.com/@mulyono_tb", like: 55, komen: 8, share: 4, ideKonsepTipe: "Motivasi", ideKonsepNilai: 90, editing: 82, karakter: 80, nuansaLokal: 88, dampakPositif: 85 },
       { nama: "Riswadi", linkVideo: "https://www.tiktok.com/@riswadi_tb", like: 65, komen: 9, share: 5, ideKonsepTipe: "Inspiratif", ideKonsepNilai: 92, editing: 85, karakter: 84, nuansaLokal: 86, dampakPositif: 87 },
@@ -26,6 +27,7 @@ const dataJuara = {
     awal: "25 Oktober 2025",
     akhir: "28 Desember 2025",
     Sponsor: "Toko Tani Makmur",
+    Poin: "true",
     kreator: [
       { nama: "Nadia", linkVideo: "https://www.tiktok.com/@nadia123", like: 30, komen: 5, share: 1, ideKonsepTipe: "Humoris", ideKonsepNilai: 87, editing: 70, karakter: 68, nuansaLokal: 80, dampakPositif: 75 },
       { nama: "Tama", linkVideo: "https://www.tiktok.com/@tama_risma", like: 40, komen: 10, share: 2, ideKonsepTipe: "Inspiratif", ideKonsepNilai: 90, editing: 85, karakter: 80, nuansaLokal: 75, dampakPositif: 88 },
