@@ -16,8 +16,8 @@ document.querySelectorAll("#menu a").forEach(link => {
 // ===============================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
-  "Kreator hebat lahir dari dusun kecil, tapi mimpi besar.",
-  "Jangan tunggu viral, buatlah karya yang bernilai."
+  "Jangan tunggu viral, buatlah karya yang bernilai.",
+  "Kreator hebat lahir dari dusun yg kecil, tapi mimpi yg besar.",
 ];
 let indexKutipan = 0, indexHuruf = 0, intervalHuruf;
 
@@ -215,7 +215,7 @@ function tampilkanDataSeason() {
 
   const awal = dataJuara[season].awal || "-";
   const akhir = dataJuara[season].akhir || "-";
-  infoRange.textContent = `Periode: ${awal} - ${akhir}`;
+  infoRange.textContent = `${awal} - ${akhir}`;
 
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
