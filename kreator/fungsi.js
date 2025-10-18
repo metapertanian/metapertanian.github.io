@@ -83,7 +83,9 @@ searchContainer.innerHTML = `
   <input type="text" id="searchNama" placeholder="Cari nama peserta..." 
   style="padding:8px 12px; border-radius:8px; width:70%; max-width:300px; border:none; outline:none; background:#222; color:#fff; text-align:center;">
 `;
-document.getElementById("poinKreator").insertAdjacentElement("afterend", searchContainer);
+// 🔧 Fix: gantikan poinKreator dengan poin
+const poinSection = document.getElementById("poin");
+if (poinSection) poinSection.insertAdjacentElement("afterbegin", searchContainer);
 
 let currentPage = 1;
 const itemsPerPage = 5;
@@ -144,12 +146,10 @@ function hitungTotal(p, tampilkanPoin) {
 function cariPemenangBerdasarkanFilter(dataSeason, filter) {
   const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
 
-  // 1️⃣ Filter berdasarkan teks (misal "Humoris")
   if (typeof filter === "string") {
     return data.find(p => p.ideKonsepTipe && p.ideKonsepTipe.toLowerCase().includes(filter.toLowerCase()));
   }
 
-  // 2️⃣ Filter berdasarkan objek field/value atau mode
   if (typeof filter === "object" && filter.field) {
     if (filter.mode === "max") {
       return data.reduce((a, b) => (b[filter.field] > a[filter.field] ? b : a));
@@ -158,7 +158,6 @@ function cariPemenangBerdasarkanFilter(dataSeason, filter) {
     }
   }
 
-  // fallback
   return null;
 }
 
@@ -179,6 +178,7 @@ function tampilkanDataSeason() {
     .sort((a, b) => b.total - a.total);
 
   const wadah = document.getElementById("daftarPeserta");
+  if (!wadah) return;
   wadah.innerHTML = "";
 
   const awal = dataSeason.awal || "-";
@@ -222,8 +222,24 @@ function tampilkanDataSeason() {
     wadah.appendChild(div);
   });
 
-  // 📦 Tampilkan pemenang hadiah berdasarkan filter
-  const juaraBox = document.getElementById("daftarJuara");
+  // 📄 Pagination button render
+  const pagination = document.getElementById("pagination");
+  if (pagination) {
+    pagination.innerHTML = "";
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = (i === currentPage) ? "active" : "";
+      btn.onclick = () => {
+        currentPage = i;
+        tampilkanDataSeason();
+      };
+      pagination.appendChild(btn);
+    }
+  }
+
+  // 🏆 Hadiah & Juara dinamis per season
+  const juaraBox = document.getElementById("hadiahList");
   if (juaraBox) {
     juaraBox.innerHTML = "";
     (dataSeason.Hadiah || []).forEach(h => {
@@ -250,4 +266,4 @@ document.getElementById("searchNama").addEventListener("input", tampilkanDataSea
 // ===============================
 // 🚀 Jalankan Pertama Kali
 // ===============================
-tampilkanDataSeason();
+window.addEventListener("load", tampilkanDataSeason);
