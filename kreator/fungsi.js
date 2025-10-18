@@ -74,6 +74,21 @@ infoRange.style.marginTop = "6px";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
 // ===============================
+// 🔎 Kolom Pencarian + Pagination
+// ===============================
+const searchContainer = document.createElement("div");
+searchContainer.style.textAlign = "center";
+searchContainer.style.margin = "10px 0";
+searchContainer.innerHTML = `
+  <input type="text" id="searchNama" placeholder="Cari nama peserta..." 
+  style="padding:8px 12px; border-radius:8px; width:70%; max-width:300px; border:none; outline:none; background:#222; color:#fff; text-align:center;">
+`;
+document.getElementById("poinKreator").insertAdjacentElement("afterend", searchContainer);
+
+let currentPage = 1;
+const itemsPerPage = 5;
+
+// ===============================
 // 📜 Aturan Lomba
 // ===============================
 document.getElementById("aturanText").innerHTML = `
@@ -101,7 +116,7 @@ Dilarang spam komen, beli like/share, atau bot.
 `;
 
 // ===============================
-// 🏅 Hitung Nilai Total
+// 🧮 Hitung Nilai
 // ===============================
 function hitungTotal(p, tampilkanPoin) {
   const like = Number(p.like) || 0;
@@ -125,17 +140,6 @@ function hitungTotal(p, tampilkanPoin) {
 }
 
 // ===============================
-// 🔢 Ranking per Season
-// ===============================
-function prosesRanking(data, tampilkanPoin) {
-  if (!tampilkanPoin) {
-    return data.map(p => ({ ...p, ...hitungTotal(p, false) }));
-  }
-  return data.map(p => ({ ...p, ...hitungTotal(p, true) }))
-             .sort((a, b) => b.total - a.total);
-}
-
-// ===============================
 // 📊 Tampilkan Data Season
 // ===============================
 function tampilkanDataSeason() {
@@ -146,13 +150,15 @@ function tampilkanDataSeason() {
   const data = dataSeason.kreator || [];
   const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
   const sponsor = dataSeason.Sponsor || "-";
-  const ranking = prosesRanking(data, tampilkanPoin);
+  const ranking = data
+    .map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }))
+    .sort((a, b) => b.total - a.total);
+
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
 
   const awal = dataSeason.awal || "-";
   const akhir = dataSeason.akhir || "-";
-
   infoRange.innerHTML = `
     <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-top:8px;">
       <div style="font-weight:700; color:#fff;">${awal} - ${akhir}</div>
@@ -163,11 +169,21 @@ function tampilkanDataSeason() {
     </div>
   `;
 
-  ranking.forEach((p, i) => {
+  // 🔎 Filter nama
+  const keyword = document.getElementById("searchNama").value.toLowerCase();
+  const filtered = ranking.filter(p => p.nama.toLowerCase().includes(keyword));
+
+  // 📄 Pagination
+  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  if (currentPage > totalPages) currentPage = 1;
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+
+  pageItems.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
-    const rankDisplay = tampilkanPoin ? `<div class="rank">#${i + 1}</div>` : "";
-
+    const rankDisplay = tampilkanPoin ? `<div class="rank">#${startIndex + i + 1}</div>` : "";
     div.innerHTML = `
       ${rankDisplay}
       <div class="nama">${p.nama.toUpperCase()}</div>
@@ -181,10 +197,45 @@ function tampilkanDataSeason() {
     `;
     wadah.appendChild(div);
   });
+
+  // 🔢 Pagination Navigation
+  const pagination = document.createElement("div");
+  pagination.style.textAlign = "center";
+  pagination.style.margin = "15px 0";
+  pagination.innerHTML = `
+    <button ${currentPage === 1 ? "disabled" : ""} id="prevPage" style="margin-right:10px;">⬅️</button>
+    <span style="color:#fff;">Halaman ${currentPage} / ${totalPages}</span>
+    <button ${currentPage === totalPages ? "disabled" : ""} id="nextPage" style="margin-left:10px;">➡️</button>
+  `;
+  wadah.appendChild(pagination);
+
+  document.getElementById("prevPage").onclick = () => {
+    if (currentPage > 1) {
+      currentPage--;
+      tampilkanDataSeason();
+    }
+  };
+  document.getElementById("nextPage").onclick = () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      tampilkanDataSeason();
+    }
+  };
 }
 
+document.getElementById("searchNama").addEventListener("input", () => {
+  currentPage = 1;
+  tampilkanDataSeason();
+});
+
+selectSeason.addEventListener("change", () => {
+  currentPage = 1;
+  tampilkanDataSeason();
+  tampilkanHadiah();
+});
+
 // ===============================
-// 🎁 Juara Otomatis (Dynamic & Flexible Filter)
+// 🎁 Juara Otomatis (tetap sama)
 // ===============================
 function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
@@ -194,13 +245,13 @@ function tampilkanHadiah() {
   const dataSeason = dataJuara[season];
   const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
   const data = dataSeason.kreator || [];
-  const ranking = prosesRanking(data, tampilkanPoin);
+  const ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }))
+                      .sort((a, b) => b.total - a.total);
   const sudahMenang = new Set();
   const hadiahList = dataSeason.Hadiah || [];
 
   function pilihPemenang(filter, posisi) {
     let kandidat = ranking;
-
     if (posisi !== undefined) {
       const juara = kandidat[posisi - 1];
       if (juara && !sudahMenang.has(juara.nama)) {
@@ -208,29 +259,21 @@ function tampilkanHadiah() {
         return juara;
       }
     }
-
     if (filter) {
-      // 🔹 Jika filter adalah string → ideKonsepTipe
       if (typeof filter === "string") {
         kandidat = kandidat.filter(p => (p.ideKonsepTipe || "").toLowerCase() === filter.toLowerCase());
-      }
-      // 🔹 Jika filter adalah objek
-      else if (typeof filter === "object") {
+      } else if (typeof filter === "object") {
         const { field, value, mode } = filter;
-        if (mode === "max") {
-          kandidat = [...kandidat].sort((a, b) => (b[field] || 0) - (a[field] || 0));
-        } else if (value) {
-          kandidat = kandidat.filter(p => (p[field] || "").toLowerCase() === (value || "").toLowerCase());
-        }
+        if (mode === "max") kandidat = [...kandidat].sort((a, b) => (b[field] || 0) - (a[field] || 0));
+        else if (value) kandidat = kandidat.filter(p => (p[field] || "").toLowerCase() === value.toLowerCase());
       }
     }
-
     const juara = kandidat.find(p => !sudahMenang.has(p.nama));
     if (juara) sudahMenang.add(juara.nama);
     return juara;
   }
 
-  hadiahList.forEach((h, i) => {
+  hadiahList.forEach(h => {
     let juara = null;
     if (tampilkanPoin) {
       if (h.kategori.toLowerCase().includes("juara 1")) juara = pilihPemenang(null, 1);
@@ -239,11 +282,9 @@ function tampilkanHadiah() {
       else if (h.filter) juara = pilihPemenang(h.filter);
       else juara = pilihPemenang();
     }
-
     const juaraData = tampilkanPoin && juara
       ? `<div class="juara">🏆 ${juara.nama} <span class="poin">(${juara.total.toFixed(1)} pts)</span></div>`
       : `<div class="juara">⏳ Belum diumumkan</div>`;
-
     const div = document.createElement("div");
     div.className = "hadiah-card";
     div.innerHTML = `
@@ -254,11 +295,6 @@ function tampilkanHadiah() {
     wadah.appendChild(div);
   });
 }
-
-selectSeason.addEventListener("change", () => {
-  tampilkanDataSeason();
-  tampilkanHadiah();
-});
 
 tampilkanDataSeason();
 tampilkanHadiah();
