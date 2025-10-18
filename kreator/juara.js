@@ -64,7 +64,7 @@ const dataJuara = {
       { nama: "Nabila", linkVideo: "https://www.tiktok.com/@nabila_risma", like: 38, komen: 4, share: 1, ideKonsepTipe: "Humoris", ideKonsepNilai: 79, editing: 70, karakter: 75, nuansaLokal: 80, dampakPositif: 76, merkHP: "Oppo" },
       { nama: "Risma", linkVideo: "https://www.tiktok.com/@risma_tb", like: 35, komen: 6, share: 2, ideKonsepTipe: "Inspiratif", ideKonsepNilai: 84, editing: 73, karakter: 77, nuansaLokal: 83, dampakPositif: 82, merkHP: "Samsung" },
       { nama: "Wahyu", linkVideo: "https://www.tiktok.com/@wahyu_tb", like: 42, komen: 5, share: 3, ideKonsepTipe: "Motivasi", ideKonsepNilai: 86, editing: 76, karakter: 80, nuansaLokal: 85, dampakPositif: 83, merkHP: "Realme" },
-      { nama: "Syifa", linkVideo: "https://www.tiktok.com/@syifa_risma", like: 33, komen: 7, share: 1, ideKonsepTipe: "Edukatif", ideKonsepNilai: 82, editing: 71, karakter: 74, nuansaLokal: 84, dampakPositif: 80, merkHP: "Xiaomi" }
+      { nama: "Syifa", linkVideo: "https://www.tiktok.com/@syifa_risma", like: 33, komen: 7, share: 1, ideKonsepTipe: "Humoris", ideKonsepNilai: 92, editing: 71, karakter: 74, nuansaLokal: 84, dampakPositif: 80, merkHP: "Xiaomi" }
     ]
   }
 };
