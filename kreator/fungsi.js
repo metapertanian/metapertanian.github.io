@@ -131,12 +131,35 @@ function hitungTotal(p, tampilkanPoin) {
   const viral = (like * 1.0) + (komen * 1.5) + (share * 1.5);
   const nilaiKreatif = (ide * 1.5) + edit + (karakter * 0.5);
   const nilaiLokal = nuansa + dampak;
-
   const total = tampilkanPoin
     ? parseFloat((nilaiKreatif + nilaiLokal + viral).toFixed(1))
     : parseFloat((nilaiKreatif + nilaiLokal).toFixed(1));
 
   return { total, nilaiKreatif, nilaiLokal, viral };
+}
+
+// ===============================
+// 🧩 Fungsi Penentuan Juara Berdasarkan Filter
+// ===============================
+function cariPemenangBerdasarkanFilter(dataSeason, filter) {
+  const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
+
+  // 1️⃣ Filter berdasarkan teks (misal "Humoris")
+  if (typeof filter === "string") {
+    return data.find(p => p.ideKonsepTipe && p.ideKonsepTipe.toLowerCase().includes(filter.toLowerCase()));
+  }
+
+  // 2️⃣ Filter berdasarkan objek field/value atau mode
+  if (typeof filter === "object" && filter.field) {
+    if (filter.mode === "max") {
+      return data.reduce((a, b) => (b[filter.field] > a[filter.field] ? b : a));
+    } else if (filter.value) {
+      return data.find(p => p[filter.field] === filter.value);
+    }
+  }
+
+  // fallback
+  return null;
 }
 
 // ===============================
@@ -150,6 +173,7 @@ function tampilkanDataSeason() {
   const data = dataSeason.kreator || [];
   const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
   const sponsor = dataSeason.Sponsor || "-";
+
   const ranking = data
     .map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }))
     .sort((a, b) => b.total - a.total);
@@ -176,10 +200,10 @@ function tampilkanDataSeason() {
   // 📄 Pagination
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   if (currentPage > totalPages) currentPage = 1;
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
 
+  // 🎥 Tampilkan peserta
   pageItems.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
@@ -198,103 +222,32 @@ function tampilkanDataSeason() {
     wadah.appendChild(div);
   });
 
-  // 🔢 Pagination Navigation
-  const pagination = document.createElement("div");
-  pagination.style.textAlign = "center";
-  pagination.style.margin = "15px 0";
-  pagination.innerHTML = `
-    <button ${currentPage === 1 ? "disabled" : ""} id="prevPage" style="margin-right:10px;">⬅️</button>
-    <span style="color:#fff;">Halaman ${currentPage} / ${totalPages}</span>
-    <button ${currentPage === totalPages ? "disabled" : ""} id="nextPage" style="margin-left:10px;">➡️</button>
-  `;
-  wadah.appendChild(pagination);
-
-  document.getElementById("prevPage").onclick = () => {
-    if (currentPage > 1) {
-      currentPage--;
-      tampilkanDataSeason();
-    }
-  };
-  document.getElementById("nextPage").onclick = () => {
-    if (currentPage < totalPages) {
-      currentPage++;
-      tampilkanDataSeason();
-    }
-  };
-}
-
-document.getElementById("searchNama").addEventListener("input", () => {
-  currentPage = 1;
-  tampilkanDataSeason();
-});
-
-selectSeason.addEventListener("change", () => {
-  currentPage = 1;
-  tampilkanDataSeason();
-  tampilkanHadiah();
-});
-
-// ===============================
-// 🎁 Juara Otomatis (tetap sama)
-// ===============================
-function tampilkanHadiah() {
-  const wadah = document.getElementById("hadiahList");
-  wadah.innerHTML = "";
-
-  const season = selectSeason.value;
-  const dataSeason = dataJuara[season];
-  const tampilkanPoin = dataSeason.Poin === true || dataSeason.Poin === "true";
-  const data = dataSeason.kreator || [];
-  const ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }))
-                      .sort((a, b) => b.total - a.total);
-  const sudahMenang = new Set();
-  const hadiahList = dataSeason.Hadiah || [];
-
-  function pilihPemenang(filter, posisi) {
-    let kandidat = ranking;
-    if (posisi !== undefined) {
-      const juara = kandidat[posisi - 1];
-      if (juara && !sudahMenang.has(juara.nama)) {
-        sudahMenang.add(juara.nama);
-        return juara;
-      }
-    }
-    if (filter) {
-      if (typeof filter === "string") {
-        kandidat = kandidat.filter(p => (p.ideKonsepTipe || "").toLowerCase() === filter.toLowerCase());
-      } else if (typeof filter === "object") {
-        const { field, value, mode } = filter;
-        if (mode === "max") kandidat = [...kandidat].sort((a, b) => (b[field] || 0) - (a[field] || 0));
-        else if (value) kandidat = kandidat.filter(p => (p[field] || "").toLowerCase() === value.toLowerCase());
-      }
-    }
-    const juara = kandidat.find(p => !sudahMenang.has(p.nama));
-    if (juara) sudahMenang.add(juara.nama);
-    return juara;
+  // 📦 Tampilkan pemenang hadiah berdasarkan filter
+  const juaraBox = document.getElementById("daftarJuara");
+  if (juaraBox) {
+    juaraBox.innerHTML = "";
+    (dataSeason.Hadiah || []).forEach(h => {
+      const pemenang = h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter) : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1];
+      const nama = pemenang ? pemenang.nama : "—";
+      const card = document.createElement("div");
+      card.className = "hadiah";
+      card.innerHTML = `
+        <b>${h.kategori}</b><br>
+        🎁 ${h.hadiah}<br>
+        🏆 <span style="color:#ffeb3b">${nama}</span>
+      `;
+      juaraBox.appendChild(card);
+    });
   }
-
-  hadiahList.forEach(h => {
-    let juara = null;
-    if (tampilkanPoin) {
-      if (h.kategori.toLowerCase().includes("juara 1")) juara = pilihPemenang(null, 1);
-      else if (h.kategori.toLowerCase().includes("juara 2")) juara = pilihPemenang(null, 2);
-      else if (h.kategori.toLowerCase().includes("juara 3")) juara = pilihPemenang(null, 3);
-      else if (h.filter) juara = pilihPemenang(h.filter);
-      else juara = pilihPemenang();
-    }
-    const juaraData = tampilkanPoin && juara
-      ? `<div class="juara">🏆 ${juara.nama} <span class="poin">(${juara.total.toFixed(1)} pts)</span></div>`
-      : `<div class="juara">⏳ Belum diumumkan</div>`;
-    const div = document.createElement("div");
-    div.className = "hadiah-card";
-    div.innerHTML = `
-      <div class="judul">${h.kategori}</div>
-      <div class="isi">${h.hadiah}</div>
-      ${juaraData}
-    `;
-    wadah.appendChild(div);
-  });
 }
 
+// ===============================
+// 📢 Event Listener
+// ===============================
+selectSeason.addEventListener("change", tampilkanDataSeason);
+document.getElementById("searchNama").addEventListener("input", tampilkanDataSeason);
+
+// ===============================
+// 🚀 Jalankan Pertama Kali
+// ===============================
 tampilkanDataSeason();
-tampilkanHadiah();
