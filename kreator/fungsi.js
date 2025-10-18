@@ -129,10 +129,8 @@ function hitungTotal(p, tampilkanPoin) {
 // ===============================
 function prosesRanking(data, tampilkanPoin) {
   if (!tampilkanPoin) {
-    // Jika poin belum dibuka → urut sesuai urutan input
     return data.map(p => ({ ...p, ...hitungTotal(p, false) }));
   }
-  // Jika poin dibuka → urut berdasarkan nilai total
   return data.map(p => ({ ...p, ...hitungTotal(p, true) }))
              .sort((a, b) => b.total - a.total);
 }
@@ -155,7 +153,6 @@ function tampilkanDataSeason() {
   const awal = dataSeason.awal || "-";
   const akhir = dataSeason.akhir || "-";
 
-  // 🏆 Info Umum
   infoRange.innerHTML = `
     <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-top:8px;">
       <div style="font-weight:700; color:#fff;">${awal} - ${akhir}</div>
@@ -166,7 +163,6 @@ function tampilkanDataSeason() {
     </div>
   `;
 
-  // 🧑‍🎨 Daftar Peserta
   ranking.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
@@ -188,7 +184,7 @@ function tampilkanDataSeason() {
 }
 
 // ===============================
-// 🎁 Juara Otomatis
+// 🎁 Juara Otomatis (Dynamic & Flexible Filter)
 // ===============================
 function tampilkanHadiah() {
   const wadah = document.getElementById("hadiahList");
@@ -200,38 +196,52 @@ function tampilkanHadiah() {
   const data = dataSeason.kreator || [];
   const ranking = prosesRanking(data, tampilkanPoin);
   const sudahMenang = new Set();
+  const hadiahList = dataSeason.Hadiah || [];
 
-  function pilihUnik(arr) {
-    return arr.find(p => !sudahMenang.has(p.nama));
+  function pilihPemenang(filter, posisi) {
+    let kandidat = ranking;
+
+    if (posisi !== undefined) {
+      const juara = kandidat[posisi - 1];
+      if (juara && !sudahMenang.has(juara.nama)) {
+        sudahMenang.add(juara.nama);
+        return juara;
+      }
+    }
+
+    if (filter) {
+      // 🔹 Jika filter adalah string → ideKonsepTipe
+      if (typeof filter === "string") {
+        kandidat = kandidat.filter(p => (p.ideKonsepTipe || "").toLowerCase() === filter.toLowerCase());
+      }
+      // 🔹 Jika filter adalah objek
+      else if (typeof filter === "object") {
+        const { field, value, mode } = filter;
+        if (mode === "max") {
+          kandidat = [...kandidat].sort((a, b) => (b[field] || 0) - (a[field] || 0));
+        } else if (value) {
+          kandidat = kandidat.filter(p => (p[field] || "").toLowerCase() === (value || "").toLowerCase());
+        }
+      }
+    }
+
+    const juara = kandidat.find(p => !sudahMenang.has(p.nama));
+    if (juara) sudahMenang.add(juara.nama);
+    return juara;
   }
 
-  const juara1 = tampilkanPoin ? pilihUnik(ranking) : null;
-  if (juara1) sudahMenang.add(juara1.nama);
-  const juara2 = tampilkanPoin ? pilihUnik(ranking) : null;
-  if (juara2) sudahMenang.add(juara2.nama);
-  const juara3 = tampilkanPoin ? pilihUnik(ranking) : null;
-  if (juara3) sudahMenang.add(juara3.nama);
+  hadiahList.forEach((h, i) => {
+    let juara = null;
+    if (tampilkanPoin) {
+      if (h.kategori.toLowerCase().includes("juara 1")) juara = pilihPemenang(null, 1);
+      else if (h.kategori.toLowerCase().includes("juara 2")) juara = pilihPemenang(null, 2);
+      else if (h.kategori.toLowerCase().includes("juara 3")) juara = pilihPemenang(null, 3);
+      else if (h.filter) juara = pilihPemenang(h.filter);
+      else juara = pilihPemenang();
+    }
 
-  const ideTerbaik = tampilkanPoin ? pilihUnik(ranking.sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)) : null;
-  const viralTertinggi = tampilkanPoin ? pilihUnik(ranking.sort((a,b)=>b.viral - a.viral)) : null;
-  const lucu = tampilkanPoin ? pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="humoris").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)) : null;
-  const lokal = tampilkanPoin ? pilihUnik(ranking.sort((a,b)=>b.nuansaLokal - a.nuansaLokal)) : null;
-  const inspiratif = tampilkanPoin ? pilihUnik(ranking.filter(d=>d.ideKonsepTipe.toLowerCase()==="inspiratif").sort((a,b)=>b.ideKonsepNilai - a.ideKonsepNilai)) : null;
-
-  const hadiahKategori = [
-    { kategori: "Juara 1", hadiah: "Paket Data + 100rb + Sertifikat", juara: juara1 },
-    { kategori: "Juara 2", hadiah: "Paket Data + 75rb + Sertifikat", juara: juara2 },
-    { kategori: "Juara 3", hadiah: "Paket Data + 50rb + Sertifikat", juara: juara3 },
-    { kategori: "Ide Konsep Terbaik", hadiah: "Paket Data + 40rb + Sertifikat", juara: ideTerbaik },
-    { kategori: "Konten Terfavorit", hadiah: "Paket Data + 35rb + Sertifikat", juara: viralTertinggi },
-    { kategori: "Konten Terlucu", hadiah: "Paket Data + 30rb + Sertifikat", juara: lucu },
-    { kategori: "Paling Tanjung Bulan", hadiah: "Paket Data + 25rb + Sertifikat", juara: lokal },
-    { kategori: "Paling Inspiratif", hadiah: "Paket Data + 25rb + Sertifikat", juara: inspiratif }
-  ];
-
-  hadiahKategori.forEach(h => {
-    const juaraData = tampilkanPoin && h.juara
-      ? `<div class="juara">🏆 ${h.juara.nama} <span class="poin">(${h.juara.total.toFixed(1)} pts)</span></div>`
+    const juaraData = tampilkanPoin && juara
+      ? `<div class="juara">🏆 ${juara.nama} <span class="poin">(${juara.total.toFixed(1)} pts)</span></div>`
       : `<div class="juara">⏳ Belum diumumkan</div>`;
 
     const div = document.createElement("div");
