@@ -11,7 +11,7 @@ const dataJuara = {
     awal: "10 Januari 2026",
     akhir: "20 Maret 2026",
     Sponsor: "Bank Desa Nusantara",
-    Poin: "true",
+    Poin: "false",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Rp 200rb + Sertifikat" },
