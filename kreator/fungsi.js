@@ -2,30 +2,15 @@ function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   const isDark = document.body.classList.contains('dark-theme');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  updateThemeStyles(isDark);
 }
 
 // Saat halaman dimuat, ambil tema dari localStorage
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
-  const isDark = savedTheme === 'dark';
-  if (isDark) document.body.classList.add('dark-theme');
-  updateThemeStyles(isDark);
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+  }
 });
-
-// 🔆 Fungsi update warna dinamis berdasarkan tema
-function updateThemeStyles(isDark) {
-  const kutipan = document.getElementById("kutipan");
-  if (kutipan) {
-    kutipan.style.color = isDark ? "#ffe082" : "#444";
-    kutipan.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "none";
-  }
-
-  const infoRange = document.getElementById("infoRange");
-  if (infoRange) {
-    infoRange.style.color = isDark ? "#eee" : "#333";
-  }
-}
 
 // ===============================
 // 🔘 Navbar Toggle
@@ -59,13 +44,14 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
 
-  const isDark = document.body.classList.contains('dark-theme');
+  // 🎨 Warna kutipan adaptif
+  const isDark = document.body.classList.contains("dark-theme");
   elemen.style.color = isDark ? "#ffe082" : "#333";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "none";
 
   const cursor = document.createElement("span");
   cursor.textContent = "|";
-  cursor.style.color = isDark ? "#ffd54f" : "#666";
+  cursor.style.color = isDark ? "#ffd54f" : "#444";
   elemen.appendChild(cursor);
 
   indexHuruf = 0;
@@ -104,20 +90,48 @@ infoRange.style.marginTop = "6px";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
 // ===============================
-// 🔎 Kolom Pencarian
+// 🔎 Kolom Pencarian + Pagination
 // ===============================
 const searchContainer = document.createElement("div");
-searchContainer.className = "search-container";
+searchContainer.style.textAlign = "center";
+searchContainer.style.margin = "10px 0";
 searchContainer.innerHTML = `
   <input type="text" id="searchNama" placeholder="Cari nama peserta..." 
-  class="input-cari">
+  style="padding:8px 12px; border-radius:8px; width:70%; max-width:300px; border:none; outline:none; background:var(--input-bg); color:var(--text-color); text-align:center;">
 `;
 
 const poinSection = document.getElementById("poin");
-if (poinSection) poinSection.insertAdjacentElement("beforeend", searchContainer);
+if (poinSection) poinSection.insertAdjacentElement("afterend", searchContainer);
 
 let currentPage = 1;
 const itemsPerPage = 5;
+
+// ===============================
+// 📜 Aturan Lomba
+// ===============================
+document.getElementById("aturanText").innerHTML = `
+<ul style="line-height:1.6">
+<li>Lomba terbuka untuk umum.</li>
+<li>Video harus diambil di <b>Tanjung Bulan</b>.</li>
+<li>Edit boleh dilakukan di mana saja.</li>
+<li>Video hasil karya sendiri (belum pernah diunggah).</li>
+<li>Tema: kehidupan, kreativitas, dan inspirasi di Tanjung Bulan.</li>
+<li>Gaya video: lucu, edukatif, dokumenter, cinematic, atau motivasi.</li>
+</ul>
+<br>
+<b>Poin Juri:</b><br>
+💡 Kreativitas:<br>
+• ide konsep (150),<br>
+• editing (100),<br>
+• karakter (50).<br>
+🏡 Dampak Dusun:<br>
+• nuansa (100),<br>
+• dampak positif (100).<br>
+<b>Total Maksimal:</b> 500 poin.<br><br>
+<b>Poin TikTok:</b><br>
+🚀 Viral dihitung otomatis (like, komen, share).<br><br>
+Dilarang spam komen, beli like/share, atau bot.
+`;
 
 // ===============================
 // 🧮 Hitung Nilai
@@ -143,7 +157,7 @@ function hitungTotal(p, tampilkanPoin) {
 }
 
 // ===============================
-// 🏆 Cari Pemenang
+// 🧩 Fungsi Penentuan Juara Berdasarkan Filter
 // ===============================
 function cariPemenangBerdasarkanFilter(dataSeason, filter) {
   const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
@@ -180,18 +194,20 @@ function tampilkanDataSeason() {
     .sort((a, b) => b.total - a.total);
 
   const wadah = document.getElementById("daftarPeserta");
+  if (!wadah) return;
   wadah.innerHTML = "";
 
   const awal = dataSeason.awal || "-";
   const akhir = dataSeason.akhir || "-";
-  const isDark = document.body.classList.contains('dark-theme');
+  const isDark = document.body.classList.contains("dark-theme");
 
+  // 🎨 Warna adaptif untuk info range
   infoRange.innerHTML = `
-    <div style="background:${isDark ? 'rgba(255,255,255,0.05)' : '#f5f5f5'}; padding:10px; border-radius:10px;">
-      <div style="font-weight:700; color:${isDark ? '#fff' : '#333'};">${awal} - ${akhir}</div>
+    <div style="background:${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'}; padding:10px; border-radius:10px; margin-top:8px;">
+      <div style="font-weight:700; color:${isDark ? '#fff' : '#222'};">${awal} - ${akhir}</div>
       <div style="margin-top:4px; font-size:0.95em;">
-        <span style="color:${isDark ? '#ffeb3b' : '#cc7a00'};">🎗️ Sponsor:</span><br>
-        <span style="font-style:italic; color:${isDark ? '#fdd835' : '#333'};">${sponsor}</span>
+        <span style="color:${isDark ? '#ffeb3b' : '#b8860b'};">🎗️ Sponsor:</span><br>
+        <span style="font-style:italic; color:${isDark ? '#fdd835' : '#5a4b00'};">${sponsor}</span>
       </div>
     </div>
   `;
@@ -225,7 +241,7 @@ function tampilkanDataSeason() {
     wadah.appendChild(div);
   });
 
-  // 📄 Pagination button
+  // 📄 Pagination button render
   const pagination = document.getElementById("pagination");
   if (pagination) {
     pagination.innerHTML = "";
@@ -241,21 +257,22 @@ function tampilkanDataSeason() {
     }
   }
 
-  // 🏆 Hadiah & Juara dinamis
+  // 🏆 Hadiah & Juara dinamis per season
   const juaraBox = document.getElementById("hadiahList");
   if (juaraBox) {
     juaraBox.innerHTML = "";
     (dataSeason.Hadiah || []).forEach(h => {
-      const pemenang = tampilkanPoin
-        ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter) : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
-        : null;
-      const nama = pemenang ? pemenang.nama : "Belum diumumkan";
+      const pemenang = h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter) : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1];
+      const nama = tampilkanPoin
+        ? (pemenang ? pemenang.nama : "—")
+        : "Belum diumumkan";
+
       const card = document.createElement("div");
       card.className = "hadiah";
       card.innerHTML = `
         <b>${h.kategori}</b><br>
         🎁 ${h.hadiah}<br>
-        🏆 <span class="namaJuara">${nama}</span>
+        🏆 <span>${nama}</span>
       `;
       juaraBox.appendChild(card);
     });
@@ -268,5 +285,7 @@ function tampilkanDataSeason() {
 selectSeason.addEventListener("change", tampilkanDataSeason);
 document.getElementById("searchNama").addEventListener("input", tampilkanDataSeason);
 
+// ===============================
 // 🚀 Jalankan Pertama Kali
+// ===============================
 window.addEventListener("load", tampilkanDataSeason);
