@@ -176,7 +176,8 @@ function hitungTotal(p, tampilkanPoin) {
 // ===============================
 // 🔍 Filter Juara
 // ===============================
-function cariPemenangBerdasarkanFilter(dataSeason, filter) {
+function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
+  if (!tampilkanPoin) return null; // 🔒 Kunci jika poin belum dibuka
   const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
   if (typeof filter === "string")
     return data.find(p => p.ideKonsepTipe?.toLowerCase().includes(filter.toLowerCase()));
@@ -262,9 +263,10 @@ function tampilkanDataSeason() {
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
     const pemenang = h.filter
-      ? cariPemenangBerdasarkanFilter(dataSeason, h.filter)
-      : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1];
-    const nama = tampilkanPoin ? (pemenang ? pemenang.nama : "—") : "Belum diumumkan";
+      ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, tampilkanPoin)
+      : (tampilkanPoin ? ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1] : null);
+
+    const nama = (tampilkanPoin && pemenang) ? pemenang.nama : "Belum diumumkan";
 
     const card = document.createElement("div");
     card.className = "hadiah-card";
