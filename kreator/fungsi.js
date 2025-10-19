@@ -5,16 +5,18 @@ function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   const isDark = document.body.classList.contains('dark-theme');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  updateThemeColors();
+  applyThemeColors();
 }
 
-function updateThemeColors() {
+// Terapkan warna tema
+function applyThemeColors() {
   const isDark = document.body.classList.contains('dark-theme');
-  document.documentElement.style.setProperty('--bg-color', isDark ? '#121212' : '#f4f4f4');
-  document.documentElement.style.setProperty('--text-color', isDark ? '#f5f5f5' : '#222');
-  document.documentElement.style.setProperty('--input-bg', isDark ? '#1f1f1f' : '#fff');
+  document.documentElement.style.setProperty('--bg-color', isDark ? '#121212' : '#f5f5f5');
+  document.documentElement.style.setProperty('--text-color', isDark ? '#f1f1f1' : '#222');
   document.documentElement.style.setProperty('--card-bg', isDark ? 'rgba(255,255,255,0.05)' : '#fff');
-  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 6px rgba(255,255,255,0.1)' : '0 2px 6px rgba(0,0,0,0.1)');
+  document.documentElement.style.setProperty('--input-bg', isDark ? '#1e1e1e' : '#fff');
+  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 6px rgba(255,255,255,0.08)' : '0 2px 6px rgba(0,0,0,0.1)');
+  document.documentElement.style.setProperty('--highlight', isDark ? '#ffeb3b' : '#b8860b');
 }
 
 // Saat halaman dimuat, ambil tema dari localStorage
@@ -23,7 +25,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (!savedTheme || savedTheme === 'dark') {
     document.body.classList.add('dark-theme');
   }
-  updateThemeColors();
+  applyThemeColors();
 });
 
 // ===============================
@@ -32,18 +34,13 @@ window.addEventListener('DOMContentLoaded', () => {
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("active");
-  if (menu.classList.contains("active")) {
-    menu.style.left = "0";
-    menu.style.right = "auto";
-  } else {
-    menu.style.left = "-250px";
-  }
+  menu.style.left = menu.classList.contains("active") ? "0" : "-100%";
 }
-
 document.querySelectorAll("#menu a").forEach(link => {
   link.addEventListener("click", () => {
-    document.getElementById("menu").classList.remove("active");
-    document.getElementById("menu").style.left = "-250px";
+    const menu = document.getElementById("menu");
+    menu.classList.remove("active");
+    menu.style.left = "-100%";
   });
 });
 
@@ -117,10 +114,11 @@ const searchContainer = document.createElement("div");
 searchContainer.style.textAlign = "center";
 searchContainer.style.margin = "10px 0";
 searchContainer.innerHTML = `
-  <input type="text" id="searchNama" placeholder="Cari nama peserta..."   
+  <input type="text" id="searchNama" placeholder="Cari nama peserta..." 
   style="padding:8px 12px;border-radius:8px;width:70%;max-width:300px;
-  border:none;outline:none;background:var(--input-bg);color:var(--text-color);
-  text-align:center;">
+  border:1px solid var(--text-color);outline:none;
+  background:var(--input-bg);color:var(--text-color);
+  text-align:center;transition:0.3s;">
 `;
 
 const poinTitle = document.querySelector("#poin h2");
@@ -201,11 +199,10 @@ function tampilkanDataSeason() {
   const tampilkanPoin = !!dataSeason.Poin;
   const sponsor = dataSeason.Sponsor || "-";
 
-  const ranking = data
-    .map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
+  let ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
 
-  if (tampilkanPoin)
-    ranking.sort((a, b) => b.total - a.total);
+  // Jika poin disembunyikan, jangan urutkan
+  if (tampilkanPoin) ranking.sort((a, b) => b.total - a.total);
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
@@ -263,7 +260,7 @@ function tampilkanDataSeason() {
     pagination.appendChild(btn);
   }
 
-  // 🏆 Hadiah Juara
+  // 🏆 Hadiah Juara (Card Style)
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
@@ -287,7 +284,7 @@ function tampilkanDataSeason() {
     card.innerHTML = `
       <b>${h.kategori}</b><br>
       🎁 ${h.hadiah}<br>
-      🏆 <span style="color:${isDark ? '#ffeb3b' : '#b8860b'}">${nama}</span>
+      🏆 <span style="color:var(--highlight)">${nama}</span>
     `;
     juaraBox.appendChild(card);
   });
