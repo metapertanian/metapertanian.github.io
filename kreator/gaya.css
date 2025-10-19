@@ -5,26 +5,59 @@
   box-sizing: border-box;
 }
 
+/* ===================== THEME VARIABLES ===================== */
+:root {
+  /* ===== Tema Terang ===== */
+  --bg-gradient: linear-gradient(160deg, #e8f5e9, #ffffff);
+  --text-main: #1a1a1a;
+  --text-sub: #333;
+  --accent-primary: #2e7d32;
+  --accent-secondary: #43a047;
+  --highlight: #fbc02d;
+  --card-bg: #ffffff;
+  --navbar-bg: linear-gradient(90deg, #43a047, #66bb6a);
+  --border-glow: #00c853;
+  --link-color: #1e88e5;
+  --shadow: rgba(0,0,0,0.1);
+}
+
+body.dark-theme {
+  /* ===== Tema Gelap ===== */
+  --bg-gradient: linear-gradient(160deg, #001f1c, #000);
+  --text-main: #f5f5f5;
+  --text-sub: #ddd;
+  --accent-primary: #1b5e20;
+  --accent-secondary: #2e7d32;
+  --highlight: #ffca28;
+  --card-bg: #181818;
+  --navbar-bg: linear-gradient(90deg, #1b5e20, #2e7d32);
+  --border-glow: #00ffb7;
+  --link-color: #81d4fa;
+  --shadow: rgba(0,0,0,0.3);
+}
+
 /* ===================== BODY ===================== */
 body {
   font-family: 'Poppins', 'Segoe UI', sans-serif;
-  background: linear-gradient(160deg, #001f1c, #000);
-  color: #f5f5f5;
+  background: var(--bg-gradient);
+  color: var(--text-main);
   padding: 80px 20px 40px;
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background 0.4s, color 0.4s;
 }
 
 /* ===================== NAVBAR ===================== */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  background: linear-gradient(90deg, #1b5e20, #2e7d32);
+  background: var(--navbar-bg);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 24px;
   z-index: 1000;
+  transition: background 0.4s;
 }
 .nav-brand {
   font-size: 1.3rem;
@@ -57,7 +90,7 @@ body {
     top: 60px;
     right: 0;
     flex-direction: column;
-    background: #2e7d32;
+    background: var(--accent-secondary);
     width: 200px;
     padding: 15px;
     gap: 15px;
@@ -84,12 +117,13 @@ body {
   width: 110px;
   height: 110px;
   border-radius: 50%;
-  border: 3px solid #00ffb7;
+  border: 3px solid var(--border-glow);
   margin-bottom: 10px;
+  transition: border-color 0.4s;
 }
 .kutipan {
   font-size: 1rem;
-  color: #ffca28;
+  color: var(--highlight);
   min-height: 24px;
   animation: fadeIn 1.5s ease;
   margin-bottom: 15px;
@@ -103,22 +137,23 @@ section {
   margin-top: 60px;
 }
 h2 {
-  color: #ffca28;
+  color: var(--highlight);
   text-align: center;
   margin-bottom: 20px;
+  transition: color 0.4s;
 }
 
 /* ===================== PESERTA ===================== */
 .peserta {
   opacity: 0;
   transform: translateY(30px);
-  background: #181818;
+  background: var(--card-bg);
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 25px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 5px var(--shadow);
   transition: all 0.6s ease;
-  color: #fff;
+  color: var(--text-main);
 }
 .peserta.show {
   opacity: 1;
@@ -126,11 +161,12 @@ h2 {
 }
 .peserta:hover {
   transform: translateY(-3px);
-  background: #1e1e1e;
+  background: var(--card-bg);
+  filter: brightness(1.05);
 }
 .peserta .rank {
   font-weight: bold;
-  color: #4caf50;
+  color: var(--accent-secondary);
   font-size: 1.1rem;
 }
 .peserta .nama {
@@ -142,25 +178,26 @@ h2 {
   font-size: 0.9em;
   opacity: 0.95;
   line-height: 1.6;
+  color: var(--text-sub);
 }
 .peserta .nilai span {
   font-weight: 600;
-  color: #ffca28;
+  color: var(--highlight);
 }
 .peserta .link {
   display: block;
   margin-top: 6px;
-  color: #81d4fa;
+  color: var(--link-color);
   text-decoration: none;
   font-size: 0.9em;
 }
 .peserta .link:hover { text-decoration: underline; }
 .peserta .total {
   font-weight: bold;
-  color: #ffd54f;
+  color: var(--highlight);
   margin-top: 8px;
   font-size: 1.2em;
-  text-shadow: 0 0 12px #ffca28;
+  text-shadow: 0 0 12px var(--highlight);
 }
 
 /* ===================== HADIAH JUARA ===================== */
@@ -178,11 +215,15 @@ h2 {
   border-radius: 14px;
   padding: 16px;
   margin: 12px 0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 12px var(--shadow);
   transition: 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.6s ease forwards;
+}
+body:not(.dark-theme) .hadiah-card {
+  background: linear-gradient(145deg, #f1f8e9, #c8e6c9, #a5d6a7);
+  color: #222;
 }
 .hadiah-card:hover {
   transform: scale(1.03);
@@ -200,7 +241,7 @@ h2 {
 .hadiah-card .juara {
   display: inline-block;
   font-size: 0.85em;
-  background: #4caf50;
+  background: var(--accent-secondary);
   padding: 3px 10px;
   border-radius: 8px;
   color: white;
@@ -212,7 +253,7 @@ footer {
   text-align: center;
   margin-top: 60px;
   font-size: 0.9rem;
-  color: #888;
+  color: var(--text-sub);
 }
 
 /* ===================== ANIMASI ===================== */
@@ -235,7 +276,7 @@ footer {
   margin-top: 20px;
 }
 #pagination button {
-  background: #1b5e20;
+  background: var(--accent-primary);
   border: none;
   color: white;
   padding: 8px 14px;
@@ -244,14 +285,14 @@ footer {
   transition: 0.3s;
 }
 #pagination button:hover {
-  background: #43a047;
+  background: var(--accent-secondary);
 }
 
 /* ===================== MISC ===================== */
 .cursor {
   display: inline-block;
   animation: blink 0.8s infinite;
-  color: #4caf50;
+  color: var(--accent-secondary);
 }
 @keyframes blink {
   0%,50%,100% { opacity: 1; }
