@@ -121,7 +121,6 @@ searchContainer.innerHTML = `
   background:var(--input-bg);color:var(--text-color);
   text-align:center;transition:0.3s;">
 `;
-
 const poinTitle = document.querySelector("#poin h2");
 if (poinTitle) poinTitle.insertAdjacentElement("afterend", searchContainer);
 
@@ -174,7 +173,7 @@ function hitungTotal(p, tampilkanPoin) {
 // 🔍 Filter Juara
 // ===============================
 function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
-  if (!tampilkanPoin) return null; // 🔒 Kunci jika poin belum dibuka
+  if (!tampilkanPoin) return null;
   const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
   if (typeof filter === "string")
     return data.find(p => p.ideKonsepTipe?.toLowerCase().includes(filter.toLowerCase()));
@@ -195,10 +194,15 @@ function tampilkanDataSeason() {
   const dataSeason = dataJuara[season];
   if (!dataSeason) return;
 
-  const data = dataSeason.kreator || [];
-  const tampilkanPoin = !!dataSeason.Poin;
-  const sponsor = dataSeason.Sponsor || "-";
+  // ✅ Pastikan properti "Poin" diperlakukan benar-benar boolean
+  const tampilkanPoin = (
+    dataSeason.Poin === true ||
+    dataSeason.Poin === 'true' ||
+    dataSeason.Poin === 1
+  );
 
+  const data = dataSeason.kreator || [];
+  const sponsor = dataSeason.Sponsor || "-";
   let ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
 
   if (tampilkanPoin) ranking.sort((a, b) => b.total - a.total);
@@ -243,6 +247,7 @@ function tampilkanDataSeason() {
     wadah.appendChild(div);
   });
 
+  // 📄 Pagination
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
   for (let i = 1; i <= totalPages; i++) {
@@ -257,6 +262,7 @@ function tampilkanDataSeason() {
     pagination.appendChild(btn);
   }
 
+  // 🏆 Daftar Hadiah
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
