@@ -109,13 +109,13 @@ infoRange.style.marginTop = "6px";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
 // ===============================
-// 🔎 Pencarian Peserta
+// 🔎 Pencarian Kreator
 // ===============================
 const searchContainer = document.createElement("div");
 searchContainer.style.textAlign = "center";
 searchContainer.style.margin = "10px 0";
 searchContainer.innerHTML = `
-  <input type="text" id="searchNama" placeholder="Cari nama peserta..." 
+  <input type="text" id="searchNama" placeholder="Cari nama kreator..." 
   style="padding:8px 12px;border-radius:8px;width:70%;max-width:300px;
   border:1px solid var(--text-color);outline:none;
   background:var(--input-bg);color:var(--text-color);
