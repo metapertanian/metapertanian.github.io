@@ -8,32 +8,32 @@
 /* ===================== THEME VARIABLES ===================== */
 :root {
   /* ===== Tema Terang ===== */
-  --bg-gradient: linear-gradient(160deg, #e8f5e9, #ffffff);
+  --bg-gradient: linear-gradient(160deg, #f7fff7, #ffffff);
   --text-main: #1a1a1a;
-  --text-sub: #333;
+  --text-sub: #444;
   --accent-primary: #2e7d32;
   --accent-secondary: #43a047;
-  --highlight: #fbc02d;
+  --highlight: #1976d2; /* Biru agar lebih kontras di latar terang */
   --card-bg: #ffffff;
   --navbar-bg: linear-gradient(90deg, #43a047, #66bb6a);
-  --border-glow: #00c853;
-  --link-color: #1e88e5;
-  --shadow: rgba(0,0,0,0.1);
+  --border-glow: #2e7d32;
+  --link-color: #1565c0;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 body.dark-theme {
   /* ===== Tema Gelap ===== */
   --bg-gradient: linear-gradient(160deg, #001f1c, #000);
   --text-main: #f5f5f5;
-  --text-sub: #ddd;
+  --text-sub: #ccc;
   --accent-primary: #1b5e20;
   --accent-secondary: #2e7d32;
-  --highlight: #ffca28;
+  --highlight: #ffca28; /* Kuning hangat di latar gelap */
   --card-bg: #181818;
   --navbar-bg: linear-gradient(90deg, #1b5e20, #2e7d32);
   --border-glow: #00ffb7;
   --link-color: #81d4fa;
-  --shadow: rgba(0,0,0,0.3);
+  --shadow: rgba(0, 0, 0, 0.3);
 }
 
 /* ===================== BODY ===================== */
@@ -124,6 +124,7 @@ body {
 .kutipan {
   font-size: 1rem;
   color: var(--highlight);
+  font-weight: 600;
   min-height: 24px;
   animation: fadeIn 1.5s ease;
   margin-bottom: 15px;
@@ -132,7 +133,7 @@ body {
   margin-top: 10px;
 }
 
-/* ===================== BAGIAN LAIN ===================== */
+/* ===================== SECTION ===================== */
 section {
   margin-top: 60px;
 }
@@ -197,7 +198,7 @@ h2 {
   color: var(--highlight);
   margin-top: 8px;
   font-size: 1.2em;
-  text-shadow: 0 0 12px var(--highlight);
+  text-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
 
 /* ===================== HADIAH JUARA ===================== */
@@ -210,28 +211,26 @@ h2 {
   margin: 0 auto;
 }
 .hadiah-card {
-  background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
-  color: #fff;
-  border-radius: 14px;
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-left: 6px solid var(--accent-secondary);
+  border-radius: 10px;
   padding: 16px;
-  margin: 12px 0;
-  box-shadow: 0 4px 12px var(--shadow);
+  box-shadow: 0 2px 8px var(--shadow);
   transition: 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.6s ease forwards;
 }
-body:not(.dark-theme) .hadiah-card {
-  background: linear-gradient(145deg, #f1f8e9, #c8e6c9, #a5d6a7);
-  color: #222;
-}
 .hadiah-card:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px var(--shadow);
 }
 .hadiah-card .judul {
   font-weight: bold;
   font-size: 1.1em;
   margin-bottom: 6px;
+  color: var(--accent-secondary);
 }
 .hadiah-card .isi {
   font-size: 0.95em;
@@ -241,7 +240,7 @@ body:not(.dark-theme) .hadiah-card {
 .hadiah-card .juara {
   display: inline-block;
   font-size: 0.85em;
-  background: var(--accent-secondary);
+  background: var(--accent-primary);
   padding: 3px 10px;
   border-radius: 8px;
   color: white;
@@ -288,7 +287,7 @@ footer {
   background: var(--accent-secondary);
 }
 
-/* ===================== MISC ===================== */
+/* ===================== CURSOR ===================== */
 .cursor {
   display: inline-block;
   animation: blink 0.8s infinite;
