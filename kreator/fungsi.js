@@ -5,26 +5,32 @@ function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   const isDark = document.body.classList.contains('dark-theme');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+  // Ubah warna input pencarian saat toggle
+  const input = document.getElementById("searchNama");
+  if (input) {
+    input.style.background = isDark ? "#222" : "#fff";
+    input.style.color = isDark ? "#eee" : "#000";
+    input.style.border = isDark ? "1px solid #555" : "1px solid #ccc";
+  }
 }
 
 // Saat halaman dimuat, ambil tema dari localStorage
 window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-theme');
-  }
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  if (savedTheme === 'dark') document.body.classList.add('dark-theme');
 });
 
 // ===============================
-// 🔘 Navbar Toggle
+// 🔘 Navbar Toggle (Muncul di Kiri)
 // ===============================
 function toggleMenu() {
   const menu = document.getElementById("menu");
-  menu.classList.toggle("active");
+  menu.classList.toggle("active-left");
 }
 document.querySelectorAll("#menu a").forEach(link => {
   link.addEventListener("click", () => {
-    document.getElementById("menu").classList.remove("active");
+    document.getElementById("menu").classList.remove("active-left");
   });
 });
 
@@ -46,7 +52,7 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
-  
+
   const isDark = document.body.classList.contains("dark-theme");
   elemen.style.color = isDark ? "#ffe082" : "#333";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "none";
@@ -100,7 +106,7 @@ searchContainer.style.margin = "10px 0";
 searchContainer.innerHTML = `
   <input type="text" id="searchNama" placeholder="Cari nama peserta..." 
   style="padding:8px 12px;border-radius:8px;width:70%;max-width:300px;
-  border:none;outline:none;background:var(--input-bg);color:var(--text-color);
+  border:1px solid #ccc;outline:none;background:var(--input-bg,#fff);color:var(--text-color,#000);
   text-align:center;">
 `;
 
@@ -122,13 +128,6 @@ document.getElementById("aturanText").innerHTML = `
 <li>Tema: kehidupan, kreativitas, dan inspirasi di Tanjung Bulan.</li>
 <li>Gaya video: lucu, edukatif, dokumenter, cinematic, atau motivasi.</li>
 </ul>
-<br><b>Poin Juri:</b><br>
-💡 Kreativitas:<br>
-• ide konsep (150),<br>• editing (100),<br>• karakter (50).<br>
-🏡 Dampak Dusun:<br>• nuansa (100),<br>• dampak positif (100).<br>
-<b>Total Maksimal:</b> 500 poin.<br><br>
-<b>Poin TikTok:</b><br>🚀 Viral dihitung otomatis (like, komen, share).<br><br>
-Dilarang spam komen, beli like/share, atau bot.
 `;
 
 // ===============================
@@ -155,22 +154,6 @@ function hitungTotal(p, tampilkanPoin) {
 }
 
 // ===============================
-// 🔍 Filter Juara
-// ===============================
-function cariPemenangBerdasarkanFilter(dataSeason, filter) {
-  const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
-  if (typeof filter === "string")
-    return data.find(p => p.ideKonsepTipe?.toLowerCase().includes(filter.toLowerCase()));
-  if (typeof filter === "object" && filter.field) {
-    if (filter.mode === "max")
-      return data.reduce((a, b) => (b[filter.field] > a[filter.field] ? b : a));
-    else if (filter.value)
-      return data.find(p => p[filter.field] === filter.value);
-  }
-  return null;
-}
-
-// ===============================
 // 📊 Tampilkan Data Season
 // ===============================
 function tampilkanDataSeason() {
@@ -182,9 +165,10 @@ function tampilkanDataSeason() {
   const tampilkanPoin = !!dataSeason.Poin;
   const sponsor = dataSeason.Sponsor || "-";
 
-  const ranking = data
-    .map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }))
-    .sort((a, b) => b.total - a.total);
+  let ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
+
+  // jika poin tidak aktif, urutkan berdasarkan urutan data (bukan ranking)
+  if (tampilkanPoin) ranking.sort((a, b) => b.total - a.total);
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
@@ -227,7 +211,7 @@ function tampilkanDataSeason() {
     wadah.appendChild(div);
   });
 
-  // 📄 Pagination
+  // Pagination
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
   for (let i = 1; i <= totalPages; i++) {
@@ -242,15 +226,11 @@ function tampilkanDataSeason() {
     pagination.appendChild(btn);
   }
 
-  // 🏆 Hadiah Juara (Card Style)
+  // Hadiah Juara
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
-    const pemenang = h.filter
-      ? cariPemenangBerdasarkanFilter(dataSeason, h.filter)
-      : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1];
-    const nama = tampilkanPoin ? (pemenang ? pemenang.nama : "—") : "Belum diumumkan";
-
+    const nama = tampilkanPoin ? (h.nama || "—") : "Belum diumumkan";
     const card = document.createElement("div");
     card.className = "hadiah-card";
     card.style.cssText = `
@@ -261,7 +241,6 @@ function tampilkanDataSeason() {
       margin:10px;
       box-shadow:${isDark ? '0 2px 6px rgba(255,255,255,0.1)' : '0 2px 6px rgba(0,0,0,0.1)'};
       text-align:center;
-      transition:0.3s;
     `;
     card.innerHTML = `
       <b>${h.kategori}</b><br>
