@@ -21,7 +21,6 @@ function applyThemeColors() {
   document.documentElement.style.setProperty('--highlight', isDark ? '#ffeb3b' : '#b8860b');
 }
 
-// Saat halaman dimuat, ambil tema dari localStorage
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
   if (!savedTheme || savedTheme === 'dark') {
@@ -163,12 +162,10 @@ function hitungTotal(p, tampilkanPoin) {
   const nuansa = +p.nuansaLokal || 0;
   const dampak = +p.dampakPositif || 0;
 
-  const viral = (like * 1.0) + (komen * 1.5) + (share * 1.5);
+  const viral = tampilkanPoin ? ((like * 1.0) + (komen * 1.5) + (share * 1.5)) : 0;
   const nilaiKreatif = (ide * 1.5) + edit + (karakter * 0.5);
   const nilaiLokal = nuansa + dampak;
-  const total = tampilkanPoin
-    ? +(nilaiKreatif + nilaiLokal + viral).toFixed(1)
-    : +(nilaiKreatif + nilaiLokal).toFixed(1);
+  const total = +(nilaiKreatif + nilaiLokal + (tampilkanPoin ? viral : 0)).toFixed(1);
 
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
@@ -220,6 +217,7 @@ function tampilkanDataSeason() {
       <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
       <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${sponsor}</span>
     </div>
+    ${!tampilkanPoin ? `<div style="margin-top:6px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.9em;">⚠️ Poin viral belum dibuka</div>` : ""}
   </div>`;
 
   const keyword = document.getElementById("searchNama").value.toLowerCase();
@@ -262,9 +260,10 @@ function tampilkanDataSeason() {
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
-    const pemenang = h.filter
-      ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, tampilkanPoin)
-      : (tampilkanPoin ? ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1] : null);
+    const pemenang = tampilkanPoin
+      ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
+        : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
+      : null;
 
     const nama = (tampilkanPoin && pemenang) ? pemenang.nama : "Belum diumumkan";
 
