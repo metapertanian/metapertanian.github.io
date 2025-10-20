@@ -203,29 +203,6 @@ function tampilkanDataSeason() {
       </div>
     </div>`;
 
-  // 📖 Aturan
-  document.getElementById("aturanText").innerHTML = `
-    • Lomba terbuka untuk umum.<br>
-    • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
-    • ${dataSeason.deskripsi}<br><br>
-    • Video hasil karya sendiri dan belum pernah diunggah.<br>
-    • Gaya bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
-    <b>Poin Juri:</b><br>
-    💡 Kreativitas (maks 300):<br>
-ide konsep (150),<br>
-editing (100), <br>
-karakter (50).<br><br>
-    🏡 Lokal (maks 200): <br>
-nuansa lokal (100), <br>
-dampak positif (100).<br><br>
-    <b>Poin TikTok:</b><br>
-    🚀 Viral : poin tak terbatas.<br>
-dihitung dari like, komen, share.<br><br>
-    • Diperbolehkan mengajak teman atau saudara untuk menaikkan like, komen, share.<br>
-    • Dilarang spam/bot/beli untuk menaikkan like, komen, share.<br>
-    • Pelanggaran akan dikurangi poin atau bahkan diskualifikasi.
-  `;
-
   // 🔍 Filter Pencarian (tanpa ubah rank)
   const keyword = document.getElementById("searchNama").value.toLowerCase();
   const filtered = keyword ? ranking.filter(p => p.nama.toLowerCase().includes(keyword)) : ranking;
@@ -264,13 +241,25 @@ dihitung dari like, komen, share.<br><br>
     wadah.appendChild(div);
   });
 
-  // 📄 Pagination
+  // 📄 Pagination (desain baru)
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
+  pagination.style.textAlign = "center";
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
-    btn.className = (i === currentPage) ? "active" : "";
+    btn.style.cssText = `
+      margin:3px;
+      padding:6px 10px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      background:${i === currentPage ? 'var(--highlight)' : (isDark ? '#333' : '#ddd')};
+      color:${i === currentPage ? '#000' : (isDark ? '#fff' : '#111')};
+      transition:all .2s;
+    `;
+    btn.onmouseover = () => btn.style.filter = "brightness(1.2)";
+    btn.onmouseleave = () => btn.style.filter = "brightness(1)";
     btn.onclick = () => {
       currentPage = i;
       tampilkanDataSeason();
@@ -279,7 +268,7 @@ dihitung dari like, komen, share.<br><br>
     pagination.appendChild(btn);
   }
 
-  // 🏆 Hadiah Juara
+  // 🏆 Hadiah Juara (update desain & kondisi)
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
@@ -287,9 +276,8 @@ dihitung dari like, komen, share.<br><br>
       ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
         : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
       : null;
-    const nama = (tampilkanPoin && pemenang) ? pemenang.nama : "Belum diumumkan";
-    const total = (tampilkanPoin && pemenang) ? pemenang.total.toFixed(1) : "-";
-    const linkVideo = (tampilkanPoin && pemenang) ? pemenang.linkVideo : "#";
+    const adaPemenang = tampilkanPoin && pemenang;
+    const nama = adaPemenang ? pemenang.nama : "Belum diumumkan";
 
     const card = document.createElement("div");
     card.className = "hadiah-card";
@@ -300,19 +288,29 @@ dihitung dari like, komen, share.<br><br>
       padding:18px;
       margin:12px;
       box-shadow:var(--shadow);
-      text-align:center;
+      text-align:left;
       transition:transform .2s, box-shadow .2s;
+      line-height:1.5;
     `;
     card.onmouseover = () => card.style.transform = "scale(1.02)";
     card.onmouseleave = () => card.style.transform = "scale(1)";
 
-    card.innerHTML = `
-      <b style="font-size:1.2em;">${h.kategori}</b><br>
+    let isiCard = `
+      <b style="font-size:1.1em;">${h.kategori}</b><br>
       🎁 ${h.hadiah}<br>
-      🏆 <span style="color:var(--highlight);font-weight:700;">${nama}</span><br>
-      ⭐ <b>${total}</b><br>
-      <a href="${linkVideo}" target="_blank" style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">▶️ Lihat Video</a>
+      🏆 <span style="color:var(--highlight);font-weight:700;">${nama}</span>
     `;
+
+    if (adaPemenang) {
+      isiCard += `
+        <br>⭐ Total Poin: <b>${pemenang.total.toFixed(1)}</b><br>
+        <a href="${pemenang.linkVideo}" target="_blank" 
+           style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">
+           ▶️ Lihat Video
+        </a>`;
+    }
+
+    card.innerHTML = isiCard;
     juaraBox.appendChild(card);
   });
 }
