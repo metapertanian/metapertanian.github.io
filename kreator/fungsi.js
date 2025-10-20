@@ -205,8 +205,7 @@ function tampilkanDataSeason() {
     <div style="margin-top:4px;font-size:0.95em;">
       <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
       <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${sponsor}</span>
-    </div><br>
-    ${!tampilkanPoin ? `<div style="margin-top:6px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.9em;">⚠️ Poin viral belum dihitung</div>` : ""}
+    </div>
   </div>`;
 
   // 📖 Aturan Lomba
@@ -238,17 +237,19 @@ dihitung otomatis dari like, komen, share.<br><br>
   const startIndex = (currentPage - 1) * itemsPerPage;
   const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  pageItems.forEach(p => {
+  pageItems.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "peserta show";
+    const nomorRanking = tampilkanPoin ? `<span style="color:var(--highlight)">#${startIndex + i + 1}</span> ` : "";
     div.innerHTML = `
-      <div class="nama">${p.nama.toUpperCase()}</div>
+      <div class="nama">${nomorRanking}${p.nama.toUpperCase()}</div>
       <div class="nilai">
         💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
         🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
         🚀 Viral: ${tampilkanPoin ? `<span>${p.viral.toFixed(1)}</span>` : `<span style="color:gold">🔒</span>`}
       </div>
       <div class="total">⭐ <span>${p.total.toFixed(1)}</span></div>
+      ${!tampilkanPoin ? `<div style="margin-top:4px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.85em;">⚠️ Poin viral belum dihitung</div>` : ""}
       <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>`;
     wadah.appendChild(div);
   });
