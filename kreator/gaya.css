@@ -1,301 +1,332 @@
 /* ===================== RESET ===================== */
-
-{
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+html, body {
+  height: 100%;
+  scroll-behavior: smooth;
+}
 
-/* ===================== THEME VARIABLES ===================== /
+/* ===================== THEME VARIABLES ===================== */
 :root {
-/ ===== Tema Terang ===== /
---bg-gradient: linear-gradient(160deg, #f7fff7, #ffffff);
---text-main: #1a1a1a;
---text-sub: #444;
---accent-primary: #2e7d32;
---accent-secondary: #43a047;
---highlight: #1976d2; / Biru cerah agar jelas di latar terang */
---card-bg: #ffffff;
---navbar-bg: linear-gradient(90deg, #43a047, #66bb6a);
---border-glow: #2e7d32;
---link-color: #1565c0;
---shadow: rgba(0, 0, 0, 0.08);
+  /* ===== Tema Terang ===== */
+  --bg-gradient: linear-gradient(160deg, #eef9f1, #ffffff);
+  --text-main: #1a1a1a;
+  --text-sub: #555;
+  --accent-primary: #2e7d32;
+  --accent-secondary: #4caf50;
+  --highlight: #1e88e5;
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --navbar-bg: linear-gradient(90deg, #43a047, #66bb6a);
+  --border-glow: #2e7d32;
+  --link-color: #1565c0;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
 body.dark-theme {
-/* ===== Tema Gelap ===== /
---bg-gradient: linear-gradient(160deg, #001f1c, #000);
---text-main: #f5f5f5;
---text-sub: #d0d0d0;
---accent-primary: #1b5e20;
---accent-secondary: #2e7d32;
---highlight: #4fc3f7; / Biru lembut agar mudah dibaca di gelap */
---card-bg: #181818;
---navbar-bg: linear-gradient(90deg, #1b5e20, #2e7d32);
---border-glow: #00ffb7;
---link-color: #81d4fa;
---shadow: rgba(0, 0, 0, 0.3);
+  /* ===== Tema Gelap ===== */
+  --bg-gradient: linear-gradient(160deg, #001a17, #000);
+  --text-main: #f5f5f5;
+  --text-sub: #c9c9c9;
+  --accent-primary: #1b5e20;
+  --accent-secondary: #2e7d32;
+  --highlight: #4fc3f7;
+  --card-bg: rgba(24, 24, 24, 0.9);
+  --navbar-bg: linear-gradient(90deg, #1b5e20, #2e7d32);
+  --border-glow: #00ffb7;
+  --link-color: #81d4fa;
+  --shadow: rgba(0, 0, 0, 0.4);
 }
 
-/* ===================== BODY ===================== /
+/* ===================== BODY ===================== */
 body {
-font-family: 'Poppins', 'Segoe UI', sans-serif;
-background: var(--bg-gradient);
-color: var(--text-main);
-padding: 80px 20px 0; / hapus padding bawah agar tidak ada garis putih */
-overflow-x: hidden;
-min-height: 100vh;
-transition: background 0.4s, color 0.4s;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
+  background: var(--bg-gradient);
+  color: var(--text-main);
+  padding: 80px 20px 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background 0.4s, color 0.4s;
 }
 
 /* ===================== NAVBAR ===================== */
 .nav {
-position: fixed;
-top: 0; left: 0; right: 0;
-background: var(--navbar-bg);
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 12px 24px;
-z-index: 1000;
-transition: background 0.4s;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: var(--navbar-bg);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 28px;
+  z-index: 1000;
+  box-shadow: 0 3px 10px var(--shadow);
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  transition: background 0.4s, box-shadow 0.3s;
+}
+.nav:hover {
+  box-shadow: 0 4px 16px var(--shadow);
 }
 .nav-brand {
-font-size: 1.3rem;
-font-weight: bold;
-color: white;
-text-decoration: none;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.5px;
 }
 .nav-links {
-display: flex;
-gap: 20px;
+  display: flex;
+  gap: 22px;
 }
 .nav-links a {
-color: white;
-text-decoration: none;
-font-weight: 500;
-transition: opacity 0.3s;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s;
 }
-.nav-links a:hover { opacity: 0.8; }
+.nav-links a:hover {
+  color: #e0f7fa;
+  transform: translateY(-2px);
+}
 .nav-toggle {
-display: none;
-background: none;
-border: none;
-color: white;
-font-size: 1.6rem;
-cursor: pointer;
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.6rem;
+  cursor: pointer;
 }
 @media (max-width: 768px) {
-.nav-links {
-position: absolute;
-top: 60px;
-right: 0;
-flex-direction: column;
-background: var(--accent-secondary);
-width: 200px;
-padding: 15px;
-gap: 15px;
-max-height: 0;
-overflow: hidden;
-opacity: 0;
-transform: translateY(-10px);
-transition: 0.4s ease;
-}
-.nav-links.active {
-max-height: 500px;
-opacity: 1;
-transform: translateY(0);
-}
-.nav-toggle { display: block; }
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    flex-direction: column;
+    background: var(--accent-secondary);
+    border-radius: 0 0 10px 10px;
+    width: 200px;
+    padding: 15px;
+    gap: 15px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: 0.4s ease;
+  }
+  .nav-links.active {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .nav-toggle { display: block; }
 }
 
 /* ===================== HEADER ===================== */
 .header {
-text-align: center;
-margin-top: 30px;
+  text-align: center;
+  margin-top: 40px;
 }
 .profil-img {
-width: 110px;
-height: 110px;
-border-radius: 50%;
-border: 3px solid var(--border-glow);
-margin-bottom: 10px;
-transition: border-color 0.4s;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid var(--border-glow);
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  margin-bottom: 10px;
+  transition: transform 0.4s, border-color 0.4s;
+}
+.profil-img:hover {
+  transform: scale(1.05);
 }
 .kutipan {
-font-size: 1rem;
-color: var(--highlight);
-font-weight: 600;
-min-height: 24px;
-animation: fadeIn 1.5s ease;
-margin-bottom: 15px;
+  font-size: 1rem;
+  color: var(--highlight);
+  font-weight: 600;
+  min-height: 24px;
+  animation: fadeIn 1.5s ease;
+  margin-bottom: 15px;
 }
 .season-select {
-margin-top: 10px;
+  margin-top: 10px;
 }
 
 /* ===================== SECTION ===================== */
 section {
-margin-top: 30px;
+  margin-top: 40px;
 }
 h2 {
-color: var(--highlight);
-text-align: center;
-margin-bottom: 20px;
-transition: color 0.4s;
+  color: var(--highlight);
+  text-align: center;
+  margin-bottom: 24px;
+  transition: color 0.4s;
+  font-weight: 700;
 }
 
 /* ===================== PESERTA ===================== */
 .peserta {
-opacity: 0;
-transform: translateY(30px);
-background: var(--card-bg);
-border-radius: 14px;
-padding: 20px;
-margin-bottom: 25px;
-box-shadow: 0 2px 5px var(--shadow);
-transition: all 0.6s ease;
-color: var(--text-main);
+  opacity: 0;
+  transform: translateY(30px);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 10px var(--shadow);
+  transition: all 0.5s ease;
+  color: var(--text-main);
 }
 .peserta.show {
-opacity: 1;
-transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
 }
 .peserta:hover {
-transform: translateY(-3px);
-background: var(--card-bg);
-filter: brightness(1.05);
+  transform: translateY(-5px);
+  filter: brightness(1.05);
+  box-shadow: 0 6px 15px var(--shadow);
 }
 .peserta .rank {
-font-weight: bold;
-color: var(--accent-secondary);
-font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--accent-secondary);
+  font-size: 1.1rem;
 }
 .peserta .nama {
-font-size: 1.3rem;
-margin: 4px 0;
-font-weight: 700;
+  font-size: 1.35rem;
+  margin: 4px 0;
+  font-weight: 700;
 }
 .peserta .nilai {
-font-size: 0.9em;
-opacity: 0.95;
-line-height: 1.6;
-color: var(--text-sub);
+  font-size: 0.95em;
+  opacity: 0.95;
+  line-height: 1.6;
+  color: var(--text-sub);
 }
 .peserta .nilai span {
-font-weight: 600;
-color: var(--highlight);
+  font-weight: 600;
+  color: var(--highlight);
 }
 .peserta .link {
-display: block;
-margin-top: 6px;
-color: var(--link-color);
-text-decoration: none;
-font-size: 0.9em;
+  display: block;
+  margin-top: 8px;
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 0.9em;
+  transition: 0.3s;
 }
-.peserta .link:hover { text-decoration: underline; }
+.peserta .link:hover {
+  text-decoration: underline;
+  color: var(--highlight);
+}
 .peserta .total {
-font-weight: bold;
-color: var(--highlight);
-margin-top: 8px;
-font-size: 1.2em;
-text-shadow: 0 0 6px rgba(0,0,0,0.2);
+  font-weight: bold;
+  color: var(--highlight);
+  margin-top: 8px;
+  font-size: 1.2em;
+  text-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
 
 /* ===================== HADIAH JUARA ===================== */
 #hadiahList {
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 15px;
-max-width: 600px;
-margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 .hadiah-card {
-background: var(--card-bg);
-color: var(--text-main);
-border-left: 6px solid var(--accent-secondary);
-border-radius: 10px;
-padding: 16px;
-box-shadow: 0 2px 8px var(--shadow);
-transition: 0.3s ease;
-opacity: 0;
-transform: translateY(20px);
-animation: fadeInUp 0.6s ease forwards;
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-left: 6px solid var(--accent-secondary);
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 3px 10px var(--shadow);
+  transition: 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
 }
 .hadiah-card:hover {
-transform: scale(1.02);
-box-shadow: 0 4px 12px var(--shadow);
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px var(--shadow);
 }
 .hadiah-card .judul {
-font-weight: bold;
-font-size: 1.1em;
-margin-bottom: 6px;
-color: var(--accent-secondary);
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  color: var(--accent-secondary);
 }
 .hadiah-card .isi {
-font-size: 0.95em;
-opacity: 0.9;
-margin-bottom: 6px;
+  font-size: 0.95em;
+  opacity: 0.9;
+  margin-bottom: 6px;
 }
 .hadiah-card .juara {
-display: inline-block;
-font-size: 0.85em;
-background: var(--accent-primary);
-padding: 3px 10px;
-border-radius: 8px;
-color: white;
-font-weight: 600;
+  display: inline-block;
+  font-size: 0.85em;
+  background: var(--accent-primary);
+  padding: 4px 12px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
 }
 
 /* ===================== FOOTER ===================== */
 footer {
-text-align: center;
-margin-top: 60px;
-font-size: 0.9rem;
-color: var(--text-sub);
+  text-align: center;
+  margin-top: auto;
+  padding: 30px 10px 20px;
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
 }
 
 /* ===================== ANIMASI ===================== */
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(20px); }
-to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeInUp {
-to {
-opacity: 1;
-transform: translateY(0);
-}
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ===================== PAGINATION ===================== */
 #pagination {
-display: flex;
-justify-content: center;
-gap: 8px;
-margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 25px;
 }
 #pagination button {
-background: var(--accent-primary);
-border: none;
-color: white;
-padding: 8px 14px;
-border-radius: 8px;
-cursor: pointer;
-transition: 0.3s;
+  background: var(--accent-primary);
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 2px 6px var(--shadow);
 }
 #pagination button:hover {
-background: var(--accent-secondary);
+  background: var(--accent-secondary);
+  transform: translateY(-2px);
 }
 
 /* ===================== CURSOR ===================== */
 .cursor {
-display: inline-block;
-animation: blink 0.8s infinite;
-color: var(--accent-secondary);
+  display: inline-block;
+  animation: blink 0.8s infinite;
+  color: var(--accent-secondary);
 }
 @keyframes blink {
-0%,50%,100% { opacity: 1; }
-25%,75% { opacity: 0; }
+  0%,50%,100% { opacity: 1; }
+  25%,75% { opacity: 0; }
 }
