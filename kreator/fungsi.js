@@ -200,34 +200,34 @@ function tampilkanDataSeason() {
     </div>
     <div style="font-size:0.95em;margin-top:6px;line-height:1.4;">
       ${deskripsi}
-    </div>
-    <div style="margin-top:6px;color:${isDark ? '#bbb' : '#333'};">📅 Periode: ${periode}</div>
+    </div><br>
+    <div style="margin-top:6px;color:${isDark ? '#bbb' : '#333'};">📅 ${periode}</div><br>
     <div style="margin-top:4px;font-size:0.95em;">
       <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
       <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${sponsor}</span>
-    </div>
-    ${!tampilkanPoin ? `<div style="margin-top:6px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.9em;">⚠️ Poin viral belum dibuka</div>` : ""}
+    </div><br>
+    ${!tampilkanPoin ? `<div style="margin-top:6px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.9em;">⚠️ Poin viral belum dihitung</div>` : ""}
   </div>`;
 
   // 📖 Aturan Lomba
   document.getElementById("aturanText").innerHTML = `
   <b>📖 Aturan Lomba</b><br><br>
-  Lomba terbuka untuk umum.<br>
-  Konten Sesuai Tema: <b>${tema}</b><br>
-  ${deskripsi}<br><br>
-  Video hasil editan sendiri dan belum pernah diunggah di sosial media manapun.<br>
-  Gaya video bebas — bisa lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
+  • Lomba terbuka untuk umum.<br>
+  • Konten Sesuai Tema: <b>${tema}</b><br>
+  • ${deskripsi}<br><br>
+  • Video hasil editan sendiri dan belum pernah diunggah di sosial media manapun.<br>
+  • Gaya video bebas — bisa lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
   <b>Poin Juri:</b><br>
-  💡 Kreativitas:<br>
-  • ide konsep (150),<br>• editing (100),<br>• karakter (50).<br>
-  🏡 Dampak Dusun:<br>
-  • nuansa (100),<br>• dampak positif (100).<br>
-  <b>Total Maksimal:</b> 500 poin.<br><br>
+  💡 Kreativitas: maks 300 poin<br>
+  • ide konsep (150),<br>• editing (100),<br>• karakter (50).<br><br>
+  🏡 Lokal: (maks 200 poin)<br>
+  • nuansa lokal (100),<br>• dampak positif (100).<br><br>
   <b>Poin TikTok:</b><br>
-  🚀 Poin Viral tak terbatas — dihitung otomatis dari like, komen, share.<br><br>
-  Kreator dapat meminta bantuan teman / saudara untuk mendapatkan interaksi,<br>
-  tapi dilarang spam dan dilarang menggunakan bot / beli like, komen, share.<br><br>
-  Pelanggaran akan dikurangi poin atau diskualifikasi.
+  🚀 Viral : poin tak terbatas.<br>
+dihitung otomatis dari like, komen, share.<br><br>
+  • Kreator dapat meminta bantuan teman / saudara untuk mendapatkan interaksi,<br>
+  • Dilarang spam dan dilarang menggunakan bot / beli like, komen, share.<br><br>
+  • Pelanggaran akan dikurangi poin atau diskualifikasi.
   `;
 
   const keyword = document.getElementById("searchNama").value.toLowerCase();
