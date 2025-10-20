@@ -105,7 +105,7 @@ selectSeason.value = Object.keys(dataJuara)[0];
 
 const infoRange = document.createElement("div");
 infoRange.id = "infoRange";
-infoRange.style.fontSize = "1.2em";
+infoRange.style.fontSize = "1.0em";
 infoRange.style.marginTop = "6px";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
