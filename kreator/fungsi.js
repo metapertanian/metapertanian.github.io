@@ -203,8 +203,7 @@ function tampilkanDataSeason() {
       </div>
     </div>`;
 
-
-// 📜 Aturan Lomba
+  // 📜 Aturan Lomba
   document.getElementById("aturanText").innerHTML = `
     • Lomba terbuka untuk umum.<br>
     • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
@@ -213,11 +212,14 @@ function tampilkanDataSeason() {
     • Gaya bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
     <b>Poin Juri:</b><br>
     💡 Kreativitas (maks 300):<br>
-    ide konsep (150), editing (100), karakter (50).<br><br>
+    ide konsep (150), <br>
+editing (100), <br>
+karakter (50).<br><br>
     🏡 Lokal (maks 200):<br>
-    nuansa lokal (100), dampak positif (100).<br><br>
+    nuansa lokal (100), <br>
+dampak positif (100).<br><br>
     <b>Poin TikTok:</b><br>
-    🚀 Viral: poin tak terbatas, dihitung dari like, komen, share.<br><br>
+    🚀 Viral: poin tak terbatas,<br> dihitung dari like, komen, share.<br><br>
     • Diperbolehkan mengajak teman atau saudara untuk menaikkan like, komen, share.<br>
     • Dilarang spam/bot/beli untuk menaikkan like, komen, share.<br>
     • Pelanggaran akan dikurangi poin atau bahkan diskualifikasi.
@@ -323,7 +325,7 @@ function tampilkanDataSeason() {
 
     if (adaPemenang) {
       isiCard += `
-        <br>⭐ Total Poin: <b>${pemenang.total.toFixed(1)}</b><br>
+        <br>⭐ <b>${pemenang.total.toFixed(1)}</b><br>
         <a href="${pemenang.linkVideo}" target="_blank" 
            style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">
            ▶️ Lihat Video
