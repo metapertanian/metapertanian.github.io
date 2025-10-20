@@ -9,7 +9,7 @@ const dataJuara = {
   // ===============================
   "Season 2": {
     tema: "Sisi Lain Sawojajar",
-    deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di lingkungan RT tertentu, Dusun tertentu, Sekolah tertentu di wilayah desa Sawojajar.",
+    deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah desa Sawojajar.",
     periode: "10 Januari 2026 - 20 Maret 2026",
     Sponsor: "Bank Desa Nusantara",
     Poin: "false",
@@ -43,7 +43,7 @@ const dataJuara = {
   // ===============================
   "Season 1": {
     tema: "Sisi Lain Tanjung Bulan",
-    deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di lingkungan RT tertentu, Dusun tertentu, Sekolah tertentu di wilayah dusun Tanjung Bulan.",
+    deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah dusun Tanjung Bulan.",
     periode: "25 Oktober 2025 - 28 Desember 2025",
     Sponsor: "Toko Tani Makmur",
     Poin: "true",
