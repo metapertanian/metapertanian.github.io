@@ -57,20 +57,24 @@ let indexKutipan = 0, indexHuruf = 0, intervalHuruf;
 
 function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
+  if (!elemen) return;
   const teks = kutipanList[indexKutipan];
+
+  // Pastikan style langsung direset sesuai tema aktif
+  const isDark = document.body.classList.contains("dark-theme");
   elemen.textContent = "";
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
+  elemen.style.transition = "color 0.3s ease";
+  elemen.style.color = isDark ? "#ffe082" : "#111"; // 🔧 warna terang diperbaiki agar kontras di bg putih
+  elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "0 0 3px rgba(0,0,0,0.1)";
 
-  const isDark = document.body.classList.contains("dark-theme");
-  elemen.style.color = isDark ? "#ffe082" : "#333";
-  elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "none";
-
+  // Tambahkan kursor
   const cursor = document.createElement("span");
   cursor.textContent = "|";
-  cursor.style.color = isDark ? "#ffd54f" : "#444";
+  cursor.style.color = isDark ? "#ffd54f" : "#555";
   elemen.appendChild(cursor);
 
   indexHuruf = 0;
@@ -194,7 +198,6 @@ function tampilkanDataSeason() {
   const dataSeason = dataJuara[season];
   if (!dataSeason) return;
 
-  // ✅ Pastikan properti "Poin" diperlakukan benar-benar boolean
   const tampilkanPoin = (
     dataSeason.Poin === true ||
     dataSeason.Poin === 'true' ||
