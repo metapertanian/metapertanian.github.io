@@ -6,11 +6,10 @@ function toggleTheme() {
   const isDark = document.body.classList.contains('dark-theme');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
   applyThemeColors();
-  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 50); // ⏳ tunggu agar warna benar-benar terpasang
+  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 50);
   tampilkanDataSeason();
 }
 
-// Terapkan warna tema
 function applyThemeColors() {
   const isDark = document.body.classList.contains('dark-theme');
   document.documentElement.style.setProperty('--bg-color', isDark ? '#121212' : '#f5f5f5');
@@ -23,11 +22,9 @@ function applyThemeColors() {
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
-  if (!savedTheme || savedTheme === 'dark') {
-    document.body.classList.add('dark-theme');
-  }
+  if (!savedTheme || savedTheme === 'dark') document.body.classList.add('dark-theme');
   applyThemeColors();
-  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 100); // 🔧 pastikan kutipan muncul dengan warna benar di awal
+  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 100);
 });
 
 // ===============================
@@ -60,19 +57,15 @@ function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   if (!elemen) return;
   const teks = kutipanList[indexKutipan];
-
-  // Reset style sesuai tema aktif
   const isDark = document.body.classList.contains("dark-theme");
   elemen.textContent = "";
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
-  elemen.style.transition = "color 0.3s ease";
-  elemen.style.color = isDark ? "#ffe082" : "#111"; // Warna kutipan gelap → emas
+  elemen.style.color = isDark ? "#ffe082" : "#111";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "0 0 3px rgba(0,0,0,0.1)";
 
-  // Pastikan elemen sudah ter-render sebelum mulai menulis
   requestAnimationFrame(() => {
     const cursor = document.createElement("span");
     cursor.textContent = "|";
@@ -134,27 +127,6 @@ let currentPage = 1;
 const itemsPerPage = 5;
 
 // ===============================
-// 📜 Aturan Lomba
-// ===============================
-document.getElementById("aturanText").innerHTML = `
-<ul style="line-height:1.6">
-<li>Lomba terbuka untuk umum.</li>
-<li>Video harus diambil di <b>Tanjung Bulan</b>.</li>
-<li>Edit boleh dilakukan di mana saja.</li>
-<li>Video hasil karya sendiri (belum pernah diunggah).</li>
-<li>Tema: kehidupan, kreativitas, dan inspirasi di Tanjung Bulan.</li>
-<li>Gaya video: lucu, edukatif, dokumenter, cinematic, atau motivasi.</li>
-</ul>
-<br><b>Poin Juri:</b><br>
-💡 Kreativitas:<br>
-• ide konsep (150),<br>• editing (100),<br>• karakter (50).<br>
-🏡 Dampak Dusun:<br>• nuansa (100),<br>• dampak positif (100).<br>
-<b>Total Maksimal:</b> 500 poin.<br><br>
-<b>Poin TikTok:</b><br>🚀 Viral dihitung otomatis (like, komen, share).<br><br>
-Dilarang spam komen, beli like/share, atau bot.
-`;
-
-// ===============================
 // 🧮 Hitung Nilai
 // ===============================
 function hitungTotal(p, tampilkanPoin) {
@@ -166,69 +138,71 @@ function hitungTotal(p, tampilkanPoin) {
   const karakter = +p.karakter || 0;
   const nuansa = +p.nuansaLokal || 0;
   const dampak = +p.dampakPositif || 0;
-
   const viral = tampilkanPoin ? ((like * 1.0) + (komen * 1.5) + (share * 1.5)) : 0;
   const nilaiKreatif = (ide * 1.5) + edit + (karakter * 0.5);
   const nilaiLokal = nuansa + dampak;
   const total = +(nilaiKreatif + nilaiLokal + (tampilkanPoin ? viral : 0)).toFixed(1);
-
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
 
 // ===============================
-// 🔍 Filter Juara
+// 📜 Aturan Lomba (Dinamis)
 // ===============================
-function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
-  if (!tampilkanPoin) return null;
-  const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
-  if (typeof filter === "string")
-    return data.find(p => p.ideKonsepTipe?.toLowerCase().includes(filter.toLowerCase()));
-  if (typeof filter === "object" && filter.field) {
-    if (filter.mode === "max")
-      return data.reduce((a, b) => (b[filter.field] > a[filter.field] ? b : a));
-    else if (filter.value)
-      return data.find(p => p[filter.field] === filter.value);
-  }
-  return null;
+function generateAturan(season) {
+  const tema = season.tema || "Kreativitas Lokal";
+  const deskripsi = season.deskripsi || "";
+  return `
+📖 <b>Aturan Lomba</b><br>
+Lomba terbuka untuk umum.<br>
+Konten Sesuai Tema: <b>${tema}</b><br>
+${deskripsi}<br>
+Video hasil editan sendiri dan belum pernah di upload di sosial media manapun.<br>
+Gaya video bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
+<b>Poin Juri:</b><br>
+💡 Kreativitas:<br>
+• ide konsep (150),<br>• editing (100),<br>• karakter (50).<br>
+🏡 Dampak Dusun:<br>• nuansa (100),<br>• dampak positif (100).<br>
+<b>Total Maksimal:</b> 500 poin.<br><br>
+<b>Poin TikTok:</b><br>
+🚀 Poin Viral tak terbatas, dihitung otomatis dari like, komen, share.<br><br>
+Kreator boleh meminta bantuan teman/saudara untuk dukungan, tetapi<br>
+❌ Dilarang spam atau menggunakan bot/beli like.<br>
+Kreator yang melanggar dapat dikurangi poin atau didiskualifikasi.
+`;
 }
 
 // ===============================
 // 📊 Tampilkan Data Season
 // ===============================
 function tampilkanDataSeason() {
-  const season = selectSeason.value;
-  const dataSeason = dataJuara[season];
-  if (!dataSeason) return;
+  const seasonKey = selectSeason.value;
+  const season = dataJuara[seasonKey];
+  if (!season) return;
 
   const tampilkanPoin = (
-    dataSeason.Poin === true ||
-    dataSeason.Poin === 'true' ||
-    dataSeason.Poin === 1
+    season.Poin === true ||
+    season.Poin === 'true' ||
+    season.Poin === 1
   );
-
-  const data = dataSeason.kreator || [];
-  const sponsor = dataSeason.Sponsor || "-";
+  const data = season.kreator || [];
+  const sponsor = season.Sponsor || "-";
   let ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
-
   if (tampilkanPoin) ranking.sort((a, b) => b.total - a.total);
 
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
-
-  const awal = dataSeason.awal || "-";
-  const akhir = dataSeason.akhir || "-";
   const isDark = document.body.classList.contains("dark-theme");
 
+  // 🗓️ Info Tema & Periode
   infoRange.innerHTML = `
   <div style="background:${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};padding:10px;border-radius:10px;margin-top:8px;">
-    <div style="font-weight:700;color:${isDark ? '#fff':'#222'};">${awal} - ${akhir}</div>
-    <div style="margin-top:4px;font-size:0.95em;">
-      <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
-      <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${sponsor}</span>
-    </div>
+    <div style="font-weight:700;color:${isDark ? '#ffeb3b':'#b8860b'};font-size:1.1em;">🎬 Tema: ${season.tema || '-'}</div>
+    <div style="margin-top:4px;color:${isDark ? '#fff':'#222'};font-size:0.95em;">🗓️ Periode: ${season.periode || '-'}</div>
+    <div style="margin-top:6px;color:${isDark ? '#fdd835':'#5a4b00'};">🎗️ Sponsor: ${sponsor}</div>
     ${!tampilkanPoin ? `<div style="margin-top:6px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.9em;">⚠️ Poin viral belum dibuka</div>` : ""}
   </div>`;
 
+  // 🔎 Filter nama
   const keyword = document.getElementById("searchNama").value.toLowerCase();
   const filtered = ranking.filter(p => p.nama.toLowerCase().includes(keyword));
 
@@ -267,17 +241,11 @@ function tampilkanDataSeason() {
     pagination.appendChild(btn);
   }
 
-  // 🏆 Daftar Hadiah
+  // 🏆 Hadiah Pemenang
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
-  (dataSeason.Hadiah || []).forEach(h => {
-    const pemenang = tampilkanPoin
-      ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
-        : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
-      : null;
-
-    const nama = (tampilkanPoin && pemenang) ? pemenang.nama : "Belum diumumkan";
-
+  (season.Hadiah || []).forEach(h => {
+    const nama = tampilkanPoin ? (ranking.find(p => p.nama === h.nama)?.nama || "Belum diumumkan") : "Belum diumumkan";
     const card = document.createElement("div");
     card.className = "hadiah-card";
     card.style.cssText = `
@@ -290,13 +258,12 @@ function tampilkanDataSeason() {
       text-align:center;
       transition:0.3s;
     `;
-    card.innerHTML = `
-      <b>${h.kategori}</b><br>
-      🎁 ${h.hadiah}<br>
-      🏆 <span style="color:var(--highlight)">${nama}</span>
-    `;
+    card.innerHTML = `<b>${h.kategori}</b><br>🎁 ${h.hadiah}<br>🏆 <span style="color:var(--highlight)">${nama}</span>`;
     juaraBox.appendChild(card);
   });
+
+  // 📖 Aturan Lomba per Season
+  document.getElementById("aturanText").innerHTML = generateAturan(season);
 }
 
 selectSeason.addEventListener("change", tampilkanDataSeason);
