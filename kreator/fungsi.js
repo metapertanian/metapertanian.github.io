@@ -6,7 +6,7 @@ function toggleTheme() {
   const isDark = document.body.classList.contains('dark-theme');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
   applyThemeColors();
-  tampilkanKutipanHurufDemiHuruf();
+  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 50); // ⏳ tunggu agar warna benar-benar terpasang
   tampilkanDataSeason();
 }
 
@@ -27,6 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.body.classList.add('dark-theme');
   }
   applyThemeColors();
+  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 100); // 🔧 pastikan kutipan muncul dengan warna benar di awal
 });
 
 // ===============================
@@ -60,7 +61,7 @@ function tampilkanKutipanHurufDemiHuruf() {
   if (!elemen) return;
   const teks = kutipanList[indexKutipan];
 
-  // Pastikan style langsung direset sesuai tema aktif
+  // Reset style sesuai tema aktif
   const isDark = document.body.classList.contains("dark-theme");
   elemen.textContent = "";
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
@@ -68,31 +69,32 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
   elemen.style.transition = "color 0.3s ease";
-  elemen.style.color = isDark ? "#ffe082" : "#111"; // 🔧 warna terang diperbaiki agar kontras di bg putih
+  elemen.style.color = isDark ? "#ffe082" : "#111"; // Warna kutipan gelap → emas
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "0 0 3px rgba(0,0,0,0.1)";
 
-  // Tambahkan kursor
-  const cursor = document.createElement("span");
-  cursor.textContent = "|";
-  cursor.style.color = isDark ? "#ffd54f" : "#555";
-  elemen.appendChild(cursor);
+  // Pastikan elemen sudah ter-render sebelum mulai menulis
+  requestAnimationFrame(() => {
+    const cursor = document.createElement("span");
+    cursor.textContent = "|";
+    cursor.style.color = isDark ? "#ffd54f" : "#555";
+    elemen.appendChild(cursor);
 
-  indexHuruf = 0;
-  clearInterval(intervalHuruf);
-  intervalHuruf = setInterval(() => {
-    if (indexHuruf < teks.length) {
-      cursor.before(teks[indexHuruf]);
-      indexHuruf++;
-    } else {
-      clearInterval(intervalHuruf);
-      setTimeout(() => {
-        indexKutipan = (indexKutipan + 1) % kutipanList.length;
-        tampilkanKutipanHurufDemiHuruf();
-      }, 3000);
-    }
-  }, 80);
+    indexHuruf = 0;
+    clearInterval(intervalHuruf);
+    intervalHuruf = setInterval(() => {
+      if (indexHuruf < teks.length) {
+        cursor.before(teks[indexHuruf]);
+        indexHuruf++;
+      } else {
+        clearInterval(intervalHuruf);
+        setTimeout(() => {
+          indexKutipan = (indexKutipan + 1) % kutipanList.length;
+          tampilkanKutipanHurufDemiHuruf();
+        }, 3000);
+      }
+    }, 80);
+  });
 }
-tampilkanKutipanHurufDemiHuruf();
 
 // ===============================
 // 📅 Dropdown Season
