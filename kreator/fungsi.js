@@ -203,6 +203,31 @@ function tampilkanDataSeason() {
       </div>
     </div>`;
 
+
+// 📜 Aturan Lomba
+  document.getElementById("aturanText").innerHTML = `
+    • Lomba terbuka untuk umum.<br>
+    • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
+    • ${dataSeason.deskripsi}<br><br>
+    • Video hasil karya sendiri dan belum pernah diunggah.<br>
+    • Gaya bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
+    <b>Poin Juri:</b><br>
+    💡 Kreativitas (maks 300):<br>
+    ide konsep (150), <br>
+editing (100), <br>
+karakter (50).<br><br>
+    🏡 Lokal (maks 200):<br>
+    nuansa lokal (100), <br>
+dampak positif (100).<br><br>
+    <b>Poin TikTok:</b><br>
+    🚀 Viral: poin tak terbatas,<br> dihitung dari like, komen, share.<br><br>
+    • Diperbolehkan mengajak teman atau saudara untuk menaikkan like, komen, share.<br>
+    • Dilarang spam/bot/beli untuk menaikkan like, komen, share.<br>
+    • Pelanggaran akan dikurangi poin atau bahkan diskualifikasi.
+  `;
+
+
+
   // 🔍 Filter Pencarian (tanpa ubah rank)
   const keyword = document.getElementById("searchNama").value.toLowerCase();
   const filtered = keyword ? ranking.filter(p => p.nama.toLowerCase().includes(keyword)) : ranking;
