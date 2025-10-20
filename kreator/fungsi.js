@@ -303,7 +303,7 @@ function tampilkanDataSeason() {
 
     if (adaPemenang) {
       isiCard += `
-        <br>⭐ Total Poin: <b>${pemenang.total.toFixed(1)}</b><br>
+        <br>⭐ <b>${pemenang.total.toFixed(1)}</b><br>
         <a href="${pemenang.linkVideo}" target="_blank" 
            style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">
            ▶️ Lihat Video
