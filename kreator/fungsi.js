@@ -215,9 +215,11 @@ function tampilkanDataSeason() {
     💡 Kreativitas (maks 300): ide (150), editing (100), karakter (50).<br><br>
     🏡 Lokal (maks 200): nuansa lokal (100), dampak positif (100).<br><br>
     <b>Poin TikTok:</b><br>
-    🚀 Viral dari like, komen, share.<br><br>
-    • Dilarang spam/bot/beli interaksi.<br>
-    • Pelanggaran akan dikurangi poin/diskualifikasi.
+    🚀 Viral : poin tak terbatas.<br>
+dihitung dari like, komen, share.<br><br>
+    • Diperbolehkan mengajak teman atau saudara untuk menaikkan like, komen, share.<br>
+    • Dilarang spam/bot/beli untuk menaikkan like, komen, share.<br>
+    • Pelanggaran akan dikurangi poin atau bahkan diskualifikasi.
   `;
 
   // 🔍 Filter Pencarian (tanpa ubah rank)
@@ -304,7 +306,7 @@ function tampilkanDataSeason() {
       <b style="font-size:1.2em;">${h.kategori}</b><br>
       🎁 ${h.hadiah}<br>
       🏆 <span style="color:var(--highlight);font-weight:700;">${nama}</span><br>
-      ⭐ Total Poin: <b>${total}</b><br>
+      ⭐ <b>${total}</b><br>
       <a href="${linkVideo}" target="_blank" style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">▶️ Lihat Video</a>
     `;
     juaraBox.appendChild(card);
