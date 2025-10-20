@@ -7,12 +7,14 @@
 
 html, body {
   height: 100%;
+  min-height: 100vh;
+  background: var(--bg-gradient);
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* ===================== THEME VARIABLES ===================== */
 :root {
-  /* ===== Tema Terang ===== */
   --bg-gradient: linear-gradient(160deg, #eef9f1, #ffffff);
   --text-main: #1a1a1a;
   --text-sub: #555;
@@ -27,7 +29,6 @@ html, body {
 }
 
 body.dark-theme {
-  /* ===== Tema Gelap ===== */
   --bg-gradient: linear-gradient(160deg, #001a17, #000);
   --text-main: #f5f5f5;
   --text-sub: #c9c9c9;
@@ -44,13 +45,11 @@ body.dark-theme {
 /* ===================== BODY ===================== */
 body {
   font-family: 'Poppins', 'Segoe UI', sans-serif;
-  background: var(--bg-gradient);
   color: var(--text-main);
-  padding: 80px 20px 0;
-  overflow-x: hidden;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  padding: 80px 20px 0;
   transition: background 0.4s, color 0.4s;
 }
 
@@ -67,63 +66,6 @@ body {
   z-index: 1000;
   box-shadow: 0 3px 10px var(--shadow);
   border-bottom: 1px solid rgba(255,255,255,0.15);
-  transition: background 0.4s, box-shadow 0.3s;
-}
-.nav:hover {
-  box-shadow: 0 4px 16px var(--shadow);
-}
-.nav-brand {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: white;
-  text-decoration: none;
-  letter-spacing: 0.5px;
-}
-.nav-links {
-  display: flex;
-  gap: 22px;
-}
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: 0.3s;
-}
-.nav-links a:hover {
-  color: #e0f7fa;
-  transform: translateY(-2px);
-}
-.nav-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.6rem;
-  cursor: pointer;
-}
-@media (max-width: 768px) {
-  .nav-links {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    flex-direction: column;
-    background: var(--accent-secondary);
-    border-radius: 0 0 10px 10px;
-    width: 200px;
-    padding: 15px;
-    gap: 15px;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: 0.4s ease;
-  }
-  .nav-links.active {
-    max-height: 500px;
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .nav-toggle { display: block; }
 }
 
 /* ===================== HEADER ===================== */
@@ -131,105 +73,14 @@ body {
   text-align: center;
   margin-top: 40px;
 }
-.profil-img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid var(--border-glow);
-  box-shadow: 0 0 12px rgba(0,0,0,0.15);
-  margin-bottom: 10px;
-  transition: transform 0.4s, border-color 0.4s;
-}
-.profil-img:hover {
-  transform: scale(1.05);
-}
-.kutipan {
-  font-size: 1rem;
-  color: var(--highlight);
-  font-weight: 600;
-  min-height: 24px;
-  animation: fadeIn 1.5s ease;
-  margin-bottom: 15px;
-}
-.season-select {
-  margin-top: 10px;
-}
 
 /* ===================== SECTION ===================== */
 section {
   margin-top: 40px;
-}
-h2 {
-  color: var(--highlight);
-  text-align: center;
-  margin-bottom: 24px;
-  transition: color 0.4s;
-  font-weight: 700;
+  flex: 1 0 auto;
 }
 
-/* ===================== PESERTA ===================== */
-.peserta {
-  opacity: 0;
-  transform: translateY(30px);
-  background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 14px;
-  padding: 22px;
-  margin-bottom: 25px;
-  box-shadow: 0 4px 10px var(--shadow);
-  transition: all 0.5s ease;
-  color: var(--text-main);
-}
-.peserta.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.peserta:hover {
-  transform: translateY(-5px);
-  filter: brightness(1.05);
-  box-shadow: 0 6px 15px var(--shadow);
-}
-.peserta .rank {
-  font-weight: bold;
-  color: var(--accent-secondary);
-  font-size: 1.1rem;
-}
-.peserta .nama {
-  font-size: 1.35rem;
-  margin: 4px 0;
-  font-weight: 700;
-}
-.peserta .nilai {
-  font-size: 0.95em;
-  opacity: 0.95;
-  line-height: 1.6;
-  color: var(--text-sub);
-}
-.peserta .nilai span {
-  font-weight: 600;
-  color: var(--highlight);
-}
-.peserta .link {
-  display: block;
-  margin-top: 8px;
-  color: var(--link-color);
-  text-decoration: none;
-  font-size: 0.9em;
-  transition: 0.3s;
-}
-.peserta .link:hover {
-  text-decoration: underline;
-  color: var(--highlight);
-}
-.peserta .total {
-  font-weight: bold;
-  color: var(--highlight);
-  margin-top: 8px;
-  font-size: 1.2em;
-  text-shadow: 0 0 6px rgba(0,0,0,0.2);
-}
-
-/* ===================== HADIAH JUARA ===================== */
+/* ===================== HADIAH ===================== */
 #hadiahList {
   display: flex;
   flex-direction: column;
@@ -238,6 +89,7 @@ h2 {
   max-width: 600px;
   margin: 0 auto;
 }
+
 .hadiah-card {
   background: var(--card-bg);
   color: var(--text-main);
@@ -250,83 +102,45 @@ h2 {
   transform: translateY(20px);
   animation: fadeInUp 0.6s ease forwards;
 }
+
 .hadiah-card:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 18px var(--shadow);
-}
-.hadiah-card .judul {
-  font-weight: bold;
-  font-size: 1.1em;
-  margin-bottom: 6px;
-  color: var(--accent-secondary);
-}
-.hadiah-card .isi {
-  font-size: 0.95em;
-  opacity: 0.9;
-  margin-bottom: 6px;
-}
-.hadiah-card .juara {
-  display: inline-block;
-  font-size: 0.85em;
-  background: var(--accent-primary);
-  padding: 4px 12px;
-  border-radius: 8px;
-  color: white;
-  font-weight: 600;
 }
 
 /* ===================== FOOTER ===================== */
 footer {
   text-align: center;
-  margin-top: auto;
-  padding: 30px 10px 20px;
   font-size: 0.9rem;
   color: var(--text-sub);
+  padding: 25px 10px 18px;
   border-top: 1px solid rgba(255,255,255,0.1);
   background: transparent;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+/* ============== FIX GARIS PUTIH BAWAH ============== */
+html, body {
+  background-color: transparent;
+}
+body::after {
+  content: "";
+  display: block;
+  height: 0;
+  background: transparent;
+}
+@supports (-webkit-touch-callout: none) {
+  body {
+    background-color: var(--bg-gradient);
+    min-height: -webkit-fill-available;
+  }
 }
 
 /* ===================== ANIMASI ===================== */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
 @keyframes fadeInUp {
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* ===================== PAGINATION ===================== */
-#pagination {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 25px;
-}
-#pagination button {
-  background: var(--accent-primary);
-  border: none;
-  color: white;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 2px 6px var(--shadow);
-}
-#pagination button:hover {
-  background: var(--accent-secondary);
-  transform: translateY(-2px);
-}
-
-/* ===================== CURSOR ===================== */
-.cursor {
-  display: inline-block;
-  animation: blink 0.8s infinite;
-  color: var(--accent-secondary);
-}
-@keyframes blink {
-  0%,50%,100% { opacity: 1; }
-  25%,75% { opacity: 0; }
 }
