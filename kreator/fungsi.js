@@ -1,6 +1,6 @@
-// ===============================
+// =========================================================
 // 🌗 Tema Terang & Gelap
-// ===============================
+// =========================================================
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   const isDark = document.body.classList.contains('dark-theme');
@@ -15,24 +15,27 @@ function applyThemeColors() {
   const isDark = document.body.classList.contains('dark-theme');
   document.documentElement.style.setProperty('--bg-color', isDark ? '#121212' : '#f5f5f5');
   document.documentElement.style.setProperty('--text-color', isDark ? '#f1f1f1' : '#222');
-  document.documentElement.style.setProperty('--card-bg', isDark ? 'rgba(255,255,255,0.05)' : '#fff');
+  document.documentElement.style.setProperty('--card-bg', isDark ? 'rgba(255,255,255,0.06)' : '#fff');
   document.documentElement.style.setProperty('--input-bg', isDark ? '#1e1e1e' : '#fff');
-  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 6px rgba(255,255,255,0.08)' : '0 2px 6px rgba(0,0,0,0.1)');
+  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 8px rgba(255,255,255,0.08)' : '0 2px 8px rgba(0,0,0,0.12)');
   document.documentElement.style.setProperty('--highlight', isDark ? '#ffeb3b' : '#b8860b');
 }
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
-  if (!savedTheme || savedTheme === 'dark') {
-    document.body.classList.add('dark-theme');
-  }
+  if (!savedTheme || savedTheme === 'dark') document.body.classList.add('dark-theme');
   applyThemeColors();
   setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 100);
+
+  // Offset scroll agar heading tidak tertutup navbar
+  document.querySelectorAll('section[id]').forEach(sec => {
+    sec.style.scrollMarginTop = '100px';
+  });
 });
 
-// ===============================
+// =========================================================
 // 🔘 Navbar Toggle
-// ===============================
+// =========================================================
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("active");
@@ -46,9 +49,9 @@ document.querySelectorAll("#menu a").forEach(link => {
   });
 });
 
-// ===============================
+// =========================================================
 // 💬 Kutipan Bergantian
-// ===============================
+// =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
   "Jangan tunggu viral, buatlah karya yang bernilai.",
@@ -91,9 +94,9 @@ function tampilkanKutipanHurufDemiHuruf() {
   });
 }
 
-// ===============================
+// =========================================================
 // 📅 Dropdown Season
-// ===============================
+// =========================================================
 const selectSeason = document.getElementById("season");
 Object.keys(dataJuara).forEach(s => {
   const opt = document.createElement("option");
@@ -109,9 +112,9 @@ infoRange.style.fontSize = "0.9em";
 infoRange.style.marginTop = "6px";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
-// ===============================
+// =========================================================
 // 🔎 Pencarian Kreator
-// ===============================
+// =========================================================
 const searchContainer = document.createElement("div");
 searchContainer.style.textAlign = "center";
 searchContainer.style.margin = "10px 0";
@@ -128,9 +131,9 @@ if (poinTitle) poinTitle.insertAdjacentElement("afterend", searchContainer);
 let currentPage = 1;
 const itemsPerPage = 5;
 
-// ===============================
+// =========================================================
 // 🧮 Hitung Nilai
-// ===============================
+// =========================================================
 function hitungTotal(p, tampilkanPoin) {
   const like = +p.like || 0;
   const komen = +p.komen || 0;
@@ -148,9 +151,9 @@ function hitungTotal(p, tampilkanPoin) {
   return { total, nilaiKreatif, nilaiLokal, viral };
 }
 
-// ===============================
+// =========================================================
 // 🔍 Filter Juara
-// ===============================
+// =========================================================
 function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
   if (!tampilkanPoin) return null;
   const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
@@ -165,9 +168,9 @@ function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
   return null;
 }
 
-// ===============================
+// =========================================================
 // 📊 Tampilkan Data Season
-// ===============================
+// =========================================================
 function tampilkanDataSeason() {
   const season = selectSeason.value;
   const dataSeason = dataJuara[season];
@@ -179,78 +182,79 @@ function tampilkanDataSeason() {
     dataSeason.Poin === 1
   );
 
-  const data = dataSeason.kreator || [];
-  const sponsor = dataSeason.Sponsor || "-";
-  let ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
-
+  let ranking = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
   if (tampilkanPoin) ranking.sort((a, b) => b.total - a.total);
+
   const wadah = document.getElementById("daftarPeserta");
   wadah.innerHTML = "";
-
-  const periode = dataSeason.periode || "-";
-  const tema = dataSeason.tema || "Tanpa Tema";
-  const deskripsi = dataSeason.deskripsi || "";
   const isDark = document.body.classList.contains("dark-theme");
 
   // 🎨 Info Season
   infoRange.innerHTML = `
-  <div style="background:${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};padding:12px;border-radius:12px;margin-top:8px;">
-    <div style="font-size:1.1em;font-weight:700;color:${isDark ? '#ffeb3b' : '#b8860b'};">
-      🎬 Tema: <span style="color:${isDark ? '#fff' : '#111'};">${tema}</span>
-    </div>
-    <div style="font-size:0.95em;margin-top:6px;line-height:1.4;">
-      ${deskripsi}
-    </div><br>
-    <div style="margin-top:6px;color:${isDark ? '#bbb' : '#333'};">📅 ${periode}</div><br>
-    <div style="margin-top:4px;font-size:0.95em;">
-      <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
-      <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${sponsor}</span>
-    </div>
-  </div>`;
+    <div style="background:${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};padding:12px;border-radius:12px;margin-top:8px;">
+      <div style="font-size:1.1em;font-weight:700;color:${isDark ? '#ffeb3b' : '#b8860b'};">
+        🎬 Tema: <span style="color:${isDark ? '#fff' : '#111'};">${dataSeason.tema || "Tanpa Tema"}</span>
+      </div>
+      <div style="font-size:0.95em;margin-top:6px;line-height:1.4;">${dataSeason.deskripsi || ""}</div><br>
+      <div style="margin-top:6px;color:${isDark ? '#bbb' : '#333'};">📅 ${dataSeason.periode || "-"}</div><br>
+      <div style="margin-top:4px;font-size:0.95em;">
+        <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
+        <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${dataSeason.Sponsor || "-"}</span>
+      </div>
+    </div>`;
 
-  // 📖 Aturan Lomba
+  // 📖 Aturan
   document.getElementById("aturanText").innerHTML = `
-  <b>📖 Aturan Lomba</b><br><br>
-  • Lomba terbuka untuk umum.<br>
-  • Konten Sesuai Tema: <b>${tema}</b><br>
-  • ${deskripsi}<br><br>
-  • Video hasil editan sendiri dan belum pernah diunggah di sosial media manapun.<br>
-  • Gaya video bebas — bisa lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
-  <b>Poin Juri:</b><br>
-  💡 Kreativitas: maks 300 poin<br>
-  • ide konsep (150),<br>• editing (100),<br>• karakter (50).<br><br>
-  🏡 Lokal: (maks 200 poin)<br>
-  • nuansa lokal (100),<br>• dampak positif (100).<br><br>
-  <b>Poin TikTok:</b><br>
-  🚀 Viral : poin tak terbatas.<br>
-dihitung otomatis dari like, komen, share.<br><br>
-  • Kreator dapat meminta bantuan teman / saudara untuk mendapatkan interaksi,<br>
-  • Dilarang spam dan dilarang menggunakan bot / beli like, komen, share.<br><br>
-  • Pelanggaran akan dikurangi poin atau diskualifikasi.
+    <b>📖 Aturan Lomba</b><br><br>
+    • Lomba terbuka untuk umum.<br>
+    • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
+    • ${dataSeason.deskripsi}<br><br>
+    • Video hasil karya sendiri dan belum pernah diunggah.<br>
+    • Gaya bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
+    <b>Poin Juri:</b><br>
+    💡 Kreativitas (maks 300): ide (150), editing (100), karakter (50).<br><br>
+    🏡 Lokal (maks 200): nuansa lokal (100), dampak positif (100).<br><br>
+    <b>Poin TikTok:</b><br>
+    🚀 Viral dari like, komen, share.<br><br>
+    • Dilarang spam/bot/beli interaksi.<br>
+    • Pelanggaran akan dikurangi poin/diskualifikasi.
   `;
 
+  // 🔍 Filter Pencarian (tanpa ubah rank)
   const keyword = document.getElementById("searchNama").value.toLowerCase();
-  const filtered = ranking.filter(p => p.nama.toLowerCase().includes(keyword));
+  const filtered = keyword ? ranking.filter(p => p.nama.toLowerCase().includes(keyword)) : ranking;
 
   const totalPages = Math.ceil(filtered.length / itemsPerPage);
   if (currentPage > totalPages) currentPage = 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  pageItems.forEach((p, i) => {
+  // 📋 Daftar Poin Kreator
+  pageItems.forEach(p => {
     const div = document.createElement("div");
     div.className = "peserta show";
-    const nomorRanking = tampilkanPoin ? `<span style="color:var(--highlight)">#${startIndex + i + 1}</span> ` : "";
+    div.style.cssText = `
+      background:var(--card-bg);
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      padding:12px;
+      margin:10px 0;
+      transition:transform .2s;
+    `;
+    div.onmouseover = () => div.style.transform = "translateY(-3px)";
+    div.onmouseleave = () => div.style.transform = "translateY(0)";
+
+    const nomorRanking = tampilkanPoin ? `<span style="color:var(--highlight)">#${ranking.indexOf(p)+1}</span> ` : "";
     div.innerHTML = `
-      <div class="nama">${nomorRanking}${p.nama.toUpperCase()}</div>
+      <div class="nama" style="font-weight:700;">${nomorRanking}${p.nama.toUpperCase()}</div>
       <div class="nilai">
-        💡 Kreativitas: <span>${p.nilaiKreatif.toFixed(1)}</span><br>
-        🏡 Lokal: <span>${p.nilaiLokal.toFixed(1)}</span><br>
-        🚀 Viral: ${tampilkanPoin ? `<span>${p.viral.toFixed(1)}</span>` : `<span style="color:gold">🔒</span>`}
+        💡 Kreativitas: <b>${p.nilaiKreatif.toFixed(1)}</b><br>
+        🏡 Lokal: <b>${p.nilaiLokal.toFixed(1)}</b><br>
+        🚀 Viral: ${tampilkanPoin ? `<b>${p.viral.toFixed(1)}</b>` : `<span style="color:gold">🔒</span>`}
       </div>
-      <div class="total">⭐ <span>${p.total.toFixed(1)}</span></div>
-      ${!tampilkanPoin ? `<div style="margin-top:4px;color:${isDark ? '#ffcc80':'#b8860b'};font-size:0.85em;">⚠️ Poin viral belum dihitung</div>` : ""}
-      <a href="${p.linkVideo}" target="_blank" class="link">📺 Lihat Video</a>`;
+      <div class="total" style="margin-top:5px;">⭐ <b style="color:var(--highlight);">${p.total.toFixed(1)}</b></div>
+      <a href="${p.linkVideo}" target="_blank" class="link" style="display:inline-block;margin-top:8px;color:${isDark ? '#4fc3f7' : '#0077b6'};">▶️ Lihat Video</a>
+    `;
     wadah.appendChild(div);
   });
 
@@ -269,7 +273,7 @@ dihitung otomatis dari like, komen, share.<br><br>
     pagination.appendChild(btn);
   }
 
-  // 🏆 Daftar Hadiah
+  // 🏆 Hadiah Juara
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
@@ -277,24 +281,31 @@ dihitung otomatis dari like, komen, share.<br><br>
       ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
         : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
       : null;
-
     const nama = (tampilkanPoin && pemenang) ? pemenang.nama : "Belum diumumkan";
+    const total = (tampilkanPoin && pemenang) ? pemenang.total.toFixed(1) : "-";
+    const linkVideo = (tampilkanPoin && pemenang) ? pemenang.linkVideo : "#";
+
     const card = document.createElement("div");
     card.className = "hadiah-card";
     card.style.cssText = `
-      background:var(--card-bg);
+      background:linear-gradient(145deg, var(--card-bg), ${isDark ? '#1a1a1a' : '#f9f9f9'});
       color:var(--text-color);
-      border-radius:12px;
-      padding:15px;
-      margin:10px;
+      border-radius:14px;
+      padding:18px;
+      margin:12px;
       box-shadow:var(--shadow);
       text-align:center;
-      transition:0.3s;
+      transition:transform .2s, box-shadow .2s;
     `;
+    card.onmouseover = () => card.style.transform = "scale(1.02)";
+    card.onmouseleave = () => card.style.transform = "scale(1)";
+
     card.innerHTML = `
-      <b>${h.kategori}</b><br>
+      <b style="font-size:1.2em;">${h.kategori}</b><br>
       🎁 ${h.hadiah}<br>
-      🏆 <span style="color:var(--highlight)">${nama}</span>
+      🏆 <span style="color:var(--highlight);font-weight:700;">${nama}</span><br>
+      ⭐ Total Poin: <b>${total}</b><br>
+      <a href="${linkVideo}" target="_blank" style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">▶️ Lihat Video</a>
     `;
     juaraBox.appendChild(card);
   });
