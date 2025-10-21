@@ -20,12 +20,13 @@ function applyThemeColors() {
   document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 8px rgba(255,255,255,0.08)' : '0 2px 8px rgba(0,0,0,0.12)');
   document.documentElement.style.setProperty('--highlight', isDark ? '#ffeb3b' : '#b8860b');
 
-  // 🧱 Hilangkan garis putih di bawah layar
+// 🧱 Hilangkan garis putih di bawah layar
   document.documentElement.style.height = "100%";
   document.body.style.height = "100%";
   document.body.style.margin = "0";
   document.body.style.backgroundColor = "var(--bg-color)";
   document.body.style.overflowX = "hidden";
+
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -79,7 +80,6 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.transition = "color 0.3s ease";
   elemen.style.color = isDark ? "#ffe082" : "#111";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "0 0 3px rgba(0,0,0,0.1)";
-  
   requestAnimationFrame(() => {
     const cursor = document.createElement("span");
     cursor.textContent = "|";
@@ -200,16 +200,40 @@ function tampilkanDataSeason() {
   // 🎨 Info Season
   infoRange.innerHTML = `
     <div style="background:${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};padding:12px;border-radius:12px;margin-top:8px;">
-      <div style="font-weight:700;color:${isDark ? '#ffeb3b' : '#b8860b'};">
-        📅 ${dataSeason.awal || '-'} - ${dataSeason.akhir || '-'}
+      <div style="font-size:1.1em;font-weight:700;color:${isDark ? '#ffeb3b' : '#b8860b'};">
+        🎬 Tema: <span style="color:${isDark ? '#fff' : '#111'};">${dataSeason.tema || "Tanpa Tema"}</span>
       </div>
-      <div style="margin-top:6px;font-size:0.95em;">
-        <span style="color:${isDark ? '#ffeb3b' : '#b8860b'};">🎗️ Sponsor:</span><br>
-        <span style="font-style:italic;color:${isDark ? '#fdd835' : '#5a4b00'};">${dataSeason.Sponsor || "-"}</span>
+      <div style="font-size:0.95em;margin-top:6px;line-height:1.4;">${dataSeason.deskripsi || ""}</div><br>
+      <div style="margin-top:6px;color:${isDark ? '#bbb' : '#333'};">📅 ${dataSeason.periode || "-"}</div><br>
+      <div style="margin-top:4px;font-size:0.95em;">
+        <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
+        <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${dataSeason.Sponsor || "-"}</span>
       </div>
     </div>`;
 
-  // 🔍 Filter Pencarian
+  // 📜 Aturan Lomba
+  document.getElementById("aturanText").innerHTML = `
+    • Lomba terbuka untuk umum.<br>
+    • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
+    • ${dataSeason.deskripsi}<br><br>
+    • Video hasil karya sendiri dan belum pernah diunggah.<br>
+    • Gaya bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
+    <b>Poin Juri:</b><br>
+    💡 Kreativitas (maks 300):<br>
+    ide konsep (150), <br>
+editing (100), <br>
+karakter (50).<br><br>
+    🏡 Lokal (maks 200):<br>
+    nuansa lokal (100), <br>
+dampak positif (100).<br><br>
+    <b>Poin TikTok:</b><br>
+    🚀 Viral: poin tak terbatas,<br> dihitung dari like, komen, share.<br><br>
+    • Diperbolehkan mengajak teman atau saudara untuk menaikkan like, komen, share.<br>
+    • Dilarang spam/bot/beli untuk menaikkan like, komen, share.<br>
+    • Pelanggaran akan dikurangi poin atau bahkan diskualifikasi.
+  `;
+
+  // 🔍 Filter Pencarian (tanpa ubah rank)
   const keyword = document.getElementById("searchNama").value.toLowerCase();
   const filtered = keyword ? ranking.filter(p => p.nama.toLowerCase().includes(keyword)) : ranking;
 
@@ -247,7 +271,7 @@ function tampilkanDataSeason() {
     wadah.appendChild(div);
   });
 
-  // 📄 Pagination
+  // 📄 Pagination (desain baru)
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = "";
   pagination.style.textAlign = "center";
@@ -274,7 +298,7 @@ function tampilkanDataSeason() {
     pagination.appendChild(btn);
   }
 
-  // 🏆 Hadiah Juara
+  // 🏆 Hadiah Juara (update desain & kondisi)
   const juaraBox = document.getElementById("hadiahList");
   juaraBox.innerHTML = "";
   (dataSeason.Hadiah || []).forEach(h => {
