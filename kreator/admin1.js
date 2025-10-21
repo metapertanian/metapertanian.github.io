@@ -1,166 +1,132 @@
 // =========================================================
-// 🌗 Tema Terang & Gelap
+// 🧩 ADMIN1.JS - Fungsi utama dan tampilan umum
 // =========================================================
+
+// =================== Tema Terang & Gelap ===================
 function toggleTheme() {
   document.body.classList.toggle("dark-theme");
   const isDark = document.body.classList.contains("dark-theme");
   localStorage.setItem("theme", isDark ? "dark" : "light");
+  updateThemeIcon(isDark);
 }
 
-// Terapkan tema saat load
-(function () {
+function loadTheme() {
   const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    document.body.classList.add("dark-theme");
-  }
-})();
-
-// =========================================================
-// 🍔 Menu Navigasi
-// =========================================================
-function toggleMenu() {
-  const menu = document.getElementById("menu");
-  menu.classList.toggle("show");
+  const isDark = savedTheme === "dark";
+  document.body.classList.toggle("dark-theme", isDark);
+  updateThemeIcon(isDark);
 }
 
-// Tutup menu saat klik luar
-document.addEventListener("click", (e) => {
-  const menu = document.getElementById("menu");
-  const toggle = document.querySelector(".nav-toggle");
-  if (menu && !menu.contains(e.target) && !toggle.contains(e.target)) {
-    menu.classList.remove("show");
-  }
-});
-
-// =========================================================
-// ✨ Kutipan (menulis di layar saat muncul)
-// =========================================================
-const kutipanEl = document.getElementById("kutipan");
-const kutipanList = [
-  "Kreativitas adalah suara jiwa.",
-  "Satu karya bisa mengubah banyak hal.",
-  "Berkaryalah meski sederhana.",
-  "Setiap ide punya makna.",
-  "Konsistensi lebih penting daripada kesempurnaan."
-];
-
-let observerKutipan;
-function setupKutipanObserver() {
-  if (!kutipanEl) return;
-  if (observerKutipan) observerKutipan.disconnect();
-
-  observerKutipan = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        tampilkanKutipan();
-      } else {
-        kutipanEl.textContent = "";
-      }
-    });
-  });
-  observerKutipan.observe(kutipanEl);
+function updateThemeIcon(isDark) {
+  const themeIcon = document.getElementById("themeIcon");
+  if (themeIcon) themeIcon.textContent = isDark ? "🌙" : "☀️";
 }
 
-function tampilkanKutipan() {
-  const random = kutipanList[Math.floor(Math.random() * kutipanList.length)];
-  kutipanEl.textContent = "";
-  let index = 0;
-  const interval = setInterval(() => {
-    kutipanEl.textContent = random.slice(0, index++);
-    if (index > random.length) clearInterval(interval);
-  }, 60);
+document.addEventListener("DOMContentLoaded", loadTheme);
+
+// =================== Navigasi Halaman ===================
+function bukaHalaman(idHalaman) {
+  const halaman = document.querySelectorAll(".halaman");
+  halaman.forEach((el) => el.classList.add("hidden"));
+
+  const target = document.getElementById(idHalaman);
+  if (target) target.classList.remove("hidden");
 }
 
-// =========================================================
-// 🔐 Kode Rahasia Admin (pro95)
-// =========================================================
-function bukaHalamanAdmin() {
-  const kode = prompt("Masukkan kode admin untuk membuka halaman ini:");
-  if (kode !== "pro95") {
-    alert("❌ Kode salah. Akses ditolak.");
-    window.location.href = "/"; // kembali ke beranda
+// =================== Kode Akses Admin (pro95) ===================
+function bukaAksesAdmin() {
+  const kode = prompt("Masukkan kode akses admin:");
+  if (kode === "pro95") {
+    localStorage.setItem("isAdmin", "true");
+    alert("✅ Akses admin berhasil dibuka!");
+    window.location.href = "admin.html";
   } else {
-    alert("✅ Selamat datang, Admin!");
+    alert("❌ Kode salah! Coba lagi.");
   }
 }
 
-// =========================================================
-// 🧭 Data Season
-// =========================================================
-const selectSeason = document.getElementById("season");
-const infoRange = document.createElement("div");
-const statusPoin = document.getElementById("statusPoin");
+function logoutAdmin() {
+  localStorage.removeItem("isAdmin");
+  alert("Anda telah keluar dari mode admin.");
+  window.location.href = "index.html";
+}
 
-let dataJuara = {};
+// =================== Elemen Dinamis ===================
+function tampilkanPesanUtama() {
+  const pesan = document.getElementById("pesanUtama");
+  const waktu = new Date().getHours();
+  let ucapan = "";
 
-// =========================================================
-// 📦 Muat Data Juara dari file juara.js
-// =========================================================
-window.addEventListener("DOMContentLoaded", () => {
-  if (typeof semuaJuara !== "undefined") {
-    dataJuara = semuaJuara;
-    isiSeason();
-  }
-  setupKutipanObserver();
-  bukaHalamanAdmin();
-});
+  if (waktu < 10) ucapan = "Selamat pagi 🌤️";
+  else if (waktu < 15) ucapan = "Selamat siang ☀️";
+  else if (waktu < 18) ucapan = "Selamat sore 🌇";
+  else ucapan = "Selamat malam 🌙";
 
-// =========================================================
-// 🗓️ Isi Pilihan Season
-// =========================================================
-function isiSeason() {
-  if (!selectSeason) return;
-  selectSeason.innerHTML = "";
+  pesan.textContent = ucapan + " Kreator Tanjung Bulan!";
+}
 
-  const keys = Object.keys(dataJuara);
-  if (keys.length === 0) {
-    const opt = document.createElement("option");
-    opt.textContent = "Belum ada season";
-    selectSeason.appendChild(opt);
-    return;
-  }
+document.addEventListener("DOMContentLoaded", tampilkanPesanUtama);
 
-  keys.forEach((key) => {
-    const opt = document.createElement("option");
-    const s = dataJuara[key];
-    opt.value = key;
-    opt.textContent = s.nama || `Season ${key}`;
-    selectSeason.appendChild(opt);
+// =================== Poin & Tampilan ===================
+let pesertaList = JSON.parse(localStorage.getItem("pesertaList")) || [];
+
+function renderKartuPeserta() {
+  const container = document.getElementById("kartuContainer");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  pesertaList.forEach((peserta) => {
+    // jika tampilkanPoin false → tetap dianggap true
+    const showPoin = peserta.tampilkanPoin !== false;
+
+    const poinViral =
+      peserta.poinViralLocked === true
+        ? "⚠️ poin viral belum dihitung"
+        : formatRupiah(peserta.poinUtama + peserta.poinViral);
+
+    const kartu = document.createElement("div");
+    kartu.className = "kartu-peserta";
+
+    kartu.innerHTML = `
+      <h3>${peserta.nama}</h3>
+      <p>Kategori: ${peserta.kategori}</p>
+      ${
+        showPoin
+          ? `<p class="poin">${poinViral}</p>`
+          : `<p class="poin">Poin disembunyikan</p>`
+      }
+    `;
+
+    container.appendChild(kartu);
   });
-
-  selectSeason.value = keys[keys.length - 1];
-  tampilkanDataSeason(); // panggil fungsi di admin2.js
 }
 
-// =========================================================
-// ⚙️ Status Poin
-// =========================================================
-function updateStatusPoin(dataSeason) {
-  if (!statusPoin) return;
-  let tampilkanPoin = (
-    dataSeason.Poin === true ||
-    dataSeason.Poin === "true" ||
-    dataSeason.Poin === 1 ||
-    dataSeason.Poin === "1"
-  );
+document.addEventListener("DOMContentLoaded", renderKartuPeserta);
 
-  // 🔧 jika tampilkanPoin false, anggap true (selalu tampilkan poin)
-  if (!tampilkanPoin) tampilkanPoin = true;
-
-  statusPoin.innerHTML = `
-    <div style="margin:12px 0;padding:10px 14px;border-radius:12px;
-    background:var(--card-bg);box-shadow:var(--shadow);
-    color:var(--text-color);font-size:0.95em;">
-      <b>Status Poin:</b> ${tampilkanPoin ? "🟢 Ditampilkan" : "🔒 Disembunyikan (tetap dibaca true)"}
-    </div>
-  `;
+// =================== Utilitas Umum ===================
+function formatRupiah(num) {
+  return "Rp " + num.toLocaleString("id-ID");
 }
 
-// =========================================================
-// 🚀 Event awal
-// =========================================================
-window.addEventListener("load", () => {
-  if (selectSeason && selectSeason.value && dataJuara[selectSeason.value]) {
-    updateStatusPoin(dataJuara[selectSeason.value]);
-  }
-});
+// =================== Efek Animasi ===================
+function animasiNilai(idElemen, nilaiAkhir) {
+  const elemen = document.getElementById(idElemen);
+  if (!elemen) return;
+
+  let nilaiSekarang = 0;
+  const durasi = 3000;
+  const langkah = Math.ceil(nilaiAkhir / (durasi / 30));
+
+  const interval = setInterval(() => {
+    nilaiSekarang += langkah;
+    if (nilaiSekarang >= nilaiAkhir) {
+      nilaiSekarang = nilaiAkhir;
+      clearInterval(interval);
+    }
+    elemen.textContent = formatRupiah(nilaiSekarang);
+  }, 30);
+}
+
+// =================== Penutup ===================
+console.log("✅ admin1.js siap digunakan");
