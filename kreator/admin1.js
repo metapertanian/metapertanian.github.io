@@ -1,129 +1,150 @@
 // =========================================================
-// 🔒 ADMIN PANEL TANJUNG BULAN - FILE: admin1.js
+// 🧩 ADMIN1.JS – Tampilan, Tema, Kutipan, & Proteksi Akses
 // =========================================================
 
-// ================== Proteksi Kode Admin ==================
+// ===================== 🔒 AKSES ADMIN =====================
 (function () {
   const kode = prompt("Masukkan kode akses admin:");
   if (kode !== "pro95") {
     alert("Kode salah! Akses ditolak.");
-    document.body.innerHTML =
-      "<h2 style='text-align:center;margin-top:20vh;font-family:sans-serif'>❌ Akses Ditolak</h2>";
-    throw new Error("Akses ditolak: kode admin salah.");
+    window.location.href = "/";
   }
 })();
 
-// =========================================================
-// 🌗 Tema Terang & Gelap
-// =========================================================
+// ===================== 🌗 TEMA TERANG & GELAP =====================
 function toggleTheme() {
   document.body.classList.toggle("dark-theme");
   const isDark = document.body.classList.contains("dark-theme");
   localStorage.setItem("theme", isDark ? "dark" : "light");
-  const icon = document.querySelector("#themeToggle i");
-  if (icon)
-    icon.className = isDark ? "fas fa-moon" : "fas fa-sun";
 }
 
-function loadTheme() {
+// Terapkan tema tersimpan saat halaman dimuat
+window.addEventListener("load", () => {
   const savedTheme = localStorage.getItem("theme");
   if (savedTheme === "dark") {
     document.body.classList.add("dark-theme");
-    const icon = document.querySelector("#themeToggle i");
-    if (icon) icon.className = "fas fa-moon";
-  }
-}
-
-// =========================================================
-// ✨ Kutipan - Muncul hanya saat di layar
-// =========================================================
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      const quote = entry.target.querySelector(".kutipan");
-      if (quote) {
-        if (entry.isIntersecting) {
-          quote.style.opacity = "1";
-          quote.style.transform = "translateY(0)";
-        } else {
-          quote.style.opacity = "0";
-          quote.style.transform = "translateY(20px)";
-        }
-      }
-    });
-  },
-  { threshold: 0.2 }
-);
-
-document.querySelectorAll(".card").forEach((card) => observer.observe(card));
-
-// =========================================================
-// 📋 Navigasi Dasar
-// =========================================================
-function scrollToSection(id) {
-  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
-}
-
-// =========================================================
-// 🧠 Inisialisasi Awal
-// =========================================================
-document.addEventListener("DOMContentLoaded", () => {
-  loadTheme();
-
-  // tombol tema
-  const themeButton = document.getElementById("themeToggle");
-  if (themeButton) themeButton.addEventListener("click", toggleTheme);
-
-  // jika dataJuara dari juara.js sudah tersedia, tampilkan season pertama
-  if (typeof dataJuara !== "undefined" && Object.keys(dataJuara).length > 0) {
-    const firstSeason = Object.keys(dataJuara)[0];
-    if (typeof tampilkanDataSeason === "function") {
-      tampilkanDataSeason(firstSeason);
-    } else {
-      console.warn("⚠️ Fungsi tampilkanDataSeason belum didefinisikan (admin2.js belum dimuat).");
-    }
-  } else {
-    console.warn("⚠️ Tidak ada dataJuara ditemukan. Pastikan juara.js dimuat sebelum admin1.js.");
   }
 });
 
-// =========================================================
-// 🧭 Fungsi Utilitas Navigasi Musim
-// =========================================================
-function buatDropdownSeason() {
-  const dropdown = document.getElementById("dropdownSeason");
-  if (!dropdown || typeof dataJuara === "undefined") return;
+// ===================== 📜 KUTIPAN OTOMATIS =====================
+const kutipanList = [
+  "Kreativitas adalah keberanian untuk mencoba hal baru!",
+  "Jangan takut gagal, takutlah jika tidak pernah mencoba.",
+  "Satu karya kecil bisa berdampak besar.",
+  "Jadilah kreator yang menginspirasi dunia.",
+  "Setiap karya punya cerita. Buatlah ceritamu berkesan.",
+];
 
-  dropdown.innerHTML = "";
-  Object.keys(dataJuara).forEach((season) => {
-    const opt = document.createElement("option");
-    opt.value = season;
-    opt.textContent = season;
-    dropdown.appendChild(opt);
-  });
+let kutipanIndex = 0;
+const elemenKutipan = document.getElementById("kutipan");
 
-  dropdown.addEventListener("change", (e) => {
-    const season = e.target.value;
-    if (typeof tampilkanDataSeason === "function") tampilkanDataSeason(season);
-  });
+function tampilkanKutipan() {
+  elemenKutipan.textContent = kutipanList[kutipanIndex];
+  kutipanIndex = (kutipanIndex + 1) % kutipanList.length;
 }
 
-// panggil ulang setelah halaman siap
+setInterval(tampilkanKutipan, 4000);
+tampilkanKutipan();
+
+// ===================== 📱 NAVIGASI MENU =====================
+function toggleMenu() {
+  const menu = document.getElementById("menu");
+  menu.classList.toggle("show");
+}
+
+// Tutup menu saat klik di luar area
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("menu");
+  const toggle = document.querySelector(".nav-toggle");
+  if (!menu.contains(e.target) && !toggle.contains(e.target)) {
+    menu.classList.remove("show");
+  }
+});
+
+// ===================== 🎯 SEASON & DATA PESERTA =====================
+let tampilkanPoin = true; // default true
+let seasonAktif = null;
+
+// Paksa tampilkanPoin tetap true meski diset false di data
+function cekTampilkanPoin() {
+  if (typeof tampilkanPoin === "boolean" && !tampilkanPoin) {
+    tampilkanPoin = true;
+  }
+}
+
+// Panggil fungsi saat halaman selesai dimuat
 window.addEventListener("load", () => {
-  if (typeof dataJuara !== "undefined") buatDropdownSeason();
+  cekTampilkanPoin();
+  isiDropdownSeason();
 });
 
-// =========================================================
-// 🎨 Efek Visual Tambahan (Opsional)
-// =========================================================
-window.addEventListener("scroll", () => {
-  const navbar = document.querySelector("nav");
-  if (navbar) {
-    if (window.scrollY > 50) navbar.classList.add("scrolled");
-    else navbar.classList.remove("scrolled");
+// ===================== 🔽 DROPDOWN SEASON =====================
+function isiDropdownSeason() {
+  const seasonSelect = document.getElementById("season");
+  seasonSelect.innerHTML = "";
+
+  if (typeof dataJuara === "undefined") {
+    console.error("❌ dataJuara tidak ditemukan. Pastikan juara.js dimuat sebelum admin1.js");
+    return;
+  }
+
+  Object.keys(dataJuara).forEach((seasonKey) => {
+    const option = document.createElement("option");
+    option.value = seasonKey;
+    option.textContent = seasonKey.replace("season", "Season ");
+    seasonSelect.appendChild(option);
+  });
+
+  seasonAktif = seasonSelect.value;
+  tampilkanDataSeason();
+}
+
+// ===================== 🏆 TAMPILKAN DATA SEASON =====================
+function tampilkanDataSeason() {
+  cekTampilkanPoin();
+  const seasonSelect = document.getElementById("season");
+  const seasonDipilih = seasonSelect.value;
+  seasonAktif = seasonDipilih;
+
+  const dataSeason = dataJuara[seasonDipilih];
+
+  if (!dataSeason) {
+    document.getElementById("daftarPeserta").innerHTML = "<p>Data tidak ditemukan.</p>";
+    return;
+  }
+
+  // tampilkan hadiah
+  const hadiahList = document.getElementById("hadiahList");
+  hadiahList.innerHTML = "";
+  dataSeason.hadiah.forEach((item, i) => {
+    const div = document.createElement("div");
+    div.className = "hadiah-item";
+    div.innerHTML = `<strong>Juara ${i + 1}:</strong> ${item}`;
+    hadiahList.appendChild(div);
+  });
+
+  // tampilkan status poin
+  const statusPoin = document.getElementById("statusPoin");
+  statusPoin.innerHTML = `<p>📢 Poin Viral: ${
+    dataSeason.poinViralTerkunci ? "🔒 Dikunci (masih dihitung otomatis)" : "🟢 Aktif"
+  }</p>`;
+
+  // kirim data peserta ke admin2.js
+  if (typeof renderDaftarPeserta === "function") {
+    renderDaftarPeserta(dataSeason.peserta || []);
+  } else {
+    console.warn("⚠️ Fungsi renderDaftarPeserta belum dimuat dari admin2.js");
+  }
+}
+
+// ===================== 💾 SIMPAN & MUAT STATUS THEME =====================
+document.addEventListener("DOMContentLoaded", () => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-theme");
   }
 });
 
 // =========================================================
-// ✅ Akhir File admin1.js
+// ✨ Akhir dari admin1.js
 // =========================================================
