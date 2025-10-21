@@ -33,13 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// 🧱 Hilangkan garis putih di bawah layar
-  document.documentElement.style.height = "100%";
-  document.body.style.height = "100%";
-  document.body.style.margin = "0";
-  document.body.style.backgroundColor = "var(--bg-color)";
-  document.body.style.overflowX = "hidden";
-}
+
 
 // =========================================================
 // 🔘 Navbar Toggle
