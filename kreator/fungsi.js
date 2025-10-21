@@ -6,43 +6,58 @@ function toggleTheme() {
   const isDark = document.body.classList.contains('dark-theme');
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
   applyThemeColors();
-  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 50);
-  tampilkanDataSeason();
+  // pastikan kutipan dan daftar season di-refresh dengan warna baru
+  // beri sedikit delay agar CSS custom properties sudah ter-apply
+  setTimeout(() => {
+    startKutipanIfVisible();
+    tampilkanDataSeason();
+  }, 50);
 }
 
-// Terapkan warna tema
+// Terapkan warna tema dan beberapa perbaikan layout
 function applyThemeColors() {
   const isDark = document.body.classList.contains('dark-theme');
-  document.documentElement.style.setProperty('--bg-color', isDark ? '#121212' : '#f5f5f5');
+  document.documentElement.style.setProperty('--bg-color', isDark ? '#071014' : '#f5f5f5');
   document.documentElement.style.setProperty('--text-color', isDark ? '#f1f1f1' : '#222');
   document.documentElement.style.setProperty('--card-bg', isDark ? 'rgba(255,255,255,0.06)' : '#fff');
-  document.documentElement.style.setProperty('--input-bg', isDark ? '#1e1e1e' : '#fff');
-  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 8px rgba(255,255,255,0.08)' : '0 2px 8px rgba(0,0,0,0.12)');
+  document.documentElement.style.setProperty('--input-bg', isDark ? '#111' : '#fff');
+  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 8px rgba(255,255,255,0.06)' : '0 2px 8px rgba(0,0,0,0.08)');
   document.documentElement.style.setProperty('--highlight', isDark ? '#ffeb3b' : '#b8860b');
 
-// 🧱 Hilangkan garis putih di bawah layar
+  // hilangkan garis putih di bawah layar & atur body
   document.documentElement.style.height = "100%";
   document.body.style.height = "100%";
   document.body.style.margin = "0";
   document.body.style.backgroundColor = "var(--bg-color)";
   document.body.style.overflowX = "hidden";
-
 }
 
+// saat halaman dimuat: set tema default gelap jika belum ada, apply colors,
+// set scrollMarginTop untuk section agar scrollIntoView tidak tertutup navbar,
+// mulai observer kutipan supaya typing hanya ketika elemen terlihat
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
-  if (!savedTheme || savedTheme === 'dark') document.body.classList.add('dark-theme');
+  if (!savedTheme || savedTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+  }
   applyThemeColors();
-  setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 100);
 
-  // Offset scroll agar heading tidak tertutup navbar
+  // offset scroll untuk section
   document.querySelectorAll('section[id]').forEach(sec => {
     sec.style.scrollMarginTop = '100px';
   });
+
+  // setup observer untuk kutipan (multipurpose)
+  setupKutipanObserver();
+
+  // jalankan pertama kali tampilkan data
+  setTimeout(() => {
+    tampilkanDataSeason();
+  }, 80);
 });
 
 // =========================================================
-// 🔘 Navbar Toggle
+// 🔘 Navbar Toggle (muncul dari kiri)
 // =========================================================
 function toggleMenu() {
   const menu = document.getElementById("menu");
@@ -58,52 +73,128 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // =========================================================
-// 💬 Kutipan Bergantian
+// 💬 Kutipan Bergantian (typing hanya saat terlihat)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
   "Jangan tunggu viral, buatlah karya yang bernilai.",
   "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
 ];
-let indexKutipan = 0, indexHuruf = 0, intervalHuruf;
+let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
+let kutipanObserver = null;
 
+function setupKutipanObserver() {
+  const kutipanEl = document.getElementById("kutipan");
+  if (!kutipanEl) return;
+
+  // jika ada observer lama, disconnect dulu
+  if (kutipanObserver) {
+    try { kutipanObserver.disconnect(); } catch (e) {}
+    kutipanObserver = null;
+  }
+
+  kutipanObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // mulai mengetik hanya jika belum sedang mengetik
+        startKutipanIfVisible();
+      } else {
+        // hilangkan teks dan hentikan interval typing saat tidak terlihat
+        stopKutipan();
+      }
+    });
+  }, { threshold: 0.45 });
+
+  kutipanObserver.observe(kutipanEl);
+}
+
+function startKutipanIfVisible() {
+  const kutipanEl = document.getElementById("kutipan");
+  if (!kutipanEl) return;
+  // cek visibilitas manual dulu (safety)
+  const rect = kutipanEl.getBoundingClientRect();
+  const inView = rect.top < window.innerHeight && rect.bottom > 0;
+  if (inView) {
+    tampilkanKutipanHurufDemiHuruf();
+  } else {
+    // jika tidak terlihat, pastikan kosong
+    kutipanEl.textContent = "";
+  }
+}
+
+function stopKutipan() {
+  const kutipanEl = document.getElementById("kutipan");
+  if (kutipanEl) kutipanEl.textContent = "";
+  if (intervalHuruf) {
+    clearInterval(intervalHuruf);
+    intervalHuruf = null;
+  }
+}
+
+// typing yang lebih andal: gunakan span teks + cursor supaya warna diwariskan dengan benar
 function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   if (!elemen) return;
-  const teks = kutipanList[indexKutipan];
-  const isDark = document.body.classList.contains("dark-theme");
+
+  // stop interval sebelumnya
+  if (intervalHuruf) {
+    clearInterval(intervalHuruf);
+    intervalHuruf = null;
+  }
+
+  const teks = kutipanList[indexKutipan] || "";
+  const isDark = document.body.classList.contains('dark-theme');
+
+  // reset elemen & styling
   elemen.textContent = "";
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
   elemen.style.textAlign = "center";
-  elemen.style.transition = "color 0.3s ease";
+  elemen.style.transition = "color 0.25s ease";
   elemen.style.color = isDark ? "#ffe082" : "#111";
-  elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.3)" : "0 0 3px rgba(0,0,0,0.1)";
-  requestAnimationFrame(() => {
-    const cursor = document.createElement("span");
-    cursor.textContent = "|";
-    cursor.style.color = isDark ? "#ffd54f" : "#555";
-    elemen.appendChild(cursor);
-    indexHuruf = 0;
-    clearInterval(intervalHuruf);
-    intervalHuruf = setInterval(() => {
-      if (indexHuruf < teks.length) {
-        cursor.before(teks[indexHuruf]);
-        indexHuruf++;
-      } else {
-        clearInterval(intervalHuruf);
-        setTimeout(() => {
-          indexKutipan = (indexKutipan + 1) % kutipanList.length;
-          tampilkanKutipanHurufDemiHuruf();
-        }, 3000);
-      }
-    }, 80);
-  });
+  elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
+
+  // create a span that will hold the text so color is consistent
+  const textSpan = document.createElement('span');
+  textSpan.style.color = 'inherit'; // warisan dari elemen
+  textSpan.style.whiteSpace = 'pre-wrap';
+  elemen.appendChild(textSpan);
+
+  // cursor
+  const cursor = document.createElement("span");
+  cursor.textContent = "|";
+  cursor.style.color = isDark ? "#ffd54f" : "#444";
+  cursor.style.marginLeft = "2px";
+  elemen.appendChild(cursor);
+
+  indexHuruf = 0;
+  // typing: append characters into textSpan.textContent (keamanan warna)
+  intervalHuruf = setInterval(() => {
+    // jika elemen sudah tidak terlihat di viewport saat mengetik => hentikan
+    const rect = elemen.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom > 0;
+    if (!inView) {
+      stopKutipan();
+      return;
+    }
+
+    if (indexHuruf < teks.length) {
+      textSpan.textContent += teks[indexHuruf];
+      indexHuruf++;
+    } else {
+      clearInterval(intervalHuruf);
+      intervalHuruf = null;
+      setTimeout(() => {
+        indexKutipan = (indexKutipan + 1) % kutipanList.length;
+        tampilkanKutipanHurufDemiHuruf();
+      }, 3000);
+    }
+  }, 80);
 }
 
 // =========================================================
-// 📅 Dropdown Season
+// 📅 Dropdown Season & infoRange
 // =========================================================
 const selectSeason = document.getElementById("season");
 Object.keys(dataJuara).forEach(s => {
@@ -116,28 +207,32 @@ selectSeason.value = Object.keys(dataJuara)[0];
 
 const infoRange = document.createElement("div");
 infoRange.id = "infoRange";
-infoRange.style.fontSize = "0.9em";
-infoRange.style.marginTop = "6px";
+infoRange.style.fontSize = "0.95em";
+infoRange.style.marginTop = "8px";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
 // =========================================================
-// 🔎 Pencarian Kreator
+// 🔎 Pencarian Kreator (letakkan tepat di bawah judul poin kreator)
 // =========================================================
 const searchContainer = document.createElement("div");
 searchContainer.style.textAlign = "center";
 searchContainer.style.margin = "10px 0";
 searchContainer.innerHTML = `
   <input type="text" id="searchNama" placeholder="Cari nama kreator..." 
-  style="padding:8px 12px;border-radius:8px;width:70%;max-width:300px;
-  border:1px solid var(--text-color);outline:none;
-  background:var(--input-bg);color:var(--text-color);
-  text-align:center;transition:0.3s;">    
+    style="padding:8px 12px;border-radius:8px;width:70%;max-width:360px;
+    border:1px solid var(--text-color);outline:none;
+    background:var(--input-bg);color:var(--text-color);
+    text-align:center;transition:0.2s;">
 `;
+// sisipkan tepat setelah judul poin kreator jika ada
 const poinTitle = document.querySelector("#poin h2");
-if (poinTitle) poinTitle.insertAdjacentElement("afterend", searchContainer);
-
-let currentPage = 1;
-const itemsPerPage = 5;
+if (poinTitle) {
+  poinTitle.insertAdjacentElement("afterend", searchContainer);
+} else {
+  // fallback: taruh setelah #poin
+  const poinSection = document.getElementById("poin");
+  if (poinSection) poinSection.insertAdjacentElement("afterbegin", searchContainer);
+}
 
 // =========================================================
 // 🧮 Hitung Nilai
@@ -160,191 +255,237 @@ function hitungTotal(p, tampilkanPoin) {
 }
 
 // =========================================================
-// 🔍 Filter Juara
-// =========================================================
+// 🔍 Filter Juara (pembantu untuk hadiah)
+ // hanya valid jika poin ditampilkan
 function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
   if (!tampilkanPoin) return null;
-  const data = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, true) }));
-  if (typeof filter === "string")
+  const data = (dataSeason.kreator || []).map(p => ({ ...p, ...hitungTotal(p, true) }));
+  if (typeof filter === "string") {
     return data.find(p => p.ideKonsepTipe?.toLowerCase().includes(filter.toLowerCase()));
+  }
   if (typeof filter === "object" && filter.field) {
-    if (filter.mode === "max")
+    if (filter.mode === "max") {
       return data.reduce((a, b) => (b[filter.field] > a[filter.field] ? b : a));
-    else if (filter.value)
+    } else if (filter.value) {
       return data.find(p => p[filter.field] === filter.value);
+    }
   }
   return null;
 }
 
 // =========================================================
-// 📊 Tampilkan Data Season
+// 📊 Tampilkan Data Season (menggunakan season.periode, tema, deskripsi, dll)
 // =========================================================
+let currentPage = 1;
+const itemsPerPage = 5;
+
 function tampilkanDataSeason() {
   const season = selectSeason.value;
   const dataSeason = dataJuara[season];
   if (!dataSeason) return;
 
+  // Pastikan properti Poin ditafsirkan boolean benar
   const tampilkanPoin = (
     dataSeason.Poin === true ||
     dataSeason.Poin === 'true' ||
-    dataSeason.Poin === 1
+    dataSeason.Poin === 1 ||
+    dataSeason.Poin === '1'
   );
 
-  let ranking = dataSeason.kreator.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
+  const data = Array.isArray(dataSeason.kreator) ? dataSeason.kreator.slice() : [];
+  // generate nilai berdasarkan tampilkanPoin; jika Poin=false maka viral=0 dan total = kreatif+lokal
+  let ranking = data.map(p => ({ ...p, ...hitungTotal(p, tampilkanPoin) }));
+
+  // jika poin ditampilkan, urutkan berdasarkan total (ranking). Jika tidak, pertahankan urutan data (pendataan)
   if (tampilkanPoin) ranking.sort((a, b) => b.total - a.total);
 
   const wadah = document.getElementById("daftarPeserta");
+  if (!wadah) return;
   wadah.innerHTML = "";
-  const isDark = document.body.classList.contains("dark-theme");
+  const isDark = document.body.classList.contains('dark-theme');
 
-  // 🎨 Info Season
+  // Info season: gunakan tema, deskripsi, dan periode
   infoRange.innerHTML = `
-    <div style="background:${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)'};padding:12px;border-radius:12px;margin-top:8px;">
-      <div style="font-size:1.1em;font-weight:700;color:${isDark ? '#ffeb3b' : '#b8860b'};">
+    <div style="background:${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'};padding:14px;border-radius:12px;margin-top:8px;">
+      <div style="font-size:1.05em;font-weight:700;color:${isDark ? '#ffeb3b' : '#b8860b'};">
         🎬 Tema: <span style="color:${isDark ? '#fff' : '#111'};">${dataSeason.tema || "Tanpa Tema"}</span>
       </div>
-      <div style="font-size:0.95em;margin-top:6px;line-height:1.4;">${dataSeason.deskripsi || ""}</div><br>
-      <div style="margin-top:6px;color:${isDark ? '#bbb' : '#333'};">📅 ${dataSeason.periode || "-"}</div><br>
-      <div style="margin-top:4px;font-size:0.95em;">
+      <div style="font-size:0.95em;margin-top:8px;line-height:1.4;color:${isDark ? '#ddd' : '#333'};">
+        ${dataSeason.deskripsi || ""}
+      </div>
+      <div style="margin-top:10px;color:${isDark ? '#ddd' : '#444'};">📅 ${dataSeason.periode || "-"}</div>
+      <div style="margin-top:8px;font-size:0.95em;">
         <span style="color:${isDark ? '#ffeb3b':'#b8860b'};">🎗️ Sponsor:</span><br>
         <span style="font-style:italic;color:${isDark ? '#fdd835':'#5a4b00'};">${dataSeason.Sponsor || "-"}</span>
       </div>
-    </div>`;
-
-  // 📜 Aturan Lomba
-  document.getElementById("aturanText").innerHTML = `
-    • Lomba terbuka untuk umum.<br>
-    • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
-    • ${dataSeason.deskripsi}<br><br>
-    • Video hasil karya sendiri dan belum pernah diunggah.<br>
-    • Gaya bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
-    <b>Poin Juri:</b><br>
-    💡 Kreativitas (maks 300):<br>
-    ide konsep (150), <br>
-editing (100), <br>
-karakter (50).<br><br>
-    🏡 Lokal (maks 200):<br>
-    nuansa lokal (100), <br>
-dampak positif (100).<br><br>
-    <b>Poin TikTok:</b><br>
-    🚀 Viral: poin tak terbatas,<br> dihitung dari like, komen, share.<br><br>
-    • Diperbolehkan mengajak teman atau saudara untuk menaikkan like, komen, share.<br>
-    • Dilarang spam/bot/beli untuk menaikkan like, komen, share.<br>
-    • Pelanggaran akan dikurangi poin atau bahkan diskualifikasi.
+    </div>
   `;
 
-  // 🔍 Filter Pencarian (tanpa ubah rank)
-  const keyword = document.getElementById("searchNama").value.toLowerCase();
+  // Aturan lomba (menggunakan tema & deskripsi dari season)
+  const aturanEl = document.getElementById("aturanText");
+  if (aturanEl) {
+    aturanEl.innerHTML = `
+      • Lomba terbuka untuk umum.<br>
+      • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
+      • ${dataSeason.deskripsi}<br><br>
+      • Video hasil editan sendiri dan belum pernah di upload di sosial media manapun.<br>
+      • Gaya video bebas: lucu, edukatif, dokumenter, cinematic, atau motivasi.<br><br>
+      <b>Poin Juri:</b><br>
+      💡 Kreativitas:<br>
+      • ide konsep (150),<br>
+      • editing (100),<br>
+      • karakter (50).<br><br>
+      🏡 Dampak Dusun:<br>
+      • nuansa (100),<br>
+      • dampak positif (100).<br><br>
+      <b>Total Maksimal:</b> 500 poin.<br><br>
+      <b>Poin TikTok:</b><br>
+      🚀 Poin Viral tak terbatas, dihitung otomatis dari like, komen, share.<br><br>
+      Kreator dapat meminta bantuan teman/saudara untuk mendapatkan like/komen/share,<br>
+      tapi dilarang spam dan dilarang menggunakan bot / beli like, komen, share.<br>
+      Pelanggaran akan dikurangi poin atau diskualifikasi.
+    `;
+  }
+
+  // Filter berdasarkan pencarian (tetap mempertahankan urutan data jika poin false)
+  const keyword = document.getElementById("searchNama") ? document.getElementById("searchNama").value.toLowerCase() : "";
   const filtered = keyword ? ranking.filter(p => p.nama.toLowerCase().includes(keyword)) : ranking;
 
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+  // pagination
+  const totalPages = Math.max(1, Math.ceil(filtered.length / itemsPerPage));
   if (currentPage > totalPages) currentPage = 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
 
-  // 📋 Daftar Poin Kreator
+  // tampilkan peserta (jika Poin false => tidak tampil nomor ranking dan urutan sesuai data)
   pageItems.forEach(p => {
     const div = document.createElement("div");
     div.className = "peserta show";
     div.style.cssText = `
-      background:var(--card-bg);
+      background: var(--card-bg);
       border-radius:12px;
-      box-shadow:var(--shadow);
+      box-shadow: var(--shadow);
       padding:12px;
       margin:10px 0;
-      transition:transform .2s;
+      transition: transform .18s;
     `;
-    div.onmouseover = () => div.style.transform = "translateY(-3px)";
+    div.onmouseover = () => div.style.transform = "translateY(-4px)";
     div.onmouseleave = () => div.style.transform = "translateY(0)";
 
-    const nomorRanking = tampilkanPoin ? `<span style="color:var(--highlight)">#${ranking.indexOf(p)+1}</span> ` : "";
+    const nomorRanking = tampilkanPoin ? `<span style="color:var(--highlight);margin-right:6px">#${ranking.indexOf(p) + 1}</span>` : "";
+    const viralPart = tampilkanPoin
+      ? `<b>${p.viral.toFixed(1)}</b>`
+      : `<span style="color:gold">🔒</span>`;
+
+    // jika poin tersembunyi, total sudah dihitung hanya kreatif+lokal (hitungTotal sudah mengembalikan itu)
+    const peringatanViral = tampilkanPoin ? "" : `<div style="margin-top:6px;color:${isDark ? '#ffcc80' : '#b8860b'};font-size:0.9em;">⚠️ poin viral belum dihitung</div>`;
+
     div.innerHTML = `
-      <div class="nama" style="font-weight:700;">${nomorRanking}${p.nama.toUpperCase()}</div>
-      <div class="nilai">
+      <div class="nama" style="font-weight:700;font-size:1rem">${nomorRanking}${p.nama.toUpperCase()}</div>
+      <div class="nilai" style="margin-top:6px;">
         💡 Kreativitas: <b>${p.nilaiKreatif.toFixed(1)}</b><br>
         🏡 Lokal: <b>${p.nilaiLokal.toFixed(1)}</b><br>
-        🚀 Viral: ${tampilkanPoin ? `<b>${p.viral.toFixed(1)}</b>` : `<span style="color:gold">🔒</span>`}
+        🚀 Viral: ${viralPart}
       </div>
-      <div class="total" style="margin-top:5px;">⭐ <b style="color:var(--highlight);">${p.total.toFixed(1)}</b></div>
-      <a href="${p.linkVideo}" target="_blank" class="link" style="display:inline-block;margin-top:8px;color:${isDark ? '#4fc3f7' : '#0077b6'};">▶️ Lihat Video</a>
+      <div class="total" style="margin-top:8px;">⭐ <b style="color:var(--highlight);">${p.total.toFixed(1)}</b></div>
+      ${peringatanViral}
+      <a href="${p.linkVideo || '#'}" target="_blank" class="link" style="display:inline-block;margin-top:8px;color:${isDark ? '#81d4fa' : '#0077b6'};">▶️ Lihat Video</a>
     `;
     wadah.appendChild(div);
   });
 
-  // 📄 Pagination (desain baru)
+  // pagination rendering (tombol meng-scroll ke top poin)
   const pagination = document.getElementById("pagination");
-  pagination.innerHTML = "";
-  pagination.style.textAlign = "center";
-  for (let i = 1; i <= totalPages; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    btn.style.cssText = `
-      margin:3px;
-      padding:6px 10px;
-      border-radius:8px;
-      border:none;
-      cursor:pointer;
-      background:${i === currentPage ? 'var(--highlight)' : (isDark ? '#333' : '#ddd')};
-      color:${i === currentPage ? '#000' : (isDark ? '#fff' : '#111')};
-      transition:all .2s;
-    `;
-    btn.onmouseover = () => btn.style.filter = "brightness(1.2)";
-    btn.onmouseleave = () => btn.style.filter = "brightness(1)";
-    btn.onclick = () => {
-      currentPage = i;
-      tampilkanDataSeason();
-      document.getElementById("poin").scrollIntoView({ behavior: "smooth" });
-    };
-    pagination.appendChild(btn);
+  if (pagination) {
+    pagination.innerHTML = "";
+    pagination.style.textAlign = "center";
+    for (let i = 1; i <= totalPages; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.className = (i === currentPage) ? "active" : "";
+      btn.style.cssText = `
+        margin:4px;
+        padding:6px 10px;
+        border-radius:8px;
+        border:none;
+        cursor:pointer;
+        background:${i === currentPage ? 'var(--highlight)' : (isDark ? '#2b2b2b' : '#e6e6e6')};
+        color:${i === currentPage ? '#000' : (isDark ? '#fff' : '#111')};
+      `;
+      btn.onclick = () => {
+        currentPage = i;
+        tampilkanDataSeason();
+        const poinEl = document.getElementById("poin");
+        if (poinEl) poinEl.scrollIntoView({ behavior: "smooth" });
+      };
+      pagination.appendChild(btn);
+    }
   }
 
-  // 🏆 Hadiah Juara (update desain & kondisi)
+  // tampilkan hadiah (jika poin false => nama "Belum diumumkan")
   const juaraBox = document.getElementById("hadiahList");
-  juaraBox.innerHTML = "";
-  (dataSeason.Hadiah || []).forEach(h => {
-    const pemenang = tampilkanPoin
-      ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
-        : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
-      : null;
-    const adaPemenang = tampilkanPoin && pemenang;
-    const nama = adaPemenang ? pemenang.nama : "Belum diumumkan";
+  if (juaraBox) {
+    juaraBox.innerHTML = "";
+    (dataSeason.Hadiah || []).forEach(h => {
+      const pemenang = tampilkanPoin
+        ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
+          : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
+        : null;
+      const adaPemenang = tampilkanPoin && pemenang;
+      const nama = adaPemenang ? pemenang.nama : "Belum diumumkan";
 
-    const card = document.createElement("div");
-    card.className = "hadiah-card";
-    card.style.cssText = `
-      background:linear-gradient(145deg, var(--card-bg), ${isDark ? '#1a1a1a' : '#f9f9f9'});
-      color:var(--text-color);
-      border-radius:14px;
-      padding:18px;
-      margin:12px;
-      box-shadow:var(--shadow);
-      text-align:left;
-      transition:transform .2s, box-shadow .2s;
-      line-height:1.5;
-    `;
-    card.onmouseover = () => card.style.transform = "scale(1.02)";
-    card.onmouseleave = () => card.style.transform = "scale(1)";
+      const card = document.createElement("div");
+      card.className = "hadiah-card";
+      card.style.cssText = `
+        background: linear-gradient(145deg, var(--card-bg), ${isDark ? '#0f0f0f' : '#fafafa'});
+        color: var(--text-color);
+        border-radius:14px;
+        padding:16px;
+        margin:12px 0;
+        box-shadow: var(--shadow);
+        text-align:left;
+        transition: transform .15s;
+        line-height:1.4;
+      `;
+      card.onmouseover = () => card.style.transform = "translateY(-4px)";
+      card.onmouseleave = () => card.style.transform = "translateY(0)";
 
-    let isiCard = `
-      <b style="font-size:1.1em;">${h.kategori}</b><br>
-      🎁 ${h.hadiah}<br>
-      🏆 <span style="color:var(--highlight);font-weight:700;">${nama}</span>
-    `;
+      let isiCard = `
+        <div style="font-weight:700;font-size:1.05em">${h.kategori}</div>
+        <div style="margin-top:6px;">🎁 ${h.hadiah}</div>
+        <div style="margin-top:8px;">🏆 <span style="color:var(--highlight);font-weight:700">${nama}</span></div>
+      `;
 
-    if (adaPemenang) {
-      isiCard += `
-        <br>⭐ <b>${pemenang.total.toFixed(1)}</b><br>
-        <a href="${pemenang.linkVideo}" target="_blank" 
-           style="display:inline-block;margin-top:6px;color:${isDark ? '#81d4fa' : '#0077b6'};">
-           ▶️ Lihat Video
-        </a>`;
-    }
+      if (adaPemenang) {
+        isiCard += `
+          <div style="margin-top:8px;">⭐ <b>${pemenang.total.toFixed(1)}</b></div>
+          <a href="${pemenang.linkVideo || '#'}" target="_blank" style="display:inline-block;margin-top:8px;color:${isDark ? '#81d4fa' : '#0077b6'};">▶️ Lihat Video</a>
+        `;
+      }
 
-    card.innerHTML = isiCard;
-    juaraBox.appendChild(card);
-  });
+      card.innerHTML = isiCard;
+      juaraBox.appendChild(card);
+    });
+  }
 }
 
-selectSeason.addEventListener("change", tampilkanDataSeason);
-document.getElementById("searchNama").addEventListener("input", tampilkanDataSeason);
-window.addEventListener("load", tampilkanDataSeason);
+// =========================================================
+// Event listeners
+// =========================================================
+selectSeason.addEventListener("change", () => {
+  // reset pagination on season change
+  currentPage = 1;
+  tampilkanDataSeason();
+});
+const searchInput = document.getElementById("searchNama");
+if (searchInput) {
+  searchInput.addEventListener("input", () => {
+    currentPage = 1;
+    tampilkanDataSeason();
+  });
+}
+window.addEventListener("load", () => {
+  // pastikan observer kutipan aktif saat load
+  setupKutipanObserver();
+  tampilkanDataSeason();
+});
