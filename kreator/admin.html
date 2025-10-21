@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Lomba Konten Kreator</title>
+  <link rel="stylesheet" href="gaya.css">
+</head>
+<body>
+
+  <!-- 🔝 NAVBAR -->
+  <nav class="nav">
+
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="menu">
+      <a href="/kreator/daftar">Daftar Sekarang</a>
+      <a href="#hadiah">Hadiah Pemenang</a>
+      <a href="#poin">Poin Kreator</a>
+      <a href="#aturan">Aturan Lomba</a>
+      <a href="/kreator/tips">Tips & Trik</a>
+    </div>
+<a href="/" class="nav-brand">Lomba Konten Kreator</a>
+<button class="theme-toggle" onclick="toggleTheme()">🔆</button>
+  </nav>
+
+  <!-- 👤 HEADER -->
+  <header class="header">
+    <img src="/img/pulung.jpg" alt="Profil" class="profil-img">
+    <div class="kutipan" id="kutipan"></div>
+
+    <!-- Pilihan Season -->
+    <div class="season-select">
+      <label for="season">Pilih Season:</label>
+      <select id="season" onchange="tampilkanDataSeason()"></select>
+    </div>
+  </header>
+
+  <!-- 🏆 HADIAH PEMENANG -->
+  <section id="hadiah">
+    <h2>🏅 Hadiah Juara</h2>
+    <div id="hadiahList"></div>
+  </section>
+<br><hr>
+  <!-- 💥 POIN PESERTA -->
+  <section id="poin">
+    <h2>📊 Poin Kreator</h2>
+    <div id="statusPoin"></div>
+    <div id="daftarPeserta"></div>
+    <div id="pagination"></div>
+  </section>
+
+  <footer>© 2025 Tanjung Bulan Cyber™</footer>
+
+  <script src="juara.js"></script>
+  <script src="admin1.js"></script>
+  <script src="admin2.js"></script>
+</body>
+</html>
