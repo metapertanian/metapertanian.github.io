@@ -78,7 +78,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
   "Jangan tunggu viral, buatlah karya yang bernilai.",
-  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
+  "Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
 ];
 
 let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
