@@ -538,9 +538,14 @@ window.addEventListener("DOMContentLoaded", () => {
 function tampilkanDataSeasonAwal() {
   const select = document.getElementById("seasonSelect") || document.getElementById("season");
   if (!select) return;
+
+  // gunakan value default atau option pertama
   const seasonAktif = select.value || select.options[0]?.value;
   if (seasonAktif) {
     select.value = seasonAktif;
-    gantiSeason?.();
+    // panggil fungsi update data sekaligus
+    if (typeof gantiSeason === "function") {
+      gantiSeason(); // langsung update hadiah/poin/aturan
+    }
   }
 }
