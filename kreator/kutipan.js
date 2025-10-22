@@ -369,239 +369,76 @@ const kutipanList = [
 // =========================================================
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
-// ✅ Fitur:
-// - Tombol prev/next di atas kutipan (sebelah foto profil)
-// - Warna otomatis menyesuaikan tema terang/gelap
-// - Data season otomatis tampil saat halaman dimuat
-// =========================================================
-
-let indexKutipan = 0;
-let intervalHuruf = null;
-let paused = false;
-let usedQuotes = [];
 
 // 🧩 Inisialisasi kutipan
 function setupKutipan() {
-  const container = document.getElementById("kutipan");
-  const header = document.querySelector(".header");
-  if (!container || !header) return;
+const container = document.getElementById("kutipan");
+const header = document.querySelector(".header");
+if (!container || !header) return;
 
-  // Reset isi kutipan
-  container.innerHTML = `
-    <div class="quote-inner">
-      <span id="quoteText"></span>
-    </div>
-    <button id="copyQuoteBtn" style="
-      display:none;
-      margin-top:0.6em;
-      padding:6px 14px;
-      border:none;
-      border-radius:10px;
-      background:var(--btn-bg, #333);
-      color:var(--btn-color, #fff);
-      font-size:0.85rem;
-      cursor:pointer;
-      letter-spacing:0.5px;
-      transition:all 0.2s ease;
-    ">Salin Kutipan</button>
-  `;
+container.innerHTML =   <div class="quote-inner">   <span id="quoteText"></span>   </div>   <button id="copyQuoteBtn" style="   display:none;   margin-top:0.6em;   padding:6px 14px;   border:none;   border-radius:10px;   background:var(--btn-bg, #333);   color:var(--btn-color, #fff);   font-size:0.85rem;   cursor:pointer;   letter-spacing:0.5px;   transition:all 0.2s ease;   ">Salin Kutipan</button>  ;
 
-  // 🔼 Tombol prev/next di dalam header (di samping foto profil)
-  const prevBtn = document.createElement("div");
-  const nextBtn = document.createElement("div");
-  prevBtn.id = "quoteNavPrev";
-  nextBtn.id = "quoteNavNext";
-  prevBtn.innerHTML = "&lt;";
-  nextBtn.innerHTML = "&gt;";
+// tombol navigasi
+const prevBtn = document.createElement("div");
+const nextBtn = document.createElement("div");
+prevBtn.id = "quoteNavPrev";
+nextBtn.id = "quoteNavNext";
+prevBtn.innerHTML = "<";
+nextBtn.innerHTML = ">";
+header.appendChild(prevBtn);
+header.appendChild(nextBtn);
 
-  header.style.position = "relative";
-  header.appendChild(prevBtn);
-  header.appendChild(nextBtn);
+// 💅 style kutipan sesuai tema aktif
+applyQuoteTheme();
 
-  // 💅 Style kutipan dan tombol
-  applyQuoteTheme();
-  styleQuoteNav(prevBtn, nextBtn);
+prevBtn.addEventListener("click", tampilkanKutipanSebelumnya);
+nextBtn.addEventListener("click", tampilkanKutipanSelanjutnya);
+document.getElementById("quoteText").addEventListener("click", togglePause);
+document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
 
-  // 🎧 Event
-  prevBtn.addEventListener("click", tampilkanKutipanSebelumnya);
-  nextBtn.addEventListener("click", tampilkanKutipanSelanjutnya);
-  document.getElementById("quoteText").addEventListener("click", togglePause);
-  document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
-
-  tampilkanKutipanHurufDemiHuruf();
-}
-
-// ✨ Style tombol prev/next agar posisinya di atas kutipan (sebelah foto)
-function styleQuoteNav(prevBtn, nextBtn) {
-  const isDark = document.body.classList.contains("dark-theme");
-
-  [prevBtn, nextBtn].forEach(btn => {
-    Object.assign(btn.style, {
-      position: "absolute",
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: "1.5rem",
-      cursor: "pointer",
-      background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
-      border: `2px solid ${isDark ? "#ffe08280" : "#44444440"}`,
-      color: isDark ? "#ffe082" : "#222",
-      borderRadius: "50%",
-      width: "38px",
-      height: "38px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      userSelect: "none",
-      transition: "all 0.25s ease",
-      zIndex: "50",
-      opacity: "0.9"
-    });
-    btn.addEventListener("mouseenter", () => (btn.style.opacity = "1"));
-    btn.addEventListener("mouseleave", () => (btn.style.opacity = "0.9"));
-  });
-
-  // posisi di kiri dan kanan foto (tepat di sisi header)
-  prevBtn.style.left = "15px";
-  nextBtn.style.right = "15px";
+tampilkanKutipanHurufDemiHuruf();
 }
 
 // 🌗 Terapkan style tema terang/gelap secara otomatis
 function applyQuoteTheme() {
-  const isDark = document.body.classList.contains("dark-theme");
-  const container = document.getElementById("kutipan");
-  const prevBtn = document.getElementById("quoteNavPrev");
-  const nextBtn = document.getElementById("quoteNavNext");
+const isDark = document.body.classList.contains("dark-theme");
+const container = document.getElementById("kutipan");
+const prevBtn = document.getElementById("quoteNavPrev");
+const nextBtn = document.getElementById("quoteNavNext");
 
-  if (!container) return;
+if (!container) return;
 
-  container.style.color = isDark ? "#ffe082" : "#111";
-  container.style.textShadow = isDark
-    ? "0 0 10px rgba(255,255,255,0.25)"
-    : "0 0 3px rgba(0,0,0,0.1)";
+container.style.color = isDark ? "#ffe082" : "#111";
+container.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.25)" : "0 0 2px rgba(0,0,0,0.1)";
+prevBtn.style.color = isDark ? "#ffe082" : "#333";
+nextBtn.style.color = isDark ? "#ffe082" : "#333";
 
-  if (prevBtn && nextBtn) styleQuoteNav(prevBtn, nextBtn);
-
-  const btn = document.getElementById("copyQuoteBtn");
-  if (btn) {
-    btn.style.setProperty("--btn-bg", isDark ? "#444" : "#eee");
-    btn.style.setProperty("--btn-color", isDark ? "#fff" : "#111");
-  }
+// tombol salin otomatis menyesuaikan
+const btn = document.getElementById("copyQuoteBtn");
+btn.style.setProperty("--btn-bg", isDark ? "#444" : "#eee");
+btn.style.setProperty("--btn-color", isDark ? "#fff" : "#111");
 }
 
 // 🔁 Ganti tema langsung ubah warna kutipan juga
 window.addEventListener("themechange", applyQuoteTheme);
 
-// 🎞️ Tampilkan kutipan huruf demi huruf
-function tampilkanKutipanHurufDemiHuruf() {
-  const textEl = document.getElementById("quoteText");
-  const copyBtn = document.getElementById("copyQuoteBtn");
-  if (!textEl) return;
-
-  textEl.textContent = "";
-  copyBtn.style.display = "none";
-
-  if (intervalHuruf) clearInterval(intervalHuruf);
-  const teks = kutipanList[indexKutipan] || "";
-  let indexHuruf = 0;
-
-  intervalHuruf = setInterval(() => {
-    if (paused) return;
-    if (indexHuruf < teks.length) {
-      textEl.textContent += teks[indexHuruf];
-      indexHuruf++;
-    } else {
-      clearInterval(intervalHuruf);
-      intervalHuruf = null;
-      setTimeout(() => {
-        if (!paused) fadeOutText(textEl, tampilkanKutipanSelanjutnya);
-      }, 2500);
-    }
-  }, Math.floor(Math.random() * 45) + 55);
-}
-
-// 💨 Efek fade-out
-function fadeOutText(el, callback) {
-  let text = el.textContent;
-  let i = text.length;
-  const fade = setInterval(() => {
-    if (paused) return;
-    if (i > 0) {
-      text = text.slice(0, i - 1);
-      el.textContent = text;
-      i--;
-    } else {
-      clearInterval(fade);
-      if (callback) callback();
-    }
-  }, 22);
-}
-
-// 🎮 Pause / Resume
-function togglePause() {
-  const copyBtn = document.getElementById("copyQuoteBtn");
-  const textEl = document.getElementById("quoteText");
-  const teks = kutipanList[indexKutipan] || "";
-
-  if (!paused) {
-    paused = true;
-    if (intervalHuruf) clearInterval(intervalHuruf);
-    textEl.textContent = teks;
-    copyBtn.style.display = "inline-block";
-  } else {
-    paused = false;
-    copyBtn.style.display = "none";
-    fadeOutText(textEl, tampilkanKutipanSelanjutnya);
-  }
-}
-
-// 📋 Salin kutipan
-function salinKutipan() {
-  const teks = kutipanList[indexKutipan] || "";
-  navigator.clipboard.writeText(teks).then(() => {
-    const btn = document.getElementById("copyQuoteBtn");
-    const oldText = btn.textContent;
-    btn.textContent = "✅ Disalin!";
-    setTimeout(() => (btn.textContent = oldText), 1300);
-  });
-}
-
-// 🔀 Ambil kutipan acak
-function getRandomQuoteIndex() {
-  if (usedQuotes.length === kutipanList.length) usedQuotes = [];
-  let newIndex;
-  do {
-    newIndex = Math.floor(Math.random() * kutipanList.length);
-  } while (usedQuotes.includes(newIndex));
-  usedQuotes.push(newIndex);
-  return newIndex;
-}
-
-// Navigasi kutipan
-function tampilkanKutipanSebelumnya() {
-  indexKutipan = getRandomQuoteIndex();
-  tampilkanKutipanHurufDemiHuruf();
-}
-
-function tampilkanKutipanSelanjutnya() {
-  indexKutipan = getRandomQuoteIndex();
-  tampilkanKutipanHurufDemiHuruf();
-}
+// 🚀 Jalankan setelah halaman siap
+window.addEventListener("DOMContentLoaded", () => {
+setupKutipan();
+tampilkanDataSeasonAwal(); // otomatis load data pertama kali
+});
 
 // =========================================================
 // 🧩 AUTO LOAD DATA SEASON SAAT HALAMAN DIBUKA
 // =========================================================
+
 function tampilkanDataSeasonAwal() {
-  const select = document.getElementById("seasonSelect");
-  if (!select) return;
-  const seasonAktif = select.value || select.options[0]?.value;
-  if (seasonAktif) {
-    select.value = seasonAktif;
-    gantiSeason(); // fungsi existing milik kamu
-  }
+const select = document.getElementById("seasonSelect");
+if (!select) return;
+const seasonAktif = select.value || select.options[0]?.value;
+if (seasonAktif) {
+select.value = seasonAktif;
+gantiSeason(); // panggil fungsi yang sudah ada untuk update hadiah/poin/aturan
+}
 }
 
-// 🚀 Jalankan saat halaman siap
-window.addEventListener("DOMContentLoaded", () => {
-  setupKutipan();
-  tampilkanDataSeasonAwal();
-});
