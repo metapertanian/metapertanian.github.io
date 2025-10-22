@@ -72,13 +72,14 @@ document.querySelectorAll("#menu a").forEach(link => {
   });
 });
 
+
 // =========================================================
-// 💬 Kutipan Bergantian (fade delete + tinggi tetap + cursor realistis)
+// 💬 Kutipan Bergantian (fade delete + cursor mengikuti baris terakhir)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
   "Jangan tunggu viral, buatlah karya yang bernilai.",
-  "Kreator hebat lahir dari dusun yang kecil, tapi mimpi yang besar.",
+  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
 ];
 
 let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
@@ -138,36 +139,54 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.transition = "color 0.25s ease";
   elemen.style.color = isDark ? "#ffe082" : "#111";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
-  elemen.style.minHeight = "4.2em"; // tinggi tetap
-  elemen.style.display = "flex";
-  elemen.style.flexDirection = "row";
-  elemen.style.alignItems = "center";
-  elemen.style.justifyContent = "center";
+  elemen.style.minHeight = "4.2em";
+  elemen.style.display = "inline-block";
+  elemen.style.position = "relative";
+  elemen.style.whiteSpace = "pre-wrap";
+  elemen.style.lineHeight = "1.8";
 
   elemen.innerHTML = "";
 
   const textSpan = document.createElement("span");
   textSpan.style.color = "inherit";
-  textSpan.style.whiteSpace = "pre-wrap";
+  textSpan.style.display = "inline";
+  textSpan.style.wordBreak = "break-word";
   elemen.appendChild(textSpan);
 
   const cursor = document.createElement("span");
   cursor.textContent = "|";
-  cursor.style.color = isDark ? "#ffd54f" : "#444";
-  cursor.style.marginLeft = "2px";
+  cursor.style.position = "absolute";
+  cursor.style.animation = "blinkCursor 0.7s steps(1) infinite";
   cursor.style.fontWeight = "400";
-  cursor.style.animation = "blinkCursor 0.8s steps(1) infinite";
+  cursor.style.color = isDark ? "#ffd54f" : "#333";
+  cursor.style.transition = "left 0.1s, top 0.1s";
   elemen.appendChild(cursor);
 
   // animasi kedipan kursor
-  const styleBlink = document.createElement("style");
-  styleBlink.textContent = `
-    @keyframes blinkCursor {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0; }
+  if (!document.getElementById("blink-style")) {
+    const styleBlink = document.createElement("style");
+    styleBlink.id = "blink-style";
+    styleBlink.textContent = `
+      @keyframes blinkCursor {
+        0%, 50% { opacity: 1; }
+        50.01%, 100% { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(styleBlink);
+  }
+
+  // fungsi memperbarui posisi kursor di akhir teks
+  function updateCursorPosition() {
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.setStart(textSpan, textSpan.childNodes.length);
+    range.collapse(true);
+    const rect = range.getClientRects()[0];
+    if (rect) {
+      cursor.style.left = rect.right - elemen.getBoundingClientRect().left + "px";
+      cursor.style.top = rect.top - elemen.getBoundingClientRect().top + "px";
     }
-  `;
-  document.head.appendChild(styleBlink);
+  }
 
   indexHuruf = 0;
   intervalHuruf = setInterval(() => {
@@ -180,8 +199,10 @@ function tampilkanKutipanHurufDemiHuruf() {
 
     if (indexHuruf < teks.length) {
       textSpan.textContent += teks[indexHuruf];
+      updateCursorPosition();
       indexHuruf++;
     } else {
+      updateCursorPosition();
       clearInterval(intervalHuruf);
       intervalHuruf = null;
       setTimeout(() => {
@@ -191,14 +212,13 @@ function tampilkanKutipanHurufDemiHuruf() {
         });
       }, 2500);
     }
-  }, Math.floor(Math.random() * 50) + 60); // variasi kecepatan nyata
+  }, Math.floor(Math.random() * 50) + 60);
 }
 
 // efek menghapus huruf perlahan
 function fadeOutText(textSpan, callback) {
   let text = textSpan.textContent;
   let i = text.length;
-
   const fadeInterval = setInterval(() => {
     if (i > 0) {
       text = text.slice(0, i - 1);
