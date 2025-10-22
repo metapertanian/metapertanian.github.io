@@ -172,6 +172,35 @@ h2 {
   letter-spacing: 0.5px;
 }
 
+
+/* Hilangkan garis tipis (shadow leak) antar section */
+section {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-gradient);
+}
+
+#poin, #aturan, #hadiah {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Pastikan footer atau area berikutnya tidak ada bayangan sisa */
+footer, #pagination, .peserta, .hadiah-card {
+  box-shadow: none !important;
+}
+
+/* Desain <hr> tetap muncul elegan */
+hr {
+  border: none;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 2px;
+  width: 70%;
+  margin: 40px auto;
+  opacity: 0.5;
+}
+
 /* =========================================================
    🧮 PESERTA CARD
 ========================================================= */
