@@ -74,7 +74,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 
 
 // =========================================================
-// 💬 Kutipan Bergantian (fade-in + fade-out, tanpa efek kursor)
+// 💬 Kutipan Bergantian (fade delete, tanpa efek kursor)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -137,7 +137,7 @@ function tampilkanKutipanHurufDemiHuruf() {
     fontSize: "1.2rem",
     fontWeight: "600",
     textAlign: "center",
-    transition: "color 0.25s ease, opacity 0.8s ease",
+    transition: "color 0.25s ease",
     color: isDark ? "#ffe082" : "#111",
     textShadow: isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none",
     minHeight: "4.2em",
@@ -147,8 +147,7 @@ function tampilkanKutipanHurufDemiHuruf() {
     flexDirection: "column",
     lineHeight: "1.8",
     position: "relative",
-    overflow: "hidden",
-    opacity: "0" // mulai dari transparan (fade-in)
+    overflow: "hidden"
   });
 
   elemen.innerHTML = "";
@@ -160,17 +159,9 @@ function tampilkanKutipanHurufDemiHuruf() {
     wordBreak: "break-word",
     display: "inline-block",
     maxWidth: "90%",
-    textAlign: "center",
-    opacity: "0", // fade-in juga untuk teks
-    transition: "opacity 1s ease"
+    textAlign: "center"
   });
   elemen.appendChild(textSpan);
-
-  // efek fade-in lembut sebelum mulai mengetik
-  setTimeout(() => {
-    elemen.style.opacity = "1";
-    textSpan.style.opacity = "1";
-  }, 50);
 
   // efek ketik huruf demi huruf
   indexHuruf = 0;
@@ -199,23 +190,18 @@ function tampilkanKutipanHurufDemiHuruf() {
 }
 
 function fadeOutText(textSpan, callback) {
-  // buat efek fade-out lembut sebelum huruf dihapus
-  textSpan.style.transition = "opacity 0.4s ease";
-  textSpan.style.opacity = "0";
-  setTimeout(() => {
-    let text = textSpan.textContent;
-    let i = text.length;
-    const fadeInterval = setInterval(() => {
-      if (i > 0) {
-        text = text.slice(0, i - 1);
-        textSpan.textContent = text;
-        i--;
-      } else {
-        clearInterval(fadeInterval);
-        if (typeof callback === "function") callback();
-      }
-    }, 25);
-  }, 400);
+  let text = textSpan.textContent;
+  let i = text.length;
+  const fadeInterval = setInterval(() => {
+    if (i > 0) {
+      text = text.slice(0, i - 1);
+      textSpan.textContent = text;
+      i--;
+    } else {
+      clearInterval(fadeInterval);
+      if (typeof callback === "function") callback();
+    }
+  }, 30);
 }
 
 window.addEventListener("DOMContentLoaded", setupKutipanObserver);
