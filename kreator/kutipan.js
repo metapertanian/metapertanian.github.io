@@ -366,38 +366,35 @@ const kutipanList = [
   "Kamu bukan tagar viral, tapi kamu selalu trending di hatiku.",
   "Cinta itu kayak algoritma misterius — makin dipahami makin rumit."
 ];
-
-
-
 // =========================================================
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 // ✅ Fitur:
 // - Font futuristik khas kreator
+// - Tombol navigasi di kiri/kanan foto (bukan di tengah kutipan)
 // - Tap: pause / resume
-// - Saat pause: tampil penuh + tombol salin
-// - Tombol (<) dan (>) bulat elegan di kiri-kanan
+// - Tidak ada kutipan yang berulang sebelum semua tampil
 // =========================================================
 
 let indexKutipan = 0;
 let intervalHuruf = null;
 let paused = false;
+let usedQuotes = [];
 
 // 🧩 Inisialisasi kutipan
 function setupKutipan() {
   const container = document.getElementById("kutipan");
-  if (!container) return;
+  const header = document.querySelector(".header");
+  if (!container || !header) return;
 
-  // Bersihkan isi
+  // Bersihkan isi lama
   container.innerHTML = "";
 
   // Struktur elemen utama
   container.innerHTML = `
-    <div id="quoteNavPrev" class="quote-nav">&lt;</div>
     <div class="quote-inner">
       <span id="quoteText"></span>
     </div>
-    <div id="quoteNavNext" class="quote-nav">&gt;</div>
     <button id="copyQuoteBtn" style="
       display:none;
       margin-top:0.6em;
@@ -412,6 +409,16 @@ function setupKutipan() {
       transition:all 0.2s ease;
     ">Salin Kutipan</button>
   `;
+
+  // 💫 Tambahkan tombol prev/next di kiri-kanan foto profil
+  const prevBtn = document.createElement("div");
+  const nextBtn = document.createElement("div");
+  prevBtn.id = "quoteNavPrev";
+  nextBtn.id = "quoteNavNext";
+  prevBtn.innerHTML = "&lt;";
+  nextBtn.innerHTML = "&gt;";
+  header.appendChild(prevBtn);
+  header.appendChild(nextBtn);
 
   // 💅 Style container utama
   const isDark = document.body.classList.contains("dark-theme");
@@ -433,38 +440,37 @@ function setupKutipan() {
   });
 
   // 💫 Style tombol navigasi
-  document.querySelectorAll(".quote-nav").forEach(nav => {
-    Object.assign(nav.style, {
+  [prevBtn, nextBtn].forEach((btn, i) => {
+    Object.assign(btn.style, {
       position: "absolute",
       top: "50%",
       transform: "translateY(-50%)",
-      fontSize: "1.2rem",
+      fontSize: "1.4rem",
       cursor: "pointer",
       color: isDark ? "#ffe082" : "#333",
       background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
       border: `2px solid ${isDark ? "#ffe08280" : "#33333380"}`,
       borderRadius: "50%",
-      width: "38px",
-      height: "38px",
+      width: "40px",
+      height: "40px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       userSelect: "none",
-      opacity: "0.8",
+      opacity: "0.85",
       transition: "all 0.25s ease",
+      zIndex: "10"
     });
-    nav.addEventListener("mouseenter", () => (nav.style.opacity = "1"));
-    nav.addEventListener("mouseleave", () => (nav.style.opacity = "0.8"));
+    btn.addEventListener("mouseenter", () => (btn.style.opacity = "1"));
+    btn.addEventListener("mouseleave", () => (btn.style.opacity = "0.85"));
   });
 
-  document.getElementById("quoteNavPrev").style.left = "0.7em";
-  document.getElementById("quoteNavNext").style.right = "0.7em";
+  prevBtn.style.left = "5%";
+  nextBtn.style.right = "5%";
 
   // 🎧 Event listener
   const textEl = document.getElementById("quoteText");
   const copyBtn = document.getElementById("copyQuoteBtn");
-  const prevBtn = document.getElementById("quoteNavPrev");
-  const nextBtn = document.getElementById("quoteNavNext");
 
   textEl.addEventListener("click", () => togglePause());
   prevBtn.addEventListener("click", () => tampilkanKutipanSebelumnya());
@@ -550,15 +556,28 @@ function salinKutipan() {
   });
 }
 
-// ⬅️ Kutipan sebelumnya
+// 🔀 Ambil kutipan acak tanpa pengulangan
+function getRandomQuoteIndex() {
+  if (usedQuotes.length === kutipanList.length) usedQuotes = []; // reset jika sudah semua muncul
+
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * kutipanList.length);
+  } while (usedQuotes.includes(newIndex));
+
+  usedQuotes.push(newIndex);
+  return newIndex;
+}
+
+// ⬅️ Kutipan sebelumnya (acak mundur)
 function tampilkanKutipanSebelumnya() {
-  indexKutipan = (indexKutipan - 1 + kutipanList.length) % kutipanList.length;
+  indexKutipan = getRandomQuoteIndex();
   tampilkanKutipanHurufDemiHuruf();
 }
 
-// ➡️ Kutipan selanjutnya
+// ➡️ Kutipan selanjutnya (acak maju)
 function tampilkanKutipanSelanjutnya() {
-  indexKutipan = (indexKutipan + 1) % kutipanList.length;
+  indexKutipan = getRandomQuoteIndex();
   tampilkanKutipanHurufDemiHuruf();
 }
 
