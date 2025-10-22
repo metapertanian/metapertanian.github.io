@@ -74,7 +74,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 
 
 // =========================================================
-// 💬 Kutipan Bergantian (fade delete + cursor mengikuti baris terakhir)
+// 💬 Kutipan Bergantian (fade delete + cursor mengikuti baris terakhir, tanpa geser elemen luar)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -131,7 +131,7 @@ function tampilkanKutipanHurufDemiHuruf() {
   const teks = kutipanList[indexKutipan] || "";
   const isDark = document.body.classList.contains("dark-theme");
 
-  // gaya dasar
+  // gaya dasar aman agar layout tidak bergeser
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
@@ -140,29 +140,33 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.color = isDark ? "#ffe082" : "#111";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
   elemen.style.minHeight = "4.2em";
-  elemen.style.display = "inline-block";
-  elemen.style.position = "relative";
-  elemen.style.whiteSpace = "pre-wrap";
+  elemen.style.display = "flex";
+  elemen.style.justifyContent = "center";
+  elemen.style.alignItems = "center";
+  elemen.style.flexDirection = "column";
   elemen.style.lineHeight = "1.8";
+  elemen.style.position = "relative"; // penting: posisi relatif agar kursor tetap di area
+  elemen.style.overflow = "hidden";   // cegah geser vertikal luar
 
   elemen.innerHTML = "";
 
   const textSpan = document.createElement("span");
   textSpan.style.color = "inherit";
-  textSpan.style.display = "inline";
+  textSpan.style.whiteSpace = "pre-wrap";
   textSpan.style.wordBreak = "break-word";
+  textSpan.style.display = "inline-block";
+  textSpan.style.maxWidth = "90%";
   elemen.appendChild(textSpan);
 
   const cursor = document.createElement("span");
   cursor.textContent = "|";
   cursor.style.position = "absolute";
-  cursor.style.animation = "blinkCursor 0.7s steps(1) infinite";
+  cursor.style.animation = "blinkCursor 0.8s steps(1) infinite";
   cursor.style.fontWeight = "400";
   cursor.style.color = isDark ? "#ffd54f" : "#333";
   cursor.style.transition = "left 0.1s, top 0.1s";
   elemen.appendChild(cursor);
 
-  // animasi kedipan kursor
   if (!document.getElementById("blink-style")) {
     const styleBlink = document.createElement("style");
     styleBlink.id = "blink-style";
@@ -175,16 +179,20 @@ function tampilkanKutipanHurufDemiHuruf() {
     document.head.appendChild(styleBlink);
   }
 
-  // fungsi memperbarui posisi kursor di akhir teks
+  // perbarui posisi kursor tanpa mengubah tinggi kontainer
   function updateCursorPosition() {
     const range = document.createRange();
     const sel = window.getSelection();
-    range.setStart(textSpan, textSpan.childNodes.length);
-    range.collapse(true);
-    const rect = range.getClientRects()[0];
+    range.selectNodeContents(textSpan);
+    range.collapse(false);
+    const rect = range.getClientRects()[range.getClientRects().length - 1];
     if (rect) {
       cursor.style.left = rect.right - elemen.getBoundingClientRect().left + "px";
       cursor.style.top = rect.top - elemen.getBoundingClientRect().top + "px";
+    } else {
+      // jika teks kosong, posisikan kursor di tengah
+      cursor.style.left = "50%";
+      cursor.style.top = "50%";
     }
   }
 
@@ -215,7 +223,6 @@ function tampilkanKutipanHurufDemiHuruf() {
   }, Math.floor(Math.random() * 50) + 60);
 }
 
-// efek menghapus huruf perlahan
 function fadeOutText(textSpan, callback) {
   let text = textSpan.textContent;
   let i = text.length;
@@ -231,7 +238,6 @@ function fadeOutText(textSpan, callback) {
   }, 30);
 }
 
-// jalankan observer saat DOM siap
 window.addEventListener("DOMContentLoaded", setupKutipanObserver);
 
 
