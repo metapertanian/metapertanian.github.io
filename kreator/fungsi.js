@@ -74,7 +74,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 
 
 // =========================================================
-// 💬 Kutipan Bergantian (fade delete + cursor mengikuti teks terakhir dengan akurat)
+// 💬 Kutipan Bergantian (fade-in + fade-out, tanpa efek kursor)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -86,8 +86,8 @@ let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
 let kutipanObserver = null;
 
 function setupKutipanObserver() {
-  const el = document.getElementById("kutipan");
-  if (!el) return;
+  const kutipanEl = document.getElementById("kutipan");
+  if (!kutipanEl) return;
 
   if (kutipanObserver) {
     try { kutipanObserver.disconnect(); } catch (e) {}
@@ -101,21 +101,21 @@ function setupKutipanObserver() {
     });
   }, { threshold: 0.45 });
 
-  kutipanObserver.observe(el);
+  kutipanObserver.observe(kutipanEl);
 }
 
 function startKutipanIfVisible() {
-  const el = document.getElementById("kutipan");
-  if (!el) return;
-  const rect = el.getBoundingClientRect();
+  const kutipanEl = document.getElementById("kutipan");
+  if (!kutipanEl) return;
+  const rect = kutipanEl.getBoundingClientRect();
   const inView = rect.top < window.innerHeight && rect.bottom > 0;
   if (inView) tampilkanKutipanHurufDemiHuruf();
-  else el.textContent = "";
+  else kutipanEl.textContent = "";
 }
 
 function stopKutipan() {
-  const el = document.getElementById("kutipan");
-  if (el) el.textContent = "";
+  const kutipanEl = document.getElementById("kutipan");
+  if (kutipanEl) kutipanEl.textContent = "";
   if (intervalHuruf) {
     clearInterval(intervalHuruf);
     intervalHuruf = null;
@@ -125,16 +125,19 @@ function stopKutipan() {
 function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   if (!elemen) return;
+
   if (intervalHuruf) clearInterval(intervalHuruf);
 
   const teks = kutipanList[indexKutipan] || "";
   const isDark = document.body.classList.contains("dark-theme");
 
+  // gaya aman agar layout tetap stabil
   Object.assign(elemen.style, {
     fontFamily: "'Poppins','Inter',sans-serif",
     fontSize: "1.2rem",
     fontWeight: "600",
     textAlign: "center",
+    transition: "color 0.25s ease, opacity 0.8s ease",
     color: isDark ? "#ffe082" : "#111",
     textShadow: isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none",
     minHeight: "4.2em",
@@ -145,19 +148,10 @@ function tampilkanKutipanHurufDemiHuruf() {
     lineHeight: "1.8",
     position: "relative",
     overflow: "hidden",
-    transition: "color 0.25s ease"
+    opacity: "0" // mulai dari transparan (fade-in)
   });
 
   elemen.innerHTML = "";
-
-  // wadah teks + cursor di tengah
-  const wrapper = document.createElement("div");
-  Object.assign(wrapper.style, {
-    display: "inline-block",
-    position: "relative",
-    textAlign: "left"
-  });
-  elemen.appendChild(wrapper);
 
   const textSpan = document.createElement("span");
   Object.assign(textSpan.style, {
@@ -165,53 +159,20 @@ function tampilkanKutipanHurufDemiHuruf() {
     whiteSpace: "pre-wrap",
     wordBreak: "break-word",
     display: "inline-block",
+    maxWidth: "90%",
+    textAlign: "center",
+    opacity: "0", // fade-in juga untuk teks
+    transition: "opacity 1s ease"
   });
-  wrapper.appendChild(textSpan);
+  elemen.appendChild(textSpan);
 
-  const cursor = document.createElement("span");
-  cursor.textContent = "|";
-  Object.assign(cursor.style, {
-    position: "absolute",
-    left: "0",
-    animation: "blinkCursor 0.8s steps(1) infinite",
-    fontWeight: "400",
-    color: isDark ? "#ffd54f" : "#333",
-    transition: "left 0.1s, top 0.1s"
-  });
-  wrapper.appendChild(cursor);
+  // efek fade-in lembut sebelum mulai mengetik
+  setTimeout(() => {
+    elemen.style.opacity = "1";
+    textSpan.style.opacity = "1";
+  }, 50);
 
-  // tambahkan animasi blink jika belum ada
-  if (!document.getElementById("blink-style")) {
-    const styleBlink = document.createElement("style");
-    styleBlink.id = "blink-style";
-    styleBlink.textContent = `
-      @keyframes blinkCursor {
-        0%, 50% { opacity: 1; }
-        50.01%, 100% { opacity: 0; }
-      }
-    `;
-    document.head.appendChild(styleBlink);
-  }
-
-  // ======== Update posisi kursor (mengikuti huruf terakhir) ========
-  function updateCursorPosition() {
-    requestAnimationFrame(() => {
-      const range = document.createRange();
-      range.selectNodeContents(textSpan);
-      range.collapse(false);
-      const rects = range.getClientRects();
-      const lastRect = rects[rects.length - 1];
-      if (lastRect) {
-        const wrapperRect = wrapper.getBoundingClientRect();
-        cursor.style.left = (lastRect.right - wrapperRect.left) + "px";
-        cursor.style.top = (lastRect.bottom - wrapperRect.top - lastRect.height * 0.2) + "px";
-      } else {
-        cursor.style.left = "0";
-        cursor.style.top = "0";
-      }
-    });
-  }
-
+  // efek ketik huruf demi huruf
   indexHuruf = 0;
   intervalHuruf = setInterval(() => {
     const rect = elemen.getBoundingClientRect();
@@ -223,10 +184,8 @@ function tampilkanKutipanHurufDemiHuruf() {
 
     if (indexHuruf < teks.length) {
       textSpan.textContent += teks[indexHuruf];
-      updateCursorPosition();
       indexHuruf++;
     } else {
-      updateCursorPosition();
       clearInterval(intervalHuruf);
       intervalHuruf = null;
       setTimeout(() => {
@@ -240,18 +199,23 @@ function tampilkanKutipanHurufDemiHuruf() {
 }
 
 function fadeOutText(textSpan, callback) {
-  let text = textSpan.textContent;
-  let i = text.length;
-  const fadeInterval = setInterval(() => {
-    if (i > 0) {
-      text = text.slice(0, i - 1);
-      textSpan.textContent = text;
-      i--;
-    } else {
-      clearInterval(fadeInterval);
-      if (typeof callback === "function") callback();
-    }
-  }, 30);
+  // buat efek fade-out lembut sebelum huruf dihapus
+  textSpan.style.transition = "opacity 0.4s ease";
+  textSpan.style.opacity = "0";
+  setTimeout(() => {
+    let text = textSpan.textContent;
+    let i = text.length;
+    const fadeInterval = setInterval(() => {
+      if (i > 0) {
+        text = text.slice(0, i - 1);
+        textSpan.textContent = text;
+        i--;
+      } else {
+        clearInterval(fadeInterval);
+        if (typeof callback === "function") callback();
+      }
+    }, 25);
+  }, 400);
 }
 
 window.addEventListener("DOMContentLoaded", setupKutipanObserver);
