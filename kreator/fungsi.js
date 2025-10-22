@@ -74,7 +74,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 
 
 // =========================================================
-// 💬 Kutipan Bergantian (fade delete, tanpa efek kursor)
+// 💬 Kutipan Bergantian (fade delete, acak, tanpa efek kursor)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -82,7 +82,7 @@ const kutipanList = [
   "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
 ];
 
-let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
+let indexKutipan = -1, indexHuruf = 0, intervalHuruf = null;
 let kutipanObserver = null;
 
 function setupKutipanObserver() {
@@ -128,10 +128,16 @@ function tampilkanKutipanHurufDemiHuruf() {
 
   if (intervalHuruf) clearInterval(intervalHuruf);
 
+  // 🎲 Pilih kutipan acak, tapi tidak sama dengan sebelumnya
+  let newIndex;
+  do {
+    newIndex = Math.floor(Math.random() * kutipanList.length);
+  } while (newIndex === indexKutipan);
+  indexKutipan = newIndex;
+
   const teks = kutipanList[indexKutipan] || "";
   const isDark = document.body.classList.contains("dark-theme");
 
-  // gaya aman agar layout tetap stabil
   Object.assign(elemen.style, {
     fontFamily: "'Poppins','Inter',sans-serif",
     fontSize: "1.2rem",
@@ -180,10 +186,7 @@ function tampilkanKutipanHurufDemiHuruf() {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
       setTimeout(() => {
-        fadeOutText(textSpan, () => {
-          indexKutipan = (indexKutipan + 1) % kutipanList.length;
-          tampilkanKutipanHurufDemiHuruf();
-        });
+        fadeOutText(textSpan, tampilkanKutipanHurufDemiHuruf);
       }, 2500);
     }
   }, Math.floor(Math.random() * 50) + 60);
