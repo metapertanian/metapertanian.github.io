@@ -370,10 +370,9 @@ const kutipanList = [
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 // ✅ Fitur:
-// - Font futuristik khas kreator
-// - Tombol navigasi di kiri/kanan foto (bukan di tengah kutipan)
-// - Tap: pause / resume
-// - Tidak ada kutipan yang berulang sebelum semua tampil
+// - Tombol prev/next di atas kutipan (sebelah foto profil)
+// - Warna otomatis menyesuaikan tema terang/gelap
+// - Data season otomatis tampil saat halaman dimuat
 // =========================================================
 
 let indexKutipan = 0;
@@ -387,10 +386,7 @@ function setupKutipan() {
   const header = document.querySelector(".header");
   if (!container || !header) return;
 
-  // Bersihkan isi lama
-  container.innerHTML = "";
-
-  // Struktur elemen utama
+  // Reset isi kutipan
   container.innerHTML = `
     <div class="quote-inner">
       <span id="quoteText"></span>
@@ -401,8 +397,8 @@ function setupKutipan() {
       padding:6px 14px;
       border:none;
       border-radius:10px;
-      background:#333;
-      color:#fff;
+      background:var(--btn-bg, #333);
+      color:var(--btn-color, #fff);
       font-size:0.85rem;
       cursor:pointer;
       letter-spacing:0.5px;
@@ -410,93 +406,106 @@ function setupKutipan() {
     ">Salin Kutipan</button>
   `;
 
-  // 💫 Tambahkan tombol prev/next di kiri-kanan foto profil
+  // 🔼 Tombol prev/next di dalam header (di samping foto profil)
   const prevBtn = document.createElement("div");
   const nextBtn = document.createElement("div");
   prevBtn.id = "quoteNavPrev";
   nextBtn.id = "quoteNavNext";
   prevBtn.innerHTML = "&lt;";
   nextBtn.innerHTML = "&gt;";
+
+  header.style.position = "relative";
   header.appendChild(prevBtn);
   header.appendChild(nextBtn);
 
-  // 💅 Style container utama
-  const isDark = document.body.classList.contains("dark-theme");
-  Object.assign(container.style, {
-    fontFamily: "'Orbitron', 'Poppins', sans-serif",
-    fontSize: "1.15rem",
-    fontWeight: "600",
-    textAlign: "center",
-    color: isDark ? "#ffe082" : "#111",
-    textShadow: isDark ? "0 0 10px rgba(255,255,255,0.25)" : "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-    flexDirection: "column",
-    minHeight: "5.5em",
-    padding: "1em",
-    overflow: "hidden"
-  });
+  // 💅 Style kutipan dan tombol
+  applyQuoteTheme();
+  styleQuoteNav(prevBtn, nextBtn);
 
-  // 💫 Style tombol navigasi
-  [prevBtn, nextBtn].forEach((btn, i) => {
-    Object.assign(btn.style, {
-      position: "absolute",
-      top: "50%",
-      transform: "translateY(-50%)",
-      fontSize: "1.4rem",
-      cursor: "pointer",
-      color: isDark ? "#ffe082" : "#333",
-      background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-      border: `2px solid ${isDark ? "#ffe08280" : "#33333380"}`,
-      borderRadius: "50%",
-      width: "40px",
-      height: "40px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      userSelect: "none",
-      opacity: "0.85",
-      transition: "all 0.25s ease",
-      zIndex: "10"
-    });
-    btn.addEventListener("mouseenter", () => (btn.style.opacity = "1"));
-    btn.addEventListener("mouseleave", () => (btn.style.opacity = "0.85"));
-  });
-
-  prevBtn.style.left = "5%";
-  nextBtn.style.right = "5%";
-
-  // 🎧 Event listener
-  const textEl = document.getElementById("quoteText");
-  const copyBtn = document.getElementById("copyQuoteBtn");
-
-  textEl.addEventListener("click", () => togglePause());
-  prevBtn.addEventListener("click", () => tampilkanKutipanSebelumnya());
-  nextBtn.addEventListener("click", () => tampilkanKutipanSelanjutnya());
-  copyBtn.addEventListener("click", () => salinKutipan());
+  // 🎧 Event
+  prevBtn.addEventListener("click", tampilkanKutipanSebelumnya);
+  nextBtn.addEventListener("click", tampilkanKutipanSelanjutnya);
+  document.getElementById("quoteText").addEventListener("click", togglePause);
+  document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
 
   tampilkanKutipanHurufDemiHuruf();
 }
 
-// 🎞️ Menampilkan kutipan huruf demi huruf
+// ✨ Style tombol prev/next agar posisinya di atas kutipan (sebelah foto)
+function styleQuoteNav(prevBtn, nextBtn) {
+  const isDark = document.body.classList.contains("dark-theme");
+
+  [prevBtn, nextBtn].forEach(btn => {
+    Object.assign(btn.style, {
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: "1.5rem",
+      cursor: "pointer",
+      background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.05)",
+      border: `2px solid ${isDark ? "#ffe08280" : "#44444440"}`,
+      color: isDark ? "#ffe082" : "#222",
+      borderRadius: "50%",
+      width: "38px",
+      height: "38px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      userSelect: "none",
+      transition: "all 0.25s ease",
+      zIndex: "50",
+      opacity: "0.9"
+    });
+    btn.addEventListener("mouseenter", () => (btn.style.opacity = "1"));
+    btn.addEventListener("mouseleave", () => (btn.style.opacity = "0.9"));
+  });
+
+  // posisi di kiri dan kanan foto (tepat di sisi header)
+  prevBtn.style.left = "15px";
+  nextBtn.style.right = "15px";
+}
+
+// 🌗 Terapkan style tema terang/gelap secara otomatis
+function applyQuoteTheme() {
+  const isDark = document.body.classList.contains("dark-theme");
+  const container = document.getElementById("kutipan");
+  const prevBtn = document.getElementById("quoteNavPrev");
+  const nextBtn = document.getElementById("quoteNavNext");
+
+  if (!container) return;
+
+  container.style.color = isDark ? "#ffe082" : "#111";
+  container.style.textShadow = isDark
+    ? "0 0 10px rgba(255,255,255,0.25)"
+    : "0 0 3px rgba(0,0,0,0.1)";
+
+  if (prevBtn && nextBtn) styleQuoteNav(prevBtn, nextBtn);
+
+  const btn = document.getElementById("copyQuoteBtn");
+  if (btn) {
+    btn.style.setProperty("--btn-bg", isDark ? "#444" : "#eee");
+    btn.style.setProperty("--btn-color", isDark ? "#fff" : "#111");
+  }
+}
+
+// 🔁 Ganti tema langsung ubah warna kutipan juga
+window.addEventListener("themechange", applyQuoteTheme);
+
+// 🎞️ Tampilkan kutipan huruf demi huruf
 function tampilkanKutipanHurufDemiHuruf() {
   const textEl = document.getElementById("quoteText");
   const copyBtn = document.getElementById("copyQuoteBtn");
   if (!textEl) return;
 
-  // reset
   textEl.textContent = "";
   copyBtn.style.display = "none";
 
   if (intervalHuruf) clearInterval(intervalHuruf);
-
   const teks = kutipanList[indexKutipan] || "";
   let indexHuruf = 0;
 
   intervalHuruf = setInterval(() => {
-    if (paused) return; // berhenti saat pause
+    if (paused) return;
     if (indexHuruf < teks.length) {
       textEl.textContent += teks[indexHuruf];
       indexHuruf++;
@@ -527,7 +536,7 @@ function fadeOutText(el, callback) {
   }, 22);
 }
 
-// ⏸️ Toggle pause/play
+// 🎮 Pause / Resume
 function togglePause() {
   const copyBtn = document.getElementById("copyQuoteBtn");
   const textEl = document.getElementById("quoteText");
@@ -536,7 +545,7 @@ function togglePause() {
   if (!paused) {
     paused = true;
     if (intervalHuruf) clearInterval(intervalHuruf);
-    textEl.textContent = teks; // tampil penuh
+    textEl.textContent = teks;
     copyBtn.style.display = "inline-block";
   } else {
     paused = false;
@@ -545,7 +554,7 @@ function togglePause() {
   }
 }
 
-// 📋 Salin kutipan ke clipboard
+// 📋 Salin kutipan
 function salinKutipan() {
   const teks = kutipanList[indexKutipan] || "";
   navigator.clipboard.writeText(teks).then(() => {
@@ -556,30 +565,43 @@ function salinKutipan() {
   });
 }
 
-// 🔀 Ambil kutipan acak tanpa pengulangan
+// 🔀 Ambil kutipan acak
 function getRandomQuoteIndex() {
-  if (usedQuotes.length === kutipanList.length) usedQuotes = []; // reset jika sudah semua muncul
-
+  if (usedQuotes.length === kutipanList.length) usedQuotes = [];
   let newIndex;
   do {
     newIndex = Math.floor(Math.random() * kutipanList.length);
   } while (usedQuotes.includes(newIndex));
-
   usedQuotes.push(newIndex);
   return newIndex;
 }
 
-// ⬅️ Kutipan sebelumnya (acak mundur)
+// Navigasi kutipan
 function tampilkanKutipanSebelumnya() {
   indexKutipan = getRandomQuoteIndex();
   tampilkanKutipanHurufDemiHuruf();
 }
 
-// ➡️ Kutipan selanjutnya (acak maju)
 function tampilkanKutipanSelanjutnya() {
   indexKutipan = getRandomQuoteIndex();
   tampilkanKutipanHurufDemiHuruf();
 }
 
-// 🚀 Jalankan setelah halaman siap
-window.addEventListener("DOMContentLoaded", setupKutipan);
+// =========================================================
+// 🧩 AUTO LOAD DATA SEASON SAAT HALAMAN DIBUKA
+// =========================================================
+function tampilkanDataSeasonAwal() {
+  const select = document.getElementById("seasonSelect");
+  if (!select) return;
+  const seasonAktif = select.value || select.options[0]?.value;
+  if (seasonAktif) {
+    select.value = seasonAktif;
+    gantiSeason(); // fungsi existing milik kamu
+  }
+}
+
+// 🚀 Jalankan saat halaman siap
+window.addEventListener("DOMContentLoaded", () => {
+  setupKutipan();
+  tampilkanDataSeasonAwal();
+});
