@@ -370,11 +370,7 @@ const kutipanList = [
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 
-const kutipanList = [
-  "Dari satu kamera, tersimpan seribu cerita.",
-  "Jangan tunggu viral, buatlah karya yang bernilai.",
-  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
-];
+
 let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
 let kutipanObserver = null;
 
