@@ -370,13 +370,13 @@ const kutipanList = [
 
 
 // =========================================================
-// 💬 KUTIPAN BERGANTIAN INTERAKTIF
+// 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 // ✅ Fitur:
-// - Font Awesome icon di kiri-kanan kutipan
+// - Font futuristik khas kreator
 // - Tap: pause / resume
 // - Saat pause: tampil penuh + tombol salin
-// - Tombol (<) dan (>) untuk navigasi kutipan
+// - Tombol (<) dan (>) bulat elegan di kiri-kanan
 // =========================================================
 
 let indexKutipan = 0;
@@ -391,62 +391,76 @@ function setupKutipan() {
   // Bersihkan isi
   container.innerHTML = "";
 
-  // Tambahkan ikon kutipan & struktur elemen
+  // Struktur elemen utama
   container.innerHTML = `
     <div id="quoteNavPrev" class="quote-nav">&lt;</div>
     <div class="quote-inner">
-      <i class="fa-solid fa-quote-left"></i>
       <span id="quoteText"></span>
-      <i class="fa-solid fa-quote-right"></i>
     </div>
     <div id="quoteNavNext" class="quote-nav">&gt;</div>
     <button id="copyQuoteBtn" style="
       display:none;
       margin-top:0.6em;
-      padding:6px 12px;
+      padding:6px 14px;
       border:none;
-      border-radius:8px;
-      background:#444;
+      border-radius:10px;
+      background:#333;
       color:#fff;
       font-size:0.85rem;
       cursor:pointer;
+      letter-spacing:0.5px;
+      transition:all 0.2s ease;
     ">Salin Kutipan</button>
   `;
 
+  // 💅 Style container utama
+  const isDark = document.body.classList.contains("dark-theme");
   Object.assign(container.style, {
-    fontFamily: "'Poppins','Inter',sans-serif",
-    fontSize: "1.1rem",
+    fontFamily: "'Orbitron', 'Poppins', sans-serif",
+    fontSize: "1.15rem",
     fontWeight: "600",
     textAlign: "center",
-    color: document.body.classList.contains("dark-theme") ? "#ffe082" : "#111",
-    textShadow: document.body.classList.contains("dark-theme") ? "0 0 8px rgba(255,255,255,0.25)" : "none",
+    color: isDark ? "#ffe082" : "#111",
+    textShadow: isDark ? "0 0 10px rgba(255,255,255,0.25)" : "none",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
     flexDirection: "column",
-    minHeight: "5em",
+    minHeight: "5.5em",
     padding: "1em",
     overflow: "hidden"
   });
 
+  // 💫 Style tombol navigasi
   document.querySelectorAll(".quote-nav").forEach(nav => {
     Object.assign(nav.style, {
       position: "absolute",
       top: "50%",
       transform: "translateY(-50%)",
-      fontSize: "1.5rem",
+      fontSize: "1.2rem",
       cursor: "pointer",
-      color: "inherit",
-      opacity: "0.7",
-      padding: "0.3em",
-      userSelect: "none"
+      color: isDark ? "#ffe082" : "#333",
+      background: isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+      border: `2px solid ${isDark ? "#ffe08280" : "#33333380"}`,
+      borderRadius: "50%",
+      width: "38px",
+      height: "38px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      userSelect: "none",
+      opacity: "0.8",
+      transition: "all 0.25s ease",
     });
+    nav.addEventListener("mouseenter", () => (nav.style.opacity = "1"));
+    nav.addEventListener("mouseleave", () => (nav.style.opacity = "0.8"));
   });
-  document.getElementById("quoteNavPrev").style.left = "0.5em";
-  document.getElementById("quoteNavNext").style.right = "0.5em";
 
-  // Event listener
+  document.getElementById("quoteNavPrev").style.left = "0.7em";
+  document.getElementById("quoteNavNext").style.right = "0.7em";
+
+  // 🎧 Event listener
   const textEl = document.getElementById("quoteText");
   const copyBtn = document.getElementById("copyQuoteBtn");
   const prevBtn = document.getElementById("quoteNavPrev");
@@ -487,7 +501,7 @@ function tampilkanKutipanHurufDemiHuruf() {
         if (!paused) fadeOutText(textEl, tampilkanKutipanSelanjutnya);
       }, 2500);
     }
-  }, Math.floor(Math.random() * 50) + 60);
+  }, Math.floor(Math.random() * 45) + 55);
 }
 
 // 💨 Efek fade-out
@@ -504,7 +518,7 @@ function fadeOutText(el, callback) {
       clearInterval(fade);
       if (callback) callback();
     }
-  }, 25);
+  }, 22);
 }
 
 // ⏸️ Toggle pause/play
@@ -532,7 +546,7 @@ function salinKutipan() {
     const btn = document.getElementById("copyQuoteBtn");
     const oldText = btn.textContent;
     btn.textContent = "✅ Disalin!";
-    setTimeout(() => (btn.textContent = oldText), 1200);
+    setTimeout(() => (btn.textContent = oldText), 1300);
   });
 }
 
