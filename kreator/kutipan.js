@@ -370,192 +370,136 @@ const kutipanList = [
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 
+const kutipanList = [
+  "Dari satu kamera, tersimpan seribu cerita.",
+  "Jangan tunggu viral, buatlah karya yang bernilai.",
+  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
+];
 
-let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
-let kutipanObserver = null;
+let kutipanSisa = [...kutipanList]; // untuk acak tanpa ulang
+let indexKutipan = null;
 
 // 🧩 Setup kutipan
 function setupKutipan() {
   const container = document.getElementById("kutipan");
-  const header = document.querySelector(".header");
-  if (!container || !header) return;
+  if (!container) return;
 
-  // buat inner container dengan tinggi tetap untuk 3-4 baris
-  container.style.minHeight = "5.2em"; // kira-kira 4 baris
+  // gaya container kutipan
+  container.style.minHeight = "5.2em"; // 3-4 baris
   container.style.display = "flex";
   container.style.flexDirection = "column";
   container.style.alignItems = "center";
   container.style.justifyContent = "center";
   container.style.position = "relative";
-  container.innerHTML = `
-    <div class="quote-inner"><span id="quoteText"></span></div>
-    <button id="copyQuoteBtn" style="
-      margin-top:0.6em;
-      padding:6px 14px;
-      border:none;
-      border-radius:10px;
-      background:var(--btn-bg,#333);
-      color:var(--btn-color,#fff);
-      font-size:0.85rem;
-      cursor:pointer;
-      letter-spacing:0.5px;
-      transition:all 0.2s ease;
-    ">Salin Kutipan</button>
-  `;
+  container.style.marginBottom = "1em";
 
-  // tombol navigasi selalu tampil
-  const prevBtn = document.createElement("div");
-  const nextBtn = document.createElement("div");
-  prevBtn.id = "quoteNavPrev";
-  nextBtn.id = "quoteNavNext";
-  prevBtn.innerHTML = "<";
-  nextBtn.innerHTML = ">";
-  prevBtn.style.position = nextBtn.style.position = "absolute";
-  prevBtn.style.left = "5px";
-  nextBtn.style.right = "5px";
-  prevBtn.style.top = nextBtn.style.top = "50%";
-  prevBtn.style.transform = nextBtn.style.transform = "translateY(-50%)";
-  prevBtn.style.cursor = nextBtn.style.cursor = "pointer";
-  prevBtn.style.fontWeight = nextBtn.style.fontWeight = "700";
-  prevBtn.style.fontSize = nextBtn.style.fontSize = "1.2rem";
-  header.appendChild(prevBtn);
-  header.appendChild(nextBtn);
+  // HTML kutipan + tombol
+  container.innerHTML = `
+    <div id="quoteText" style="
+      font-family: 'Poppins','Inter',sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+      transition: color 0.25s ease;
+      white-space: pre-wrap;
+    "></div>
+    <div style="margin-top: 0.6em; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+      <button id="quoteNavPrev" style="
+        padding:6px 12px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:600;
+      ">&lt;</button>
+      <button id="copyQuoteBtn" style="
+        padding:6px 14px;
+        border:none;
+        border-radius:10px;
+        cursor:pointer;
+        font-weight:600;
+      ">Salin Kutipan</button>
+      <button id="quoteNavNext" style="
+        padding:6px 12px;
+        border:none;
+        border-radius:8px;
+        cursor:pointer;
+        font-weight:600;
+      ">&gt;</button>
+    </div>
+  `;
 
   applyQuoteTheme();
 
-  prevBtn.addEventListener("click", tampilkanKutipanSebelumnya);
-  nextBtn.addEventListener("click", tampilkanKutipanSelanjutnya);
-  document.getElementById("quoteText").addEventListener("click", togglePause);
+  document.getElementById("quoteNavPrev").addEventListener("click", tampilkanKutipanSebelumnya);
+  document.getElementById("quoteNavNext").addEventListener("click", tampilkanKutipanBerikutnya);
   document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
 
-  tampilkanKutipanHurufDemiHuruf();
+  tampilkanKutipanAcak();
 }
 
 // 🌗 Terapkan style tema terang/gelap
 function applyQuoteTheme() {
   const isDark = document.body.classList.contains("dark-theme");
   const container = document.getElementById("kutipan");
-  const prevBtn = document.getElementById("quoteNavPrev");
-  const nextBtn = document.getElementById("quoteNavNext");
-  const btn = document.getElementById("copyQuoteBtn");
   if (!container) return;
 
-  // warna kutipan sesuai kode lama agar jelas
-  container.style.color = isDark ? "#ffe082" : "#111";
-  container.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
+  const quoteText = document.getElementById("quoteText");
+  quoteText.style.color = isDark ? "#ffe082" : "#111";
+  quoteText.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
 
-  prevBtn.style.color = nextBtn.style.color = isDark ? "#ffe082" : "#333";
-  btn.style.setProperty("--btn-bg", isDark ? "#444" : "#eee");
-  btn.style.setProperty("--btn-color", isDark ? "#fff" : "#111");
+  const btns = container.querySelectorAll("button");
+  btns.forEach(btn => {
+    btn.style.background = isDark ? "#444" : "#eee";
+    btn.style.color = isDark ? "#fff" : "#111";
+  });
 }
 
 // 🔁 Ganti tema langsung ubah warna kutipan juga
 window.addEventListener("themechange", applyQuoteTheme);
 
+// =========================================================
+// 🧩 Fungsi menampilkan kutipan acak tanpa pengulangan
+// =========================================================
+function tampilkanKutipanAcak() {
+  if (kutipanSisa.length === 0) kutipanSisa = [...kutipanList]; // reset jika habis
+
+  const rndIndex = Math.floor(Math.random() * kutipanSisa.length);
+  indexKutipan = kutipanList.indexOf(kutipanSisa[rndIndex]);
+
+  const quoteText = document.getElementById("quoteText");
+  if (quoteText) quoteText.textContent = kutipanSisa[rndIndex];
+
+  kutipanSisa.splice(rndIndex, 1); // hapus dari sisa agar tidak muncul lagi
+}
+
+// tombol navigasi
+function tampilkanKutipanBerikutnya() {
+  tampilkanKutipanAcak();
+}
+function tampilkanKutipanSebelumnya() {
+  // tampilkan kutipan sebelumnya di list utama (sederhana)
+  if (indexKutipan === null) return;
+  const prevIndex = (indexKutipan - 1 + kutipanList.length) % kutipanList.length;
+  document.getElementById("quoteText").textContent = kutipanList[prevIndex];
+  indexKutipan = prevIndex;
+}
+
+// salin kutipan
+function salinKutipan() {
+  const text = document.getElementById("quoteText")?.textContent || "";
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Kutipan disalin!");
+  });
+}
+
+// =========================================================
 // 🚀 Jalankan setelah halaman siap
+// =========================================================
 window.addEventListener("DOMContentLoaded", () => {
   setupKutipan();
-  setupKutipanObserver();
-  tampilkanDataSeasonAwal(); // otomatis load data season, hadiah, poin, aturan
+  tampilkanDataSeasonAwal();
 });
-
-// =========================================================
-// 🧩 Observer agar kutipan mulai saat terlihat
-// =========================================================
-function setupKutipanObserver() {
-  const kutipanEl = document.getElementById("kutipan");
-  if (!kutipanEl) return;
-
-  if (kutipanObserver) {
-    try { kutipanObserver.disconnect(); } catch (e) {}
-    kutipanObserver = null;
-  }
-
-  kutipanObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) startKutipanIfVisible();
-      else stopKutipan();
-    });
-  }, { threshold: 0.45 });
-
-  kutipanObserver.observe(kutipanEl);
-}
-
-function startKutipanIfVisible() {
-  const el = document.getElementById("kutipan");
-  if (!el) return;
-  const rect = el.getBoundingClientRect();
-  const inView = rect.top < window.innerHeight && rect.bottom > 0;
-  if (inView) tampilkanKutipanHurufDemiHuruf();
-  else el.textContent = "";
-}
-
-function stopKutipan() {
-  const el = document.getElementById("kutipan");
-  if (el) el.textContent = "";
-  if (intervalHuruf) {
-    clearInterval(intervalHuruf);
-    intervalHuruf = null;
-  }
-}
-
-// =========================================================
-// 🧩 Tampilkan kutipan huruf demi huruf
-// =========================================================
-function tampilkanKutipanHurufDemiHuruf() {
-  const el = document.getElementById("kutipan");
-  if (!el) return;
-
-  if (intervalHuruf) {
-    clearInterval(intervalHuruf);
-    intervalHuruf = null;
-  }
-
-  const teks = kutipanList[indexKutipan] || "";
-  const isDark = document.body.classList.contains('dark-theme');
-
-  el.innerHTML = ""; // reset
-  el.style.fontFamily = "'Poppins','Inter',sans-serif";
-  el.style.fontSize = "1.2rem";
-  el.style.fontWeight = "600";
-  el.style.textAlign = "center";
-  el.style.transition = "color 0.25s ease";
-  el.style.color = isDark ? "#ffe082" : "#111";
-  el.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
-
-  const textSpan = document.createElement('span');
-  textSpan.style.color = 'inherit';
-  textSpan.style.whiteSpace = 'pre-wrap';
-  el.appendChild(textSpan);
-
-  const cursor = document.createElement("span");
-  cursor.textContent = "|";
-  cursor.style.color = isDark ? "#ffd54f" : "#444";
-  cursor.style.marginLeft = "2px";
-  el.appendChild(cursor);
-
-  indexHuruf = 0;
-  intervalHuruf = setInterval(() => {
-    const rect = el.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-    if (!inView) {
-      stopKutipan();
-      return;
-    }
-
-    if (indexHuruf < teks.length) {
-      textSpan.textContent += teks[indexHuruf];
-      indexHuruf++;
-    } else {
-      clearInterval(intervalHuruf);
-      intervalHuruf = null;
-      setTimeout(() => {
-        indexKutipan = (indexKutipan + 1) % kutipanList.length;
-        tampilkanKutipanHurufDemiHuruf();
-      }, 3000);
-    }
-  }, 80);
-}
 
 // =========================================================
 // 🧩 AUTO LOAD DATA SEASON SAAT HALAMAN DIBUKA
@@ -566,6 +510,6 @@ function tampilkanDataSeasonAwal() {
   const seasonAktif = select.value || select.options[0]?.value;
   if (seasonAktif) {
     select.value = seasonAktif;
-    gantiSeason?.(); // panggil fungsi update hadiah/poin/aturan jika ada
+    gantiSeason?.();
   }
 }
