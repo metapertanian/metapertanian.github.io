@@ -131,7 +131,7 @@ function tampilkanKutipanHurufDemiHuruf() {
   const teks = kutipanList[indexKutipan] || "";
   const isDark = document.body.classList.contains("dark-theme");
 
-  // gaya dasar aman agar layout tidak bergeser
+  // gaya aman agar layout tetap stabil
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
@@ -145,8 +145,8 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.alignItems = "center";
   elemen.style.flexDirection = "column";
   elemen.style.lineHeight = "1.8";
-  elemen.style.position = "relative"; // penting: posisi relatif agar kursor tetap di area
-  elemen.style.overflow = "hidden";   // cegah geser vertikal luar
+  elemen.style.position = "relative";
+  elemen.style.overflow = "hidden";
 
   elemen.innerHTML = "";
 
@@ -179,21 +179,23 @@ function tampilkanKutipanHurufDemiHuruf() {
     document.head.appendChild(styleBlink);
   }
 
-  // perbarui posisi kursor tanpa mengubah tinggi kontainer
+  // ======== Update kursor agar selalu menempel di huruf terakhir =========
   function updateCursorPosition() {
-    const range = document.createRange();
-    const sel = window.getSelection();
-    range.selectNodeContents(textSpan);
-    range.collapse(false);
-    const rect = range.getClientRects()[range.getClientRects().length - 1];
-    if (rect) {
-      cursor.style.left = rect.right - elemen.getBoundingClientRect().left + "px";
-      cursor.style.top = rect.top - elemen.getBoundingClientRect().top + "px";
-    } else {
-      // jika teks kosong, posisikan kursor di tengah
-      cursor.style.left = "50%";
-      cursor.style.top = "50%";
-    }
+    requestAnimationFrame(() => {
+      const range = document.createRange();
+      range.selectNodeContents(textSpan);
+      range.collapse(false);
+      const rects = range.getClientRects();
+      const rect = rects[rects.length - 1];
+      if (rect) {
+        const parentRect = elemen.getBoundingClientRect();
+        cursor.style.left = (rect.right - parentRect.left) + "px";
+        cursor.style.top = (rect.bottom - parentRect.top - 22) + "px"; // offset kecil biar sejajar huruf
+      } else {
+        cursor.style.left = "50%";
+        cursor.style.top = "50%";
+      }
+    });
   }
 
   indexHuruf = 0;
