@@ -74,7 +74,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 
 
 // =========================================================
-// 💬 Kutipan Bergantian (fade delete + cursor mengikuti baris terakhir, tanpa geser elemen luar)
+// 💬 Kutipan Bergantian (fade delete + cursor mengikuti teks terakhir, tanpa geser elemen luar)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -132,39 +132,46 @@ function tampilkanKutipanHurufDemiHuruf() {
   const isDark = document.body.classList.contains("dark-theme");
 
   // gaya aman agar layout tetap stabil
-  elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
-  elemen.style.fontSize = "1.2rem";
-  elemen.style.fontWeight = "600";
-  elemen.style.textAlign = "center";
-  elemen.style.transition = "color 0.25s ease";
-  elemen.style.color = isDark ? "#ffe082" : "#111";
-  elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
-  elemen.style.minHeight = "4.2em";
-  elemen.style.display = "flex";
-  elemen.style.justifyContent = "center";
-  elemen.style.alignItems = "center";
-  elemen.style.flexDirection = "column";
-  elemen.style.lineHeight = "1.8";
-  elemen.style.position = "relative";
-  elemen.style.overflow = "hidden";
+  Object.assign(elemen.style, {
+    fontFamily: "'Poppins','Inter',sans-serif",
+    fontSize: "1.2rem",
+    fontWeight: "600",
+    textAlign: "center",
+    transition: "color 0.25s ease",
+    color: isDark ? "#ffe082" : "#111",
+    textShadow: isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none",
+    minHeight: "4.2em",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    lineHeight: "1.8",
+    position: "relative",
+    overflow: "hidden"
+  });
 
   elemen.innerHTML = "";
 
   const textSpan = document.createElement("span");
-  textSpan.style.color = "inherit";
-  textSpan.style.whiteSpace = "pre-wrap";
-  textSpan.style.wordBreak = "break-word";
-  textSpan.style.display = "inline-block";
-  textSpan.style.maxWidth = "90%";
+  Object.assign(textSpan.style, {
+    color: "inherit",
+    whiteSpace: "pre-wrap",
+    wordBreak: "break-word",
+    display: "inline-block",
+    maxWidth: "90%",
+    textAlign: "center"
+  });
   elemen.appendChild(textSpan);
 
   const cursor = document.createElement("span");
   cursor.textContent = "|";
-  cursor.style.position = "absolute";
-  cursor.style.animation = "blinkCursor 0.8s steps(1) infinite";
-  cursor.style.fontWeight = "400";
-  cursor.style.color = isDark ? "#ffd54f" : "#333";
-  cursor.style.transition = "left 0.1s, top 0.1s";
+  Object.assign(cursor.style, {
+    position: "absolute",
+    animation: "blinkCursor 0.8s steps(1) infinite",
+    fontWeight: "400",
+    color: isDark ? "#ffd54f" : "#333",
+    transition: "left 0.1s, top 0.1s"
+  });
   elemen.appendChild(cursor);
 
   if (!document.getElementById("blink-style")) {
@@ -179,19 +186,24 @@ function tampilkanKutipanHurufDemiHuruf() {
     document.head.appendChild(styleBlink);
   }
 
-  // ======== Update kursor agar selalu menempel di huruf terakhir =========
+  // ======== Update posisi kursor agar selalu mengikuti teks terakhir ========
   function updateCursorPosition() {
     requestAnimationFrame(() => {
       const range = document.createRange();
       range.selectNodeContents(textSpan);
       range.collapse(false);
       const rects = range.getClientRects();
-      const rect = rects[rects.length - 1];
-      if (rect) {
-        const parentRect = elemen.getBoundingClientRect();
-        cursor.style.left = (rect.right - parentRect.left) + "px";
-        cursor.style.top = (rect.bottom - parentRect.top - 22) + "px"; // offset kecil biar sejajar huruf
+      const lastRect = rects[rects.length - 1];
+      const parentRect = elemen.getBoundingClientRect();
+
+      if (lastRect) {
+        // hitung posisi relatif di tengah (karena textAlign: center)
+        const textRect = textSpan.getBoundingClientRect();
+        const offsetX = (parentRect.width - textRect.width) / 2;
+        cursor.style.left = (lastRect.right - parentRect.left - offsetX) + "px";
+        cursor.style.top = (lastRect.bottom - parentRect.top - textSpan.offsetHeight / rects.length) + "px";
       } else {
+        // fallback: posisikan di tengah
         cursor.style.left = "50%";
         cursor.style.top = "50%";
       }
