@@ -73,7 +73,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // =========================================================
-// 💬 Kutipan Bergantian (fade delete + tinggi tetap)
+// 💬 Kutipan Bergantian (fade delete + tinggi tetap + cursor realistis)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
@@ -95,11 +95,8 @@ function setupKutipanObserver() {
 
   kutipanObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        startKutipanIfVisible();
-      } else {
-        stopKutipan();
-      }
+      if (entry.isIntersecting) startKutipanIfVisible();
+      else stopKutipan();
     });
   }, { threshold: 0.45 });
 
@@ -111,11 +108,8 @@ function startKutipanIfVisible() {
   if (!kutipanEl) return;
   const rect = kutipanEl.getBoundingClientRect();
   const inView = rect.top < window.innerHeight && rect.bottom > 0;
-  if (inView) {
-    tampilkanKutipanHurufDemiHuruf();
-  } else {
-    kutipanEl.textContent = "";
-  }
+  if (inView) tampilkanKutipanHurufDemiHuruf();
+  else kutipanEl.textContent = "";
 }
 
 function stopKutipan() {
@@ -131,11 +125,10 @@ function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   if (!elemen) return;
 
-  // stop interval lama
   if (intervalHuruf) clearInterval(intervalHuruf);
 
   const teks = kutipanList[indexKutipan] || "";
-  const isDark = document.body.classList.contains('dark-theme');
+  const isDark = document.body.classList.contains("dark-theme");
 
   // gaya dasar
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
@@ -145,14 +138,14 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.transition = "color 0.25s ease";
   elemen.style.color = isDark ? "#ffe082" : "#111";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
-  elemen.style.minHeight = "4.2em"; // kira-kira 3 baris teks tetap
+  elemen.style.minHeight = "4.2em"; // tinggi tetap
   elemen.style.display = "flex";
-  elemen.style.flexDirection = "column";
+  elemen.style.flexDirection = "row";
   elemen.style.alignItems = "center";
   elemen.style.justifyContent = "center";
 
-  // isi
   elemen.innerHTML = "";
+
   const textSpan = document.createElement("span");
   textSpan.style.color = "inherit";
   textSpan.style.whiteSpace = "pre-wrap";
@@ -162,7 +155,19 @@ function tampilkanKutipanHurufDemiHuruf() {
   cursor.textContent = "|";
   cursor.style.color = isDark ? "#ffd54f" : "#444";
   cursor.style.marginLeft = "2px";
+  cursor.style.fontWeight = "400";
+  cursor.style.animation = "blinkCursor 0.8s steps(1) infinite";
   elemen.appendChild(cursor);
+
+  // animasi kedipan kursor
+  const styleBlink = document.createElement("style");
+  styleBlink.textContent = `
+    @keyframes blinkCursor {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+  `;
+  document.head.appendChild(styleBlink);
 
   indexHuruf = 0;
   intervalHuruf = setInterval(() => {
@@ -180,21 +185,19 @@ function tampilkanKutipanHurufDemiHuruf() {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
       setTimeout(() => {
-        // Mulai efek hapus perlahan
         fadeOutText(textSpan, () => {
           indexKutipan = (indexKutipan + 1) % kutipanList.length;
           tampilkanKutipanHurufDemiHuruf();
         });
       }, 2500);
     }
-  }, 80);
+  }, Math.floor(Math.random() * 50) + 60); // variasi kecepatan nyata
 }
 
 // efek menghapus huruf perlahan
 function fadeOutText(textSpan, callback) {
   let text = textSpan.textContent;
-  const total = text.length;
-  let i = total;
+  let i = text.length;
 
   const fadeInterval = setInterval(() => {
     if (i > 0) {
