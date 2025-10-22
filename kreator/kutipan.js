@@ -367,3 +367,186 @@ const kutipanList = [
   "Cinta itu kayak algoritma misterius — makin dipahami makin rumit."
 ];
 
+
+
+// =========================================================
+// 💬 KUTIPAN BERGANTIAN INTERAKTIF
+// =========================================================
+// ✅ Fitur:
+// - Font Awesome icon di kiri-kanan kutipan
+// - Tap: pause / resume
+// - Saat pause: tampil penuh + tombol salin
+// - Tombol (<) dan (>) untuk navigasi kutipan
+// =========================================================
+
+let indexKutipan = 0;
+let intervalHuruf = null;
+let paused = false;
+
+// 🧩 Inisialisasi kutipan
+function setupKutipan() {
+  const container = document.getElementById("kutipan");
+  if (!container) return;
+
+  // Bersihkan isi
+  container.innerHTML = "";
+
+  // Tambahkan ikon kutipan & struktur elemen
+  container.innerHTML = `
+    <div id="quoteNavPrev" class="quote-nav">&lt;</div>
+    <div class="quote-inner">
+      <i class="fa-solid fa-quote-left"></i>
+      <span id="quoteText"></span>
+      <i class="fa-solid fa-quote-right"></i>
+    </div>
+    <div id="quoteNavNext" class="quote-nav">&gt;</div>
+    <button id="copyQuoteBtn" style="
+      display:none;
+      margin-top:0.6em;
+      padding:6px 12px;
+      border:none;
+      border-radius:8px;
+      background:#444;
+      color:#fff;
+      font-size:0.85rem;
+      cursor:pointer;
+    ">Salin Kutipan</button>
+  `;
+
+  Object.assign(container.style, {
+    fontFamily: "'Poppins','Inter',sans-serif",
+    fontSize: "1.1rem",
+    fontWeight: "600",
+    textAlign: "center",
+    color: document.body.classList.contains("dark-theme") ? "#ffe082" : "#111",
+    textShadow: document.body.classList.contains("dark-theme") ? "0 0 8px rgba(255,255,255,0.25)" : "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+    flexDirection: "column",
+    minHeight: "5em",
+    padding: "1em",
+    overflow: "hidden"
+  });
+
+  document.querySelectorAll(".quote-nav").forEach(nav => {
+    Object.assign(nav.style, {
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      fontSize: "1.5rem",
+      cursor: "pointer",
+      color: "inherit",
+      opacity: "0.7",
+      padding: "0.3em",
+      userSelect: "none"
+    });
+  });
+  document.getElementById("quoteNavPrev").style.left = "0.5em";
+  document.getElementById("quoteNavNext").style.right = "0.5em";
+
+  // Event listener
+  const textEl = document.getElementById("quoteText");
+  const copyBtn = document.getElementById("copyQuoteBtn");
+  const prevBtn = document.getElementById("quoteNavPrev");
+  const nextBtn = document.getElementById("quoteNavNext");
+
+  textEl.addEventListener("click", () => togglePause());
+  prevBtn.addEventListener("click", () => tampilkanKutipanSebelumnya());
+  nextBtn.addEventListener("click", () => tampilkanKutipanSelanjutnya());
+  copyBtn.addEventListener("click", () => salinKutipan());
+
+  tampilkanKutipanHurufDemiHuruf();
+}
+
+// 🎞️ Menampilkan kutipan huruf demi huruf
+function tampilkanKutipanHurufDemiHuruf() {
+  const textEl = document.getElementById("quoteText");
+  const copyBtn = document.getElementById("copyQuoteBtn");
+  if (!textEl) return;
+
+  // reset
+  textEl.textContent = "";
+  copyBtn.style.display = "none";
+
+  if (intervalHuruf) clearInterval(intervalHuruf);
+
+  const teks = kutipanList[indexKutipan] || "";
+  let indexHuruf = 0;
+
+  intervalHuruf = setInterval(() => {
+    if (paused) return; // berhenti saat pause
+    if (indexHuruf < teks.length) {
+      textEl.textContent += teks[indexHuruf];
+      indexHuruf++;
+    } else {
+      clearInterval(intervalHuruf);
+      intervalHuruf = null;
+      setTimeout(() => {
+        if (!paused) fadeOutText(textEl, tampilkanKutipanSelanjutnya);
+      }, 2500);
+    }
+  }, Math.floor(Math.random() * 50) + 60);
+}
+
+// 💨 Efek fade-out
+function fadeOutText(el, callback) {
+  let text = el.textContent;
+  let i = text.length;
+  const fade = setInterval(() => {
+    if (paused) return;
+    if (i > 0) {
+      text = text.slice(0, i - 1);
+      el.textContent = text;
+      i--;
+    } else {
+      clearInterval(fade);
+      if (callback) callback();
+    }
+  }, 25);
+}
+
+// ⏸️ Toggle pause/play
+function togglePause() {
+  const copyBtn = document.getElementById("copyQuoteBtn");
+  const textEl = document.getElementById("quoteText");
+  const teks = kutipanList[indexKutipan] || "";
+
+  if (!paused) {
+    paused = true;
+    if (intervalHuruf) clearInterval(intervalHuruf);
+    textEl.textContent = teks; // tampil penuh
+    copyBtn.style.display = "inline-block";
+  } else {
+    paused = false;
+    copyBtn.style.display = "none";
+    fadeOutText(textEl, tampilkanKutipanSelanjutnya);
+  }
+}
+
+// 📋 Salin kutipan ke clipboard
+function salinKutipan() {
+  const teks = kutipanList[indexKutipan] || "";
+  navigator.clipboard.writeText(teks).then(() => {
+    const btn = document.getElementById("copyQuoteBtn");
+    const oldText = btn.textContent;
+    btn.textContent = "✅ Disalin!";
+    setTimeout(() => (btn.textContent = oldText), 1200);
+  });
+}
+
+// ⬅️ Kutipan sebelumnya
+function tampilkanKutipanSebelumnya() {
+  indexKutipan = (indexKutipan - 1 + kutipanList.length) % kutipanList.length;
+  tampilkanKutipanHurufDemiHuruf();
+}
+
+// ➡️ Kutipan selanjutnya
+function tampilkanKutipanSelanjutnya() {
+  indexKutipan = (indexKutipan + 1) % kutipanList.length;
+  tampilkanKutipanHurufDemiHuruf();
+}
+
+// 🚀 Jalankan setelah halaman siap
+window.addEventListener("DOMContentLoaded", setupKutipan);
