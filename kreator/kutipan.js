@@ -1,8 +1,5 @@
 const kutipanList = [
   // ===== KUTIPAN ORIGINAL UNTUK KREATOR =====
-  "Dari satu kamera, tersimpan seribu cerita.",
-  "Jangan tunggu viral, buatlah karya yang bernilai.",
-  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
   "Konten hebat bukan karena alatnya, tapi niatnya.",
   "Konsisten lebih kuat dari sekadar inspirasi.",
   "Setiap upload adalah langkah menuju versi terbaikmu.",
