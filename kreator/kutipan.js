@@ -370,8 +370,14 @@ const kutipanList = [
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 
+const kutipanList = [
+  "Dari satu kamera, tersimpan seribu cerita.",
+  "Jangan tunggu viral, buatlah karya yang bernilai.",
+  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
+];
 
-let kutipanSisa = [...kutipanList]; // untuk acak tanpa pengulangan
+let kutipanSisa = [...kutipanList]; // untuk acak tanpa ulang
+let historyKutipan = []; // simpan urutan yang sudah tampil
 let indexKutipan = null;
 let intervalHuruf = null;
 let paused = false;
@@ -381,7 +387,7 @@ function setupKutipan() {
   const container = document.getElementById("kutipan");
   if (!container) return;
 
-  container.style.minHeight = "5.2em"; // 3-4 baris
+  container.style.minHeight = "5.2em";
   container.style.display = "flex";
   container.style.flexDirection = "column";
   container.style.alignItems = "center";
@@ -408,10 +414,16 @@ function setupKutipan() {
 
   applyQuoteTheme();
 
-  document.getElementById("quoteText").addEventListener("click", togglePause);
-  document.getElementById("quoteNavPrev").addEventListener("click", () => { stopKutipan(); tampilkanKutipanSebelumnya(); });
-  document.getElementById("quoteNavNext").addEventListener("click", () => { stopKutipan(); tampilkanKutipanBerikutnya(); });
+  document.getElementById("quoteNavPrev").addEventListener("click", () => {
+    stopKutipan();
+    tampilkanKutipanSebelumnya();
+  });
+  document.getElementById("quoteNavNext").addEventListener("click", () => {
+    stopKutipan();
+    tampilkanKutipanBerikutnya();
+  });
   document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
+  document.getElementById("quoteText").addEventListener("click", togglePause);
 
   tampilkanKutipanAcak();
 }
@@ -423,7 +435,7 @@ function applyQuoteTheme() {
   if (!container) return;
 
   const quoteText = document.getElementById("quoteText");
-  quoteText.style.color = isDark ? "#ffe082" : "#111";
+  quoteText.style.color = isDark ? "#ffe082" : "#111"; // bisa diganti kode warna Anda
   quoteText.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
 
   const btns = container.querySelectorAll("button");
@@ -436,12 +448,18 @@ function applyQuoteTheme() {
 window.addEventListener("themechange", applyQuoteTheme);
 
 // =========================================================
-// 🧩 Tampilkan kutipan acak huruf demi huruf
+// 🧩 Tampilkan kutipan huruf demi huruf dengan sejarah
 // =========================================================
 function tampilkanKutipanAcak() {
-  if (kutipanSisa.length === 0) kutipanSisa = [...kutipanList];
+  if (kutipanSisa.length === 0) {
+    kutipanSisa = [...kutipanList];
+    historyKutipan = [];
+  }
+
   const rndIndex = Math.floor(Math.random() * kutipanSisa.length);
   indexKutipan = kutipanList.indexOf(kutipanSisa[rndIndex]);
+  historyKutipan.push(indexKutipan);
+
   startTyping(kutipanSisa[rndIndex]);
   kutipanSisa.splice(rndIndex, 1);
 }
@@ -463,7 +481,7 @@ function startTyping(teks) {
     } else {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
-      btns.style.visibility = "visible"; // tombol muncul setelah selesai
+      btns.style.visibility = "visible";
     }
   }, 60);
 }
@@ -472,8 +490,9 @@ function stopKutipan() {
   clearInterval(intervalHuruf);
   intervalHuruf = null;
   paused = true;
-  const quoteText = document.getElementById("quoteText");
-  if (indexKutipan !== null) quoteText.textContent = kutipanList[indexKutipan];
+  if (indexKutipan !== null) {
+    document.getElementById("quoteText").textContent = kutipanList[indexKutipan];
+  }
   document.getElementById("quoteBtns").style.visibility = "visible";
 }
 
@@ -485,24 +504,33 @@ function togglePause() {
   }
 }
 
-// tombol navigasi
-function tampilkanKutipanBerikutnya() { tampilkanKutipanAcak(); }
-function tampilkanKutipanSebelumnya() {
-  if (indexKutipan === null) return;
-  const prevIndex = (indexKutipan - 1 + kutipanList.length) % kutipanList.length;
-  startTyping(kutipanList[prevIndex]);
-  indexKutipan = prevIndex;
+// =========================================================
+// 🧩 Navigasi Prev/Next
+// =========================================================
+function tampilkanKutipanBerikutnya() {
+  tampilkanKutipanAcak();
 }
 
-// salin kutipan
-function salinKutipan() {
-  const text = document.getElementById("quoteText")?.textContent || "";
-  if (!text) return;
-  navigator.clipboard.writeText(text).then(() => { alert("Kutipan disalin!"); });
+function tampilkanKutipanSebelumnya() {
+  if (historyKutipan.length < 2) return;
+  // hapus indeks terakhir
+  historyKutipan.pop();
+  const prevIndex = historyKutipan[historyKutipan.length - 1];
+  indexKutipan = prevIndex;
+  startTyping(kutipanList[prevIndex]);
 }
 
 // =========================================================
-// 🚀 Jalankan setelah halaman siap
+// 🧩 Salin kutipan
+// =========================================================
+function salinKutipan() {
+  const text = document.getElementById("quoteText")?.textContent || "";
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => alert("Kutipan disalin!"));
+}
+
+// =========================================================
+// 🚀 Jalankan saat DOM siap
 // =========================================================
 window.addEventListener("DOMContentLoaded", () => {
   setupKutipan();
@@ -510,7 +538,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // =========================================================
-// 🧩 AUTO LOAD DATA SEASON SAAT HALAMAN DIBUKA
+// 🧩 Auto load data season
 // =========================================================
 function tampilkanDataSeasonAwal() {
   const select = document.getElementById("seasonSelect") || document.getElementById("season");
@@ -518,6 +546,6 @@ function tampilkanDataSeasonAwal() {
   const seasonAktif = select.value || select.options[0]?.value;
   if (seasonAktif) {
     select.value = seasonAktif;
-    if (typeof gantiSeason === "function") gantiSeason(); // langsung load data season/poin/hadiah/aturan
+    gantiSeason?.();
   }
 }
