@@ -1,4 +1,6 @@
-/* ===================== RESET ===================== */
+/* =========================================================
+   🌿 RESET
+========================================================= */
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +12,9 @@ html, body {
   scroll-behavior: smooth;
 }
 
-/* ===================== THEME VARIABLES ===================== */
+/* =========================================================
+   🎨 THEME VARIABLES
+========================================================= */
 :root {
   /* ===== Tema Terang ===== */
   --bg-gradient: linear-gradient(160deg, #eef9f1, #ffffff);
@@ -19,29 +23,31 @@ html, body {
   --accent-primary: #2e7d32;
   --accent-secondary: #4caf50;
   --highlight: #1e88e5;
-  --card-bg: rgba(255, 255, 255, 0.85);
+  --card-bg: #ffffff;
   --navbar-bg: linear-gradient(90deg, #43a047, #66bb6a);
   --border-glow: #2e7d32;
   --link-color: #1565c0;
-  --shadow: rgba(0, 0, 0, 0.08);
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
 body.dark-theme {
   /* ===== Tema Gelap ===== */
   --bg-gradient: linear-gradient(160deg, #001a17, #000);
   --text-main: #f5f5f5;
-  --text-sub: #c9c9c9;
+  --text-sub: #bdbdbd;
   --accent-primary: #1b5e20;
   --accent-secondary: #2e7d32;
   --highlight: #4fc3f7;
-  --card-bg: rgba(24, 24, 24, 0.9);
+  --card-bg: #141414;
   --navbar-bg: linear-gradient(90deg, #1b5e20, #2e7d32);
   --border-glow: #00ffb7;
   --link-color: #81d4fa;
-  --shadow: rgba(0, 0, 0, 0.4);
+  --shadow: rgba(0, 0, 0, 0.5);
 }
 
-/* ===================== BODY ===================== */
+/* =========================================================
+   👊 BODY
+========================================================= */
 body {
   font-family: 'Poppins', 'Segoe UI', sans-serif;
   background: var(--bg-gradient);
@@ -51,46 +57,46 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  transition: background 0.4s, color 0.4s;
+  transition: background 0.5s, color 0.4s;
 }
 
-/* ===================== NAVBAR ===================== */
+/* =========================================================
+   🌿 NAVBAR
+========================================================= */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   background: var(--navbar-bg);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 28px;
+  padding: 14px 30px;
   z-index: 1000;
-  box-shadow: 0 3px 10px var(--shadow);
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-  transition: background 0.4s, box-shadow 0.3s;
+  box-shadow: 0 3px 8px var(--shadow);
+  transition: box-shadow 0.3s ease;
 }
 .nav:hover {
-  box-shadow: 0 4px 16px var(--shadow);
+  box-shadow: 0 4px 14px var(--shadow);
 }
 .nav-brand {
-  font-size: 1.35rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: white;
+  color: #fff;
   text-decoration: none;
-  letter-spacing: 0.5px;
 }
 .nav-links {
   display: flex;
   gap: 22px;
 }
 .nav-links a {
-  color: white;
+  color: #fff;
   text-decoration: none;
   font-weight: 500;
   transition: 0.3s;
 }
 .nav-links a:hover {
-  color: #e0f7fa;
+  color: #c8f7c5;
   transform: translateY(-2px);
 }
 .nav-toggle {
@@ -104,13 +110,13 @@ body {
 @media (max-width: 768px) {
   .nav-links {
     position: absolute;
-    top: 60px;
+    top: 58px;
     right: 0;
     flex-direction: column;
     background: var(--accent-secondary);
-    border-radius: 0 0 10px 10px;
+    border-radius: 0 0 12px 12px;
     width: 200px;
-    padding: 15px;
+    padding: 14px;
     gap: 15px;
     max-height: 0;
     overflow: hidden;
@@ -126,7 +132,9 @@ body {
   .nav-toggle { display: block; }
 }
 
-/* ===================== HEADER ===================== */
+/* =========================================================
+   👤 HEADER
+========================================================= */
 .header {
   text-align: center;
   margin-top: 10px;
@@ -136,26 +144,23 @@ body {
   height: 120px;
   border-radius: 50%;
   border: 3px solid var(--border-glow);
-  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   margin-bottom: 10px;
-  transition: transform 0.4s, border-color 0.4s;
+  transition: transform 0.4s;
 }
-.profil-img:hover {
-  transform: scale(1.05);
-}
+.profil-img:hover { transform: scale(1.06); }
 .kutipan {
   font-size: 1rem;
   color: var(--highlight);
   font-weight: 600;
-  min-height: 24px;
-  animation: fadeIn 1.5s ease;
   margin-bottom: 15px;
+  animation: fadeIn 1.4s ease;
 }
-.season-select {
-  margin-top: 10px;
-}
+.season-select { margin-top: 8px; }
 
-/* ===================== SECTION ===================== */
+/* =========================================================
+   🧩 SECTION
+========================================================= */
 section {
   margin-top: 40px;
 }
@@ -163,20 +168,21 @@ h2 {
   color: var(--highlight);
   text-align: center;
   margin-bottom: 24px;
-  transition: color 0.4s;
   font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
-/* ===================== PESERTA ===================== */
+/* =========================================================
+   🧮 PESERTA CARD
+========================================================= */
 .peserta {
-  opacity: 0;
-  transform: translateY(30px);
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 22px;
   margin-bottom: 25px;
-  box-shadow: 0 4px 10px var(--shadow);
+  box-shadow: 0 4px 14px var(--shadow);
+  opacity: 0;
+  transform: translateY(25px);
   transition: all 0.5s ease;
   color: var(--text-main);
 }
@@ -185,148 +191,153 @@ h2 {
   transform: translateY(0);
 }
 .peserta:hover {
-  transform: translateY(-5px);
-  filter: brightness(1.05);
-  box-shadow: 0 6px 15px var(--shadow);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 22px var(--shadow);
 }
 .peserta .rank {
   font-weight: bold;
   color: var(--accent-secondary);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 .peserta .nama {
   font-size: 1.35rem;
-  margin: 4px 0;
   font-weight: 700;
+  margin: 6px 0;
 }
 .peserta .nilai {
-  font-size: 0.95em;
-  opacity: 0.95;
-  line-height: 1.6;
+  font-size: 0.95rem;
   color: var(--text-sub);
+  line-height: 1.6;
 }
 .peserta .nilai span {
   font-weight: 600;
   color: var(--highlight);
 }
-.peserta .link {
-  display: block;
+.peserta .total {
+  font-weight: 700;
+  color: var(--highlight);
+  font-size: 1.2em;
   margin-top: 8px;
+}
+.peserta .link {
+  display: inline-block;
+  margin-top: 10px;
   color: var(--link-color);
   text-decoration: none;
-  font-size: 0.9em;
-  transition: 0.3s;
+  font-size: 0.9rem;
+  transition: color 0.3s;
 }
 .peserta .link:hover {
+  color: var(--highlight);
   text-decoration: underline;
-  color: var(--highlight);
-}
-.peserta .total {
-  font-weight: bold;
-  color: var(--highlight);
-  margin-top: 8px;
-  font-size: 1.2em;
-  text-shadow: 0 0 6px rgba(0,0,0,0.2);
 }
 
-/* ===================== HADIAH JUARA ===================== */
+/* =========================================================
+   🏆 HADIAH CARD
+========================================================= */
 #hadiahList {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
-  max-width: 600px;
+  gap: 20px;
+  max-width: 620px;
   margin: 0 auto;
 }
+
 .hadiah-card {
   background: var(--card-bg);
   color: var(--text-main);
   border-left: 6px solid var(--accent-secondary);
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 3px 10px var(--shadow);
-  transition: 0.3s ease;
+  border-radius: 16px;
+  padding: 22px 24px;
+  box-shadow: 0 6px 18px var(--shadow);
+  transform: translateY(25px);
   opacity: 0;
-  transform: translateY(20px);
   animation: fadeInUp 0.6s ease forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .hadiah-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 18px var(--shadow);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 26px var(--shadow);
 }
 .hadiah-card .judul {
-  font-weight: bold;
-  font-size: 1.1em;
-  margin-bottom: 6px;
+  font-weight: 700;
+  font-size: 1.15em;
   color: var(--accent-secondary);
+  margin-bottom: 6px;
 }
 .hadiah-card .isi {
-  font-size: 0.95em;
-  opacity: 0.9;
-  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: var(--text-sub);
+  margin-bottom: 8px;
 }
 .hadiah-card .juara {
   display: inline-block;
-  font-size: 0.85em;
+  font-size: 0.9em;
   background: var(--accent-primary);
-  padding: 4px 12px;
+  padding: 5px 14px;
   border-radius: 8px;
-  color: white;
+  color: #fff;
   font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
-/* ===================== FOOTER ===================== */
+/* =========================================================
+   ⚡ FOOTER
+========================================================= */
 footer {
   text-align: center;
   margin-top: auto;
-  padding: 30px 10px 20px;
+  padding: 30px 10px 25px;
   font-size: 0.9rem;
   color: var(--text-sub);
-  border-top: 1px solid rgba(255,255,255,0.1);
-  background: transparent;
+  background: none;
 }
 
-/* ===================== ANIMASI ===================== */
+/* =========================================================
+   ✨ ANIMASI
+========================================================= */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* ===================== PAGINATION ===================== */
+/* =========================================================
+   ⏩ PAGINATION
+========================================================= */
 #pagination {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
   margin-top: 25px;
 }
 #pagination button {
   background: var(--accent-primary);
   border: none;
-  color: white;
-  padding: 8px 14px;
+  color: #fff;
+  padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
-  box-shadow: 0 2px 6px var(--shadow);
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px var(--shadow);
 }
 #pagination button:hover {
   background: var(--accent-secondary);
   transform: translateY(-2px);
 }
 
-/* ===================== CURSOR ===================== */
+/* =========================================================
+   💡 CURSOR
+========================================================= */
 .cursor {
   display: inline-block;
   animation: blink 0.8s infinite;
   color: var(--accent-secondary);
 }
 @keyframes blink {
-  0%,50%,100% { opacity: 1; }
-  25%,75% { opacity: 0; }
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
 }
