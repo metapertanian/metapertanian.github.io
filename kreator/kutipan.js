@@ -92,7 +92,6 @@ const kutipanList = [
   "Karya hebat selalu dimulai dari keberanian kecil.",
   "Berkarya bukan karena harus, tapi karena ingin berbagi.",
   "Kreator bukan sekadar pembuat konten — dia pembentuk masa depan.",
-
   // ===== KUTIPAN DARI TOKOH DUNIA =====
   "“Creativity is intelligence having fun.” – Albert Einstein",
   "“The best way to predict the future is to create it.” – Peter Drucker",
@@ -114,7 +113,6 @@ const kutipanList = [
   "“Start where you are. Use what you have. Do what you can.” – Arthur Ashe",
   "“Inspiration exists, but it has to find you working.” – Pablo Picasso",
   "“Every artist was first an amateur.” – Ralph Waldo Emerson",
-
 // ===== TAMBAHAN 100 KUTIPAN =====
   "Kamera tak pernah bohong, tapi bisa menangkap kebohongan dengan indah.",
   "Kalau ide tak datang, pergi menyapu dulu — kadang inspirasi muncul saat bekerja.",
@@ -273,4 +271,3 @@ const kutipanList = [
   "Jangan tunggu sempurna untuk mulai, mulai dulu untuk jadi sempurna. — Najwa Shihab",
   "Karya tak pernah bohong, ia menunjukkan siapa dirimu sebenarnya. — Ernest Prakasa"
 ];
-
