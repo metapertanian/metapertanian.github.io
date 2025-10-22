@@ -1,4 +1,3 @@
-data masih saja error tolong perbaiki
 const kutipanList = [
 // ===== KUTIPAN ORIGINAL UNTUK KREATOR =====
 "Dari satu kamera, tersimpan seribu cerita.",
