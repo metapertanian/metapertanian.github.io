@@ -73,13 +73,14 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // =========================================================
-// 💬 Kutipan Bergantian (typing hanya saat terlihat)
+// 💬 Kutipan Bergantian (fade delete + tinggi tetap)
 // =========================================================
 const kutipanList = [
   "Dari satu kamera, tersimpan seribu cerita.",
   "Jangan tunggu viral, buatlah karya yang bernilai.",
   "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
 ];
+
 let indexKutipan = 0, indexHuruf = 0, intervalHuruf = null;
 let kutipanObserver = null;
 
@@ -87,7 +88,6 @@ function setupKutipanObserver() {
   const kutipanEl = document.getElementById("kutipan");
   if (!kutipanEl) return;
 
-  // jika ada observer lama, disconnect dulu
   if (kutipanObserver) {
     try { kutipanObserver.disconnect(); } catch (e) {}
     kutipanObserver = null;
@@ -96,10 +96,8 @@ function setupKutipanObserver() {
   kutipanObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        // mulai mengetik hanya jika belum sedang mengetik
         startKutipanIfVisible();
       } else {
-        // hilangkan teks dan hentikan interval typing saat tidak terlihat
         stopKutipan();
       }
     });
@@ -111,13 +109,11 @@ function setupKutipanObserver() {
 function startKutipanIfVisible() {
   const kutipanEl = document.getElementById("kutipan");
   if (!kutipanEl) return;
-  // cek visibilitas manual dulu (safety)
   const rect = kutipanEl.getBoundingClientRect();
   const inView = rect.top < window.innerHeight && rect.bottom > 0;
   if (inView) {
     tampilkanKutipanHurufDemiHuruf();
   } else {
-    // jika tidak terlihat, pastikan kosong
     kutipanEl.textContent = "";
   }
 }
@@ -131,22 +127,17 @@ function stopKutipan() {
   }
 }
 
-// typing yang lebih andal: gunakan span teks + cursor supaya warna diwariskan dengan benar
 function tampilkanKutipanHurufDemiHuruf() {
   const elemen = document.getElementById("kutipan");
   if (!elemen) return;
 
-  // stop interval sebelumnya
-  if (intervalHuruf) {
-    clearInterval(intervalHuruf);
-    intervalHuruf = null;
-  }
+  // stop interval lama
+  if (intervalHuruf) clearInterval(intervalHuruf);
 
   const teks = kutipanList[indexKutipan] || "";
   const isDark = document.body.classList.contains('dark-theme');
 
-  // reset elemen & styling
-  elemen.textContent = "";
+  // gaya dasar
   elemen.style.fontFamily = "'Poppins','Inter',sans-serif";
   elemen.style.fontSize = "1.2rem";
   elemen.style.fontWeight = "600";
@@ -154,14 +145,19 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.style.transition = "color 0.25s ease";
   elemen.style.color = isDark ? "#ffe082" : "#111";
   elemen.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
+  elemen.style.minHeight = "4.2em"; // kira-kira 3 baris teks tetap
+  elemen.style.display = "flex";
+  elemen.style.flexDirection = "column";
+  elemen.style.alignItems = "center";
+  elemen.style.justifyContent = "center";
 
-  // create a span that will hold the text so color is consistent
-  const textSpan = document.createElement('span');
-  textSpan.style.color = 'inherit'; // warisan dari elemen
-  textSpan.style.whiteSpace = 'pre-wrap';
+  // isi
+  elemen.innerHTML = "";
+  const textSpan = document.createElement("span");
+  textSpan.style.color = "inherit";
+  textSpan.style.whiteSpace = "pre-wrap";
   elemen.appendChild(textSpan);
 
-  // cursor
   const cursor = document.createElement("span");
   cursor.textContent = "|";
   cursor.style.color = isDark ? "#ffd54f" : "#444";
@@ -169,9 +165,7 @@ function tampilkanKutipanHurufDemiHuruf() {
   elemen.appendChild(cursor);
 
   indexHuruf = 0;
-  // typing: append characters into textSpan.textContent (keamanan warna)
   intervalHuruf = setInterval(() => {
-    // jika elemen sudah tidak terlihat di viewport saat mengetik => hentikan
     const rect = elemen.getBoundingClientRect();
     const inView = rect.top < window.innerHeight && rect.bottom > 0;
     if (!inView) {
@@ -186,12 +180,37 @@ function tampilkanKutipanHurufDemiHuruf() {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
       setTimeout(() => {
-        indexKutipan = (indexKutipan + 1) % kutipanList.length;
-        tampilkanKutipanHurufDemiHuruf();
-      }, 3000);
+        // Mulai efek hapus perlahan
+        fadeOutText(textSpan, () => {
+          indexKutipan = (indexKutipan + 1) % kutipanList.length;
+          tampilkanKutipanHurufDemiHuruf();
+        });
+      }, 2500);
     }
   }, 80);
 }
+
+// efek menghapus huruf perlahan
+function fadeOutText(textSpan, callback) {
+  let text = textSpan.textContent;
+  const total = text.length;
+  let i = total;
+
+  const fadeInterval = setInterval(() => {
+    if (i > 0) {
+      text = text.slice(0, i - 1);
+      textSpan.textContent = text;
+      i--;
+    } else {
+      clearInterval(fadeInterval);
+      if (typeof callback === "function") callback();
+    }
+  }, 30);
+}
+
+// jalankan observer saat DOM siap
+window.addEventListener("DOMContentLoaded", setupKutipanObserver);
+
 
 // =========================================================
 // 📅 Dropdown Season & infoRange
