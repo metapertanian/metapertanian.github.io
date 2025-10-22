@@ -370,16 +370,22 @@ const kutipanList = [
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 
+const kutipanList = [
+  "Dari satu kamera, tersimpan seribu cerita.",
+  "Jangan tunggu viral, buatlah karya yang bernilai.",
+  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
+];
 
 let kutipanSisa = [...kutipanList]; // untuk acak tanpa ulang
 let indexKutipan = null;
+let intervalHuruf = null;
+let paused = false;
 
 // 🧩 Setup kutipan
 function setupKutipan() {
   const container = document.getElementById("kutipan");
   if (!container) return;
 
-  // gaya container kutipan
   container.style.minHeight = "5.2em"; // 3-4 baris
   container.style.display = "flex";
   container.style.flexDirection = "column";
@@ -397,37 +403,27 @@ function setupKutipan() {
       text-align: center;
       transition: color 0.25s ease;
       white-space: pre-wrap;
+      cursor: pointer;
     "></div>
-    <div style="margin-top: 0.6em; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
-      <button id="quoteNavPrev" style="
-        padding:6px 12px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        font-weight:600;
-      ">&lt;</button>
-      <button id="copyQuoteBtn" style="
-        padding:6px 14px;
-        border:none;
-        border-radius:10px;
-        cursor:pointer;
-        font-weight:600;
-      ">Salin Kutipan</button>
-      <button id="quoteNavNext" style="
-        padding:6px 12px;
-        border:none;
-        border-radius:8px;
-        cursor:pointer;
-        font-weight:600;
-      ">&gt;</button>
+    <div id="quoteBtns" style="margin-top:0.6em; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; visibility:hidden;">
+      <button id="quoteNavPrev" style="padding:6px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">&lt;</button>
+      <button id="copyQuoteBtn" style="padding:6px 14px; border:none; border-radius:10px; cursor:pointer; font-weight:600;">Salin Kutipan</button>
+      <button id="quoteNavNext" style="padding:6px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">&gt;</button>
     </div>
   `;
 
   applyQuoteTheme();
 
-  document.getElementById("quoteNavPrev").addEventListener("click", tampilkanKutipanSebelumnya);
-  document.getElementById("quoteNavNext").addEventListener("click", tampilkanKutipanBerikutnya);
+  document.getElementById("quoteNavPrev").addEventListener("click", () => {
+    stopKutipan();
+    tampilkanKutipanSebelumnya();
+  });
+  document.getElementById("quoteNavNext").addEventListener("click", () => {
+    stopKutipan();
+    tampilkanKutipanBerikutnya();
+  });
   document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
+  document.getElementById("quoteText").addEventListener("click", togglePause);
 
   tampilkanKutipanAcak();
 }
@@ -449,33 +445,65 @@ function applyQuoteTheme() {
   });
 }
 
-// 🔁 Ganti tema langsung ubah warna kutipan juga
 window.addEventListener("themechange", applyQuoteTheme);
 
 // =========================================================
-// 🧩 Fungsi menampilkan kutipan acak tanpa pengulangan
+// 🧩 Tampilkan kutipan acak huruf demi huruf
 // =========================================================
 function tampilkanKutipanAcak() {
   if (kutipanSisa.length === 0) kutipanSisa = [...kutipanList]; // reset jika habis
-
   const rndIndex = Math.floor(Math.random() * kutipanSisa.length);
   indexKutipan = kutipanList.indexOf(kutipanSisa[rndIndex]);
+  startTyping(kutipanSisa[rndIndex]);
+  kutipanSisa.splice(rndIndex, 1);
+}
 
+function startTyping(teks) {
   const quoteText = document.getElementById("quoteText");
-  if (quoteText) quoteText.textContent = kutipanSisa[rndIndex];
+  const btns = document.getElementById("quoteBtns");
+  quoteText.textContent = "";
+  paused = false;
+  btns.style.visibility = "hidden";
 
-  kutipanSisa.splice(rndIndex, 1); // hapus dari sisa agar tidak muncul lagi
+  let i = 0;
+  clearInterval(intervalHuruf);
+  intervalHuruf = setInterval(() => {
+    if (paused) return;
+    if (i < teks.length) {
+      quoteText.textContent += teks[i];
+      i++;
+    } else {
+      clearInterval(intervalHuruf);
+      intervalHuruf = null;
+      btns.style.visibility = "visible"; // tombol muncul setelah selesai
+    }
+  }, 60);
+}
+
+function stopKutipan() {
+  clearInterval(intervalHuruf);
+  intervalHuruf = null;
+  paused = true;
+  const quoteText = document.getElementById("quoteText");
+  if (indexKutipan !== null) quoteText.textContent = kutipanList[indexKutipan];
+  document.getElementById("quoteBtns").style.visibility = "visible";
+}
+
+function togglePause() {
+  if (!paused) {
+    stopKutipan();
+  } else {
+    // lanjutkan mengetik kutipan selanjutnya
+    tampilkanKutipanAcak();
+  }
 }
 
 // tombol navigasi
-function tampilkanKutipanBerikutnya() {
-  tampilkanKutipanAcak();
-}
+function tampilkanKutipanBerikutnya() { tampilkanKutipanAcak(); }
 function tampilkanKutipanSebelumnya() {
-  // tampilkan kutipan sebelumnya di list utama (sederhana)
   if (indexKutipan === null) return;
   const prevIndex = (indexKutipan - 1 + kutipanList.length) % kutipanList.length;
-  document.getElementById("quoteText").textContent = kutipanList[prevIndex];
+  startTyping(kutipanList[prevIndex]);
   indexKutipan = prevIndex;
 }
 
