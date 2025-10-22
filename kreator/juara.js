@@ -7,7 +7,7 @@ const dataJuara = {
   // ===============================
   // 🎬 SEASON 2
   // ===============================
-  "Season 2": {
+  "LKK S2": {
     tema: "Sisi Lain Sawojajar",
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah desa Sawojajar.",
     periode: "10 Januari 2026 - 20 Maret 2026",
