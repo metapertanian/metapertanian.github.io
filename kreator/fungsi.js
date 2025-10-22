@@ -76,11 +76,7 @@ document.querySelectorAll("#menu a").forEach(link => {
 // =========================================================
 // 💬 Kutipan Bergantian (fade delete, acak, tanpa efek kursor)
 // =========================================================
-const kutipanList = [
-  "Dari satu kamera, tersimpan seribu cerita.",
-  "Jangan tunggu viral, buatlah karya yang bernilai.",
-  "Kreator hebat lahir dari dusun kecil, tapi mimpi yang besar.",
-];
+
 
 let indexKutipan = -1, indexHuruf = 0, intervalHuruf = null;
 let kutipanObserver = null;
