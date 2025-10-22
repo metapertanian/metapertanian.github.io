@@ -371,7 +371,7 @@ const kutipanList = [
 // =========================================================
 
 
-let kutipanSisa = [...kutipanList]; // untuk acak tanpa ulang
+let kutipanSisa = [...kutipanList]; // untuk acak tanpa pengulangan
 let indexKutipan = null;
 let intervalHuruf = null;
 let paused = false;
@@ -389,7 +389,6 @@ function setupKutipan() {
   container.style.position = "relative";
   container.style.marginBottom = "1em";
 
-  // HTML kutipan + tombol
   container.innerHTML = `
     <div id="quoteText" style="
       font-family: 'Poppins','Inter',sans-serif;
@@ -409,16 +408,10 @@ function setupKutipan() {
 
   applyQuoteTheme();
 
-  document.getElementById("quoteNavPrev").addEventListener("click", () => {
-    stopKutipan();
-    tampilkanKutipanSebelumnya();
-  });
-  document.getElementById("quoteNavNext").addEventListener("click", () => {
-    stopKutipan();
-    tampilkanKutipanBerikutnya();
-  });
-  document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
   document.getElementById("quoteText").addEventListener("click", togglePause);
+  document.getElementById("quoteNavPrev").addEventListener("click", () => { stopKutipan(); tampilkanKutipanSebelumnya(); });
+  document.getElementById("quoteNavNext").addEventListener("click", () => { stopKutipan(); tampilkanKutipanBerikutnya(); });
+  document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
 
   tampilkanKutipanAcak();
 }
@@ -446,7 +439,7 @@ window.addEventListener("themechange", applyQuoteTheme);
 // 🧩 Tampilkan kutipan acak huruf demi huruf
 // =========================================================
 function tampilkanKutipanAcak() {
-  if (kutipanSisa.length === 0) kutipanSisa = [...kutipanList]; // reset jika habis
+  if (kutipanSisa.length === 0) kutipanSisa = [...kutipanList];
   const rndIndex = Math.floor(Math.random() * kutipanSisa.length);
   indexKutipan = kutipanList.indexOf(kutipanSisa[rndIndex]);
   startTyping(kutipanSisa[rndIndex]);
@@ -488,7 +481,6 @@ function togglePause() {
   if (!paused) {
     stopKutipan();
   } else {
-    // lanjutkan mengetik kutipan selanjutnya
     tampilkanKutipanAcak();
   }
 }
@@ -506,9 +498,7 @@ function tampilkanKutipanSebelumnya() {
 function salinKutipan() {
   const text = document.getElementById("quoteText")?.textContent || "";
   if (!text) return;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Kutipan disalin!");
-  });
+  navigator.clipboard.writeText(text).then(() => { alert("Kutipan disalin!"); });
 }
 
 // =========================================================
@@ -528,6 +518,6 @@ function tampilkanDataSeasonAwal() {
   const seasonAktif = select.value || select.options[0]?.value;
   if (seasonAktif) {
     select.value = seasonAktif;
-    gantiSeason?.();
+    if (typeof gantiSeason === "function") gantiSeason(); // langsung load data season/poin/hadiah/aturan
   }
 }
