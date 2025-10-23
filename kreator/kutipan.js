@@ -399,7 +399,7 @@ function setupKutipanObserver() {
   kutipanEl.innerHTML = "";
 
   // ✨ Tambah ruang tinggi agar kutipan panjang tidak menabrak
-  kutipanEl.style.minHeight = "8em";
+  kutipanEl.style.minHeight = "6.5em";
   kutipanEl.style.display = "flex";
   kutipanEl.style.flexDirection = "column";
   kutipanEl.style.alignItems = "center";
