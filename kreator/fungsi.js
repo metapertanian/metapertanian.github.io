@@ -117,7 +117,7 @@ document.addEventListener("focusin", e => {
     searchBox.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
     const poinSection = document.getElementById("poin");
     if (poinSection) {
-      const y = poinSection.getBoundingClientRect().top + window.scrollY - 80; // offset agar judul tetap terlihat
+      const y = poinSection.getBoundingClientRect().top + window.scrollY - 40; // offset agar judul tetap terlihat
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   }
@@ -186,7 +186,7 @@ function tampilkanDataSeason() {
       <div style="margin-top:6px;color:${isDark ? '#ddd' : '#333'};">${dataSeason.deskripsi || ""}</div>
       <div style="margin-top:6px;color:${isDark ? '#bbb' : '#555'};">📅 ${dataSeason.periode || "-"}</div>
       <div style="margin-top:8px;font-size:0.9em;">
-        🎗️ <span style="color:var(--highlight);">Sponsor:</span> <i>${dataSeason.Sponsor || "-"}</i>
+        🎗️ <span style="color:var(--highlight);">Sponsor:</span><br><i>${dataSeason.Sponsor || "-"}</i>
       </div>
     </div>
   `;
@@ -201,10 +201,15 @@ function tampilkanDataSeason() {
       • ${dataSeason.deskripsi}<br><br>
       • Video hasil karya sendiri (bukan reupload).<br>
       • Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.<br><br>
-      💡 <b>Kriteria Penilaian:</b><br>
-      Ide Konsep (150), Editing (100), Karakter (50), Nuansa Lokal (100), Dampak Positif (100)<br>
-      🚀 Poin Viral dihitung otomatis dari like, komen, share (tanpa batas).<br><br>
-      ⚠️ Dilarang spam, bot, atau beli engagement — pelanggaran = diskualifikasi.
+      <b>Kriteria Penilaian:</b><br>
+      <b>💡 Kreatifitas</b>: Maks 300 poin<br>
+      dihitung dari <u>Ide Konsep</u> (150), <u>Editing</u> (100), <u>Karakter</u> (50).<br>
+      <b>🏡 Lokal</b>: Maks 200 poin<br>
+      dihitung dari <u>Nuansa Lokal</u> (100), <u>Dampak Positif</u> (100).<br>
+      <b>🚀 Viral</b>: Tak terbatas<br>
+      dihitung otomatis dari reaksi (like, komen, share) menggunakan Algoritma kami.<br><br>
+      ✅ Boleh mengajak orang lain untuk menaikkan reaksi.
+      ⚠️ Dilarang spam, bot, atau beli reaksi — pelanggaran keras = diskualifikasi.
     `;
   }
 
