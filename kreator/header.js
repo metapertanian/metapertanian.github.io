@@ -98,3 +98,68 @@ window.addEventListener("DOMContentLoaded", () => {
   const tahunEl = document.getElementById("tahun");
   if (tahunEl) tahunEl.textContent = new Date().getFullYear();
 });
+
+// =========================================================
+// 🔎 Pencarian Kreator
+// =========================================================
+const searchContainer = document.createElement("div");
+searchContainer.style.textAlign = "center";
+searchContainer.style.margin = "10px 0";
+searchContainer.innerHTML = `
+  <input type="text" id="searchNama" placeholder="Cari nama kreator..."
+    style="padding:10px 14px;border-radius:10px;width:75%;max-width:380px;
+    border:1px solid var(--text-color);outline:none;
+    background:var(--input-bg);color:var(--text-color);
+    text-align:center;transition:all 0.3s ease;">
+`;
+const poinTitle = document.querySelector("#poin h2");
+if (poinTitle) poinTitle.insertAdjacentElement("afterend", searchContainer);
+
+// 🌟 Efek saat fokus pencarian: arahkan layar ke #poin tanpa menggeser form
+document.addEventListener("focusin", e => {
+  if (e.target.id === "searchNama") {
+    const searchBox = e.target;
+    searchBox.style.transform = "none";
+    searchBox.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+    const poinSection = document.getElementById("poin");
+    if (poinSection) {
+      const y = poinSection.getBoundingClientRect().top + window.scrollY - 50; // offset agar judul tetap terlihat
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }
+});
+
+document.addEventListener("focusout", e => {
+  if (e.target.id === "searchNama") {
+    const searchBox = e.target;
+    searchBox.style.boxShadow = "none";
+  }
+});
+
+// =========================================================
+// 🧮 Hitung Nilai
+// =========================================================
+function hitungTotal(p, tampilkanPoin) {
+  const like = +p.like || 0, komen = +p.komen || 0, share = +p.share || 0;
+  const ide = +p.ideKonsepNilai || 0, edit = +p.editing || 0, karakter = +p.karakter || 0;
+  const nuansa = +p.nuansaLokal || 0, dampak = +p.dampakPositif || 0;
+  const viral = tampilkanPoin ? ((like * 1.0) + (komen * 1.5) + (share * 1.5)) : 0;
+  const nilaiKreatif = (ide * 1.5) + edit + (karakter * 0.5);
+  const nilaiLokal = nuansa + dampak;
+  const total = +(nilaiKreatif + nilaiLokal + (tampilkanPoin ? viral : 0)).toFixed(1);
+  return { total, nilaiKreatif, nilaiLokal, viral };
+}
+
+// =========================================================
+// 🔍 Filter Juara
+// =========================================================
+function cariPemenangBerdasarkanFilter(dataSeason, filter, tampilkanPoin) {
+  if (!tampilkanPoin) return null;
+  const data = (dataSeason.kreator || []).map(p => ({ ...p, ...hitungTotal(p, true) }));
+  if (typeof filter === "string") return data.find(p => p.ideKonsepTipe?.toLowerCase().includes(filter.toLowerCase()));
+  if (typeof filter === "object" && filter.field) {
+    if (filter.mode === "max") return data.reduce((a, b) => (b[filter.field] > a[filter.field] ? b : a));
+    else if (filter.value) return data.find(p => p[filter.field] === filter.value);
+  }
+  return null;
+}
