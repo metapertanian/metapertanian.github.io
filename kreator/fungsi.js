@@ -33,25 +33,52 @@ function tampilkanDataSeason() {
 
 
   
-  // Aturan
-  const aturanEl = document.getElementById("aturanText");
-  if (aturanEl) {
-    aturanEl.innerHTML = `
-      • Lomba terbuka untuk umum.<br>
-      • Konten sesuai tema: <b>${dataSeason.tema}</b><br>
-      • ${dataSeason.deskripsi}<br>
-      • Video hasil karya sendiri (bukan reupload).<br>
-      • Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.<br><br>
-      <b>Kriteria Penilaian:</b><br>
-      <b>💡 Kreatifitas</b>: Maks 300 poin<br>
-      dihitung dari Ide Konsep, Editing, Karakter.<br>
-      <b>🏡 Lokal</b>: Maks 200 poin<br>
-      dihitung dari Nuansa Lokal, Dampak Positif.<br>
-      <b>🚀 Viral</b>: Poin tak terbatas<br>
-      Algoritma kami akan menghitung otomatis dari reaksi (like, komen, share).<br><br>
-      ✅ Boleh mengajak orang lain untuk menaikkan reaksi.<br>
-      ⚠️ Dilarang spam, bot, atau beli reaksi, pelanggaran akan dikurangi poin bahkan diskualifikasi.
-    `;
+  // 📜 Aturan
+const aturanEl = document.getElementById("aturanText");
+if (aturanEl) {
+  aturanEl.innerHTML = `
+    <div style="
+      background: var(--card-bg);
+      padding: 18px 20px;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      line-height: 1.6;
+      font-size: 0.95em;
+      color: var(--text-color);
+      border-left: 4px solid var(--highlight);
+    ">
+      <div style="font-weight:700;font-size:1.05em;margin-bottom:8px;color:var(--highlight);">
+        📅 Periode Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span>
+      </div>
+
+      <ul style="list-style: none; padding-left: 0; margin: 0;">
+        <li>• Lomba terbuka untuk umum.</li>
+        <li>• Konten sesuai tema: <b>${dataSeason.tema}</b></li>
+        <li>• ${dataSeason.deskripsi}</li>
+        <li>• Video hasil karya sendiri (bukan reupload).</li>
+        <li>• Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
+      </ul>
+
+      <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
+
+      <div style="margin-bottom:6px;font-weight:700;font-size:1em;color:var(--highlight);">
+        🏆 Kriteria Penilaian:
+      </div>
+
+      <div style="margin-left:10px;">
+        <div><b>💡 Kreativitas</b>: <span style="opacity:0.85;">dihitung dari Ide Konsep, Editing, Karakter.</span></div>
+        <div style="margin-top:6px;"><b>🏡 Lokal</b>: <span style="opacity:0.85;">dihitung dari Nuansa Lokal, Dampak Positif.</span></div>
+        <div style="margin-top:6px;"><b>🚀 Viral</b>: <span style="opacity:0.85;">dihitung dari interaksi (like, komen, share).</span></div>
+      </div>
+
+      <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
+
+      <ul style="list-style: none; padding-left: 0; margin: 0;">
+        <li>✅ Boleh mengajak orang lain untuk menaikkan interaksi.</li>
+        <li>⚠️ Dilarang spam, bot, atau beli interaksi — pelanggaran akan dikurangi poin bahkan didiskualifikasi.</li>
+      </ul>
+    </div>
+  `;
 
 // 🌟 Sponsor Section Elegan di bawah Aturan
 const oldSponsor = document.getElementById("sponsorBox");
@@ -60,7 +87,7 @@ if (oldSponsor) oldSponsor.remove();
 const sponsorBox = document.createElement("div");
 sponsorBox.id = "sponsorBox";
 sponsorBox.style.cssText = `
-  margin-top: 22px;
+  margin-top: 10px;
   padding: 16px 18px;
   border-radius: 14px;
   background: var(--card-bg);
