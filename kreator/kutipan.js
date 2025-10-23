@@ -376,12 +376,12 @@ let indexKutipan = 0,
     menghapus = false,
     jeda = false,
     kutipanObserver = null,
-    urutanAcak = [];
+    urutanAcak = [],
+    teksAktif = "";
 
 // 🔀 Buat urutan acak tanpa pengulangan
 function buatUrutanAcak() {
-  urutanAcak = kutipanList.map((_, i) => i)
-    .sort(() => Math.random() - 0.5);
+  urutanAcak = kutipanList.map((_, i) => i).sort(() => Math.random() - 0.5);
   indexKutipan = 0;
 }
 
@@ -400,7 +400,7 @@ function setupKutipanObserver() {
   kutipanEl.innerHTML = "";
 
   // Atur gaya dasar dan lebar tetap
-  kutipanEl.style.minHeight = "5.2em"; // cukup untuk 3–4 baris
+  kutipanEl.style.minHeight = "5.2em";
   kutipanEl.style.display = "flex";
   kutipanEl.style.flexDirection = "column";
   kutipanEl.style.alignItems = "center";
@@ -436,13 +436,13 @@ function setupKutipanObserver() {
   // Terapkan tema awal
   applyQuoteTheme();
 
-  // Ubah tema jika body berubah (manual event custom atau observer)
+  // Ubah tema jika body berubah
   const themeObserver = new MutationObserver(applyQuoteTheme);
   themeObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
 
   kutipanEl.addEventListener("click", toggleJeda);
 
-  // Gunakan observer agar animasi hanya berjalan saat terlihat
+  // Siapkan observer agar animasi hanya berjalan saat terlihat
   if (kutipanObserver) {
     try { kutipanObserver.disconnect(); } catch (e) {}
     kutipanObserver = null;
@@ -450,8 +450,16 @@ function setupKutipanObserver() {
 
   kutipanObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) startKutipanIfVisible();
-      else stopKutipan();
+      const textSpan = document.getElementById("quoteText");
+      if (!textSpan) return;
+      if (entry.isIntersecting) {
+        if (!intervalHuruf && !jeda) startKutipanIfVisible();
+      } else {
+        // Saat tidak terlihat: tampilkan teks penuh agar tidak hilang
+        clearInterval(intervalHuruf);
+        intervalHuruf = null;
+        if (textSpan.textContent.trim() === "") textSpan.textContent = teksAktif;
+      }
     });
   }, { threshold: 0.45 });
 
@@ -473,7 +481,9 @@ function applyQuoteTheme() {
 
   cariBtn.style.background = isDark ? "#444" : "#eee";
   cariBtn.style.color = isDark ? "#fff" : "#111";
-  cariBtn.style.boxShadow = isDark ? "0 2px 8px rgba(255,255,255,0.1)" : "0 2px 8px rgba(0,0,0,0.1)";
+  cariBtn.style.boxShadow = isDark
+    ? "0 2px 8px rgba(255,255,255,0.1)"
+    : "0 2px 8px rgba(0,0,0,0.1)";
   cariBtn.onmouseover = () => {
     cariBtn.style.transform = "scale(1.05)";
     cariBtn.style.opacity = "0.85";
@@ -491,67 +501,86 @@ function startKutipanIfVisible() {
   const rect = el.getBoundingClientRect();
   const inView = rect.top < window.innerHeight && rect.bottom > 0;
   if (inView) tampilkanKutipanHurufDemiHuruf();
-  else stopKutipan();
 }
 
-// 🛑 Hentikan animasi saat tidak terlihat
+// 🛑 Hentikan animasi (tanpa hapus teks)
 function stopKutipan() {
   clearInterval(intervalHuruf);
   intervalHuruf = null;
 }
 
 // 🎬 Efek mengetik dan menghapus huruf demi huruf
-function tampilkanKutipanHurufDemiHuruf() {
+function tampilkanKutipanHurufDemiHuruf(teksBaru = null) {
   const textSpan = document.getElementById("quoteText");
   if (!textSpan) return;
 
   clearInterval(intervalHuruf);
 
-  const idx = ambilKutipanAcak();
-  const teks = kutipanList[idx] || "";
-  textSpan.textContent = "";
+  // Jika tidak ada teks baru (awal atau setelah hapus)
+  if (!teksBaru) {
+    const idx = ambilKutipanAcak();
+    teksAktif = kutipanList[idx] || "";
+  } else {
+    teksAktif = teksBaru;
+  }
+
   indexHuruf = 0;
   menghapus = false;
+  textSpan.textContent = "";
 
   intervalHuruf = setInterval(() => {
     if (jeda) return;
 
-    if (!menghapus && indexHuruf < teks.length) {
-      textSpan.textContent += teks[indexHuruf++];
+    if (!menghapus && indexHuruf < teksAktif.length) {
+      // Mengetik huruf demi huruf
+      textSpan.textContent += teksAktif[indexHuruf++];
     } 
-    else if (!menghapus && indexHuruf >= teks.length) {
-      // Tunggu 3 detik sebelum mulai menghapus
+    else if (!menghapus && indexHuruf >= teksAktif.length) {
+      // Setelah selesai mengetik, tunggu 3 detik lalu hapus
       menghapus = true;
       clearInterval(intervalHuruf);
       setTimeout(() => {
-        tampilkanKutipanHurufDemiHuruf(); // lanjut ke fase hapus
+        hapusHurufDemiHuruf();
       }, 3000);
-    } 
-    else if (menghapus && indexHuruf > 0) {
-      textSpan.textContent = teks.substring(0, --indexHuruf);
-    } 
-    else if (menghapus && indexHuruf === 0) {
+    }
+  }, 50);
+}
+
+// 🔙 Efek menghapus huruf demi huruf
+function hapusHurufDemiHuruf() {
+  const textSpan = document.getElementById("quoteText");
+  if (!textSpan) return;
+
+  clearInterval(intervalHuruf);
+  indexHuruf = teksAktif.length;
+
+  intervalHuruf = setInterval(() => {
+    if (jeda) return;
+
+    if (indexHuruf > 0) {
+      textSpan.textContent = teksAktif.substring(0, --indexHuruf);
+    } else {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
-      setTimeout(tampilkanKutipanHurufDemiHuruf, 400);
+      setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 400);
     }
-  }, 60);
+  }, 50);
 }
 
 // ⏯️ Klik untuk jeda / lanjut
 function toggleJeda() {
   const textSpan = document.getElementById("quoteText");
-  const idx = urutanAcak[Math.max(0, indexKutipan - 1)] || 0;
-  const teks = kutipanList[idx] || "";
   if (!textSpan) return;
 
   jeda = !jeda;
+
   if (jeda) {
     clearInterval(intervalHuruf);
     intervalHuruf = null;
-    textSpan.textContent = teks; // tampilkan penuh
+    textSpan.textContent = teksAktif; // tampilkan penuh
   } else {
-    tampilkanKutipanHurufDemiHuruf(); // lanjutkan animasi
+    // lanjutkan animasi dari kondisi penuh
+    hapusHurufDemiHuruf();
   }
 }
 
