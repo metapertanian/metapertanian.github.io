@@ -17,32 +17,34 @@ html, body {
 ========================================================= */
 :root {
   /* ===== Tema Terang ===== */
-  --bg-gradient: linear-gradient(160deg, #eef9f1, #ffffff);
+  --bg-gradient: linear-gradient(160deg, #e8f5e9, #fefefe);
+  --section-bg: rgba(255, 255, 255, 0.85);
   --text-main: #1a1a1a;
   --text-sub: #555;
   --accent-primary: #2e7d32;
   --accent-secondary: #4caf50;
   --highlight: #1e88e5;
-  --card-bg: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.9);
   --navbar-bg: linear-gradient(90deg, #43a047, #66bb6a);
   --border-glow: #2e7d32;
   --link-color: #1565c0;
-  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow: rgba(0, 0, 0, 0.12);
 }
 
 body.dark-theme {
   /* ===== Tema Gelap ===== */
   --bg-gradient: linear-gradient(160deg, #001a17, #000);
+  --section-bg: rgba(20, 20, 20, 0.75);
   --text-main: #f5f5f5;
   --text-sub: #bdbdbd;
   --accent-primary: #1b5e20;
   --accent-secondary: #2e7d32;
   --highlight: #4fc3f7;
-  --card-bg: #141414;
+  --card-bg: rgba(22, 22, 22, 0.9);
   --navbar-bg: linear-gradient(90deg, #1b5e20, #2e7d32);
   --border-glow: #00ffb7;
   --link-color: #81d4fa;
-  --shadow: rgba(0, 0, 0, 0.5);
+  --shadow: rgba(0, 0, 0, 0.6);
 }
 
 /* =========================================================
@@ -67,23 +69,24 @@ body {
   position: fixed;
   top: 0; left: 0; right: 0;
   background: var(--navbar-bg);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(8px);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 14px 30px;
   z-index: 1000;
-  box-shadow: 0 3px 8px var(--shadow);
+  box-shadow: 0 3px 10px var(--shadow);
   transition: box-shadow 0.3s ease;
 }
 .nav:hover {
-  box-shadow: 0 4px 14px var(--shadow);
+  box-shadow: 0 5px 16px var(--shadow);
 }
 .nav-brand {
   font-size: 1.4rem;
   font-weight: 700;
   color: #fff;
   text-decoration: none;
+  letter-spacing: 0.5px;
 }
 .nav-links {
   display: flex;
@@ -144,7 +147,7 @@ body {
   height: 120px;
   border-radius: 50%;
   border: 3px solid var(--border-glow);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
   margin-bottom: 10px;
   transition: transform 0.4s;
 }
@@ -162,7 +165,16 @@ body {
    🧩 SECTION
 ========================================================= */
 section {
-  margin-top: 40px;
+  margin-top: 45px;
+  background: var(--section-bg);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 28px 18px;
+  box-shadow: 0 5px 18px var(--shadow);
+  transition: background 0.4s ease, box-shadow 0.3s ease;
+}
+section:hover {
+  box-shadow: 0 8px 24px var(--shadow);
 }
 h2 {
   color: var(--highlight);
@@ -172,25 +184,7 @@ h2 {
   letter-spacing: 0.5px;
 }
 
-
-/* Hilangkan garis tipis (shadow leak) antar section */
-section {
-  position: relative;
-  z-index: 1;
-  background: var(--bg-gradient);
-}
-
-#poin, #aturan, #hadiah {
-  box-shadow: none !important;
-  border: none !important;
-}
-
-/* Pastikan footer atau area berikutnya tidak ada bayangan sisa */
-footer, #pagination, .peserta, .hadiah-card {
-  box-shadow: none !important;
-}
-
-/* Desain <hr> tetap muncul elegan */
+/* Desain <hr> */
 hr {
   border: none;
   height: 3px;
@@ -198,7 +192,7 @@ hr {
   border-radius: 2px;
   width: 70%;
   margin: 40px auto;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 /* =========================================================
@@ -214,6 +208,7 @@ hr {
   transform: translateY(25px);
   transition: all 0.5s ease;
   color: var(--text-main);
+  backdrop-filter: blur(6px);
 }
 .peserta.show {
   opacity: 1;
@@ -221,7 +216,7 @@ hr {
 }
 .peserta:hover {
   transform: translateY(-6px);
-  box-shadow: 0 8px 22px var(--shadow);
+  box-shadow: 0 10px 26px var(--shadow);
 }
 .peserta .rank {
   font-weight: bold;
@@ -284,6 +279,7 @@ hr {
   opacity: 0;
   animation: fadeInUp 0.6s ease forwards;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(8px);
 }
 .hadiah-card:hover {
   transform: translateY(-5px);
