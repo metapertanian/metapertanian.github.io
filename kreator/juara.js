@@ -12,6 +12,7 @@ const dataJuara = {
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah desa Sawojajar.",
     periode: "10 Januari 2026 - 20 Maret 2026",
     Sponsor: "Bank Desa Nusantara",
+    logoSponsor: "",
     Poin: "true",
 
     Hadiah: [
@@ -45,7 +46,8 @@ const dataJuara = {
     tema: "Sisi Lain Tanjung Bulan",
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah dusun Tanjung Bulan.",
     periode: "25 Oktober 2025 - 28 Desember 2025",
-    Sponsor: "Toko Tani Makmur",
+    Sponsor: "Karang Taruna Tanjung Bulan",
+    logoSponsor: "",
     Poin: "false",
 
     Hadiah: [
