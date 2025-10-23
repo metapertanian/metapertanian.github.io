@@ -278,38 +278,55 @@ function tampilkanDataSeason() {
   }
 
   // 🏆 Hadiah
-  const juaraBox = document.getElementById("hadiahList");
-  if (juaraBox) {
-    juaraBox.innerHTML = "";
-    (dataSeason.Hadiah || []).forEach(h => {
-      const pemenang = tampilkanPoin
-        ? (h.filter ? cariPemenangBerdasarkanFilter(dataSeason, h.filter, true)
-          : ranking[parseInt(h.kategori.replace(/\D/g, "")) - 1])
-        : null;
-      const nama = tampilkanPoin && pemenang ? pemenang.nama : "Belum diumumkan";
+const juaraBox = document.getElementById("hadiahList");
+if (juaraBox) {
+  juaraBox.innerHTML = "";
+  const sudahMenang = new Set(); // ⛔️ untuk mencegah pemenang dobel
 
-      const card = document.createElement("div");
-      card.className = "hadiah-card";
-      card.style.cssText = `
-        background: linear-gradient(145deg, var(--card-bg), ${isDark ? '#0d0d0d' : '#fefefe'});
-        border-radius:14px;padding:16px;box-shadow:var(--shadow);
-        margin:12px 0;transition:transform .15s;line-height:1.5;
-      `;
-      card.onmouseover = () => card.style.transform = "translateY(-4px)";
-      card.onmouseleave = () => card.style.transform = "translateY(0)";
+  (dataSeason.Hadiah || []).forEach(h => {
+    let pemenang = null;
 
-      card.innerHTML = `
-        <div style="font-weight:700;font-size:1.05em">${h.kategori}</div>
-        <div style="margin-top:6px;">🎁 ${h.hadiah}</div>
-        <div style="margin-top:8px;">🏆 <span style="color:var(--highlight);font-weight:700">${nama}</span></div>
-        ${pemenang ? `
-          <div style="margin-top:8px;">⭐ <b>${pemenang.total.toFixed(1)}</b></div>
-          <a href="${pemenang.linkVideo || '#'}" target="_blank" style="display:inline-block;margin-top:8px;color:var(--accent)">▶️ Lihat Video</a>
-        ` : ""}
-      `;
-      juaraBox.appendChild(card);
-    });
-  }
+    if (tampilkanPoin) {
+      // cari pemenang berdasarkan filter atau ranking
+      if (h.filter) {
+        pemenang = cariPemenangBerdasarkanFilter(dataSeason, h.filter, true);
+      } else {
+        const posisi = parseInt(h.kategori.replace(/\D/g, "")) - 1;
+        pemenang = ranking[posisi];
+      }
+
+      // 🔁 pastikan tidak dobel hadiah
+      if (pemenang && sudahMenang.has(pemenang.nama)) {
+        // cari pengganti berikutnya yang belum menang
+        pemenang = ranking.find(p => !sudahMenang.has(p.nama));
+      }
+
+      if (pemenang) sudahMenang.add(pemenang.nama);
+    }
+
+    const nama = tampilkanPoin && pemenang ? pemenang.nama : "Belum diumumkan";
+    const card = document.createElement("div");
+    card.className = "hadiah-card";
+    card.style.cssText = `
+      background: linear-gradient(145deg, var(--card-bg), ${isDark ? '#0d0d0d' : '#fefefe'});
+      border-radius:14px;padding:16px;box-shadow:var(--shadow);
+      margin:12px 0;transition:transform .15s;line-height:1.5;
+    `;
+    card.onmouseover = () => card.style.transform = "translateY(-4px)";
+    card.onmouseleave = () => card.style.transform = "translateY(0)";
+
+    card.innerHTML = `
+      <div style="font-weight:700;font-size:1.05em">${h.kategori}</div>
+      <div style="margin-top:6px;">🎁 ${h.hadiah}</div>
+      <div style="margin-top:8px;">🏆 <span style="color:var(--highlight);font-weight:700">${nama}</span></div>
+      ${pemenang ? `
+        <div style="margin-top:8px;">⭐ <b>${pemenang.total.toFixed(1)}</b></div>
+        <a href="${pemenang.linkVideo || '#'}" target="_blank" style="display:inline-block;margin-top:8px;color:var(--accent)">▶️ Lihat Video</a>
+      ` : ""}
+    `;
+    juaraBox.appendChild(card);
+  });
+}
 }
 
 // =========================================================
