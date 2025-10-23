@@ -201,11 +201,11 @@ function tampilkanDataSeason() {
       • ${dataSeason.deskripsi}<br>
       • Video hasil karya sendiri (bukan reupload).<br>
       • Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.<br><br>
-      <b>Kriteria Penilaian:</b><br><br>
+      <b>Kriteria Penilaian:</b><br>
       <b>💡 Kreatifitas</b>: Maks 300 poin<br>
-      dihitung dari Ide Konsep, Editing, Karakter.<br><br>
+      dihitung dari Ide Konsep, Editing, Karakter.<br>
       <b>🏡 Lokal</b>: Maks 200 poin<br>
-      dihitung dari Nuansa Lokal, Dampak Positif.<br><br>
+      dihitung dari Nuansa Lokal, Dampak Positif.<br>
       <b>🚀 Viral</b>: Poin tak terbatas<br>
       Algoritma kami akan menghitung otomatis dari reaksi (like, komen, share).<br><br>
       ✅ Boleh mengajak orang lain untuk menaikkan reaksi.<br>
