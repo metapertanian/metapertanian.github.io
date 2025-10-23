@@ -109,19 +109,23 @@ searchContainer.innerHTML = `
 const poinTitle = document.querySelector("#poin h2");
 if (poinTitle) poinTitle.insertAdjacentElement("afterend", searchContainer);
 
-// 🌟 Efek saat fokus pencarian: form naik ke atas
+// 🌟 Efek saat fokus pencarian: arahkan layar ke #poin tanpa menggeser form
 document.addEventListener("focusin", e => {
   if (e.target.id === "searchNama") {
     const searchBox = e.target;
-    searchBox.style.transform = "translateY(-40px)";
-    searchBox.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
-    searchBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    searchBox.style.transform = "none";
+    searchBox.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
+    const poinSection = document.getElementById("poin");
+    if (poinSection) {
+      const y = poinSection.getBoundingClientRect().top + window.scrollY - 80; // offset agar judul tetap terlihat
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
   }
 });
+
 document.addEventListener("focusout", e => {
   if (e.target.id === "searchNama") {
     const searchBox = e.target;
-    searchBox.style.transform = "translateY(0)";
     searchBox.style.boxShadow = "none";
   }
 });
