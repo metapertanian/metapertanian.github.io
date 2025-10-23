@@ -375,7 +375,22 @@ let indexKutipan = 0,
     intervalHuruf = null,
     menghapus = false,
     jeda = false,
-    kutipanObserver = null;
+    kutipanObserver = null,
+    urutanAcak = [];
+
+// 🔀 Buat urutan acak tanpa pengulangan
+function buatUrutanAcak() {
+  urutanAcak = kutipanList.map((_, i) => i)
+    .sort(() => Math.random() - 0.5);
+  indexKutipan = 0;
+}
+
+function ambilKutipanAcak() {
+  if (urutanAcak.length === 0 || indexKutipan >= urutanAcak.length) {
+    buatUrutanAcak(); // buat urutan baru setelah semua tampil
+  }
+  return urutanAcak[indexKutipan++];
+}
 
 function setupKutipanObserver() {
   const kutipanEl = document.getElementById("kutipan");
@@ -441,6 +456,9 @@ function setupKutipanObserver() {
   }, { threshold: 0.45 });
 
   kutipanObserver.observe(kutipanEl);
+
+  // Siapkan urutan acak awal
+  buatUrutanAcak();
 }
 
 // 🌗 Terapkan tema terang/gelap
@@ -488,7 +506,9 @@ function tampilkanKutipanHurufDemiHuruf() {
   if (!textSpan) return;
 
   clearInterval(intervalHuruf);
-  const teks = kutipanList[indexKutipan] || "";
+
+  const idx = ambilKutipanAcak();
+  const teks = kutipanList[idx] || "";
   textSpan.textContent = "";
   indexHuruf = 0;
   menghapus = false;
@@ -513,16 +533,16 @@ function tampilkanKutipanHurufDemiHuruf() {
     else if (menghapus && indexHuruf === 0) {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
-      indexKutipan = (indexKutipan + 1) % kutipanList.length;
       setTimeout(tampilkanKutipanHurufDemiHuruf, 400);
     }
-  }, menghapus ? 60 : 60);
+  }, 60);
 }
 
 // ⏯️ Klik untuk jeda / lanjut
 function toggleJeda() {
   const textSpan = document.getElementById("quoteText");
-  const teks = kutipanList[indexKutipan] || "";
+  const idx = urutanAcak[Math.max(0, indexKutipan - 1)] || 0;
+  const teks = kutipanList[idx] || "";
   if (!textSpan) return;
 
   jeda = !jeda;
