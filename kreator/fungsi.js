@@ -117,6 +117,31 @@ function tampilkanDataSeason() {
       ✅ Boleh mengajak orang lain untuk menaikkan reaksi.<br>
       ⚠️ Dilarang spam, bot, atau beli reaksi, pelanggaran akan dikurangi poin bahkan diskualifikasi.
     `;
+
+// 🌟 Sponsor Section Elegan di bawah Aturan
+const sponsorBox = document.createElement("div");
+sponsorBox.style.cssText = `
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--card-bg);
+  color: var(--text-color);
+  box-shadow: var(--shadow);
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  transition: all 0.3s ease;
+`;
+sponsorBox.innerHTML = `
+  <div style="font-weight:600; color:var(--highlight); letter-spacing:0.4px;">
+    🤝 Didukung oleh:
+  </div>
+  <div style="margin-top:6px; font-style:italic; color:var(--accent); font-size:1.05rem;">
+    ${dataSeason.Sponsor || "-"}
+  </div>
+`;
+
+aturanEl.insertAdjacentElement("afterend", sponsorBox);
   }
 
   // 🔎 Filter + pagination
