@@ -1,5 +1,5 @@
 // =========================================================
-// 🌗 Tema Terang & Gelap (default: gelap, elegan & kontras lembut)
+// 🌗 Tema Terang & Gelap (default: terang, elegan & kontras lembut)
 // =========================================================
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
@@ -37,7 +37,8 @@ function applyThemeColors() {
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('theme');
-  if (!savedTheme || savedTheme === 'dark') {
+  // 🟢 Tema terang sebagai default
+  if (savedTheme === 'dark') {
     document.body.classList.add('dark-theme');
   }
   applyThemeColors();
@@ -103,10 +104,27 @@ searchContainer.innerHTML = `
     style="padding:10px 14px;border-radius:10px;width:75%;max-width:380px;
     border:1px solid var(--text-color);outline:none;
     background:var(--input-bg);color:var(--text-color);
-    text-align:center;transition:0.25s;">
+    text-align:center;transition:all 0.3s ease;">
 `;
 const poinTitle = document.querySelector("#poin h2");
 if (poinTitle) poinTitle.insertAdjacentElement("afterend", searchContainer);
+
+// 🌟 Efek saat fokus pencarian: form naik ke atas
+document.addEventListener("focusin", e => {
+  if (e.target.id === "searchNama") {
+    const searchBox = e.target;
+    searchBox.style.transform = "translateY(-40px)";
+    searchBox.style.boxShadow = "0 4px 12px rgba(0,0,0,0.2)";
+    searchBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+document.addEventListener("focusout", e => {
+  if (e.target.id === "searchNama") {
+    const searchBox = e.target;
+    searchBox.style.transform = "translateY(0)";
+    searchBox.style.boxShadow = "none";
+  }
+});
 
 // =========================================================
 // 🧮 Hitung Nilai
@@ -169,6 +187,7 @@ function tampilkanDataSeason() {
     </div>
   `;
 
+  
   // Aturan
   const aturanEl = document.getElementById("aturanText");
   if (aturanEl) {
