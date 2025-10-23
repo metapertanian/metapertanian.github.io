@@ -19,43 +19,18 @@ function tampilkanDataSeason() {
   wadah.innerHTML = "";
   const isDark = document.body.classList.contains('dark-theme');
 
-  // 🧾 Info Season
-infoRange.innerHTML = `
-  <div style="background:var(--card-bg);padding:14px 16px;border-radius:12px;box-shadow:var(--shadow);">
-    <div style="font-weight:700;color:var(--highlight);font-size:1.05em;">
-      🎬 ${dataSeason.tema || "Tanpa Tema"}
-    </div>
-    <div style="margin-top:6px;color:${isDark ? '#ddd' : '#333'};">
-      ${dataSeason.deskripsi || ""}
-    </div>
-    <div style="margin-top:6px;color:${isDark ? '#bbb' : '#555'};">
-      📅 ${dataSeason.periode || "-"}
-    </div>
-    <div style="margin-top:8px;font-size:0.9em;">
-      🎗️ <span style="color:var(--highlight);">Sponsor:</span><br>
-      <i>${Array.isArray(dataSeason.Sponsor) ? dataSeason.Sponsor.join(', ') : (dataSeason.Sponsor || "-")}</i>
-    </div>
+ // 🧾 Info Season  
+  infoRange.innerHTML = `  
+    <div style="background:var(--card-bg);padding:14px 16px;border-radius:12px;box-shadow:var(--shadow);">  
+      <div style="font-weight:700;color:var(--highlight);font-size:1.05em;">🎬 ${dataSeason.tema || "Tanpa Tema"}</div>  
+      <div style="margin-top:6px;color:${isDark ? '#ddd' : '#333'};">${dataSeason.deskripsi || ""}</div>  
+      <div style="margin-top:6px;color:${isDark ? '#bbb' : '#555'};">📅 ${dataSeason.periode || "-"}</div>  
+      <div style="margin-top:8px;font-size:0.9em;">  
+        🎗️ <span style="color:var(--highlight);">Sponsor:</span><br><i>${dataSeason.Sponsor || "-"}</i>  
+      </div>  
+    </div>  
+  `;
 
-    ${dataSeason.logoSponsor && dataSeason.logoSponsor.length ? `
-      <div style="margin-top:10px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">
-        ${dataSeason.logoSponsor.map(logo => `
-          <div style="background:var(--section-bg);
-                      border-radius:10px;
-                      padding:8px 10px;
-                      box-shadow:var(--shadow);
-                      transition:transform .2s;
-                      display:flex;
-                      align-items:center;
-                      justify-content:center;">
-            <img src="${logo}" 
-                 alt="Logo Sponsor" 
-                 style="height:40px;max-width:120px;object-fit:contain;filter:${isDark ? 'brightness(0.9)' : 'none'};">
-          </div>
-        `).join('')}
-      </div>
-    ` : ''}
-  </div>
-`;
 
   
   // Aturan
