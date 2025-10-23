@@ -381,6 +381,9 @@ function setupKutipanObserver() {
   const kutipanEl = document.getElementById("kutipan");
   if (!kutipanEl) return;
 
+  // Hapus isi agar tidak membuat tombol dobel
+  kutipanEl.innerHTML = "";
+
   // Atur gaya dasar dan lebar tetap
   kutipanEl.style.minHeight = "5.2em"; // cukup untuk 3–4 baris
   kutipanEl.style.display = "flex";
@@ -395,6 +398,7 @@ function setupKutipanObserver() {
   kutipanEl.style.marginBottom = "1.2em";
   kutipanEl.style.cursor = "pointer";
 
+  // Elemen teks kutipan
   const textSpan = document.createElement("span");
   textSpan.id = "quoteText";
   textSpan.style.whiteSpace = "pre-wrap";
@@ -402,12 +406,13 @@ function setupKutipanObserver() {
 
   // Tombol Cari Quote di bawah kutipan
   const cariBtn = document.createElement("a");
+  cariBtn.id = "btnCariQuote";
   cariBtn.href = "/kreator/quote";
   cariBtn.textContent = "Cari Quote";
   cariBtn.style.marginTop = "10px";
   cariBtn.style.display = "inline-block";
-  cariBtn.style.padding = "8px 16px";
-  cariBtn.style.borderRadius = "10px";
+  cariBtn.style.padding = "8px 18px";
+  cariBtn.style.borderRadius = "12px";
   cariBtn.style.fontWeight = "600";
   cariBtn.style.textDecoration = "none";
   cariBtn.style.transition = "all 0.3s ease";
@@ -416,8 +421,11 @@ function setupKutipanObserver() {
   // Terapkan tema awal
   applyQuoteTheme();
 
+  // Ubah tema jika body berubah (manual event custom atau observer)
+  const themeObserver = new MutationObserver(applyQuoteTheme);
+  themeObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+
   kutipanEl.addEventListener("click", toggleJeda);
-  window.addEventListener("themechange", applyQuoteTheme);
 
   // Gunakan observer agar animasi hanya berjalan saat terlihat
   if (kutipanObserver) {
@@ -439,7 +447,7 @@ function setupKutipanObserver() {
 function applyQuoteTheme() {
   const isDark = document.body.classList.contains("dark-theme");
   const textSpan = document.getElementById("quoteText");
-  const cariBtn = document.querySelector("#kutipan a");
+  const cariBtn = document.getElementById("btnCariQuote");
   if (!textSpan || !cariBtn) return;
 
   textSpan.style.color = isDark ? "#ffe082" : "#111";
@@ -490,18 +498,25 @@ function tampilkanKutipanHurufDemiHuruf() {
 
     if (!menghapus && indexHuruf < teks.length) {
       textSpan.textContent += teks[indexHuruf++];
-    } else if (!menghapus && indexHuruf >= teks.length) {
+    } 
+    else if (!menghapus && indexHuruf >= teks.length) {
+      // Tunggu 3 detik sebelum mulai menghapus
       menghapus = true;
-      setTimeout(() => {}, 3000);
-    } else if (menghapus && indexHuruf > 0) {
+      clearInterval(intervalHuruf);
+      setTimeout(() => {
+        tampilkanKutipanHurufDemiHuruf(); // lanjut ke fase hapus
+      }, 3000);
+    } 
+    else if (menghapus && indexHuruf > 0) {
       textSpan.textContent = teks.substring(0, --indexHuruf);
-    } else if (menghapus && indexHuruf === 0) {
+    } 
+    else if (menghapus && indexHuruf === 0) {
       clearInterval(intervalHuruf);
       intervalHuruf = null;
       indexKutipan = (indexKutipan + 1) % kutipanList.length;
       setTimeout(tampilkanKutipanHurufDemiHuruf, 400);
     }
-  }, 60);
+  }, menghapus ? 60 : 60);
 }
 
 // ⏯️ Klik untuk jeda / lanjut
