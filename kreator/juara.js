@@ -47,7 +47,7 @@ const dataJuara = {
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah dusun Tanjung Bulan.",
     periode: "25 Oktober 2025 - 28 Desember 2025",
     Sponsor: "Karang Taruna Tanjung Bulan",
-    logoSponsor: "",
+    logoSponsor: "https://pulungrwo.github.io/img/logo-karang-taruna-tanjung-bulan.png",
     Poin: "false",
 
     Hadiah: [
