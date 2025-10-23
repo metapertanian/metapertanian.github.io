@@ -366,224 +366,235 @@ const kutipanList = [
   "Kamu bukan tagar viral, tapi kamu selalu trending di hatiku.",
   "Cinta itu kayak algoritma misterius — makin dipahami makin rumit."
 ];
-// =========================================================
-// 💬 Kutipan Bergantian (tanpa efek |, bisa jeda & cari quote)
-// =========================================================
+// =========================================================  
+// 💬 Kutipan Bergantian (tanpa efek |, bisa jeda & cari quote)  
+// =========================================================  
 
-let indexKutipan = 0,
-    indexHuruf = 0,
-    intervalHuruf = null,
-    menghapus = false,
-    jeda = false,
-    kutipanObserver = null,
-    urutanAcak = [],
-    teksAktif = "";
+let indexKutipan = 0,  
+    indexHuruf = 0,  
+    intervalHuruf = null,  
+    menghapus = false,  
+    jeda = false,  
+    kutipanObserver = null,  
+    urutanAcak = [],  
+    teksAktif = "";  
 
-// 🔀 Buat urutan acak tanpa pengulangan
-function buatUrutanAcak() {
-  urutanAcak = kutipanList.map((_, i) => i).sort(() => Math.random() - 0.5);
-  indexKutipan = 0;
-}
+// 🔀 Buat urutan acak tanpa pengulangan  
+function buatUrutanAcak() {  
+  urutanAcak = kutipanList.map((_, i) => i).sort(() => Math.random() - 0.5);  
+  indexKutipan = 0;  
+}  
 
-function ambilKutipanAcak() {
-  if (urutanAcak.length === 0 || indexKutipan >= urutanAcak.length) {
-    buatUrutanAcak(); // buat urutan baru setelah semua tampil
-  }
-  return urutanAcak[indexKutipan++];
-}
+function ambilKutipanAcak() {  
+  if (urutanAcak.length === 0 || indexKutipan >= urutanAcak.length) {  
+    buatUrutanAcak(); // buat urutan baru setelah semua tampil  
+  }  
+  return urutanAcak[indexKutipan++];  
+}  
 
-function setupKutipanObserver() {
-  const kutipanEl = document.getElementById("kutipan");
-  if (!kutipanEl) return;
+function setupKutipanObserver() {  
+  const kutipanEl = document.getElementById("kutipan");  
+  if (!kutipanEl) return;  
 
-  kutipanEl.innerHTML = "";
+  kutipanEl.innerHTML = "";  
 
-  // ✨ Tambah ruang tinggi agar kutipan panjang tidak menabrak
-  kutipanEl.style.minHeight = "6.5em";
-  kutipanEl.style.display = "flex";
-  kutipanEl.style.flexDirection = "column";
-  kutipanEl.style.alignItems = "center";
-  kutipanEl.style.justifyContent = "center";
-  kutipanEl.style.position = "relative";
-  kutipanEl.style.textAlign = "center";
-  kutipanEl.style.fontFamily = "'Poppins','Inter',sans-serif";
-  kutipanEl.style.fontSize = "1.2rem";
-  kutipanEl.style.fontWeight = "600";
-  kutipanEl.style.marginBottom = "1.2em";
-  kutipanEl.style.cursor = "pointer";
+  // ✨ Tambah ruang tinggi agar kutipan panjang tidak menabrak  
+  kutipanEl.style.minHeight = "6.5em";  
+  kutipanEl.style.display = "flex";  
+  kutipanEl.style.flexDirection = "column";  
+  kutipanEl.style.alignItems = "center";  
+  kutipanEl.style.justifyContent = "center";  
+  kutipanEl.style.position = "relative";  
+  kutipanEl.style.textAlign = "center";  
+  kutipanEl.style.fontFamily = "'Poppins','Inter',sans-serif";  
+  kutipanEl.style.fontSize = "1.2rem";  
+  kutipanEl.style.fontWeight = "600";  
+  kutipanEl.style.marginBottom = "1.2em";  
+  kutipanEl.style.cursor = "pointer";  
 
-  // Elemen teks kutipan
-  const textSpan = document.createElement("span");
-  textSpan.id = "quoteText";
-  textSpan.style.whiteSpace = "pre-wrap";
-  kutipanEl.appendChild(textSpan);
+  // Elemen teks kutipan  
+  const textSpan = document.createElement("span");  
+  textSpan.id = "quoteText";  
+  textSpan.style.whiteSpace = "pre-wrap";  
+  kutipanEl.appendChild(textSpan);  
 
-  // Tombol Cari Quote di bawah kutipan
-  const cariBtn = document.createElement("a");
-  cariBtn.id = "btnCariQuote";
-  cariBtn.href = "/kreator/quote";
-  cariBtn.textContent = "Cari Quote";
-  cariBtn.style.marginTop = "10px";
-  cariBtn.style.display = "inline-block";
-  cariBtn.style.padding = "8px 18px";
-  cariBtn.style.borderRadius = "12px";
-  cariBtn.style.fontWeight = "600";
-  cariBtn.style.textDecoration = "none";
-  cariBtn.style.transition = "all 0.3s ease";
-  kutipanEl.appendChild(cariBtn);
+  // Tombol Cari Quote di bawah kutipan  
+  const cariBtn = document.createElement("a");  
+  cariBtn.id = "btnCariQuote";  
+  cariBtn.href = "/kreator/quote";  
+  cariBtn.textContent = "Cari Quote";  
+  cariBtn.style.marginTop = "10px";  
+  cariBtn.style.display = "inline-block";  
+  cariBtn.style.padding = "8px 18px";  
+  cariBtn.style.borderRadius = "12px";  
+  cariBtn.style.fontWeight = "600";  
+  cariBtn.style.textDecoration = "none";  
+  cariBtn.style.transition = "all 0.3s ease";  
+  kutipanEl.appendChild(cariBtn);  
 
-  // Terapkan tema awal
-  applyQuoteTheme(true); // mode awal (tulis ulang, jangan acak)
+  // Terapkan tema awal  
+  applyQuoteTheme(true); // mode awal (tulis ulang, jangan acak)  
 
-  // 🔄 Ubah tema jika body berubah — tulis ulang kutipan aktif, bukan acak
-  const themeObserver = new MutationObserver(() => applyQuoteTheme(true));
-  themeObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  // 🔄 Ubah tema jika body berubah — tulis ulang kutipan aktif tanpa acak  
+  const themeObserver = new MutationObserver(() => {  
+    applyQuoteTheme(true);  
+    const textSpan = document.getElementById("quoteText");  
+    if (textSpan && teksAktif) {  
+      clearInterval(intervalHuruf);  
+      intervalHuruf = null;  
+      textSpan.textContent = teksAktif; // tampilkan ulang kutipan aktif  
+      // jika sedang tidak pause, lanjutkan efek mengetik ulang dari awal  
+      if (!jeda) {  
+        setTimeout(() => tampilkanKutipanHurufDemiHuruf(teksAktif), 200);  
+      }  
+    }  
+  });  
+  themeObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });  
 
-  kutipanEl.addEventListener("click", toggleJeda);
+  kutipanEl.addEventListener("click", toggleJeda);  
 
-  // Siapkan observer agar animasi hanya berjalan saat terlihat
-  if (kutipanObserver) {
-    try { kutipanObserver.disconnect(); } catch (e) {}
-    kutipanObserver = null;
-  }
+  // Siapkan observer agar animasi hanya berjalan saat terlihat  
+  if (kutipanObserver) {  
+    try { kutipanObserver.disconnect(); } catch (e) {}  
+    kutipanObserver = null;  
+  }  
 
-  kutipanObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      const textSpan = document.getElementById("quoteText");
-      if (!textSpan) return;
-      if (entry.isIntersecting) {
-        if (!intervalHuruf && !jeda) startKutipanIfVisible();
-      } else {
-        clearInterval(intervalHuruf);
-        intervalHuruf = null;
-        if (textSpan.textContent.trim() === "") textSpan.textContent = teksAktif;
-      }
-    });
-  }, { threshold: 0.45 });
+  kutipanObserver = new IntersectionObserver(entries => {  
+    entries.forEach(entry => {  
+      const textSpan = document.getElementById("quoteText");  
+      if (!textSpan) return;  
+      if (entry.isIntersecting) {  
+        if (!intervalHuruf && !jeda) startKutipanIfVisible();  
+      } else {  
+        clearInterval(intervalHuruf);  
+        intervalHuruf = null;  
+        if (textSpan.textContent.trim() === "") textSpan.textContent = teksAktif;  
+      }  
+    });  
+  }, { threshold: 0.45 });  
 
-  kutipanObserver.observe(kutipanEl);
+  kutipanObserver.observe(kutipanEl);  
 
-  // Siapkan urutan acak awal
-  buatUrutanAcak();
-}
+  // Siapkan urutan acak awal  
+  buatUrutanAcak();  
+}  
 
-// 🌗 Terapkan tema terang/gelap
-function applyQuoteTheme(rewriteOnly = false) {
-  const isDark = document.body.classList.contains("dark-theme");
-  const textSpan = document.getElementById("quoteText");
-  const cariBtn = document.getElementById("btnCariQuote");
-  if (!textSpan || !cariBtn) return;
+// 🌗 Terapkan tema terang/gelap  
+function applyQuoteTheme(rewriteOnly = false) {  
+  const isDark = document.body.classList.contains("dark-theme");  
+  const textSpan = document.getElementById("quoteText");  
+  const cariBtn = document.getElementById("btnCariQuote");  
+  if (!textSpan || !cariBtn) return;  
 
-  textSpan.style.color = isDark ? "#ffe082" : "#111";
-  textSpan.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
+  textSpan.style.color = isDark ? "#ffe082" : "#111";  
+  textSpan.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";  
 
-  cariBtn.style.background = isDark ? "#444" : "#eee";
-  cariBtn.style.color = isDark ? "#fff" : "#111";
-  cariBtn.style.boxShadow = isDark
-    ? "0 2px 8px rgba(255,255,255,0.1)"
-    : "0 2px 8px rgba(0,0,0,0.1)";
+  cariBtn.style.background = isDark ? "#444" : "#eee";  
+  cariBtn.style.color = isDark ? "#fff" : "#111";  
+  cariBtn.style.boxShadow = isDark  
+    ? "0 2px 8px rgba(255,255,255,0.1)"  
+    : "0 2px 8px rgba(0,0,0,0.1)";  
 
-  cariBtn.onmouseover = () => {
-    cariBtn.style.transform = "scale(1.05)";
-    cariBtn.style.opacity = "0.85";
-  };
-  cariBtn.onmouseout = () => {
-    cariBtn.style.transform = "scale(1)";
-    cariBtn.style.opacity = "1";
-  };
+  cariBtn.onmouseover = () => {  
+    cariBtn.style.transform = "scale(1.05)";  
+    cariBtn.style.opacity = "0.85";  
+  };  
+  cariBtn.onmouseout = () => {  
+    cariBtn.style.transform = "scale(1)";  
+    cariBtn.style.opacity = "1";  
+  };  
 
-  // ✨ Jika hanya ingin menulis ulang (tanpa mengacak)
-  if (rewriteOnly && teksAktif) {
-    const textSpan = document.getElementById("quoteText");
-    if (textSpan) textSpan.textContent = teksAktif;
-  }
-}
+  // ✨ Jika hanya ingin menulis ulang (tanpa mengacak)  
+  if (rewriteOnly && teksAktif) {  
+    textSpan.textContent = teksAktif;  
+  }  
+}  
 
-// 🚀 Mulai animasi saat elemen terlihat
-function startKutipanIfVisible() {
-  const el = document.getElementById("kutipan");
-  if (!el) return;
-  const rect = el.getBoundingClientRect();
-  const inView = rect.top < window.innerHeight && rect.bottom > 0;
-  if (inView) tampilkanKutipanHurufDemiHuruf();
-}
+// 🚀 Mulai animasi saat elemen terlihat  
+function startKutipanIfVisible() {  
+  const el = document.getElementById("kutipan");  
+  if (!el) return;  
+  const rect = el.getBoundingClientRect();  
+  const inView = rect.top < window.innerHeight && rect.bottom > 0;  
+  if (inView) tampilkanKutipanHurufDemiHuruf();  
+}  
 
-// 🛑 Hentikan animasi (tanpa hapus teks)
-function stopKutipan() {
-  clearInterval(intervalHuruf);
-  intervalHuruf = null;
-}
+// 🛑 Hentikan animasi (tanpa hapus teks)  
+function stopKutipan() {  
+  clearInterval(intervalHuruf);  
+  intervalHuruf = null;  
+}  
 
-// 🎬 Efek mengetik dan menghapus huruf demi huruf
-function tampilkanKutipanHurufDemiHuruf(teksBaru = null) {
-  const textSpan = document.getElementById("quoteText");
-  if (!textSpan) return;
+// 🎬 Efek mengetik dan menghapus huruf demi huruf  
+function tampilkanKutipanHurufDemiHuruf(teksBaru = null) {  
+  const textSpan = document.getElementById("quoteText");  
+  if (!textSpan) return;  
 
-  clearInterval(intervalHuruf);
+  clearInterval(intervalHuruf);  
 
-  if (!teksBaru) {
-    const idx = ambilKutipanAcak();
-    teksAktif = kutipanList[idx] || "";
-  } else {
-    teksAktif = teksBaru;
-  }
+  if (!teksBaru) {  
+    const idx = ambilKutipanAcak();  
+    teksAktif = kutipanList[idx] || "";  
+  } else {  
+    teksAktif = teksBaru;  
+  }  
 
-  indexHuruf = 0;
-  menghapus = false;
-  textSpan.textContent = "";
+  indexHuruf = 0;  
+  menghapus = false;  
+  textSpan.textContent = "";  
 
-  intervalHuruf = setInterval(() => {
-    if (jeda) return;
+  intervalHuruf = setInterval(() => {  
+    if (jeda) return;  
 
-    if (!menghapus && indexHuruf < teksAktif.length) {
-      textSpan.textContent += teksAktif[indexHuruf++];
-    } 
-    else if (!menghapus && indexHuruf >= teksAktif.length) {
-      menghapus = true;
-      clearInterval(intervalHuruf);
-      setTimeout(() => hapusHurufDemiHuruf(), 3000);
-    }
-  }, 50);
-}
+    if (!menghapus && indexHuruf < teksAktif.length) {  
+      textSpan.textContent += teksAktif[indexHuruf++];  
+    }   
+    else if (!menghapus && indexHuruf >= teksAktif.length) {  
+      menghapus = true;  
+      clearInterval(intervalHuruf);  
+      setTimeout(() => hapusHurufDemiHuruf(), 3000);  
+    }  
+  }, 50);  
+}  
 
-// 🔙 Efek menghapus huruf demi huruf
-function hapusHurufDemiHuruf() {
-  const textSpan = document.getElementById("quoteText");
-  if (!textSpan) return;
+// 🔙 Efek menghapus huruf demi huruf  
+function hapusHurufDemiHuruf() {  
+  const textSpan = document.getElementById("quoteText");  
+  if (!textSpan) return;  
 
-  clearInterval(intervalHuruf);
-  indexHuruf = teksAktif.length;
+  clearInterval(intervalHuruf);  
+  indexHuruf = teksAktif.length;  
 
-  intervalHuruf = setInterval(() => {
-    if (jeda) return;
+  intervalHuruf = setInterval(() => {  
+    if (jeda) return;  
 
-    if (indexHuruf > 0) {
-      textSpan.textContent = teksAktif.substring(0, --indexHuruf);
-    } else {
-      clearInterval(intervalHuruf);
-      intervalHuruf = null;
-      setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 400);
-    }
-  }, 50);
-}
+    if (indexHuruf > 0) {  
+      textSpan.textContent = teksAktif.substring(0, --indexHuruf);  
+    } else {  
+      clearInterval(intervalHuruf);  
+      intervalHuruf = null;  
+      setTimeout(() => tampilkanKutipanHurufDemiHuruf(), 400);  
+    }  
+  }, 50);  
+}  
 
-// ⏯️ Klik untuk jeda / lanjut
-function toggleJeda() {
-  const textSpan = document.getElementById("quoteText");
-  if (!textSpan) return;
+// ⏯️ Klik untuk jeda / lanjut  
+function toggleJeda() {  
+  const textSpan = document.getElementById("quoteText");  
+  if (!textSpan) return;  
 
-  jeda = !jeda;
+  jeda = !jeda;  
 
-  if (jeda) {
-    clearInterval(intervalHuruf);
-    intervalHuruf = null;
-    textSpan.textContent = teksAktif;
-  } else {
-    hapusHurufDemiHuruf();
-  }
-}
+  if (jeda) {  
+    clearInterval(intervalHuruf);  
+    intervalHuruf = null;  
+    textSpan.textContent = teksAktif;  
+  } else {  
+    hapusHurufDemiHuruf();  
+  }  
+}  
 
-// =========================================================
-// 🚀 Jalankan saat halaman siap
-// =========================================================
+// =========================================================  
+// 🚀 Jalankan saat halaman siap  
+// =========================================================  
 window.addEventListener("DOMContentLoaded", setupKutipanObserver);
