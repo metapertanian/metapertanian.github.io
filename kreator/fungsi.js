@@ -119,11 +119,15 @@ function tampilkanDataSeason() {
     `;
 
 // 🌟 Sponsor Section Elegan di bawah Aturan
+const oldSponsor = document.getElementById("sponsorBox");
+if (oldSponsor) oldSponsor.remove();
+
 const sponsorBox = document.createElement("div");
+sponsorBox.id = "sponsorBox";
 sponsorBox.style.cssText = `
-  margin-top: 18px;
-  padding: 14px 16px;
-  border-radius: 12px;
+  margin-top: 22px;
+  padding: 16px 18px;
+  border-radius: 14px;
   background: var(--card-bg);
   color: var(--text-color);
   box-shadow: var(--shadow);
@@ -131,16 +135,42 @@ sponsorBox.style.cssText = `
   font-size: 0.95rem;
   line-height: 1.6;
   transition: all 0.3s ease;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
 `;
-sponsorBox.innerHTML = `
-  <div style="font-weight:600; color:var(--highlight); letter-spacing:0.4px;">
-    🤝 Didukung oleh:
-  </div>
-  <div style="margin-top:6px; font-style:italic; color:var(--accent); font-size:1.05rem;">
-    ${dataSeason.Sponsor || "-"}
+
+// Pastikan bisa handle array maupun string
+const sponsors = Array.isArray(dataSeason.Sponsor) ? dataSeason.Sponsor : [dataSeason.Sponsor || "-"];
+const logos = Array.isArray(dataSeason.logoSponsor) ? dataSeason.logoSponsor : (dataSeason.logoSponsor ? [dataSeason.logoSponsor] : []);
+
+let sponsorHTML = `
+  <div style="font-weight:600; color:var(--highlight); letter-spacing:0.4px; margin-bottom:6px;">
+    🤝 Didukung oleh
   </div>
 `;
 
+// Tambahkan logo jika ada
+if (logos.length > 0) {
+  sponsorHTML += `
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin:10px 0;">
+      ${logos.map(src => `
+        <img src="${src}" alt="Sponsor Logo"
+          style="max-height:55px; max-width:140px; object-fit:contain;
+          filter:${document.body.classList.contains('dark-theme') ? 'brightness(0.9)' : 'none'};">
+      `).join("")}
+    </div>
+  `;
+}
+
+// Tambahkan daftar nama sponsor
+sponsorHTML += `
+  <div style="margin-top:6px; font-style:italic; color:var(--accent); font-size:1.05rem;">
+    ${sponsors.join(" • ")}
+  </div>
+`;
+
+sponsorBox.innerHTML = sponsorHTML;
 aturanEl.insertAdjacentElement("afterend", sponsorBox);
   }
 
