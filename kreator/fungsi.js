@@ -203,13 +203,13 @@ function tampilkanDataSeason() {
       • Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.<br><br>
       <b>Kriteria Penilaian:</b><br><br>
       <b>💡 Kreatifitas</b>: Maks 300 poin<br>
-      dihitung dari <u>Ide Konsep</u> (150), <u>Editing</u> (100), <u>Karakter</u> (50).<br><br>
+      dihitung dari Ide Konsep, Editing, Karakter.<br><br>
       <b>🏡 Lokal</b>: Maks 200 poin<br>
-      dihitung dari <u>Nuansa Lokal</u> (100), <u>Dampak Positif</u> (100).<br><br>
-      <b>🚀 Viral</b>: Tak terbatas<br>
-      dihitung otomatis dari reaksi (like, komen, share) menggunakan Algoritma kami.<br><br>
+      dihitung dari Nuansa Lokal, Dampak Positif.<br><br>
+      <b>🚀 Viral</b>: Poin tak terbatas<br>
+      Algoritma kami akan menghitung otomatis dari reaksi (like, komen, share).<br><br>
       ✅ Boleh mengajak orang lain untuk menaikkan reaksi.<br>
-      ⚠️ Dilarang spam, bot, atau beli reaksi — pelanggaran keras = diskualifikasi.
+      ⚠️ Dilarang spam, bot, atau beli reaksi, pelanggaran akan dikurangi poin bahkan diskualifikasi.
     `;
   }
 
