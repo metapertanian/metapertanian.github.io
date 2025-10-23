@@ -370,182 +370,259 @@ const kutipanList = [
 // 💬 KUTIPAN BERGANTIAN INTERAKTIF (TEMA TERANG & GELAP)
 // =========================================================
 
-
-let kutipanSisa = [...kutipanList]; // untuk acak tanpa ulang
-let historyKutipan = []; // simpan urutan yang sudah tampil
-let indexKutipan = null;
+let kutipanSisa = [...kutipanList]; // kutipan yang belum ditampilkan (acak tanpa ulang)
+let historyKutipan = [];            // riwayat indeks kutipan yg sudah tampil (untuk prev)
+let indexKutipan = null;            // indeks di kutipanList saat ini
 let intervalHuruf = null;
-let paused = false;
+let typingPaused = false;
 
-// 🧩 Setup kutipan
+// ----------------------------
+// Helper: baca warna dari CSS vars (fallback jika belum tersedia)
+function getThemeColor(varName, fallback) {
+  const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return v || fallback;
+}
+
+// Terapkan warna kutipan & elemen penting dari CSS vars
+function applyQuoteTheme() {
+  const isDark = document.body.classList.contains('dark-theme');
+
+  // preferensi: --quote-color, lalu --text-color, lalu fallback
+  const quoteColor = getThemeColor('--quote-color', getThemeColor('--text-color', isDark ? '#ffe082' : '#111'));
+  const quoteShadow = isDark ? '0 0 10px rgba(255,255,255,0.28)' : 'none';
+  const btnBg = getThemeColor('--btn-bg', isDark ? '#444' : '#eee');
+  const btnColor = getThemeColor('--btn-color', isDark ? '#fff' : '#111');
+
+  const quoteText = document.getElementById('quoteText');
+  if (quoteText) {
+    quoteText.style.color = quoteColor;
+    quoteText.style.textShadow = quoteShadow;
+  }
+
+  // tombol di bawah kutipan
+  const btns = document.querySelectorAll('#quoteBtns button');
+  btns.forEach(b => {
+    b.style.background = btnBg;
+    b.style.color = btnColor;
+    b.style.border = 'none';
+  });
+
+  // juga pastikan elemen info season/hadiah/poin/aturan mengikuti --text-color agar terbaca
+  const infoEls = [
+    document.getElementById('infoRange'),
+    document.getElementById('hadiahList'),
+    document.getElementById('daftarPeserta'),
+    document.getElementById('aturanText'),
+    document.getElementById('statusPoin'),
+  ];
+  const textColor = getThemeColor('--text-color', isDark ? '#ffe082' : '#111');
+  infoEls.forEach(el => {
+    if (el) el.style.color = textColor;
+  });
+}
+
+// ----------------------------
+// Setup UI kutipan
 function setupKutipan() {
-  const container = document.getElementById("kutipan");
+  const container = document.getElementById('kutipan');
   if (!container) return;
 
-  container.style.minHeight = "5.2em";
-  container.style.display = "flex";
-  container.style.flexDirection = "column";
-  container.style.alignItems = "center";
-  container.style.justifyContent = "center";
-  container.style.position = "relative";
-  container.style.marginBottom = "1em";
+  // layout container — tetap sediakan ruang 3-4 baris agar tidak menimpa
+  container.style.minHeight = '5.2em';
+  container.style.display = 'flex';
+  container.style.flexDirection = 'column';
+  container.style.alignItems = 'center';
+  container.style.justifyContent = 'center';
+  container.style.position = 'relative';
+  container.style.marginBottom = '1em';
 
+  // inner html: teks + tombol (tombol hidden sampai typing selesai)
   container.innerHTML = `
     <div id="quoteText" style="
       font-family: 'Poppins','Inter',sans-serif;
-      font-size: 1.2rem;
+      font-size: 1.12rem;
       font-weight: 600;
       text-align: center;
-      transition: color 0.25s ease;
+      transition: color 0.2s ease;
       white-space: pre-wrap;
       cursor: pointer;
-    "></div>
-    <div id="quoteBtns" style="margin-top:0.6em; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; visibility:hidden;">
-      <button id="quoteNavPrev" style="padding:6px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">&lt;</button>
-      <button id="copyQuoteBtn" style="padding:6px 14px; border:none; border-radius:10px; cursor:pointer; font-weight:600;">Salin Kutipan</button>
-      <button id="quoteNavNext" style="padding:6px 12px; border:none; border-radius:8px; cursor:pointer; font-weight:600;">&gt;</button>
+      padding: 0 8px;
+    " aria-live="polite"></div>
+
+    <div id="quoteBtns" style="
+      margin-top:0.6em;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:center;
+      visibility:hidden;
+    ">
+      <button id="quoteNavPrev" aria-label="Sebelumnya">&lt;</button>
+      <button id="copyQuoteBtn">Salin Kutipan</button>
+      <button id="quoteNavNext" aria-label="Berikutnya">&gt;</button>
     </div>
   `;
 
+  // event handlers
+  document.getElementById('quoteText').addEventListener('click', () => {
+    // jika sedang mengetik -> hentikan dan tampilkan penuh
+    // jika sudah berhenti (visible tombol) -> lanjut ke kutipan acak berikutnya
+    if (intervalHuruf) {
+      stopTypingAndShowFull();
+    } else {
+      // jika tombol terlihat berarti typing selesai; klik kutipan artinya next
+      // lanjutkan ke kutipan acak berikutnya
+      startNextFromClick();
+    }
+  });
+
+  document.getElementById('quoteNavPrev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    // prev harus menampilkan benar-benar previous dari history
+    if (historyKutipan.length >= 2) {
+      // hentikan typing jika ada
+      clearTypingInterval();
+      // ambil previous: buang current terakhir lalu ambil yang baru terakhir
+      historyKutipan.pop();
+      const prevIdx = historyKutipan[historyKutipan.length - 1];
+      indexKutipan = prevIdx;
+      startTyping(kutipanList[prevIdx]);
+    }
+  });
+
+  document.getElementById('quoteNavNext').addEventListener('click', (e) => {
+    e.stopPropagation();
+    // next: hentikan typing & ambil acak berikutnya dari sisa
+    clearTypingInterval();
+    tampilkanKutipanAcak();
+  });
+
+  document.getElementById('copyQuoteBtn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    salinKutipan();
+  });
+
+  // apply theme colors initially
   applyQuoteTheme();
 
-  document.getElementById("quoteNavPrev").addEventListener("click", () => {
-    stopKutipan();
-    tampilkanKutipanSebelumnya();
-  });
-  document.getElementById("quoteNavNext").addEventListener("click", () => {
-    stopKutipan();
-    tampilkanKutipanBerikutnya();
-  });
-  document.getElementById("copyQuoteBtn").addEventListener("click", salinKutipan);
-  document.getElementById("quoteText").addEventListener("click", togglePause);
-
+  // mulai tampilkan kutipan pertama
   tampilkanKutipanAcak();
 }
 
-// 🌗 Terapkan style tema terang/gelap
-function applyQuoteTheme() {
-  const isDark = document.body.classList.contains("dark-theme");
-  const container = document.getElementById("kutipan");
-  if (!container) return;
-
-  const quoteText = document.getElementById("quoteText");
-  quoteText.style.color = isDark ? "#ffe082" : "#111"; // bisa diganti kode warna Anda
-  quoteText.style.textShadow = isDark ? "0 0 10px rgba(255,255,255,0.28)" : "none";
-
-  const btns = container.querySelectorAll("button");
-  btns.forEach(btn => {
-    btn.style.background = isDark ? "#444" : "#eee";
-    btn.style.color = isDark ? "#fff" : "#111";
-  });
-}
-
-window.addEventListener("themechange", applyQuoteTheme);
-
-// =========================================================
-// 🧩 Tampilkan kutipan huruf demi huruf dengan sejarah
-// =========================================================
-function tampilkanKutipanAcak() {
-  if (kutipanSisa.length === 0) {
-    kutipanSisa = [...kutipanList];
-    historyKutipan = [];
+// ----------------------------
+// Typing logic
+function clearTypingInterval() {
+  if (intervalHuruf) {
+    clearInterval(intervalHuruf);
+    intervalHuruf = null;
   }
-
-  const rndIndex = Math.floor(Math.random() * kutipanSisa.length);
-  indexKutipan = kutipanList.indexOf(kutipanSisa[rndIndex]);
-  historyKutipan.push(indexKutipan);
-
-  startTyping(kutipanSisa[rndIndex]);
-  kutipanSisa.splice(rndIndex, 1);
 }
 
 function startTyping(teks) {
-  const quoteText = document.getElementById("quoteText");
-  const btns = document.getElementById("quoteBtns");
-  quoteText.textContent = "";
-  paused = false;
-  btns.style.visibility = "hidden";
+  const quoteText = document.getElementById('quoteText');
+  const btnContainer = document.getElementById('quoteBtns');
+  if (!quoteText || !btnContainer) return;
+
+  quoteText.textContent = '';
+  btnContainer.style.visibility = 'hidden';
+  clearTypingInterval();
 
   let i = 0;
-  clearInterval(intervalHuruf);
+  typingPaused = false;
   intervalHuruf = setInterval(() => {
-    if (paused) return;
+    if (typingPaused) return;
     if (i < teks.length) {
       quoteText.textContent += teks[i];
       i++;
     } else {
-      clearInterval(intervalHuruf);
-      intervalHuruf = null;
-      btns.style.visibility = "visible";
+      // selesai mengetik
+      clearTypingInterval();
+      btnContainer.style.visibility = 'visible';
     }
-  }, 60);
+  }, 50); // kecepatan mengetik (ms per huruf)
 }
 
-function stopKutipan() {
-  clearInterval(intervalHuruf);
-  intervalHuruf = null;
-  paused = true;
+function stopTypingAndShowFull() {
+  // hentikan interval, tampilkan full text, tampilkan tombol
+  clearTypingInterval();
+  typingPaused = true;
   if (indexKutipan !== null) {
-    document.getElementById("quoteText").textContent = kutipanList[indexKutipan];
+    const quoteText = document.getElementById('quoteText');
+    quoteText.textContent = kutipanList[indexKutipan];
   }
-  document.getElementById("quoteBtns").style.visibility = "visible";
+  const btnContainer = document.getElementById('quoteBtns');
+  if (btnContainer) btnContainer.style.visibility = 'visible';
 }
 
-function togglePause() {
-  if (!paused) {
-    stopKutipan();
-  } else {
-    tampilkanKutipanAcak();
-  }
-}
-
-// =========================================================
-// 🧩 Navigasi Prev/Next
-// =========================================================
-function tampilkanKutipanBerikutnya() {
+function startNextFromClick() {
+  // diklik setelah selesai => mulai kutipan acak berikutnya
   tampilkanKutipanAcak();
 }
 
-function tampilkanKutipanSebelumnya() {
-  if (historyKutipan.length < 2) return;
-  // hapus indeks terakhir
-  historyKutipan.pop();
-  const prevIndex = historyKutipan[historyKutipan.length - 1];
-  indexKutipan = prevIndex;
-  startTyping(kutipanList[prevIndex]);
+// ----------------------------
+// Acak tanpa ulang sampai habis + track history
+function tampilkanKutipanAcak() {
+  if (kutipanSisa.length === 0) {
+    // reset sisa dan history jika sudah habis
+    kutipanSisa = [...kutipanList];
+    historyKutipan = [];
+  }
+
+  const rnd = Math.floor(Math.random() * kutipanSisa.length);
+  const teks = kutipanSisa[rnd];
+  const idx = kutipanList.indexOf(teks);
+  indexKutipan = idx;
+
+  // push ke history (untuk prev)
+  historyKutipan.push(idx);
+
+  // hapus dari sisa agar tidak diulang
+  kutipanSisa.splice(rnd, 1);
+
+  startTyping(teks);
 }
 
-// =========================================================
-// 🧩 Salin kutipan
-// =========================================================
+// ----------------------------
+// Salin kutipan
 function salinKutipan() {
-  const text = document.getElementById("quoteText")?.textContent || "";
-  if (!text) return;
-  navigator.clipboard.writeText(text).then(() => alert("Kutipan disalin!"));
-}
-
-// =========================================================
-// 🚀 Jalankan saat DOM siap
-// =========================================================
-window.addEventListener("DOMContentLoaded", () => {
-  setupKutipan();
-  tampilkanDataSeasonAwal();
-});
-
-// =========================================================
-// 🧩 Auto load data season
-// =========================================================
-function tampilkanDataSeasonAwal() {
-  const select = document.getElementById("seasonSelect") || document.getElementById("season");
-  if (!select) return;
-
-  // gunakan value default atau option pertama
-  const seasonAktif = select.value || select.options[0]?.value;
-  if (seasonAktif) {
-    select.value = seasonAktif;
-    // panggil fungsi update data sekaligus
-    if (typeof gantiSeason === "function") {
-      gantiSeason(); // langsung update hadiah/poin/aturan
-    }
+  const txt = document.getElementById('quoteText')?.textContent || '';
+  if (!txt) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(() => {
+      // gunakan notifikasi sederhana
+      try { window.toastr?.success?.('Kutipan disalin!'); } catch(e) {}
+      alert('Kutipan disalin!');
+    }).catch(() => alert('Gagal menyalin kutipan.'));
+  } else {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    alert('Kutipan disalin!');
   }
 }
+
+// ----------------------------
+// Integrasi tema & data load saat DOM siap
+window.addEventListener('DOMContentLoaded', () => {
+  setupKutipan();
+  // pastikan warna tema juga ter-aplikasi ke elemen info/hadiah/poin/aturan
+  applyQuoteTheme();
+  // pastikan load data season/hadiah/poin/aturan pada muat pertama
+  if (typeof tampilkanDataSeason === 'function') {
+    tampilkanDataSeason();
+  } else if (typeof tampilkanDataSeasonAwal === 'function') {
+    // fallback jika fungsi bernama lain
+    tampilkanDataSeasonAwal();
+  }
+});
+
+// jalankan applyQuoteTheme juga saat theme berubah
+window.addEventListener('themechange', applyQuoteTheme);
+window.addEventListener('click', () => {
+  // jika theme toggle mengubah class secara eksternal, panggil ulang
+  applyQuoteTheme();
+});
