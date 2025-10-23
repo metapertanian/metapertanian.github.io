@@ -160,28 +160,54 @@ function tampilkanDataSeason() {
   });
 
   // 🔢 Pagination
-  const pagination = document.getElementById("pagination");
-  if (pagination) {
-    pagination.innerHTML = "";
-    pagination.style.textAlign = "center";
-    for (let i = 1; i <= totalPages; i++) {
-      const btn = document.createElement("button");
-      btn.textContent = i;
-      btn.className = (i === currentPage) ? "active" : "";
-      btn.style.cssText = `
-        margin:4px;padding:6px 10px;border-radius:8px;border:none;
-        cursor:pointer;
-        background:${i === currentPage ? 'var(--highlight)' : (isDark ? '#1b1b1b' : '#e6e6e6')};
-        color:${i === currentPage ? '#000' : (isDark ? '#fff' : '#111')};
-      `;
+const pagination = document.getElementById("pagination");
+if (pagination) {
+  pagination.innerHTML = "";
+  pagination.style.textAlign = "center";
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+
+    const aktif = i === currentPage;
+    btn.disabled = aktif; // ⛔ tidak bisa diklik jika halaman aktif
+
+    btn.style.cssText = `
+      margin:4px;
+      padding:6px 10px;
+      border-radius:8px;
+      border:none;
+      font-weight:600;
+      transition:all 0.25s ease;
+      cursor:${aktif ? "default" : "pointer"};
+      opacity:${aktif ? "1" : "0.9"};
+      background:${aktif 
+        ? (isDark ? "#ffc107" : "#ffeb3b")   // warna aktif (kontras)
+        : (isDark ? "#1f2a33" : "#e0e0e0")}; // warna normal
+      color:${aktif 
+        ? (isDark ? "#000" : "#000")         // teks halaman aktif
+        : (isDark ? "#fff" : "#222")};       // teks halaman normal
+      box-shadow:${aktif 
+        ? (isDark ? "0 0 10px rgba(255,193,7,0.5)" : "0 0 8px rgba(255,235,59,0.5)")
+        : "none"};
+    `;
+
+    if (!aktif) {
+      btn.onmouseover = () => {
+        btn.style.background = isDark ? "#2d3b46" : "#d5d5d5";
+      };
+      btn.onmouseleave = () => {
+        btn.style.background = isDark ? "#1f2a33" : "#e0e0e0";
+      };
       btn.onclick = () => {
         currentPage = i;
         tampilkanDataSeason();
         document.getElementById("poin").scrollIntoView({ behavior: "smooth" });
       };
-      pagination.appendChild(btn);
     }
+
+    pagination.appendChild(btn);
   }
+}
 
   // 🏆 Hadiah
 const juaraBox = document.getElementById("hadiahList");
