@@ -7,12 +7,12 @@ const dataJuara = {
   // ===============================
   // 🎬 SEASON 2
   // ===============================
-  "LKK S2": {
+  "Lomba Konten S2": {
     tema: "Sisi Lain Sawojajar",
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah desa Sawojajar.",
     periode: "10 Januari 2026 - 20 Maret 2026",
     Sponsor: "Bank Desa Nusantara",
-    Poin: "false",
+    Poin: "true",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Rp 200rb + Sertifikat" },
@@ -41,12 +41,12 @@ const dataJuara = {
   // ===============================
   // 🎥 SEASON 1
   // ===============================
-  "Season 1": {
+  "Lomba Konten S1": {
     tema: "Sisi Lain Tanjung Bulan",
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah dusun Tanjung Bulan.",
     periode: "25 Oktober 2025 - 28 Desember 2025",
     Sponsor: "Toko Tani Makmur",
-    Poin: "true",
+    Poin: "false",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Rp 150rb + Sertifikat" },
