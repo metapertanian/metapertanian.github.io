@@ -47,16 +47,21 @@ if (aturanEl) {
       color: var(--text-color);
       border-left: 4px solid var(--highlight);
     ">
-      <div style="font-weight:700;font-size:1.05em;margin-bottom:8px;color:var(--highlight);">
-        📅 Periode Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span>
-      </div>
+      
 
       <ul style="list-style: none; padding-left: 0; margin: 0;">
         <li>• Lomba terbuka untuk umum.</li>
         <li>• Konten sesuai tema: <b>${dataSeason.tema}</b></li>
         <li>• ${dataSeason.deskripsi}</li>
+        <li>• Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
+      
         <li>• Video hasil karya sendiri (bukan reupload).</li>
         <li>• Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
+        <li>• Konten tidak boleh melanggar hukum.</li>
+        <li>• Durasi paling lama 3 menit</li>
+        <li>• kirimkan video kualitas HD atau Resolusi minimal 720p.</li>
+        <li>• Panitia berhak untuk mengupload dan mengelola konten peserta.</li>
+        <li>• Poin diambil dari penilaian dewan juri dan interaksi konten di tiktok.</li>
       </ul>
 
       <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
