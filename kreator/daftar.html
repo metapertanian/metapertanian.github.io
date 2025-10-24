@@ -4,55 +4,141 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pendaftaran Lomba Konten | Rumah Kreator by PROxyz</title>
-    <link rel="stylesheet" href="gaya.css" />
+  <link rel="stylesheet" href="gaya.css" />
+  <link rel="stylesheet" href="daftar.css" />
 </head>
 <body>
-  
 
-  <div class="form-container">
-    <div id="statusInfo" class="status"></div>
+  <!-- 🔝 NAVBAR -->
+  <nav class="nav">
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    <div class="nav-links" id="menu">
+      <a href="/">Beranda</a>
+      <a href="/#hadiah">Hadiah</a>
+      <a href="/#poin">Poin Kreator</a>
+      <a href="/#aturan">Aturan</a>
+      <a href="/kreator/tips">Tips & Trik</a>
+    </div>
+    <a href="/" class="nav-brand">Rumah Kreator</a>
+    <button class="theme-toggle" onclick="toggleTheme()">🔆</button>
+  </nav>
 
-    <label for="tiktok">Nama Akun TikTok *</label>
-    <input type="text" id="tiktok" placeholder="@namapengguna" required />
+  <!-- 👤 HEADER -->
+  <header class="header">
+    <img src="/img/pulung.jpg" alt="Profil" class="profil-img">
+    <div class="kutipan" id="kutipan"></div>
+    <div id="sambutan"></div>
+  </header>
 
-    <label for="caption">Caption *</label>
-    <textarea id="caption" placeholder="Keterangan video..." required></textarea>
+  <!-- 📝 FORM PENDAFTARAN -->
+  <section class="form-section">
+    <div id="statusBox" class="status-box"></div>
 
-    <label for="telepon">Nomor Telepon *</label>
-    <input type="tel" id="telepon" placeholder="Contoh: 089512345678" required />
+    <div class="form-container">
+      <label for="grup">Grup</label>
+      <input type="text" id="grup" readonly placeholder="Akan diisi otomatis..." />
 
-    <label for="hp">Merek HP *</label>
-    <input type="text" id="hp" placeholder="Oppo A78" required />
+      <label for="tiktok">Nama Akun TikTok *</label>
+      <input type="text" id="tiktok" placeholder="@namapengguna" required />
 
-    <button onclick="kirimWA()">Kirim ke WhatsApp</button>
-  </div>
+      <label for="caption">Caption *</label>
+      <textarea id="caption" placeholder="Keterangan video..." required></textarea>
 
-  <div class="footer">Powered by Tanjung Bulan Squad 🌙</div>
+      <label for="telepon">Nomor Telepon *</label>
+      <input type="tel" id="telepon" placeholder="Contoh: 089512345678" required />
 
+      <label for="hp">Merek HP *</label>
+      <input type="text" id="hp" placeholder="Oppo A78" required />
+
+      <button onclick="kirimWA()">Kirim ke WhatsApp</button>
+    </div>
+  </section>
+
+  <footer>© 2025 Rumah Kreator by Tanjung Bulan Cyber™</footer>
+
+  <script src="kutipan.js"></script>
   <script>
-    // 🟢 STATUS PENDAFTARAN
-    // Pilihan: "buka", "tutup", "belum"
-    const statusPendaftaran = "belum"; 
+    // =========================================================
+    // 🧭 Ambil Parameter URL
+    // =========================================================
+    const params = new URLSearchParams(window.location.search);
+    const nama = params.get("nama") || "Kreator Hebat";
+    const grup = params.get("grup") || "";
+    const kodeUrl = params.get("kode");
+    document.getElementById("grup").value = grup;
 
-    const statusInfo = document.getElementById("statusInfo");
-    if (statusPendaftaran === "buka") {
-      statusInfo.textContent = "🟢 Pendaftaran sedang dibuka!";
-      statusInfo.style.color = "#00ffb7";
-    } else if (statusPendaftaran === "tutup") {
-      statusInfo.textContent = "🔴 Pendaftaran telah ditutup.";
-      statusInfo.classList.add("closed");
-    } else if (statusPendaftaran === "belum") {
-      statusInfo.textContent = "🕓 Pendaftaran belum dibuka.";
-      statusInfo.classList.add("soon");
+    document.getElementById("sambutan").innerHTML = `
+      <div class="sambutan-text">
+        Hai, <b>${nama}</b>! 👋<br>
+        Selamat datang di halaman pendaftaran lomba konten kreator.
+      </div>
+    `;
+
+    // =========================================================
+    // 🔢 Buat Kode Otomatis [Hari][Jam][Menit][Detik]
+    // =========================================================
+    function buatKodeHari() {
+      const hari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const s = String(now.getSeconds()).padStart(2, "0");
+      return `${hari[now.getDay()]}${h}${m}${s}`;
     }
 
+    // =========================================================
+    // 🌐 Dapatkan IP & Cegah Penggunaan Ganda
+    // =========================================================
+    let ipPengguna = "";
+    fetch("https://api.ipify.org?format=json")
+      .then(r => r.json())
+      .then(data => {
+        ipPengguna = data.ip;
+        const kodeTersimpan = localStorage.getItem(`kode_${ipPengguna}`);
+        if (!kodeTersimpan) {
+          const kodeBaru = buatKodeHari();
+          localStorage.setItem(`kode_${ipPengguna}`, kodeBaru);
+          tampilkanStatus(kodeBaru, true);
+        } else {
+          tampilkanStatus(kodeTersimpan, false);
+        }
+      })
+      .catch(() => {
+        tampilkanStatus("Tidak dapat mengambil IP", false);
+      });
+
+    // =========================================================
+    // ✅ Tampilkan Status Berdasarkan Kode
+    // =========================================================
+    function tampilkanStatus(kode, baru) {
+      const statusBox = document.getElementById("statusBox");
+      if (baru) {
+        statusBox.innerHTML = `
+          <div class="notif success">
+            ✅ Kode unik kamu: <b>${kode}</b><br>
+            Silakan isi data di bawah ini dan kirim. Jangan lupa kirim juga video karyamu ke grup.
+          </div>
+        `;
+      } else {
+        statusBox.innerHTML = `
+          <div class="notif warning">
+            ⚠️ Kamu sudah pernah mengakses halaman ini dengan kode <b>${kode}</b>.<br>
+            Setiap perangkat hanya bisa menggunakan satu kode.<br><br>
+            <a href="https://wa.me/6288971344131?text=Halo%20admin%2C%20saya%20perlu%20kode%20baru%20untuk%20pendaftaran." target="_blank" class="wa-btn">
+              📞 Hubungi Panitia
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    // =========================================================
+    // 📩 Kirim ke WhatsApp
+    // =========================================================
     function kirimWA() {
-      // Jika pendaftaran belum dibuka atau sudah ditutup
-      if (statusPendaftaran === "tutup") {
-        alert("⚠️ Maaf, pendaftaran sudah ditutup. Terima kasih atas antusiasmenya!");
-        return;
-      } else if (statusPendaftaran === "belum") {
-        alert("⚠️ Pendaftaran belum dibuka. Silakan cek kembali nanti!");
+      const kodeAktif = localStorage.getItem(`kode_${ipPengguna}`);
+      if (!kodeAktif) {
+        alert("⚠️ Kode belum valid. Silakan muat ulang halaman atau hubungi panitia.");
         return;
       }
 
@@ -60,22 +146,34 @@
       const caption = document.getElementById('caption').value.trim();
       const telepon = document.getElementById('telepon').value.trim();
       const hp = document.getElementById('hp').value.trim();
+      const grupVal = document.getElementById('grup').value.trim();
 
       if (!tiktok || !caption || !telepon || !hp) {
         alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
         return;
       }
 
-      const pesan = `*Pendaftaran Lomba Konten Kreator Tanjung Bulan*%0A
+      const pesan = `*Pendaftaran Lomba Konten Rumah Kreator*%0A
+👤 Nama: ${nama}%0A
+👥 Grup: ${grupVal || '-'}%0A
 📱 Akun TikTok: ${tiktok}%0A
 📝 Caption: ${caption}%0A
 📞 Nomor Telepon: ${telepon}%0A
 📸 Merek HP: ${hp}%0A
-%0ASaya mendaftar sebagai peserta lomba.`;
+🔑 Kode: ${kodeAktif}%0A
+%0ASaya telah mengisi formulir pendaftaran.`;
 
-      const nomor = "6288971344131"; // gunakan 62
+      const nomor = "6288971344131";
       const url = `https://wa.me/${nomor}?text=${pesan}`;
       window.open(url, "_blank");
+    }
+
+    // =========================================================
+    // 🔘 Navbar Toggle (mobile)
+    // =========================================================
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.classList.toggle("active");
     }
   </script>
 </body>
