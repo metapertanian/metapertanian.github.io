@@ -52,17 +52,17 @@ if (aturanEl) {
       </div>
 
       <ul style="list-style: none; padding-left: 0; margin: 0;">
-  <li>• 📅 Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
-  <li>• 🎬 Tema lomba: <b>${dataSeason.tema}</b></li>
+  <li>• Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
+  <li>• Tema lomba: <b>${dataSeason.tema}</b></li>
   <li>• ${dataSeason.deskripsi}</li>
-  <li>• 👥 Lomba terbuka untuk umum.</li>
-  <li>• 🎥 Video hasil karya sendiri dan belum pernah diunggah sebelumnya.</li>
-  <li>• 🧠 Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
-  <li>• ⚖️ Konten tidak boleh melanggar hukum.</li>
-  <li>• ⏱️ Durasi maksimal 3 menit.</li>
-  <li>• 📹 Kualitas video minimal HD (720p).</li>
-  <li>• 🗂️ Kirimkan video ke panitia untuk diunggah di media sosial resmi lomba.</li>
-  <li>• 🧮 Poin dihitung otomatis menggunakan <b>algoritma internal</b> dan hasil bersifat final.</li>
+  <li>• Lomba terbuka untuk umum.</li>
+  <li>• Video hasil karya sendiri dan belum pernah diunggah sebelumnya.</li>
+  <li>• Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
+  <li>• Konten tidak boleh melanggar hukum.</li>
+  <li>• Durasi maksimal 3 menit.</li>
+  <li>• Kualitas video minimal HD (720p).</li>
+  <li>• Kirimkan video ke panitia untuk diunggah di media sosial resmi lomba.</li>
+  <li>• Poin dihitung otomatis menggunakan <b>algoritma internal</b> dan hasil bersifat final.</li>
 </ul>
 
       <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
@@ -73,13 +73,13 @@ if (aturanEl) {
 
       <div style="margin-left:10px;">
         <div><b>💡 Kreativitas</b>: <span style="opacity:0.85;">dihitung dari Ide Konsep, Editing, Karakter.</span></div>
-        <div style="margin-top:6px;"><b>🏡 Lokal</b>: <span style="opacity:0.85;">dihitung dari Nuansa Lokal, Dampak Positif.</span></div>
+        <div style="margin-top:6px;"><b>🏡 Lokal</b>: <span style="opacity:0.85;">Nuansa Lokal dan Dampak Positif atau Pesan Moral.</span></div>
         <div style="margin-top:6px;"><b>🚀 Viral</b>: <span style="opacity:0.85;">dihitung dari interaksi (like, komen, share).</span></div>
 
 </div>
 
       <ul style="list-style: none; padding-left: 0; margin: 0;">
-        <li>Boleh mengajak orang lain untuk menaikkan interaksi tapi dilarang spam, bot, atau beli interaksi.</li>
+        <li>Boleh mengajak orang lain untuk menaikkan interaksi tapi dilarang spam, bot, atau beli interaksi. pelanggaran akan dikurangi poin.</li>
       </ul>
 
 <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
@@ -87,7 +87,7 @@ if (aturanEl) {
 <div style="margin-bottom:6px;font-weight:700;font-size:1em;color:var(--highlight);">
         🏆 Cara Pendaftaran:
       </div>
-ketik <b>daftar</b> pada grup whatsapp RISMA, Karang Taruna, Tanjung Bulan Squad, dan grup yg disediakan oleh panitia.
+ketik <b>daftar</b> di grup WA : RISMA, Karang Taruna, Tanjung Bulan Squad, atau grup yg disediakan panitia.
       
 
     </div>
