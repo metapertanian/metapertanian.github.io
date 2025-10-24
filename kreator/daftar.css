@@ -1,102 +1,124 @@
 /* =========================================================
-   🌿 FORM PENDAFTARAN
+   📋 FORM PENDAFTARAN
 ========================================================= */
 .form-section {
+  max-width: 680px;
+  margin: 40px auto;
   background: var(--section-bg);
-  border-radius: 20px;
-  padding: 30px 20px;
-  max-width: 700px;
-  margin: 100px auto 40px;
-  box-shadow: 0 8px 25px var(--shadow);
-  transition: background 0.3s ease;
+  padding: 28px 24px;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px var(--shadow);
 }
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-label {
+.form-container label {
+  display: block;
+  margin-top: 14px;
   font-weight: 600;
   color: var(--text-main);
-  margin-bottom: 4px;
 }
 
-input, textarea {
-  padding: 10px 12px;
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 10px 14px;
+  margin-top: 6px;
   border: 1px solid var(--card-border);
   border-radius: 10px;
-  background: var(--card-bg);
+  background: var(--input-bg);
   color: var(--text-main);
-  resize: none;
-  transition: 0.3s;
-}
-input:focus, textarea:focus {
-  outline: none;
-  border-color: var(--highlight);
-  box-shadow: 0 0 6px var(--highlight);
+  font-family: 'Poppins', sans-serif;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
-button {
-  background: var(--accent-secondary);
-  border: none;
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
+.form-container input:focus,
+.form-container textarea:focus {
+  border-color: var(--highlight);
+  box-shadow: 0 0 8px var(--highlight);
+  outline: none;
 }
-button:hover {
+
+.form-container button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--accent-secondary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.form-container button:hover {
   background: var(--accent-primary);
   transform: translateY(-2px);
 }
 
 /* =========================================================
-   🌟 NOTIFIKASI KODE
+   🧾 STATUS BOX
 ========================================================= */
 .status-box {
+  text-align: center;
   margin-bottom: 18px;
 }
+
 .notif {
-  border-radius: 12px;
   padding: 16px 18px;
-  line-height: 1.5;
-  font-size: 0.95rem;
-  box-shadow: 0 3px 12px var(--shadow);
-  text-align: center;
-  transition: 0.3s;
+  border-radius: 12px;
+  line-height: 1.6;
+  box-shadow: var(--shadow);
 }
+
 .notif.success {
-  background: rgba(46, 125, 50, 0.15);
+  background: rgba(46, 125, 50, 0.12);
   border-left: 5px solid var(--accent-secondary);
   color: var(--text-main);
 }
+
 .notif.warning {
   background: rgba(255, 193, 7, 0.15);
-  border-left: 5px solid #ffb300;
+  border-left: 5px solid var(--highlight);
   color: var(--text-main);
 }
 
 .wa-btn {
   display: inline-block;
-  background: #25d366;
+  background: var(--accent);
   color: #fff;
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin: 4px;
   text-decoration: none;
   font-weight: 600;
-  transition: background 0.3s;
+  transition: background 0.3s ease;
 }
-.wa-btn:hover { background: #1ebe5d; }
+
+.wa-btn:hover {
+  background: var(--highlight);
+}
 
 /* =========================================================
-   👋 SAMBUTAN
+   🕓 INFO SEASON
 ========================================================= */
-.sambutan-text {
-  margin-top: 10px;
-  font-size: 1rem;
+.info-season {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.season-box {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  line-height: 1.6;
+  display: inline-block;
   color: var(--text-main);
-  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.season-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px var(--shadow);
 }
