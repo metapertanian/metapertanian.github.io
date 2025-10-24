@@ -1,0 +1,102 @@
+/* =========================================================
+   🌿 FORM PENDAFTARAN
+========================================================= */
+.form-section {
+  background: var(--section-bg);
+  border-radius: 20px;
+  padding: 30px 20px;
+  max-width: 700px;
+  margin: 100px auto 40px;
+  box-shadow: 0 8px 25px var(--shadow);
+  transition: background 0.3s ease;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+label {
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+input, textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  background: var(--card-bg);
+  color: var(--text-main);
+  resize: none;
+  transition: 0.3s;
+}
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--highlight);
+  box-shadow: 0 0 6px var(--highlight);
+}
+
+button {
+  background: var(--accent-secondary);
+  border: none;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background: var(--accent-primary);
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   🌟 NOTIFIKASI KODE
+========================================================= */
+.status-box {
+  margin-bottom: 18px;
+}
+.notif {
+  border-radius: 12px;
+  padding: 16px 18px;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  box-shadow: 0 3px 12px var(--shadow);
+  text-align: center;
+  transition: 0.3s;
+}
+.notif.success {
+  background: rgba(46, 125, 50, 0.15);
+  border-left: 5px solid var(--accent-secondary);
+  color: var(--text-main);
+}
+.notif.warning {
+  background: rgba(255, 193, 7, 0.15);
+  border-left: 5px solid #ffb300;
+  color: var(--text-main);
+}
+
+.wa-btn {
+  display: inline-block;
+  background: #25d366;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+.wa-btn:hover { background: #1ebe5d; }
+
+/* =========================================================
+   👋 SAMBUTAN
+========================================================= */
+.sambutan-text {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
