@@ -13,13 +13,13 @@
   <nav class="nav">
     <button class="nav-toggle" onclick="toggleMenu()">☰</button>
     <div class="nav-links" id="menu">
-      <a href="/">Beranda</a>
-      <a href="/#hadiah">Hadiah</a>
-      <a href="/#poin">Poin Kreator</a>
-      <a href="/#aturan">Aturan</a>
+      <a href="/kreator">Rumah Kreator</a>
+      <a href="/kreator/#hadiah">Hadiah</a>
+      <a href="/kreator/#poin">Poin Kreator</a>
+      <a href="/kreator/#aturan">Aturan</a>
       <a href="/kreator/tips">Tips & Trik</a>
     </div>
-    <a href="/" class="nav-brand">Rumah Kreator</a>
+    <a href="/" class="nav-brand">Pendaftaran Konten</a>
     <button class="theme-toggle" onclick="toggleTheme()">🔆</button>
   </nav>
 
@@ -78,7 +78,7 @@
     // 🔢 Buat Kode Otomatis [Hari][Jam][Menit][Detik]
     // =========================================================
     function buatKodeHari() {
-      const hari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+      const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
       const now = new Date();
       const h = String(now.getHours()).padStart(2, "0");
       const m = String(now.getMinutes()).padStart(2, "0");
@@ -153,7 +153,7 @@
         return;
       }
 
-      const pesan = `*Pendaftaran Lomba Konten Rumah Kreator*%0A
+      const pesan = `*Pendaftaran Lomba Konten Kreator*%0A
 👤 Nama: ${nama}%0A
 👥 Grup: ${grupVal || '-'}%0A
 📱 Akun TikTok: ${tiktok}%0A
