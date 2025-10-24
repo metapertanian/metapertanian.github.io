@@ -33,7 +33,7 @@ function tampilkanDataSeason() {
 
 
   
-  // 📜 Aturan
+    // 📜 Aturan
 const aturanEl = document.getElementById("aturanText");
 if (aturanEl) {
   aturanEl.innerHTML = `
@@ -47,21 +47,22 @@ if (aturanEl) {
       color: var(--text-color);
       border-left: 4px solid var(--highlight);
     ">
-      
+      <div style="margin-bottom:6px;font-weight:700;font-size:1em;color:var(--highlight);">
+        🪧 Syarat & Ketentuan:
+      </div>
 
       <ul style="list-style: none; padding-left: 0; margin: 0;">
+        <li>• Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
         <li>• Lomba terbuka untuk umum.</li>
         <li>• Konten sesuai tema: <b>${dataSeason.tema}</b></li>
         <li>• ${dataSeason.deskripsi}</li>
-        <li>• Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
-      
-        <li>• Video hasil karya sendiri (bukan reupload).</li>
+        <li>• Video hasil karya sendiri dan belum pernah di upload.</li>
         <li>• Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
         <li>• Konten tidak boleh melanggar hukum.</li>
         <li>• Durasi paling lama 3 menit</li>
         <li>• kirimkan video kualitas HD atau Resolusi minimal 720p.</li>
         <li>• Panitia berhak untuk mengupload dan mengelola konten peserta.</li>
-        <li>• Poin diambil dari penilaian dewan juri dan interaksi konten di tiktok.</li>
+        <li>• Poin dihitung otomatis dengan <b>Algoritma kami</b> dan tidak bisa di ganggu gugat.</li>
       </ul>
 
       <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
@@ -74,7 +75,8 @@ if (aturanEl) {
         <div><b>💡 Kreativitas</b>: <span style="opacity:0.85;">dihitung dari Ide Konsep, Editing, Karakter.</span></div>
         <div style="margin-top:6px;"><b>🏡 Lokal</b>: <span style="opacity:0.85;">dihitung dari Nuansa Lokal, Dampak Positif.</span></div>
         <div style="margin-top:6px;"><b>🚀 Viral</b>: <span style="opacity:0.85;">dihitung dari interaksi (like, komen, share).</span></div>
-      </div>
+
+</div>
 
       <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
 
@@ -82,6 +84,15 @@ if (aturanEl) {
         <li>✅ Boleh mengajak orang lain untuk menaikkan interaksi.</li>
         <li>⚠️ Dilarang spam, bot, atau beli interaksi — pelanggaran akan dikurangi poin bahkan didiskualifikasi.</li>
       </ul>
+
+<hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
+
+<div style="margin-bottom:6px;font-weight:700;font-size:1em;color:var(--highlight);">
+        🏆 Cara Pendaftaran:
+      </div>
+ketik <b>daftar</b> pada grup whatsapp RISMA, Karang Taruna, Tanjung Bulan Squad, dan grup yg disediakan oleh panitia.
+      
+
     </div>
   `;
 
