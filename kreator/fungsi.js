@@ -85,7 +85,7 @@ if (aturanEl) {
 <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
 
 <div style="margin-bottom:6px;font-weight:700;font-size:1em;color:var(--highlight);">
-        🏆 Cara Pendaftaran:
+        ✍️ Cara Pendaftaran:
       </div>
 ketik <b>daftar</b> di grup WA : RISMA, Karang Taruna, Tanjung Bulan Squad, atau grup yg disediakan panitia.
       
