@@ -34,11 +34,11 @@
   <section class="form-section">
     <div id="statusBox" class="status-box"></div>
 
-    <div class="form-container">
-      <label for="grup">Grup</label>
-      <input type="text" id="grup" readonly placeholder="Akan diisi otomatis..." />
+    <div class="form-container" id="formBox">
+      <label for="grup" display="hidden">Grup</label>
+      <input type="text" id="grup" display="hidden" readonly placeholder="Akan diisi otomatis..." />
 
-      <label for="tiktok">Nama Akun TikTok *</label>
+      <label for="tiktok">Nama TikTok *</label>
       <input type="text" id="tiktok" placeholder="@namapengguna" required />
 
       <label for="caption">Caption *</label>
@@ -52,207 +52,135 @@
 
       <button onclick="kirimWA()">Kirim ke WhatsApp</button>
     </div>
+
+    <div id="infoSeason" class="info-season"></div>
   </section>
 
-  <footer>© 2025 Rumah Kreator by Tanjung Bulan Cyber™</footer>
+  <footer>©2025 Rumah Kreator by PROxyz</footer>
 
   <script src="kutipan.js"></script>
+  <script src="juara.js"></script>
   <script>
+  // =========================================================
+  // ⚙️ SETTINGAN UTAMA
+  // =========================================================
+  const KODE_BENAR = "KaumMendangMending";   // ubah di sini
+  const STATUS_PENDAFTARAN = false;            // true = buka, false = tutup
+  const NOMOR_ADMIN = "6288971344131";        // nomor WA admin
 
-// =========================================================
-// 🌗 Tema Terang & Gelap (default: terang, elegan & kontras lembut)
-// =========================================================
-function toggleTheme() {
-  document.body.classList.toggle('dark-theme');
-  const isDark = document.body.classList.contains('dark-theme');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  applyThemeColors();
-  setTimeout(() => {
-    startKutipanIfVisible();
-    tampilkanDataSeason();
-  }, 80);
-}
+  // =========================================================
+  // 🧭 Ambil Parameter URL
+  // =========================================================
+  const params = new URLSearchParams(window.location.search);
+  const nama = params.get("nama") || "Kreator Hebat";
+  const grup = params.get("grup") || "";
+  const kode = params.get("kode");
 
-function applyThemeColors() {
-  const isDark = document.body.classList.contains('dark-theme');
+  document.getElementById("grup").value = grup;
+  document.getElementById("sambutan").innerHTML = `
+    <div class="sambutan-text">
+      Hai, <b>${nama}</b>! 👋<br>
+      Selamat datang di halaman pendaftaran lomba konten kreator.
+    </div>
+  `;
 
-  // 🎨 Warna dasar elegan
-  document.documentElement.style.setProperty('--bg-color', isDark ? '#0b1216' : '#f3f5f7');
-  document.documentElement.style.setProperty('--text-color', isDark ? '#f2f2f2' : '#1a1a1a');
-  document.documentElement.style.setProperty('--card-bg', isDark ? 'rgba(255,255,255,0.05)' : '#ffffff');
-  document.documentElement.style.setProperty('--input-bg', isDark ? '#101820' : '#ffffff');
-  document.documentElement.style.setProperty('--shadow', isDark ? '0 2px 10px rgba(0,0,0,0.6)' : '0 2px 10px rgba(0,0,0,0.08)');
-  document.documentElement.style.setProperty('--highlight', isDark ? '#ffeb3b' : '#c79400');
-  document.documentElement.style.setProperty('--accent', isDark ? '#2196f3' : '#0077b6');
-  document.documentElement.style.setProperty('--section-bg', isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)');
+  const statusBox = document.getElementById("statusBox");
+  const formBox = document.getElementById("formBox");
 
-  document.documentElement.style.height = "100%";
-  document.body.style.height = "100%";
-  document.body.style.margin = "0";
-  document.body.style.backgroundColor = "var(--bg-color)";
-  document.body.style.color = "var(--text-color)";
-  document.body.style.fontFamily = "Poppins, Arial, sans-serif";
-  document.body.style.overflowX = "hidden";
-  document.body.style.transition = "background-color .3s, color .3s";
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('theme');
-  // 🟢 Tema terang sebagai default
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-theme');
+  // =========================================================
+  // 🟢 STATUS PENDAFTARAN
+  // =========================================================
+  if (!STATUS_PENDAFTARAN) {
+    statusBox.innerHTML = `
+      <div class="notif warning">
+        ⚠️ Pendaftaran belum dibuka atau sudah ditutup.<br>
+        Silakan cek kembali nanti!
+      </div>`;
+    formBox.style.display = "none";
   }
-  applyThemeColors();
 
-  // offset scroll agar tidak tertutup navbar
-  document.querySelectorAll('section[id]').forEach(sec => {
-    sec.style.scrollMarginTop = '90px';
-    sec.style.background = 'var(--section-bg)';
-    sec.style.borderRadius = '12px';
-    sec.style.padding = '12px 10px';
-    sec.style.margin = '16px auto';
-    sec.style.maxWidth = '900px';
-    sec.style.boxShadow = 'var(--shadow)';
-  });
-
-  setupKutipanObserver();
-  setTimeout(() => tampilkanDataSeason(), 100);
-});
-
-// =========================================================
-// 🔘 Navbar Toggle (muncul dari kiri)
-// =========================================================
-function toggleMenu() {
-  const menu = document.getElementById("menu");
-  menu.classList.toggle("active");
-  menu.style.left = menu.classList.contains("active") ? "0" : "-100%";
-}
-document.querySelectorAll("#menu a").forEach(link => {
-  link.addEventListener("click", () => {
-    const menu = document.getElementById("menu");
-    menu.classList.remove("active");
-    menu.style.left = "-100%";
-  });
-});
-
-
-    // =========================================================
-    // 🧭 Ambil Parameter URL
-    // =========================================================
-    const params = new URLSearchParams(window.location.search);
-    const nama = params.get("nama") || "Kreator Hebat";
-    const grup = params.get("grup") || "";
-    const kodeUrl = params.get("kode");
-    document.getElementById("grup").value = grup;
-
-    document.getElementById("sambutan").innerHTML = `
-      <div class="sambutan-text">
-        Hai, <b>${nama}</b>! 👋<br>
-        Selamat datang di halaman pendaftaran lomba konten kreator.
+  // =========================================================
+  // ✅ Validasi Kode
+  // =========================================================
+  if (kode !== KODE_BENAR || !kode) {
+    formBox.style.display = "none";
+    statusBox.innerHTML = `
+      <div class="notif warning">
+        ⚠️ Kode salah atau belum diisi.<br>
+        Silakan ketik <b>daftar</b> di grup lomba yang sudah disediakan oleh panitia.<br><br>
+        <a href="https://chat.whatsapp.com/" target="_blank" class="wa-btn">💬 Kirim ke Grup</a>
+        <a href="https://wa.me/${NOMOR_ADMIN}?text=Halo%20admin%2C%20saya%20perlu%20kode%20pendaftaran%20baru." target="_blank" class="wa-btn">📞 Hubungi Panitia</a>
       </div>
     `;
+  } else if (STATUS_PENDAFTARAN) {
+    statusBox.innerHTML = `
+      <div class="notif success">
+        ✅ Kode verifikasi benar!<br>
+        Silakan isi data di bawah ini dan kirim.<br>
+        Jangan lupa untuk mengirim video karyamu ke panitia (bukan ke grup).
+      </div>
+    `;
+  }
 
-    // =========================================================
-    // 🔢 Buat Kode Otomatis [Hari][Jam][Menit][Detik]
-    // =========================================================
-    function buatKodeHari() {
-      const hari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, "0");
-      const m = String(now.getMinutes()).padStart(2, "0");
-      const s = String(now.getSeconds()).padStart(2, "0");
-      return `${hari[now.getDay()]}${h}${m}${s}`;
+  // =========================================================
+  // 📩 Kirim ke WhatsApp
+  // =========================================================
+  function kirimWA() {
+    if (kode !== KODE_BENAR) {
+      alert("⚠️ Kode tidak valid. Silakan hubungi panitia terlebih dahulu.");
+      return;
     }
 
-    // =========================================================
-    // 🌐 Dapatkan IP & Cegah Penggunaan Ganda
-    // =========================================================
-    let ipPengguna = "";
-    fetch("https://api.ipify.org?format=json")
-      .then(r => r.json())
-      .then(data => {
-        ipPengguna = data.ip;
-        const kodeTersimpan = localStorage.getItem(`kode_${ipPengguna}`);
-        if (!kodeTersimpan) {
-          const kodeBaru = buatKodeHari();
-          localStorage.setItem(`kode_${ipPengguna}`, kodeBaru);
-          tampilkanStatus(kodeBaru, true);
-        } else {
-          tampilkanStatus(kodeTersimpan, false);
-        }
-      })
-      .catch(() => {
-        tampilkanStatus("Tidak dapat mengambil IP", false);
-      });
+    const tiktok = document.getElementById('tiktok').value.trim();
+    const caption = document.getElementById('caption').value.trim();
+    const telepon = document.getElementById('telepon').value.trim();
+    const hp = document.getElementById('hp').value.trim();
+    const grupVal = document.getElementById('grup').value.trim();
 
-    // =========================================================
-    // ✅ Tampilkan Status Berdasarkan Kode
-    // =========================================================
-    function tampilkanStatus(kode, baru) {
-      const statusBox = document.getElementById("statusBox");
-      if (baru) {
-        statusBox.innerHTML = `
-          <div class="notif success">
-            ✅ Kode unik kamu: <b>${kode}</b><br>
-            Silakan isi data di bawah ini dan kirim. Jangan lupa kirim juga video karyamu ke grup.
-          </div>
-        `;
-      } else {
-        statusBox.innerHTML = `
-          <div class="notif warning">
-            ⚠️ Kamu sudah pernah mengakses halaman ini dengan kode <b>${kode}</b>.<br>
-            Setiap perangkat hanya bisa menggunakan satu kode.<br><br>
-            <a href="https://wa.me/6288971344131?text=Halo%20admin%2C%20saya%20perlu%20kode%20baru%20untuk%20pendaftaran." target="_blank" class="wa-btn">
-              📞 Hubungi Panitia
-            </a>
-          </div>
-        `;
-      }
+    if (!tiktok || !caption || !telepon || !hp) {
+      alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
+      return;
     }
 
-    // =========================================================
-    // 📩 Kirim ke WhatsApp
-    // =========================================================
-    function kirimWA() {
-      const kodeAktif = localStorage.getItem(`kode_${ipPengguna}`);
-      if (!kodeAktif) {
-        alert("⚠️ Kode belum valid. Silakan muat ulang halaman atau hubungi panitia.");
-        return;
-      }
-
-      const tiktok = document.getElementById('tiktok').value.trim();
-      const caption = document.getElementById('caption').value.trim();
-      const telepon = document.getElementById('telepon').value.trim();
-      const hp = document.getElementById('hp').value.trim();
-      const grupVal = document.getElementById('grup').value.trim();
-
-      if (!tiktok || !caption || !telepon || !hp) {
-        alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
-        return;
-      }
-
-      const pesan = `*Pendaftaran Lomba Konten Kreator*%0A
+    const pesan = `*Pendaftaran Lomba Konten Kreator*%0A
 👤 Nama: ${nama}%0A
 👥 Grup: ${grupVal || '-'}%0A
 📱 Akun TikTok: ${tiktok}%0A
 📝 Caption: ${caption}%0A
 📞 Nomor Telepon: ${telepon}%0A
 📸 Merek HP: ${hp}%0A
-🔑 Kode: ${kodeAktif}%0A
-%0ASaya telah mengisi formulir pendaftaran.`;
+%0ASaya akan segera mengirim *videonya*.`;
 
-      const nomor = "6288971344131";
-      const url = `https://wa.me/${nomor}?text=${pesan}`;
-      window.open(url, "_blank");
-    }
+    window.open(`https://wa.me/${NOMOR_ADMIN}?text=${pesan}`, "_blank");
+  }
 
-    // =========================================================
-    // 🔘 Navbar Toggle (mobile)
-    // =========================================================
-    function toggleMenu() {
-      const menu = document.getElementById("menu");
-      menu.classList.toggle("active");
+  // =========================================================
+  // 📅 Info Season Terbaru dari juara.js
+  // =========================================================
+  window.addEventListener("load", () => {
+    try {
+      const seasonKeys = Object.keys(dataJuara);
+      const lastSeason = dataJuara[seasonKeys[seasonKeys.length - 1]];
+      if (lastSeason) {
+        document.getElementById("infoSeason").innerHTML = `
+          <div class="season-box">
+            📅 <b>Season:</b> ${lastSeason.nama || "-"}<br>
+            🕓 <b>Periode:</b> ${lastSeason.periode || "-"}
+          </div>
+        `;
+      }
+    } catch (e) {
+      console.warn("Gagal memuat info season", e);
     }
+  });
+
+  // =========================================================
+  // 🔘 Navbar Toggle (mobile)
+  // =========================================================
+  function toggleMenu() {
+    const menu = document.getElementById("menu");
+    menu.classList.toggle("active");
+  }
   </script>
 </body>
 </html>
