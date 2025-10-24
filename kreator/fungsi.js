@@ -52,18 +52,18 @@ if (aturanEl) {
       </div>
 
       <ul style="list-style: none; padding-left: 0; margin: 0;">
-        <li>• Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
-        <li>• Lomba terbuka untuk umum.</li>
-        <li>• Konten sesuai tema: <b>${dataSeason.tema}</b></li>
-        <li>• ${dataSeason.deskripsi}</li>
-        <li>• Video hasil karya sendiri dan belum pernah di upload.</li>
-        <li>• Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
-        <li>• Konten tidak boleh melanggar hukum.</li>
-        <li>• Durasi paling lama 3 menit</li>
-        <li>• kirimkan video kualitas HD atau Resolusi minimal 720p.</li>
-        <li>• Panitia berhak untuk mengupload dan mengelola konten peserta.</li>
-        <li>• Poin dihitung otomatis dengan <b>Algoritma kami</b> dan tidak bisa di ganggu gugat.</li>
-      </ul>
+  <li>• 📅 Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
+  <li>• 🎬 Tema lomba: <b>${dataSeason.tema}</b></li>
+  <li>• ${dataSeason.deskripsi}</li>
+  <li>• 👥 Lomba terbuka untuk umum.</li>
+  <li>• 🎥 Video hasil karya sendiri dan belum pernah diunggah sebelumnya.</li>
+  <li>• 🧠 Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
+  <li>• ⚖️ Konten tidak boleh melanggar hukum.</li>
+  <li>• ⏱️ Durasi maksimal 3 menit.</li>
+  <li>• 📹 Kualitas video minimal HD (720p).</li>
+  <li>• 🗂️ Kirimkan video ke panitia untuk diunggah di media sosial resmi lomba.</li>
+  <li>• 🧮 Poin dihitung otomatis menggunakan <b>algoritma internal</b> dan hasil bersifat final.</li>
+</ul>
 
       <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
 
@@ -78,11 +78,8 @@ if (aturanEl) {
 
 </div>
 
-      <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
-
       <ul style="list-style: none; padding-left: 0; margin: 0;">
-        <li>✅ Boleh mengajak orang lain untuk menaikkan interaksi.</li>
-        <li>⚠️ Dilarang spam, bot, atau beli interaksi — pelanggaran akan dikurangi poin bahkan didiskualifikasi.</li>
+        <li>Boleh mengajak orang lain untuk menaikkan interaksi tapi dilarang spam, bot, atau beli interaksi.</li>
       </ul>
 
 <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
@@ -103,7 +100,7 @@ if (oldSponsor) oldSponsor.remove();
 const sponsorBox = document.createElement("div");
 sponsorBox.id = "sponsorBox";
 sponsorBox.style.cssText = `
-  margin-top: 10px;
+  margin-top: 6px;
   padding: 16px 18px;
   border-radius: 14px;
   background: var(--card-bg);
@@ -267,7 +264,7 @@ if (juaraBox) {
     card.style.cssText = `
       background: linear-gradient(145deg, var(--card-bg), ${isDark ? '#0d0d0d' : '#fefefe'});
       border-radius:14px;padding:16px;box-shadow:var(--shadow);
-      margin:12px 0;transition:transform .15s;line-height:1.5;
+      margin:6px 0;transition:transform .15s;line-height:1.5;
     `;
     card.onmouseover = () => card.style.transform = "translateY(-4px)";
     card.onmouseleave = () => card.style.transform = "translateY(0)";
