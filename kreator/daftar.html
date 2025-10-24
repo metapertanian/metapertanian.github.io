@@ -35,8 +35,7 @@
     <div id="statusBox" class="status-box"></div>
 
     <div class="form-container" id="formBox">
-      <label for="grup" display="hidden">Grup</label>
-      <input type="text" id="grup" display="hidden" readonly placeholder="Akan diisi otomatis..." />
+      <input type="hidden" id="grup" readonly />
 
       <label for="tiktok">Nama TikTok *</label>
       <input type="text" id="tiktok" placeholder="@namapengguna" required />
@@ -56,125 +55,12 @@
     <div id="infoSeason" class="info-season"></div>
   </section>
 
-  <footer>© 2025 — by PROxyz</footer>
+  <footer>© 2025 by PROxyz</footer>
 
+  <!-- 📦 SCRIPT -->
   <script src="header.js"></script>
   <script src="kutipan.js"></script>
   <script src="juara.js"></script>
-  <script>
-  // =========================================================
-  // ⚙️ SETTINGAN UTAMA
-  // =========================================================
-  const KODE_BENAR = "kaummendangmending";   // ubah di sini
-  const STATUS_PENDAFTARAN = true;            // true = buka, false = tutup
-  const NOMOR_ADMIN = "6288971344131";        // nomor WA admin
-
-  // =========================================================
-  // 🧭 Ambil Parameter URL
-  // =========================================================
-  const params = new URLSearchParams(window.location.search);
-  const nama = params.get("nama") || "Kreator Hebat";
-  const grup = params.get("grup") || "";
-  const kode = params.get("kode");
-
-  document.getElementById("grup").value = grup;
-  document.getElementById("sambutan").innerHTML = `
-    <div class="sambutan-text">
-      Hai, <b>${nama}</b>! 👋<br>
-      Selamat datang di halaman pendaftaran lomba konten kreator.
-    </div>
-  `;
-
-  const statusBox = document.getElementById("statusBox");
-  const formBox = document.getElementById("formBox");
-
-  // =========================================================
-  // 🟢 STATUS PENDAFTARAN
-  // =========================================================
-  if (!STATUS_PENDAFTARAN) {
-    statusBox.innerHTML = `
-      <div class="notif warning">
-        ⚠️ Pendaftaran belum dibuka atau sudah ditutup.<br>
-        Silakan cek kembali nanti!
-      </div>`;
-    formBox.style.display = "none";
-  }
-
-  // =========================================================
-  // ✅ Validasi Kode
-  // =========================================================
-  if (kode !== KODE_BENAR || !kode) {
-    formBox.style.display = "none";
-    statusBox.innerHTML = `
-      <div class="notif warning">
-        ⚠️ Kode salah atau belum diisi.<br>
-        Silakan ketik <b>daftar</b> di grup lomba yang sudah disediakan oleh panitia.<br><br>
-        <a href="https://chat.whatsapp.com/" target="_blank" class="wa-btn">💬 Kirim ke Grup</a>
-        <a href="https://wa.me/${NOMOR_ADMIN}?text=Halo%20admin%2C%20saya%20perlu%20kode%20pendaftaran%20baru." target="_blank" class="wa-btn">📞 Hubungi Panitia</a>
-      </div>
-    `;
-  } else if (STATUS_PENDAFTARAN) {
-    statusBox.innerHTML = `
-      <div class="notif success">
-        ✅ Kode verifikasi benar!<br>
-        Silakan isi data di bawah ini dan kirim.<br>
-        Jangan lupa untuk mengirim video karyamu ke panitia (bukan ke grup).
-      </div>
-    `;
-  }
-
-  // =========================================================
-  // 📩 Kirim ke WhatsApp
-  // =========================================================
-  function kirimWA() {
-    if (kode !== KODE_BENAR) {
-      alert("⚠️ Kode tidak valid. Silakan hubungi panitia terlebih dahulu.");
-      return;
-    }
-
-    const tiktok = document.getElementById('tiktok').value.trim();
-    const caption = document.getElementById('caption').value.trim();
-    const telepon = document.getElementById('telepon').value.trim();
-    const hp = document.getElementById('hp').value.trim();
-    const grupVal = document.getElementById('grup').value.trim();
-
-    if (!tiktok || !caption || !telepon || !hp) {
-      alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
-      return;
-    }
-
-    const pesan = `*Pendaftaran Lomba Konten Kreator*%0A
-👤 Nama: ${nama}%0A
-👥 Grup: ${grupVal || '-'}%0A
-📱 Akun TikTok: ${tiktok}%0A
-📝 Caption: ${caption}%0A
-📞 Nomor Telepon: ${telepon}%0A
-📸 Merek HP: ${hp}%0A
-%0ASaya akan segera mengirim *videonya*.`;
-
-    window.open(`https://wa.me/${NOMOR_ADMIN}?text=${pesan}`, "_blank");
-  }
-
-  // =========================================================
-  // 📅 Info Season Terbaru dari juara.js
-  // =========================================================
-  window.addEventListener("load", () => {
-    try {
-      const seasonKeys = Object.keys(dataJuara);
-      const lastSeason = dataJuara[seasonKeys[seasonKeys.length - 1]];
-      if (lastSeason) {
-        document.getElementById("infoSeason").innerHTML = `
-          <div class="season-box">
-            📅 <b>Season:</b> ${lastSeason.nama || "-"}<br>
-            🕓 <b>Periode:</b> ${lastSeason.periode || "-"}
-          </div>
-        `;
-      }
-    } catch (e) {
-      console.warn("Gagal memuat info season", e);
-    }
-  });
-
-  </script>
+  <script src="daftar.js"></script>
 </body>
 </html>
