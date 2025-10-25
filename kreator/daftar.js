@@ -79,7 +79,8 @@ if (kode !== KODE_BENAR || !kode) {
         animation:fadeIn 0.4s ease;">
         <h3 style="margin:0 0 10px;color:var(--highlight)">Hai ${nama}👋</h3>
         <p style="line-height:1.6;color:var(--text-main)">
-          Silakan isi data dulu dan klik <b>Kirim ke WA</b>. nanti kamu akan diarahkan ke WA panitia.<br>
+          silahkan isi data dulu dan klik <b>Kirim ke WA</b>.<br>
+          nanti kamu akan diarahkan ke WA panitia.<br>
           setalah itu baru kirim videomu.
         </p>
         <button id="closePopup" style="
@@ -105,7 +106,8 @@ if (kode !== KODE_BENAR || !kode) {
   // tetap tampilkan statusBox untuk aksesibilitas
   statusBox.innerHTML = `
     <div class="notif success" style="display:none;">
-      Silakan isi data dulu dan klik <b>Kirim ke WA</b>. nanti kamu akan diarahkan ke WA panitia.<br>
+      silahkan isi data dulu dan klik <b>Kirim ke WA</b>.<br>
+      nanti kamu akan diarahkan ke WA panitia.<br>
       setalah itu baru kirim videomu.
     </div>
   `;
@@ -116,7 +118,7 @@ if (kode !== KODE_BENAR || !kode) {
 // =========================================================
 function kirimWA() {
   if (kode !== KODE_BENAR) {
-    alert("⚠️ Kode tidak valid. Silakan hubungi panitia terlebih dahulu.");
+    alert("⚠️ Kode tidak valid. Silahkan hubungi panitia terlebih dahulu.");
     return;
   }
 
@@ -158,7 +160,7 @@ window.addEventListener("load", () => {
       document.getElementById("infoSeason").innerHTML = `
         <div class="season-box">
           <b>${latestKey}</b><br>
-          🎬 <b>${latestSeason.tema}</b><br>
+          🎬 ${latestSeason.tema}<br>
           <small style="display:block;margin-top:4px;color:var(--text-sub)">
             ${latestSeason.deskripsi || ""}
           </small>
