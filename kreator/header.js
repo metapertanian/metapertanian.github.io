@@ -1,14 +1,24 @@
 // =========================================================
-// 🌗 Tema Terang & Gelap (default: terang, elegan & kontras lembut)
+// 🌗 Tema Terang & Gelap (versi elegan dengan ikon dinamis)
 // =========================================================
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
+  const btn = document.querySelector('.theme-toggle');
   const isDark = document.body.classList.contains('dark-theme');
+
+  // ubah ikon sesuai mode
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+
+  // simpan preferensi ke localStorage
   localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+  // terapkan warna sesuai mode
   applyThemeColors();
+
+  // jalankan ulang fungsi dinamis lain agar sinkron
   setTimeout(() => {
-    startKutipanIfVisible();
-    tampilkanDataSeason();
+    if (typeof startKutipanIfVisible === 'function') startKutipanIfVisible();
+    if (typeof tampilkanDataSeason === 'function') tampilkanDataSeason();
   }, 80);
 }
 
