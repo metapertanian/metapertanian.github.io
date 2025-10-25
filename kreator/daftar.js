@@ -123,20 +123,20 @@ function kirimWA() {
 
   const tiktok = document.getElementById('tiktok').value.trim();
   const caption = document.getElementById('caption').value.trim();
-  const telepon = document.getElementById('telepon').value.trim();
+  const provider = document.getElementById('provider').value.trim();
   const hp = document.getElementById('hp').value.trim();
   const grupVal = document.getElementById('grup').value.trim();
 
-  if (!tiktok || !caption || !telepon || !hp) {
+  if (!tiktok || !caption || !provider || !hp) {
     alert("⚠️ Harap isi semua kolom yang wajib sebelum mengirim!");
     return;
   }
 
   const pesan = `*Pendaftaran Lomba Konten Kreator*%0A
-👤 Akun TikTok: ${tiktok}%
-👥 Grup: ${grupVal || '-'}%0A0A
+👤 Akun TikTok: ${tiktok}%0A
+👥 Grup: ${grupVal || '-'}%0A
 📝 Caption: ${caption}%0A
-📞 Nomor Telepon: ${telepon}%0A
+📞 Kartu Perdana: ${provider}%0A
 📱 Merek HP: ${hp}%0A
 %0ASaya akan segera mengirim videonya.`;
 
@@ -148,10 +148,10 @@ function kirimWA() {
 // =========================================================
 window.addEventListener("load", () => {
   try {
-    const seasonKeys = Object.keys(dataJuara);
+    const seasonKeys = Object.keys(dataJuara).reverse(); // paling atas = terbaru
     if (seasonKeys.length === 0) return;
 
-    const lastKey = seasonKeys[seasonKeys.length - 1];
+    const lastKey = seasonKeys[0]; // ambil paling atas (terbaru)
     const lastSeason = dataJuara[lastKey];
 
     if (lastSeason) {
@@ -159,7 +159,12 @@ window.addEventListener("load", () => {
         <div class="season-box">
           <b>${lastKey}</b><br>
           <b>Tema:</b> ${lastSeason.tema || "-"}<br>
-          📆${lastSeason.periode || "-"}
+          <div style="margin-top:6px;color:var(--text-color);font-size:0.95em;">
+            ${lastSeason.deskripsi || ""}
+          </div>
+          <div style="margin-top:6px;font-size:0.85em;color:var(--accent);">
+            📆 ${lastSeason.periode || "-"}
+          </div>
         </div>
       `;
     }
