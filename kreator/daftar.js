@@ -147,22 +147,23 @@ function kirimWA() {
 // =========================================================
 window.addEventListener("load", () => {
   try {
-    const seasonKeys = Object.keys(dataJuara).reverse(); // paling atas = terbaru
+    const seasonKeys = Object.keys(dataJuara);
     if (seasonKeys.length === 0) return;
 
-    const lastKey = seasonKeys[0]; // ambil paling atas (terbaru)
-    const lastSeason = dataJuara[lastKey];
+    // Ambil yang paling atas (paling baru)
+    const latestKey = seasonKeys[0];
+    const latestSeason = dataJuara[latestKey];
 
-    if (lastSeason) {
+    if (latestSeason) {
       document.getElementById("infoSeason").innerHTML = `
         <div class="season-box">
-          <b>${lastKey}</b><br>
-          <b>Tema:</b> ${lastSeason.tema || "-"}<br>
-          <div style="margin-top:6px;color:var(--text-color);font-size:0.95em;">
-            ${lastSeason.deskripsi || ""}
-          </div>
-          <div style="margin-top:6px;font-size:0.85em;color:var(--accent);">
-            📆 ${lastSeason.periode || "-"}
+          <b>${latestKey}</b><br>
+          🎬 <b>${latestSeason.tema}</b><br>
+          <small style="display:block;margin-top:4px;color:var(--text-sub)">
+            ${latestSeason.deskripsi || ""}
+          </small>
+          <div style="margin-top:6px;font-size:0.85em;opacity:0.8;">
+            📆 ${latestSeason.periode || "-"}
           </div>
         </div>
       `;
