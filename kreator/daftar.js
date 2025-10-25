@@ -94,7 +94,7 @@ function kirimWA() {
 📝 Caption: ${caption}%0A
 📞 Nomor Telepon: ${telepon}%0A
 📸 Merek HP: ${hp}%0A
-%0ASaya telah mengisi formulir pendaftaran.`;
+%0ASaya akan segera mengirim videonya.`;
 
   window.open(`https://wa.me/${NOMOR_ADMIN}?text=${pesan}`, "_blank");
 }
@@ -113,9 +113,9 @@ window.addEventListener("load", () => {
     if (lastSeason) {
       document.getElementById("infoSeason").innerHTML = `
         <div class="season-box">
-          📅 <b>Season:</b> ${lastKey}<br>
-          🎬 <b>Tema:</b> ${lastSeason.tema || "-"}<br>
-          🕓 <b>Periode:</b> ${lastSeason.periode || "-"}
+          <b>${lastKey}</b><br>
+          <b>Tema:</b> ${lastSeason.tema || "-"}<br>
+          📆${lastSeason.periode || "-"}
         </div>
       `;
     }
