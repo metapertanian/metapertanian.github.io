@@ -80,13 +80,7 @@ function toggleTheme() {
   applyThemeColors();
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-const savedTheme = localStorage.getItem('theme');
-const themeToggle = document.getElementById('themeToggle');
-if (savedTheme === 'dark') {
-  document.body.classList.add('dark-theme');
-  if (themeToggle) themeToggle.querySelector('.theme-icon').textContent = '🌙';
-}
+
 
 
 // =========================================================
