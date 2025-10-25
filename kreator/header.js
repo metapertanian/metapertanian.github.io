@@ -100,6 +100,18 @@ if (selectSeason && typeof dataJuara !== "undefined") {
   selectSeason.insertAdjacentElement("afterend", infoRange);
 }
 
+// 🧾 Info Season  
+  infoRange.innerHTML = `  
+    <div style="background:var(--card-bg);padding:14px 16px;border-radius:12px;box-shadow:var(--shadow);">  
+      <div style="font-weight:700;color:var(--highlight);font-size:1.05em;">🎬 ${dataSeason.tema || "Tanpa Tema"}</div>  
+      <div style="margin-top:6px;color:${isDark ? '#ddd' : '#333'};">${dataSeason.deskripsi || ""}</div>  
+      <div style="margin-top:6px;color:${isDark ? '#bbb' : '#555'};">📅 ${dataSeason.periode || "-"}</div>  
+      <div style="margin-top:8px;font-size:0.9em;">  
+        🎗️ <span style="color:var(--highlight);">Sponsor:</span><br><i>${dataSeason.Sponsor || "-"}</i>  
+      </div>  
+    </div>  
+  `;
+
 // Tahun Footer otomatis 
 window.addEventListener("DOMContentLoaded", () => {
   const elTahun = document.getElementById("tahun");
