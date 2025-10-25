@@ -52,16 +52,15 @@ if (kode !== KODE_BENAR || !kode) {
   formBox.style.display = "none";
   statusBox.innerHTML = `
     <div class="notif warning">
-      ⚠️ Kode salah atau belum diisi.<br>
+      ⚠️ Sudah masuk grup?<br>
       Silakan ketik <b>daftar</b> di grup lomba yang sudah disediakan oleh panitia.<br><br>
       <a href="https://chat.whatsapp.com/" target="_blank" class="wa-btn">💬 Kirim ke Grup</a>
-      <a href="https://wa.me/${NOMOR_ADMIN}?text=Halo%20admin%2C%20saya%20perlu%20kode%20pendaftaran%20baru." target="_blank" class="wa-btn">📞 Hubungi Panitia</a>
+      <a href="https://wa.me/${NOMOR_ADMIN}?text=Halo%20admin%2C%20saya%20ingin%20mendaftar%20lomba%20konten." target="_blank" class="wa-btn">📞 Hubungi Panitia</a>
     </div>
   `;
 } else if (STATUS_PENDAFTARAN) {
   statusBox.innerHTML = `
     <div class="notif success">
-      ✅ Kode verifikasi benar!<br>
       Silakan isi data di bawah ini dan kirim.<br>
       Jangan lupa untuk mengirim video karyamu ke panitia.
     </div>
