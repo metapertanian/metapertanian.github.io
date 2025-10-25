@@ -52,9 +52,9 @@ if (kode !== KODE_BENAR || !kode) {
   formBox.style.display = "none";
   statusBox.innerHTML = `
     <div class="notif warning">
-      ⚠️ Sudah masuk grup?<br>
-      Silakan ketik <b>daftar</b> di grup lomba yang sudah disediakan oleh panitia.<br><br>
-      <a href="https://chat.whatsapp.com/" target="_blank" class="wa-btn">💬 Kirim ke Grup</a>
+      ⚠️ Selamat ${waktu}, <b>Kreator Hebat</b>!<br>
+      Silakan ketik <b>daftar</b> di grup lomba yang sudah disediakan oleh panitia terlebih dahulu.<br><br>
+      <a href="https://wa.me/?text=daftar" target="_blank" class="wa-btn">💬 Kirim ke Grup</a>
       <a href="https://wa.me/${NOMOR_ADMIN}?text=Halo%20admin%2C%20saya%20ingin%20mendaftar%20lomba%20konten." target="_blank" class="wa-btn">📞 Hubungi Panitia</a>
     </div>
   `;
@@ -78,10 +78,10 @@ if (kode !== KODE_BENAR || !kode) {
         max-width:400px;
         text-align:center;
         animation:fadeIn 0.4s ease;">
-        <h3 style="margin:0 0 10px;color:var(--highlight)">Kode Verifikasi Benar ✅</h3>
+        <h3 style="margin:0 0 10px;color:var(--highlight)">Hai ${nama}👋</h3>
         <p style="line-height:1.6;color:var(--text-main)">
-          Silakan isi data di bawah ini dan kirim.<br>
-          Jangan lupa untuk mengirim video karyamu ke panitia.
+          Silakan isi data dulu dan klik <b>Kirim ke WA</b>. nanti kamu akan diarahkan ke WA panitia.<br>
+          setalah itu baru kirim videomu.
         </p>
         <button id="closePopup" style="
           margin-top:14px;
@@ -106,8 +106,8 @@ if (kode !== KODE_BENAR || !kode) {
   // tetap tampilkan statusBox untuk aksesibilitas
   statusBox.innerHTML = `
     <div class="notif success" style="display:none;">
-      Silakan isi data di bawah ini dan kirim.<br>
-      Jangan lupa untuk mengirim video karyamu ke panitia.
+      Silakan isi data dulu dan klik <b>Kirim ke WA</b>. nanti kamu akan diarahkan ke WA panitia.<br>
+      setalah itu baru kirim videomu.
     </div>
   `;
 }
