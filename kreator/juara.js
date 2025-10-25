@@ -10,7 +10,7 @@ const dataJuara = {
   "Lomba Konten S2": {
     tema: "Sisi Lain Sawojajar",
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah desa Sawojajar.",
-    periode: "10 Januari 2026 - 20 Maret 2026",
+    periode: "10 Jan 2026 - 20 Mar 2026",
     Sponsor: "Bank Desa Nusantara",
     logoSponsor: "",
     Poin: "true",
@@ -45,17 +45,20 @@ const dataJuara = {
   "Lomba Konten S1": {
     tema: "Sisi Lain Tanjung Bulan",
     deskripsi: "Konten video unik tentang kehidupan sehari-hari, yang ada di wilayah dusun Tanjung Bulan.",
-    periode: "25 Oktober 2025 - 28 Desember 2025",
+    periode: "25 Okt 2025 - 28 Des 2025",
     Sponsor: "Karang Taruna Tanjung Bulan",
     logoSponsor: "https://pulungrwo.github.io/img/logo-karang-taruna-tanjung-bulan.png",
     Poin: "false",
 
     Hadiah: [
-      { kategori: "Juara 1", hadiah: "Rp 150rb + Sertifikat" },
-      { kategori: "Juara 2", hadiah: "Rp 100rb + Sertifikat" },
-      { kategori: "Juara 3", hadiah: "Rp 75rb + Sertifikat" },
-      { kategori: "Ide Terbaik", hadiah: "Rp 50rb", filter: { field: "ideKonsepNilai", mode: "max" } },
-      { kategori: "Humoris", hadiah: "Rp 50rb", filter: "Humoris" }
+      { kategori: "Juara 1", hadiah: "Paket Data + Uang + Sertif" },
+      { kategori: "Juara 2", hadiah: "Paket Data + Uang + Sertif" },
+      { kategori: "Juara 3", hadiah: "Paket Data + Uang + Sertif" },
+      { kategori: "Konten Favorit", hadiah: "Paket Data + Sertif", filter: { field: "Viral", mode: "max" } },
+      { kategori: "Konsep Terbaik", hadiah: "Paket Data + Sertif", filter: { field: "ideKonsepNilai", mode: "max" } },
+      { kategori: "Paling Inspiratif", hadiah: "Paket Data + Sertif", filter: "Inspiratif" },
+      { kategori: "Konten Terlucu", hadiah: "Paket Data + Sertif", filter: "Humoris" },
+      { kategori: "Kearifan Lokal", hadiah: "Paket Data + Sertif", filter: { field: "Lokal", mode: "max" } }
     ],
 
     kreator: [
