@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tips Menang Lomba Konten | Rumah Kreator</title>
+  <title>Tips & Trik Menang Lomba Konten | Rumah Kreator by PROxyz</title>
   <link rel="stylesheet" href="gaya.css">
   <style>
     /* =======================================================
@@ -12,17 +12,18 @@
     body {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
-      overflow: hidden;
+      min-height: 100vh;
       background: linear-gradient(135deg, var(--bg-color), var(--section-bg));
       color: var(--text-color);
       font-family: "Poppins", sans-serif;
       transition: background 0.6s, color 0.4s;
+      margin: 0;
+      padding-top: 80px; /* beri jarak agar tidak menimpa navbar */
+      box-sizing: border-box;
     }
 
-    /* 🔝 NAVBAR (ikut gaya dari header.js) */
+    /* 🔝 NAVBAR (identik dengan header.js) */
     .nav {
       position: fixed;
       top: 0;
@@ -37,11 +38,46 @@
       z-index: 1000;
     }
 
+    .nav-links a {
+      color: var(--text-color);
+      margin-right: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover {
+      color: var(--highlight);
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1.1em;
+      color: var(--highlight);
+      text-decoration: none;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1.5px solid var(--highlight);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    .theme-toggle:hover {
+      background: var(--highlight);
+      color: #000;
+      transform: scale(1.1);
+    }
+
     /* 👤 PROFIL */
     .profil {
       text-align: center;
-      margin-top: 90px;
-      margin-bottom: 8px;
+      margin: 10px 0 12px;
     }
     .profil img {
       width: 95px;
@@ -62,15 +98,17 @@
       background: var(--card-bg);
       border-radius: 20px;
       box-shadow: 0 8px 24px var(--shadow);
-      padding: 34px;
+      padding: 30px;
       text-align: center;
-      min-height: 280px;
+      min-height: 260px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       backdrop-filter: blur(10px);
       position: relative;
       overflow: hidden;
+      margin-bottom: 80px; /* beri jarak agar tidak menimpa footer */
+      animation: fadeIn 0.8s ease;
     }
 
     .slide-title {
@@ -94,7 +132,7 @@
     .fade-slide-enter {
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
     .fade-slide-enter-active {
       opacity: 1;
@@ -106,7 +144,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-top: 22px;
+      margin-bottom: 30px;
       gap: 16px;
     }
 
@@ -136,12 +174,15 @@
 
     /* ⚓ FOOTER */
     footer {
-      position: absolute;
-      bottom: 12px;
-      font-size: 0.9em;
-      color: var(--text-sub);
+      width: 100%;
       text-align: center;
-      opacity: 0.85;
+      padding: 10px 0;
+      color: var(--text-sub);
+      font-size: 0.9em;
+      background: transparent;
+      position: fixed;
+      bottom: 0;
+      left: 0;
     }
 
     @keyframes fadeIn {
@@ -160,7 +201,7 @@
       <a href="/kreator/#poin">Poin Kreator</a>
       <a href="/kreator/#aturan">Aturan Lomba</a>
     </div>
-    <a href="" class="nav-brand">Tips & Trik</a>
+    <a href="#" class="nav-brand">Tips & Trik</a>
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
   </nav>
 
@@ -224,7 +265,7 @@
     function prevSlide() { current = (current - 1 + slides.length) % slides.length; updateSlide(); }
 
     function startAutoPlay() {
-      autoPlayInterval = setInterval(nextSlide, 10000); // ⏱ setiap 10 detik
+      autoPlayInterval = setInterval(nextSlide, 10000);
       playPauseBtn.textContent = "⏸ Jeda";
       isPlaying = true;
     }
@@ -237,7 +278,6 @@
 
     function toggleAutoPlay() { isPlaying ? stopAutoPlay() : startAutoPlay(); }
 
-    // mulai otomatis saat halaman dibuka
     startAutoPlay();
   </script>
 
