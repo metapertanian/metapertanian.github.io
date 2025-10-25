@@ -61,46 +61,32 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Tambahan
 function toggleTheme() {
-  document.body.classList.toggle('dark-theme');
-  const isDark = document.body.classList.contains('dark-theme');
-  localStorage.setItem('theme', isDark ? 'dark' : 'light');
-  applyThemeColors();
-
-  // 🎨 Ganti ikon & label elegan
   const btn = document.getElementById("themeToggle");
-  if (btn) {
-    btn.innerHTML = isDark ? "🌙" : "🌞";
-    btn.setAttribute("data-theme", isDark ? "Gelap" : "Terang");
-  }
+  const icon = btn.querySelector(".theme-icon");
+  btn.classList.add("switching");
 
+  document.body.classList.toggle("dark-theme");
+  const isDark = document.body.classList.contains("dark-theme");
+
+  // Simpan preferensi
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+
+  // Ganti ikon
   setTimeout(() => {
-    startKutipanIfVisible?.();
-    tampilkanDataSeason?.();
-  }, 80);
+    icon.textContent = isDark ? "🌙" : "🌞";
+    btn.classList.remove("switching");
+  }, 200);
+
+  applyThemeColors();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme === 'dark') {
-    document.body.classList.add('dark-theme');
-    const btn = document.getElementById("themeToggle");
-    if (btn) {
-      btn.innerHTML = "🌙";
-      btn.setAttribute("data-theme", "Gelap");
-    }
-  } else {
-    const btn = document.getElementById("themeToggle");
-    if (btn) {
-      btn.innerHTML = "🌞";
-      btn.setAttribute("data-theme", "Terang");
-    }
-  }
-
-  applyThemeColors();
-  setupKutipanObserver?.();
-  setTimeout(() => tampilkanDataSeason?.(), 100);
-});
-
+const savedTheme = localStorage.getItem('theme');
+const themeToggle = document.getElementById('themeToggle');
+if (savedTheme === 'dark') {
+  document.body.classList.add('dark-theme');
+  if (themeToggle) themeToggle.querySelector('.theme-icon').textContent = '🌙';
+}
 
 
 // =========================================================
