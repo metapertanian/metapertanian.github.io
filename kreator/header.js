@@ -59,26 +59,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Tambahan
-function toggleTheme() {
-  const btn = document.getElementById("themeToggle");
-  const icon = btn.querySelector(".theme-icon");
-  btn.classList.add("switching");
-
-  document.body.classList.toggle("dark-theme");
-  const isDark = document.body.classList.contains("dark-theme");
-
-  // Simpan preferensi
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-
-  // Ganti ikon
-  setTimeout(() => {
-    icon.textContent = isDark ? "🌙" : "🌞";
-    btn.classList.remove("switching");
-  }, 200);
-
-  applyThemeColors();
-}
 
 
 
