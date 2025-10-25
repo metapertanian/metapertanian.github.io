@@ -6,10 +6,6 @@
   <title>Tips Menang Lomba Konten | Rumah Kreator</title>
   <link rel="stylesheet" href="gaya.css">
   <style>
-    :root {
-      --nav-height: 60px;
-    }
-
     /* =======================================================
        🌈 LAYOUT DASAR
     ======================================================= */
@@ -24,140 +20,110 @@
       color: var(--text-color);
       font-family: "Poppins", sans-serif;
       transition: background 0.6s, color 0.4s;
-      margin: 0;
     }
 
-    /* =======================================================
-       🔝 NAVBAR
-    ======================================================= */
-    nav.nav {
+    /* 🔝 NAVBAR (ikut gaya dari header.js) */
+    .nav {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: var(--nav-height);
       background: var(--card-bg);
-      box-shadow: var(--shadow);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      z-index: 10;
-    }
-
-    .nav-left {
-      display: flex;
       align-items: center;
-      gap: 16px;
+      padding: 12px 18px;
+      box-shadow: var(--shadow);
+      z-index: 1000;
     }
 
-    .nav-left a {
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.95em;
-      transition: color 0.3s ease;
-    }
-
-    .nav-left a:hover {
-      color: var(--highlight);
-    }
-
-    /* 🌗 Tombol Ganti Tema Elegan */
-    .theme-toggle {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: none;
-      background: var(--card-bg);
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-      color: var(--text-color);
-      font-size: 1.2em;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .theme-toggle:hover {
-      transform: scale(1.1);
-      background: var(--accent);
-      color: #fff;
-    }
-
-    /* =======================================================
-       👤 PROFIL
-    ======================================================= */
+    /* 👤 PROFIL */
     .profil {
       text-align: center;
-      margin-top: calc(var(--nav-height) + 20px);
-      margin-bottom: 20px;
+      margin-top: 90px;
+      margin-bottom: 8px;
     }
     .profil img {
-      width: 110px;
-      height: 110px;
+      width: 95px;
+      height: 95px;
       border-radius: 50%;
-      border: 3px solid var(--highlight);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      border: 2.5px solid var(--highlight);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      transition: transform 0.3s;
+    }
+    .profil img:hover {
+      transform: scale(1.05);
     }
 
-    /* =======================================================
-       🧭 SLIDE CONTAINER
-    ======================================================= */
+    /* 💡 SLIDE AREA */
     .slide-container {
-      width: 90%;
-      max-width: 700px;
+      width: 88%;
+      max-width: 720px;
       background: var(--card-bg);
-      border-radius: 18px;
-      box-shadow: 0 10px 30px var(--shadow);
-      padding: 28px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px var(--shadow);
+      padding: 34px;
       text-align: center;
-      animation: fadeIn 0.5s ease;
-      min-height: 300px;
+      min-height: 280px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
     }
 
     .slide-title {
-      font-size: 1.4em;
+      font-size: 1.35em;
       font-weight: 700;
       color: var(--highlight);
       margin-bottom: 12px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
 
     .slide-text {
       font-size: 1.05em;
       line-height: 1.6;
       color: var(--text-color);
-      text-align: center;
       max-width: 600px;
       margin: 0 auto;
+      opacity: 0.95;
     }
 
-    /* =======================================================
-       🎛️ TOMBOL NAVIGASI
-    ======================================================= */
+    /* 🎞️ ANIMASI SLIDE */
+    .fade-slide-enter {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-slide-enter-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 🎛️ TOMBOL NAVIGASI */
     .nav-buttons {
       display: flex;
       justify-content: center;
       align-items: center;
       margin-top: 22px;
-      gap: 14px;
+      gap: 16px;
     }
 
     .nav-btn {
       background: var(--accent);
       color: #fff;
       border: none;
-      border-radius: 10px;
-      padding: 10px 18px;
+      border-radius: 12px;
+      padding: 10px 20px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s ease;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
 
     .nav-btn:hover {
-      transform: scale(1.06);
+      transform: translateY(-2px);
       background: var(--highlight);
       color: #000;
     }
@@ -168,12 +134,14 @@
       font-weight: bold;
     }
 
+    /* ⚓ FOOTER */
     footer {
       position: absolute;
-      bottom: 18px;
+      bottom: 12px;
       font-size: 0.9em;
       color: var(--text-sub);
       text-align: center;
+      opacity: 0.85;
     }
 
     @keyframes fadeIn {
@@ -186,13 +154,13 @@
 
   <!-- 🔝 NAVBAR -->
   <nav class="nav">
-    <div class="nav-left">
-      <a href="/kreator">🏠 Beranda</a>
-      <a href="/kreator/#hadiah">Hadiah</a>
-      <a href="/kreator/#poin">Poin</a>
-      <a href="/kreator/#aturan">Aturan</a>
-      <a href="/kreator/tips">Tips</a>
+    <div class="nav-links" id="menu">
+      <a href="/kreator">Rumah Kreator</a>
+      <a href="/kreator/#hadiah">Hadiah & Pemenang</a>
+      <a href="/kreator/#poin">Poin Kreator</a>
+      <a href="/kreator/#aturan">Aturan Lomba</a>
     </div>
+    <a href="" class="nav-brand">Tips & Trik</a>
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
   </nav>
 
@@ -206,7 +174,7 @@
     <div class="slide-title">1️⃣ Pahami Tema dan Tujuan Lomba</div>
     <div class="slide-text">
       Baca dulu aturan lombanya. Cari tahu temanya apa, mau mengangkat hal apa, dan siapa penontonnya.  
-      Kalau temanya tentang kota, angkat hal unik dari sekitarmu.
+      Mulailah dari hal unik dari sekitarmu.
     </div>
   </div>
 
@@ -217,68 +185,64 @@
     <button class="nav-btn" onclick="nextSlide()">Berikutnya ➡</button>
   </div>
 
-  <!-- ⚙️ SCRIPT -->
+  <!-- 📦 SCRIPT -->
+  <script src="header.js"></script>
   <script>
     const slides = [
-      { title: "1️⃣ Pahami Tema dan Tujuan Lomba", text: "Baca dulu aturan lombanya. Cari tahu temanya apa, mau mengangkat hal apa, dan siapa penontonnya. Kalau temanya tentang kota, angkat hal unik dari sekitarmu." },
+      { title: "1️⃣ Pahami Tema dan Tujuan Lomba", text: "Baca dulu aturan lombanya. Cari tahu temanya apa, mau mengangkat hal apa, dan siapa penontonnya. Mulailah dari hal unik dari sekitarmu." },
       { title: "2️⃣ Buat Ide dan Alur Cerita", text: "Tuliskan alur sederhana: pembuka – isi – penutup. Cerita pendek yang jelas lebih menarik daripada video panjang tanpa arah." },
-      { title: "3️⃣ Gunakan Kamera HP dengan Baik", text: "Pastikan pencahayaan cukup (dekat jendela atau di luar ruangan). Pegang HP dengan stabil, atau gunakan tripod biar hasilnya tidak goyang." },
+      { title: "3️⃣ Gunakan Kamera HP dengan Baik", text: "Pastikan pencahayaan cukup, pegang HP stabil, atau pakai tripod biar hasilnya tidak goyang." },
       { title: "4️⃣ Gunakan Suara dan Musik yang Jelas", text: "Gunakan mikrofon atau earphone agar suara jernih. Pilih musik bebas hak cipta dari CapCut atau TikTok yang sedang populer." },
-      { title: "5️⃣ Edit Pakai Aplikasi Gratis", text: "Gunakan CapCut, VN, atau InShot. Tambahkan teks penting, transisi lembut, dan potong bagian yang tidak perlu biar padat dan enak ditonton." },
+      { title: "5️⃣ Edit Pakai Aplikasi Gratis", text: "Gunakan CapCut, VN, atau Alight Motion. Tambahkan teks penting, transisi lembut, dan potong bagian yang tidak perlu." },
       { title: "6️⃣ Tambahkan Efek dan Filter Secukupnya", text: "Gunakan filter yang memperkuat suasana, tapi jangan berlebihan. Warna hangat cocok untuk video bahagia, warna dingin untuk suasana tenang." },
-      { title: "7️⃣ Tulis Caption dan Hashtag Menarik", text: "Tulis keterangan singkat tapi kuat. Misal: 'Di balik tawa teman kampus, ada semangat yang luar biasa.' Gunakan hashtag lomba yang benar." },
-      { title: "8️⃣ Daftarkan Konten Lebih Awal", text: "Kirim videomu secepat mungkin. Dengan begitu kamu punya waktu lebih panjang untuk mendapatkan like, komentar, dan share alami." },
-      { title: "9️⃣ Ajak Teman Nonton dan Dukung", text: "Bagikan videomu ke teman, grup sekolah, atau komunitas. Dukungan alami lebih dihargai juri dibandingkan like palsu atau beli views." },
-      { title: "🔟 Nikmati Proses & Bangun Gaya Sendiri", text: "Jangan terlalu fokus menang. Nikmati proses belajar, eksplor gaya unikmu, dan jadikan setiap video sebagai langkah menuju kreator hebat!" }
+      { title: "7️⃣ Tulis Caption dan Hashtag Menarik", text: "Gunakan caption dan hashtag yang bisa menarik perhatian penonton baru." },
+      { title: "8️⃣ Daftarkan Konten Lebih Awal", text: "Kirim videomu secepat mungkin agar punya waktu lebih panjang untuk mendapatkan like, komentar, dan share alami." },
+      { title: "9️⃣ Ajak Teman Nonton dan Dukung", text: "Bagikan videomu ke teman, grup sekolah, atau komunitas. Dukungan alami lebih dihargai daripada like palsu." },
+      { title: "🔟 Nikmati Proses & Bangun Gaya Sendiri", text: "Nikmati proses belajar, temukan gayamu sendiri, dan jadikan setiap video sebagai langkah menuju kreator hebat!" }
     ];
 
-    let current = 0;
-    let isPlaying = true;
-    let autoPlayInterval;
+    let current = 0, isPlaying = true, autoPlayInterval;
     const slideBox = document.getElementById("slideBox");
     const playPauseBtn = document.querySelector(".playpause");
 
-    function updateSlide() {
-      const s = slides[current];
-      slideBox.style.opacity = "0";
+    // 🌟 animasi elegan
+    function animateSlide(content) {
+      slideBox.classList.remove("fade-slide-enter-active");
+      slideBox.classList.add("fade-slide-enter");
       setTimeout(() => {
-        slideBox.innerHTML = `<div class='slide-title'>${s.title}</div><div class='slide-text'>${s.text}</div>`;
-        slideBox.style.opacity = "1";
-      }, 300);
+        slideBox.innerHTML = `
+          <div class="slide-title">${content.title}</div>
+          <div class="slide-text">${content.text}</div>
+        `;
+        slideBox.classList.remove("fade-slide-enter");
+        slideBox.classList.add("fade-slide-enter-active");
+      }, 150);
     }
 
+    function updateSlide() { animateSlide(slides[current]); }
     function nextSlide() { current = (current + 1) % slides.length; updateSlide(); }
     function prevSlide() { current = (current - 1 + slides.length) % slides.length; updateSlide(); }
 
     function startAutoPlay() {
-      autoPlayInterval = setInterval(nextSlide, 7000);
+      autoPlayInterval = setInterval(nextSlide, 10000); // ⏱ setiap 10 detik
       playPauseBtn.textContent = "⏸ Jeda";
       isPlaying = true;
     }
+
     function stopAutoPlay() {
       clearInterval(autoPlayInterval);
       playPauseBtn.textContent = "▶ Lanjut";
       isPlaying = false;
     }
-    function toggleAutoPlay() { isPlaying ? stopAutoPlay() : startAutoPlay(); }
-    startAutoPlay();
 
-    // Tema elegan toggle
-    function toggleTheme() {
-      document.body.classList.toggle('dark-theme');
-      const btn = document.querySelector('.theme-toggle');
-      btn.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌙';
-      localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-    }
+    function toggleAutoPlay() { isPlaying ? stopAutoPlay() : startAutoPlay(); }
+
+    // mulai otomatis saat halaman dibuka
+    startAutoPlay();
   </script>
 
   <!-- ⚓ FOOTER -->
-  <footer>
-    © <span id="tahun"></span> Rumah Kreator — by PROxyz
-  </footer>
-  <script>
-    document.getElementById("tahun").textContent = new Date().getFullYear();
-  </script>
+  <footer>© <span id="tahun"></span> Rumah Kreator — by PROxyz</footer>
 
 </body>
 </html>
