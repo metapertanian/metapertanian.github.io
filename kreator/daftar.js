@@ -59,8 +59,53 @@ if (kode !== KODE_BENAR || !kode) {
     </div>
   `;
 } else if (STATUS_PENDAFTARAN) {
+  // ✅ Munculkan notifikasi pop-up elegan
+  const popup = document.createElement("div");
+  popup.innerHTML = `
+    <div id="popupOverlay" style="
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.55);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:1000;">
+      <div style="
+        background:var(--card-bg);
+        padding:28px 22px;
+        border-radius:16px;
+        box-shadow:0 8px 30px rgba(0,0,0,0.3);
+        max-width:400px;
+        text-align:center;
+        animation:fadeIn 0.4s ease;">
+        <h3 style="margin:0 0 10px;color:var(--highlight)">Kode Verifikasi Benar ✅</h3>
+        <p style="line-height:1.6;color:var(--text-main)">
+          Silakan isi data di bawah ini dan kirim.<br>
+          Jangan lupa untuk mengirim video karyamu ke panitia.
+        </p>
+        <button id="closePopup" style="
+          margin-top:14px;
+          padding:10px 18px;
+          border:none;
+          border-radius:8px;
+          background:var(--accent);
+          color:#fff;
+          font-weight:600;
+          cursor:pointer;
+          transition:background .2s;">
+          Lanjutkan
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(popup);
+  document.getElementById("closePopup").onclick = () => {
+    document.getElementById("popupOverlay").remove();
+  };
+
+  // tetap tampilkan statusBox untuk aksesibilitas
   statusBox.innerHTML = `
-    <div class="notif success">
+    <div class="notif success" style="display:none;">
       Silakan isi data di bawah ini dan kirim.<br>
       Jangan lupa untuk mengirim video karyamu ke panitia.
     </div>
@@ -88,12 +133,11 @@ function kirimWA() {
   }
 
   const pesan = `*Pendaftaran Lomba Konten Kreator*%0A
-👤 Nama: ${nama}%0A
-👥 Grup: ${grupVal || '-'}%0A
-📱 Akun TikTok: ${tiktok}%0A
+👤 Akun TikTok: ${tiktok}%
+👥 Grup: ${grupVal || '-'}%0A0A
 📝 Caption: ${caption}%0A
 📞 Nomor Telepon: ${telepon}%0A
-📸 Merek HP: ${hp}%0A
+📱 Merek HP: ${hp}%0A
 %0ASaya akan segera mengirim videonya.`;
 
   window.open(`https://wa.me/${NOMOR_ADMIN}?text=${pesan}`, "_blank");
@@ -125,9 +169,15 @@ window.addEventListener("load", () => {
 });
 
 // =========================================================
-// 🔘 Navbar Toggle
+// 🔘 Navbar Toggle (slide dari kiri)
 // =========================================================
 function toggleMenu() {
   const menu = document.getElementById("menu");
   menu.classList.toggle("active");
+  if (menu.classList.contains("active")) {
+    menu.style.left = "0";
+    menu.style.right = "auto";
+  } else {
+    menu.style.left = "-100%";
+  }
 }
