@@ -93,10 +93,10 @@ infoRange.style.marginTop = "8px";
 infoRange.style.textAlign = "center";
 selectSeason.insertAdjacentElement("afterend", infoRange);
 
-// Tahun Hak Cipta Footer 
+// Tahun Footer otomatis 
 window.addEventListener("DOMContentLoaded", () => {
-  const tahunEl = document.getElementById("tahun");
-  if (tahunEl) tahunEl.textContent = new Date().getFullYear();
+  const elTahun = document.getElementById("tahun");
+  if (elTahun) elTahun.textContent = new Date().getFullYear();
 });
 
 // =========================================================
