@@ -58,6 +58,51 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => tampilkanDataSeason(), 100);
 });
 
+
+// Tambahan
+function toggleTheme() {
+  document.body.classList.toggle('dark-theme');
+  const isDark = document.body.classList.contains('dark-theme');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  applyThemeColors();
+
+  // 🎨 Ganti ikon & label elegan
+  const btn = document.getElementById("themeToggle");
+  if (btn) {
+    btn.innerHTML = isDark ? "🌙" : "🌞";
+    btn.setAttribute("data-theme", isDark ? "Gelap" : "Terang");
+  }
+
+  setTimeout(() => {
+    startKutipanIfVisible?.();
+    tampilkanDataSeason?.();
+  }, 80);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    const btn = document.getElementById("themeToggle");
+    if (btn) {
+      btn.innerHTML = "🌙";
+      btn.setAttribute("data-theme", "Gelap");
+    }
+  } else {
+    const btn = document.getElementById("themeToggle");
+    if (btn) {
+      btn.innerHTML = "🌞";
+      btn.setAttribute("data-theme", "Terang");
+    }
+  }
+
+  applyThemeColors();
+  setupKutipanObserver?.();
+  setTimeout(() => tampilkanDataSeason?.(), 100);
+});
+
+
+
 // =========================================================
 // 🔘 Navbar Toggle (muncul dari kiri)
 // =========================================================
