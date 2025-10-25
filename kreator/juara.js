@@ -55,7 +55,7 @@ const dataJuara = {
       { kategori: "Juara 2", hadiah: "Paket Data + Uang + Sertif" },
       { kategori: "Juara 3", hadiah: "Paket Data + Uang + Sertif" },
       { kategori: "Konten Favorit", hadiah: "Paket Data + Sertif", filter: { field: "Viral", mode: "max" } },
-      { kategori: "Konsep Terbaik", hadiah: "Paket Data + Sertif", filter: { field: "ideKonsepNilai", mode: "max" } },
+      { kategori: "Editing Terbaik", hadiah: "Paket Data + Sertif", filter: { field: "Editing", mode: "max" } },
       { kategori: "Paling Inspiratif", hadiah: "Paket Data + Sertif", filter: "Inspiratif" },
       { kategori: "Konten Terlucu", hadiah: "Paket Data + Sertif", filter: "Humoris" },
       { kategori: "Kearifan Lokal", hadiah: "Paket Data + Sertif", filter: { field: "Lokal", mode: "max" } }
