@@ -75,23 +75,25 @@ document.querySelectorAll("#menu a").forEach(link => {
 });
 
 // =========================================================
-// 📅 Dropdown Season & infoRange
+// 📅 Dropdown Season & infoRange (jalankan hanya jika ada elemen #season)
 // =========================================================
 const selectSeason = document.getElementById("season");
-Object.keys(dataJuara).forEach(s => {
-  const opt = document.createElement("option");
-  opt.value = s;
-  opt.textContent = s;
-  selectSeason.appendChild(opt);
-});
-selectSeason.value = Object.keys(dataJuara)[0];
+if (selectSeason && typeof dataJuara !== "undefined") {
+  Object.keys(dataJuara).forEach(s => {
+    const opt = document.createElement("option");
+    opt.value = s;
+    opt.textContent = s;
+    selectSeason.appendChild(opt);
+  });
+  selectSeason.value = Object.keys(dataJuara)[0];
 
-const infoRange = document.createElement("div");
-infoRange.id = "infoRange";
-infoRange.style.fontSize = "0.95em";
-infoRange.style.marginTop = "8px";
-infoRange.style.textAlign = "center";
-selectSeason.insertAdjacentElement("afterend", infoRange);
+  const infoRange = document.createElement("div");
+  infoRange.id = "infoRange";
+  infoRange.style.fontSize = "0.95em";
+  infoRange.style.marginTop = "8px";
+  infoRange.style.textAlign = "center";
+  selectSeason.insertAdjacentElement("afterend", infoRange);
+}
 
 // Tahun Footer otomatis 
 window.addEventListener("DOMContentLoaded", () => {
