@@ -14,6 +14,7 @@ const dataJuara = {
     Sponsor: "Bank Desa Nusantara",
     logoSponsor: "",
     Poin: "false",
+    Juara: "false",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Rp 200rb + Sertifikat" },
@@ -49,6 +50,7 @@ const dataJuara = {
     Sponsor: "Karang Taruna Tanjung Bulan",
     logoSponsor: "https://pulungrwo.github.io/img/logo-karang-taruna-tanjung-bulan.png",
     Poin: "true",
+    Juara: "true",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Paket Data + Uang + Sertif" },
