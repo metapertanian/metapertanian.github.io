@@ -1,39 +1,3 @@
-// =========================================================
-// 💬 QUOTE VIEWER INTERAKTIF - Rumah Kreator
-// =========================================================
-
-const kutipanAcakEl = document.getElementById("kutipanAcak");
-const quoteListEl = document.getElementById("quoteList");
-const paginationEl = document.getElementById("pagination");
-
-const kategoriSelect = document.getElementById("kategoriSelect");
-const temaSelect = document.getElementById("temaSelect");
-const subtemaSelect = document.getElementById("subtemaSelect");
-
-let semuaKutipan = [];
-let halamanSaatIni = 1;
-const jumlahPerHalaman = 5;
-
-// =========================================================
-// 🗂️ Inisialisasi Dropdown
-// =========================================================
-const struktur = {
-  motivasi: {
-    "mulai-sekarang": ["berhenti-menunda", "percaya-diri", "disiplin"],
-    "hidup-berarti": ["bersyukur", "semangat-hidup"]
-  },
-  persahabatan: {
-    "teman-sejati": ["setia", "percaya"],
-    "perpisahan": ["kenangan", "doa"]
-  }
-};
-
-// Isi dropdown kategori
-function isiDropdown() {
-  kategoriSelect.innerHTML = Object.keys(struktur)
-    .map(k => `<option value="${k}">${k.replace(/-/g, " ")}</option>`)
-    .join("");
-  updateTema();
 }
 
 function updateTema() {
