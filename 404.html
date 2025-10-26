@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halaman Tidak Ditemukan | Rumah Kreator by PROxyz</title>
+  <link rel="stylesheet" href="/kreator/gaya.css">
+  <style>
+    /* ====================== 🌈 DASAR ======================= */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, var(--bg-color), var(--section-bg));
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    .error-box {
+      text-align: center;
+      background: var(--card-bg);
+      box-shadow: 0 8px 30px var(--shadow);
+      padding: 40px 28px;
+      border-radius: 20px;
+      max-width: 480px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .error-code {
+      font-size: 4.5em;
+      font-weight: 800;
+      color: var(--highlight);
+      margin: 0;
+    }
+
+    .error-text {
+      font-size: 1.2em;
+      margin: 10px 0 20px;
+      color: var(--text-color);
+    }
+
+    .error-sub {
+      font-size: 0.95em;
+      color: var(--text-sub);
+      margin-bottom: 28px;
+    }
+
+    .btn-home {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 22px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 14px rgba(0,0,0,0.2);
+    }
+
+    .btn-home:hover {
+      background: var(--highlight);
+      color: #000;
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      background: var(--card-bg);
+      border: 1.5px solid var(--highlight);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--text-color);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--highlight);
+      color: #000;
+      transform: scale(1.1);
+    }
+
+    footer {
+      position: fixed;
+      bottom: 12px;
+      color: var(--text-sub);
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+
+  <div class="error-box">
+    <h1 class="error-code">404</h1>
+    <div class="error-text">Ups... Halaman tidak ditemukan!</div>
+    <div class="error-sub">
+      Mungkin tautannya salah atau halaman ini sudah dipindahkan.
+    </div>
+    <a href="/kreator" class="btn-home">🏠 Kembali ke Rumah Kreator</a>
+  </div>
+
+  <footer>© <span id="tahun"></span> Rumah Kreator — by PROxyz</footer>
+
+  <script src="/kreator/header.js"></script>
+  <script>
+    // Jika header.js tidak tersedia (fallback ringan)
+    if (typeof toggleTheme === "undefined") {
+      window.toggleTheme = function() {
+        document.body.classList.toggle("dark-theme");
+        const btn = document.querySelector(".theme-toggle");
+        if (btn)
+          btn.textContent = document.body.classList.contains("dark-theme")
+            ? "☀️"
+            : "🌙";
+        localStorage.setItem(
+          "theme",
+          document.body.classList.contains("dark-theme") ? "dark" : "light"
+        );
+      };
+    } else {
+      // integrasi tombol tema agar sinkron dengan header.js
+      const origToggle = toggleTheme;
+      window.toggleTheme = function() {
+        origToggle();
+        const btn = document.querySelector(".theme-toggle");
+        if (btn)
+          btn.textContent = document.body.classList.contains("dark-theme")
+            ? "☀️"
+            : "🌙";
+      };
+    }
+
+    // tampilkan tahun
+    document.getElementById("tahun").textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
