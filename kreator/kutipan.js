@@ -421,8 +421,8 @@ function setupKutipanObserver() {
   // Tombol Cari Quote di bawah kutipan  
   const cariBtn = document.createElement("a");  
   cariBtn.id = "btnCariQuote";  
-  cariBtn.href = "/kreator/quote";  
-  cariBtn.textContent = "Cari Quote";  
+  cariBtn.href = "/kreator/quotes";  
+  cariBtn.textContent = "Cari Quotes";  
   cariBtn.style.marginTop = "10px";  
   cariBtn.style.display = "inline-block";  
   cariBtn.style.padding = "8px 18px";  
