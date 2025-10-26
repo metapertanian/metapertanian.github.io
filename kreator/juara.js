@@ -13,7 +13,7 @@ const dataJuara = {
     periode: "10 Jan 2026 - 20 Mar 2026",
     Sponsor: "Bank Desa Nusantara",
     logoSponsor: "",
-    Poin: "true",
+    Poin: "false",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Rp 200rb + Sertifikat" },
@@ -48,7 +48,7 @@ const dataJuara = {
     periode: "25 Okt 2025 - 28 Des 2025",
     Sponsor: "Karang Taruna Tanjung Bulan",
     logoSponsor: "https://pulungrwo.github.io/img/logo-karang-taruna-tanjung-bulan.png",
-    Poin: "false",
+    Poin: "true",
 
     Hadiah: [
       { kategori: "Juara 1", hadiah: "Paket Data + Uang + Sertif" },
