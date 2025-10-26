@@ -27,45 +27,44 @@
       border-radius: 50%;
       border: 2.5px solid var(--highlight);
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease;
     }
+    .profil img:hover { transform: scale(1.05); }
 
     /* 💬 KUTIPAN UTAMA */
     .kutipan-utama {
       text-align: center;
       background: var(--card-bg);
-      color: var(--text-color);
       max-width: 750px;
       margin: 18px auto;
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 22px;
       box-shadow: var(--shadow);
       line-height: 1.7;
       font-size: 1.1em;
       font-weight: 600;
-      position: relative;
       transition: background 0.3s ease;
     }
-
+    .kutipan-utama button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .kutipan-utama button:hover {
+      background: var(--highlight);
+      color: #000;
+    }
     .quote-nav {
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 14px;
       margin-top: 14px;
-    }
-    .quote-nav button {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 8px 14px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    .quote-nav button:hover {
-      background: var(--highlight);
-      color: #000;
     }
 
     /* 🎛️ FILTER */
@@ -104,9 +103,25 @@
       line-height: 1.6;
       cursor: default;
       transition: transform 0.3s ease;
+      position: relative;
     }
-    .quote-card:hover {
-      transform: scale(1.02);
+    .quote-card:hover { transform: scale(1.02); }
+    .quote-card button {
+      position: absolute;
+      right: 16px;
+      bottom: 10px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .quote-card button:hover {
+      background: var(--highlight);
+      color: #000;
     }
 
     /* 📄 PAGINATION */
@@ -128,6 +143,10 @@
       background: var(--highlight);
       color: #000;
     }
+    .pagination button.active {
+      background: var(--highlight);
+      color: #000;
+    }
 
     footer {
       text-align: center;
@@ -141,6 +160,7 @@
 
   <!-- 🔝 NAVBAR -->
   <nav class="nav">
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
     <div class="nav-links" id="menu">
       <a href="/kreator">Beranda</a>
       <a href="/kreator/#hadiah">Hadiah</a>
@@ -169,9 +189,15 @@
 
   <!-- 🎛️ FILTER -->
   <div class="filter-box">
-    <select id="kategoriSelect"></select>
-    <select id="temaSelect"></select>
-    <select id="subtemaSelect"></select>
+    <select id="kategoriSelect">
+      <option value="motivasi">Motivasi</option>
+    </select>
+    <select id="temaSelect">
+      <option value="mulai-sekarang">Mulai Sekarang</option>
+    </select>
+    <select id="subtemaSelect">
+      <option value="berhenti-menunda">Berhenti Menunda</option>
+    </select>
     <br><br>
     <input type="text" id="cariInput" placeholder="Cari kutipan..." oninput="filterKutipan(this.value)">
   </div>
@@ -185,5 +211,6 @@
   <!-- 📦 SCRIPT -->
   <script src="/kreator/header.js"></script>
   <script src="quotes.js"></script>
+
 </body>
 </html>
