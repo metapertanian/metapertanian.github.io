@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cari Quote : Muntah Kata Kata | Rumah Kreator by PROxyz</title>
+  <title>Cari Kutipan | Rumah Kreator by PROxyz</title>
   <link rel="stylesheet" href="/kreator/gaya.css">
   <style>
     body {
       font-family: "Poppins", sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
-      transition: background 0.4s, color 0.4s;
       margin: 0;
       padding: 0;
       padding-top: 90px;
+      transition: background 0.4s, color 0.4s;
     }
 
     /* 👤 PROFIL */
@@ -27,41 +27,46 @@
       border-radius: 50%;
       border: 2.5px solid var(--highlight);
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      transition: transform 0.3s;
-    }
-    .profil img:hover {
-      transform: scale(1.05);
     }
 
-    /* 💬 KUTIPAN ACAK */
-    .kutipan-acak {
+    /* 💬 KUTIPAN UTAMA */
+    .kutipan-utama {
       text-align: center;
+      background: var(--card-bg);
+      color: var(--text-color);
+      max-width: 750px;
+      margin: 18px auto;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      line-height: 1.7;
       font-size: 1.1em;
       font-weight: 600;
-      margin: 18px auto;
-      max-width: 700px;
-      line-height: 1.6;
-      background: var(--card-bg);
-      padding: 16px 22px;
-      border-radius: 14px;
-      box-shadow: var(--shadow);
       position: relative;
+      transition: background 0.3s ease;
     }
 
-    .copy-btn {
-      position: absolute;
-      right: 16px;
-      bottom: 14px;
-      background: var(--accent);
-      border: none;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85em;
-      cursor: pointer;
-      transition: background 0.3s;
+    .quote-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 14px;
+      margin-top: 14px;
     }
-    .copy-btn:hover { background: var(--highlight); color: #000; }
+    .quote-nav button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    .quote-nav button:hover {
+      background: var(--highlight);
+      color: #000;
+    }
 
     /* 🎛️ FILTER */
     .filter-box {
@@ -100,7 +105,9 @@
       cursor: default;
       transition: transform 0.3s ease;
     }
-    .quote-card:hover { transform: scale(1.02); }
+    .quote-card:hover {
+      transform: scale(1.02);
+    }
 
     /* 📄 PAGINATION */
     .pagination {
@@ -135,26 +142,29 @@
   <!-- 🔝 NAVBAR -->
   <nav class="nav">
     <div class="nav-links" id="menu">
-      <a href="/kreator">Rumah Kreator</a>
-      <a href="/kreator/daftar">Daftar Sekarang</a>
-      <a href="/kreator/#hadiah">Hadiah & Pemenang</a>
-      <a href="/kreator/#poin">Poin Kreator</a>
-      <a href="/kreator/#aturan">Aturan Lomba</a>
-      <a href="/kreator/tips">Tips & Trik</a>
+      <a href="/kreator">Beranda</a>
+      <a href="/kreator/#hadiah">Hadiah</a>
+      <a href="/kreator/#poin">Poin</a>
+      <a href="/kreator/#aturan">Aturan</a>
+      <a href="/kreator/tips">Tips</a>
     </div>
     <a href="#" class="nav-brand">Cari Quote</a>
     <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
   </nav>
 
-  <!-- 👤 PROFIL -->
+  <!-- 👤 FOTO PROFIL -->
   <div class="profil">
     <img src="/img/pulung.jpg" alt="Profil">
   </div>
 
-  <!-- 💬 KUTIPAN ACAK -->
-  <div class="kutipan-acak" id="kutipanAcak">
-    Memuat kutipan inspiratif...
-    <button class="copy-btn" onclick="salinKutipan()">Salin</button>
+  <!-- 💬 KUTIPAN UTAMA -->
+  <div class="kutipan-utama">
+    <div id="kutipanTeks">Memuat kutipan inspiratif...</div>
+    <div class="quote-nav">
+      <button onclick="prevKutipan()">⏪</button>
+      <button onclick="salinKutipan()">Salin</button>
+      <button onclick="nextKutipan()">⏩</button>
+    </div>
   </div>
 
   <!-- 🎛️ FILTER -->
@@ -174,6 +184,6 @@
 
   <!-- 📦 SCRIPT -->
   <script src="/kreator/header.js"></script>
-  <script src="quote.js"></script>
+  <script src="quotes.js"></script>
 </body>
 </html>
