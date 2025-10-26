@@ -1,153 +1,152 @@
 // =========================================================
-// 💬 QUOTES VIEWER INTERAKTIF - Rumah Kreator
+// 💬 Pemanggil Kutipan Berdasarkan Kategori / Tema / Subtema
 // =========================================================
 
-const kutipanTeks = document.getElementById("kutipanTeks");
-const quoteListEl = document.getElementById("quoteList");
-const paginationEl = document.getElementById("pagination");
-const kategoriSelect = document.getElementById("kategoriSelect");
-const temaSelect = document.getElementById("temaSelect");
-const subtemaSelect = document.getElementById("subtemaSelect");
-
+const basePath = "/kreator/quotes"; // 🟢 Perbaikan path
 let semuaKutipan = [];
-let indexKutipan = 0;
-let halamanSaatIni = 1;
-const jumlahPerHalaman = 5;
+let halamanAktif = 1;
+const perHalaman = 5;
+
+// 🎯 Inisialisasi utama
+window.addEventListener("DOMContentLoaded", () => {
+  tampilkanTahun();
+  setupEventHandlers();
+  tampilkanKutipanAcak();
+});
 
 // =========================================================
-// 📁 Struktur Kategori (Contoh)
-const struktur = {
-  motivasi: {
-    "mulai-sekarang": ["berhenti-menunda", "percaya-diri", "disiplin"]
-  },
-  persahabatan: {
-    "teman-sejati": ["setia", "percaya"]
-  }
-};
-
+// 🧩 Event & Interaksi
 // =========================================================
-// 🧭 Dropdown Logic
-function isiDropdown() {
-  kategoriSelect.innerHTML = Object.keys(struktur)
-    .map(k => `<option value="${k}">${k.replace(/-/g, " ")}</option>`)
-    .join("");
-  updateTema();
-}
 
-function updateTema() {
-  const kategori = kategoriSelect.value;
-  const temaList = struktur[kategori] || {};
-  temaSelect.innerHTML = Object.keys(temaList)
-    .map(t => `<option value="${t}">${t.replace(/-/g, " ")}</option>`)
-    .join("");
-  updateSubtema();
-}
+function setupEventHandlers() {
+  const kategoriSelect = document.getElementById("kategori");
+  const temaSelect = document.getElementById("tema");
+  const subtemaSelect = document.getElementById("subtema");
+  const cariInput = document.getElementById("cariKutipan");
 
-function updateSubtema() {
-  const kategori = kategoriSelect.value;
-  const tema = temaSelect.value;
-  const subtemaList = struktur[kategori]?.[tema] || [];
-  subtemaSelect.innerHTML = subtemaList
-    .map(s => `<option value="${s}">${s.replace(/-/g, " ")}</option>`)
-    .join("");
-  muatKutipan();
+  // ubah tema/subtema setiap dropdown berubah
+  kategoriSelect.addEventListener("change", muatKutipan);
+  temaSelect.addEventListener("change", muatKutipan);
+  subtemaSelect.addEventListener("change", muatKutipan);
+
+  // pencarian kutipan
+  cariInput.addEventListener("input", () => tampilkanKutipan(semuaKutipan));
 }
 
 // =========================================================
-// 📂 Muat File JSON
+// 📁 Ambil kutipan dari file JSON
+// =========================================================
 async function muatKutipan() {
-  semuaKutipan = [];
-  const kategori = kategoriSelect.value;
-  const tema = temaSelect.value;
-  const subtema = subtemaSelect.value;
-  const path = `/kreator/qoutes/${kategori}/${tema}/${subtema}.json`;
+  const kategori = document.getElementById("kategori").value.trim().toLowerCase();
+  const tema = document.getElementById("tema").value.trim().toLowerCase().replace(/\s+/g, "-");
+  const subtema = document.getElementById("subtema").value.trim().toLowerCase().replace(/\s+/g, "-");
+  const pesanStatus = document.getElementById("pesanStatus");
+
+  const path = `${basePath}/${kategori}/${tema}/${subtema}.json`;
+  pesanStatus.textContent = "⏳ Memuat kutipan...";
+  pesanStatus.style.color = "gray";
 
   try {
-    const res = await fetch(path);
+    const res = await fetch(`${path}?v=${Date.now()}`);
     if (!res.ok) throw new Error("File tidak ditemukan");
-    const data = await res.json();
-    semuaKutipan = data.sort(() => Math.random() - 0.5);
-    indexKutipan = 0;
-    tampilkanKutipanUtama();
-    tampilkanKutipanList();
+    semuaKutipan = await res.json();
+
+    if (!Array.isArray(semuaKutipan) || semuaKutipan.length === 0) {
+      throw new Error("File kosong atau format tidak valid");
+    }
+
+    shuffleArray(semuaKutipan);
+    halamanAktif = 1;
+    tampilkanKutipan(semuaKutipan);
+    pesanStatus.textContent = "";
   } catch (err) {
-    quoteListEl.innerHTML = `<p style="text-align:center;color:red;">⚠️ Gagal memuat kutipan (${err.message})</p>`;
+    semuaKutipan = [];
+    tampilkanKutipan([]);
+    pesanStatus.textContent = `⚠️ Gagal memuat kutipan (${err.message})`;
+    pesanStatus.style.color = "red";
   }
 }
 
 // =========================================================
-// 🎬 Tampilkan Kutipan Utama
-function tampilkanKutipanUtama() {
-  if (semuaKutipan.length === 0) {
-    kutipanTeks.textContent = "Tidak ada kutipan ditemukan.";
+// 📄 Tampilkan kutipan acak di atas (seperti di beranda)
+// =========================================================
+function tampilkanKutipanAcak() {
+  const kutipanEl = document.getElementById("kutipanUtama");
+  const btnSalin = document.getElementById("salinKutipan");
+
+  if (!kutipanEl) return;
+
+  const pesanDefault = "Memuat kutipan inspiratif...";
+  kutipanEl.textContent = pesanDefault;
+
+  btnSalin.addEventListener("click", () => {
+    navigator.clipboard.writeText(kutipanEl.textContent.trim());
+    btnSalin.textContent = "✅ Disalin!";
+    setTimeout(() => (btnSalin.textContent = "Salin"), 1500);
+  });
+
+  // tampilkan kutipan acak dari data terakhir dimuat
+  setInterval(() => {
+    if (semuaKutipan.length > 0) {
+      const random = semuaKutipan[Math.floor(Math.random() * semuaKutipan.length)];
+      kutipanEl.textContent = random;
+    }
+  }, 6000);
+}
+
+// =========================================================
+// 📃 Tampilkan daftar kutipan (5 per halaman)
+// =========================================================
+function tampilkanKutipan(data) {
+  const container = document.getElementById("daftarKutipan");
+  const cari = document.getElementById("cariKutipan").value.trim().toLowerCase();
+
+  const hasil = data.filter(q => q.toLowerCase().includes(cari));
+  const totalHalaman = Math.ceil(hasil.length / perHalaman);
+  const awal = (halamanAktif - 1) * perHalaman;
+  const tampil = hasil.slice(awal, awal + perHalaman);
+
+  if (hasil.length === 0) {
+    container.innerHTML = "<p style='text-align:center;color:gray;'>Tidak ada kutipan ditemukan.</p>";
+    document.getElementById("pagination").innerHTML = "";
     return;
   }
-  kutipanTeks.textContent = `“${semuaKutipan[indexKutipan]}”`;
+
+  container.innerHTML = tampil.map(q => `
+    <div class="quote-card">
+      <p>${q}</p>
+      <button onclick="salinKutipanTeks('${encodeURIComponent(q)}')">Salin</button>
+    </div>
+  `).join("");
+
+  let htmlPag = "";
+  for (let i = 1; i <= totalHalaman; i++) {
+    htmlPag += `<button class="page-btn ${i === halamanAktif ? "active" : ""}" onclick="gantiHalaman(${i})">${i}</button>`;
+  }
+  document.getElementById("pagination").innerHTML = htmlPag;
 }
 
-function nextKutipan() {
-  indexKutipan = (indexKutipan + 1) % semuaKutipan.length;
-  tampilkanKutipanUtama();
+function gantiHalaman(hal) {
+  halamanAktif = hal;
+  tampilkanKutipan(semuaKutipan);
 }
 
-function prevKutipan() {
-  indexKutipan = (indexKutipan - 1 + semuaKutipan.length) % semuaKutipan.length;
-  tampilkanKutipanUtama();
-}
-
-function salinKutipan() {
-  const teks = kutipanTeks.textContent.replace(/[“”]/g, "").trim();
-  navigator.clipboard.writeText(teks);
-  alert("Kutipan disalin ke clipboard!");
+function salinKutipanTeks(teks) {
+  navigator.clipboard.writeText(decodeURIComponent(teks));
+  alert("✅ Kutipan disalin!");
 }
 
 // =========================================================
-// 📜 Daftar Kutipan + Pagination
-function tampilkanKutipanList() {
-  const mulai = (halamanSaatIni - 1) * jumlahPerHalaman;
-  const selesai = mulai + jumlahPerHalaman;
-  const halamanKutipan = semuaKutipan.slice(mulai, selesai);
-
-  quoteListEl.innerHTML = halamanKutipan
-    .map(q => `<div class="quote-card">“${q}”</div>`)
-    .join("");
-
-  buatPagination();
-}
-
-function buatPagination() {
-  const totalHalaman = Math.ceil(semuaKutipan.length / jumlahPerHalaman);
-  paginationEl.innerHTML = "";
-  for (let i = 1; i <= totalHalaman; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    btn.onclick = () => {
-      halamanSaatIni = i;
-      tampilkanKutipanList();
-    };
-    if (i === halamanSaatIni) btn.style.background = "var(--highlight)";
-    paginationEl.appendChild(btn);
+// 🌀 Utilitas
+// =========================================================
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
 
-// =========================================================
-// 🔍 Pencarian
-function filterKutipan(keyword) {
-  const cards = document.querySelectorAll(".quote-card");
-  keyword = keyword.toLowerCase();
-  cards.forEach(card => {
-    card.style.display = card.textContent.toLowerCase().includes(keyword)
-      ? "block"
-      : "none";
-  });
+function tampilkanTahun() {
+  const el = document.getElementById("tahun");
+  if (el) el.textContent = new Date().getFullYear();
 }
-
-// =========================================================
-// 🚀 Inisialisasi
-window.addEventListener("DOMContentLoaded", () => {
-  isiDropdown();
-  kategoriSelect.onchange = updateTema;
-  temaSelect.onchange = updateSubtema;
-  subtemaSelect.onchange = muatKutipan;
-  muatKutipan();
-});
