@@ -54,16 +54,17 @@ if (aturanEl) {
 
       <ul style="list-style: none; padding-left: 0; margin: 0;">
   <li>• Pendaftaran: <span style="color:var(--accent);">${dataSeason.periode || "-"}</span></li>
+  <li>• Boleh mendaftar 2x. yg dinilai yg terbaru.</li>
   <li>• Tema lomba: <b>${dataSeason.tema}</b></li>
   <li>• ${dataSeason.deskripsi}</li>
   <li>• Lomba terbuka untuk umum.</li>
-  <li>• Video hasil karya sendiri dan belum pernah diunggah sebelumnya.</li>
+  <li>• Video hasil karya sendiri dan belum pernah di upload.</li>
   <li>• Format bebas: lucu, edukatif, cinematic, dokumenter, atau motivasi.</li>
   <li>• Konten tidak boleh melanggar hukum.</li>
   <li>• Durasi maksimal 3 menit.</li>
   <li>• Kualitas video minimal HD (720p).</li>
-  <li>• Kirimkan video ke panitia untuk diunggah di media sosial resmi lomba.</li>
-  <li>• Poin dihitung otomatis menggunakan <b>algoritma internal</b> dan hasil bersifat final.</li>
+  <li>• panitia berhak mengelola dan meng-upload konten.</li>
+  <li>• Poin dihitung pakai <b>algoritma internal</b> dan bersifat final.</li>
 </ul>
 
       <hr style="margin:14px 0;border:none;border-top:1px dashed var(--border-color);">
