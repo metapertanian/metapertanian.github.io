@@ -63,7 +63,7 @@ if (aturanEl) {
   <li>• Konten tidak boleh melanggar hukum.</li>
   <li>• Durasi maksimal 3 menit.</li>
   <li>• Kualitas video minimal HD (720p).</li>
-  <li>• panitia berhak mengelola dan meng-upload konten.</li>
+  <li>• Panitia berhak meng-upload dan mengelola konten.</li>
   <li>• Poin dihitung pakai <b>algoritma internal</b> dan bersifat final.</li>
 </ul>
 
