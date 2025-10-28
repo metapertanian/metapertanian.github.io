@@ -1,7 +1,41 @@
 {
   "motivasi": {
-    "mulai-sekarang": ["berhenti-menunda", "ambil-tindakan"],
-    "percaya-diri": ["hadapi-takut", "tumbuh-setiap-hari"]
+    "mulai-sekarang": [
+      "berhenti-menunda",
+      "langkah-pertama",
+      "mulai-dari-hal-kecil",
+      "waktu-tidak-akan-menunggu",
+      "kesempatan-datang-sekali",
+      "gagal-itu-awal",
+      "rasa-takut-yang-harus-dilawan",
+      "keyakinan-diri",
+      "ubah-nanti-jadi-sekarang",
+      "disiplin-harian",
+      "fokus-pada-tujuan",
+      "buat-rencana-bukan-alasan",
+      "konsisten-lebih-penting",
+      "proses-bukan-instan",
+      "tinggalkan-zona-nyaman",
+      "waktu-terbaik-adalah-hari-ini",
+      "coba-lagi-dan-lagi",
+      "jangan-tunggu-sempurna",
+      "hadapi-keraguan",
+      "ambil-risiko-kecil",
+      "berani-memulai-tanpa-dukungan",
+      "mulai-sebelum-siap",
+      "nikmati-progres",
+      "kalah-hari-ini-bangkit-besok",
+      "menjadi-versi-lebih-baik",
+      "tekad-yang-tidak-mudah-patah",
+      "jangan-takut-salah",
+      "hidupmu-bergerak-bila-kamu-bergerak",
+      "setiap-detik-berharga",
+      "mulai-sekarang-demi-masa-depanmu"
+    ],
+    "percaya-diri": [
+      "hadapi-takut",
+      "tumbuh-setiap-hari"
+    ]
   },
   "inspirasi": {
     "hidup": ["syukuri-hari", "belajar-dari-gagal"],
