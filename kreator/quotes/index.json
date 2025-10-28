@@ -1,0 +1,10 @@
+{
+  "motivasi": {
+    "mulai-sekarang": ["berhenti-menunda", "ambil-tindakan"],
+    "percaya-diri": ["hadapi-takut", "tumbuh-setiap-hari"]
+  },
+  "inspirasi": {
+    "hidup": ["syukuri-hari", "belajar-dari-gagal"],
+    "karier": ["berani-mencoba", "pantang-menyerah"]
+  }
+}
