@@ -22,14 +22,73 @@ let jeda = false;
 let teksAktif = "";
 
 // =========================================================
+// 🧭 Muat daftar kategori / tema / subtema otomatis
+// =========================================================
+async function muatKategori() {
+  try {
+    const res = await fetch("/kreator/quotes/index.json");
+    if (!res.ok) throw new Error("index.json tidak ditemukan");
+    const data = await res.json();
+
+    // isi dropdown kategori
+    kategoriSelect.innerHTML = "";
+    for (const kategori in data) {
+      const opt = document.createElement("option");
+      opt.value = kategori;
+      opt.textContent = kategori;
+      kategoriSelect.appendChild(opt);
+    }
+
+    kategoriSelect.onchange = () => muatTema(data[kategoriSelect.value]);
+    temaSelect.onchange = () => muatSubtema(data[kategoriSelect.value][temaSelect.value]);
+    subtemaSelect.onchange = loadQuotes;
+
+    // pilih kategori pertama sebagai default
+    const kategoriPertama = Object.keys(data)[0];
+    if (kategoriPertama) {
+      muatTema(data[kategoriPertama]);
+    }
+  } catch (e) {
+    console.error(e);
+    kategoriSelect.innerHTML = `<option value="">(Tidak ada kategori)</option>`;
+  }
+}
+
+function muatTema(objTema) {
+  temaSelect.innerHTML = "";
+  for (const tema in objTema) {
+    const opt = document.createElement("option");
+    opt.value = tema;
+    opt.textContent = tema.replace(/-/g, " ");
+    temaSelect.appendChild(opt);
+  }
+
+  const temaPertama = Object.keys(objTema)[0];
+  if (temaPertama) muatSubtema(objTema[temaPertama]);
+}
+
+function muatSubtema(arrSubtema) {
+  subtemaSelect.innerHTML = "";
+  arrSubtema.forEach(st => {
+    const opt = document.createElement("option");
+    opt.value = st;
+    opt.textContent = st.replace(/-/g, " ");
+    subtemaSelect.appendChild(opt);
+  });
+
+  loadQuotes(); // otomatis tampilkan kutipan subtema pertama
+}
+
+// =========================================================
 // 🚀 Muat file JSON berdasarkan kategori/tema/subtema
 // =========================================================
 async function loadQuotes() {
-  const kategori = kategoriSelect.value || "motivasi";
-  const tema = temaSelect.value || "mulai-sekarang";
-  const subtema = subtemaSelect.value || "berhenti-menunda";
-  const path = `/kreator/quotes/${kategori}/${tema}/${subtema}.json`;
+  const kategori = kategoriSelect.value;
+  const tema = temaSelect.value;
+  const subtema = subtemaSelect.value;
+  if (!kategori || !tema || !subtema) return;
 
+  const path = `/kreator/quotes/${kategori}/${tema}/${subtema}.json`;
   kutipanTeks.textContent = "⏳ Memuat kutipan...";
   quoteList.innerHTML = "";
 
@@ -42,7 +101,7 @@ async function loadQuotes() {
       throw new Error("Format JSON salah (tidak ada array 'kutipan')");
     }
 
-    semuaQuotes = data.kutipan.sort(() => Math.random() - 0.5); // acak urutan
+    semuaQuotes = data.kutipan.sort(() => Math.random() - 0.5);
     currentQuoteIndex = 0;
     tampilkanKutipanHurufDemiHuruf(semuaQuotes[currentQuoteIndex]);
     tampilkanDaftarQuotes();
@@ -60,11 +119,8 @@ function tampilkanKutipanHurufDemiHuruf(teksBaru = null) {
   const el = kutipanTeks;
   clearInterval(intervalHuruf);
 
-  if (!teksBaru) {
-    teksAktif = semuaQuotes[currentQuoteIndex] || "";
-  } else {
-    teksAktif = teksBaru;
-  }
+  if (!teksBaru) teksAktif = semuaQuotes[currentQuoteIndex] || "";
+  else teksAktif = teksBaru;
 
   el.textContent = "";
   indexHuruf = 0;
@@ -90,7 +146,6 @@ function hapusHurufDemiHuruf() {
 
   intervalHuruf = setInterval(() => {
     if (jeda) return;
-
     if (indexHuruf > 0) {
       el.textContent = teksAktif.substring(0, --indexHuruf);
     } else {
@@ -122,7 +177,6 @@ function salinKutipan() {
   setTimeout(() => tampilkanKutipanHurufDemiHuruf(teksAktif), 1000);
 }
 
-// pause animasi saat disentuh
 kutipanTeks.addEventListener("click", () => {
   jeda = !jeda;
   if (!jeda && intervalHuruf === null) tampilkanKutipanHurufDemiHuruf(teksAktif);
@@ -137,7 +191,6 @@ function filterKutipan(keyword = "") {
   halamanAktif = 1;
   tampilkanDaftarQuotes(hasil);
 
-  // scroll ke bagian cari
   const el = document.getElementById("cariInput");
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   el.focus();
@@ -179,13 +232,6 @@ function tampilkanDaftarQuotes(data = semuaQuotes) {
 }
 
 // =========================================================
-// 🧭 Dropdown Listener
+// 🚀 Jalankan
 // =========================================================
-[kategoriSelect, temaSelect, subtemaSelect].forEach(sel =>
-  sel.addEventListener("change", () => {
-    halamanAktif = 1;
-    loadQuotes();
-  })
-);
-
-window.addEventListener("DOMContentLoaded", loadQuotes);
+window.addEventListener("DOMContentLoaded", muatKategori);
