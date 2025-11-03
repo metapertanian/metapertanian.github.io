@@ -1,4 +1,38 @@
 {
+  "cinta": {
+    "arti-cinta": [
+      "arti-setia",
+      "cinta-pertama",
+      "cinta-dalam-diam",
+      "cinta-yang-tulus",
+      "arti-memiliki-dan-melepaskan",
+      "ketulusan-tanpa-syarat",
+      "cinta-dan-pengorbanan",
+      "saat-cinta-berubah",
+      "menemukan-diri-dalam-cinta",
+      "antara-cinta-dan-egomu",
+      "cinta-yang-tidak-dimengerti",
+      "cinta-yang-menyembuhkan",
+      "arti-kehilangan",
+      "belajar-mencintai-diri-sendiri",
+      "cinta-yang-tidak-harus-memiliki",
+      "kesetiaan-di-tengah-ujian",
+      "cinta-setelah-luka",
+      "cinta-bukan-sekadar-kata",
+      "ketika-rasa-tak-dibalas",
+      "cinta-yang-dewasa",
+      "jarak-dan-kerinduan",
+      "cinta-yang-datang-di-waktu-salah",
+      "cinta-dalam-keheningan",
+      "antara-harapan-dan-realita",
+      "mencintai-dalam-kesederhanaan",
+      "cinta-yang-mengajarkan-ikhlas",
+      "cinta-yang-menumbuhkan",
+      "arti-pulang-dalam-cinta",
+      "cinta-yang-tak-terucap",
+      "cinta-yang-menjadi-doa"
+    ]
+  }
   "motivasi": {
     "mulai-sekarang": [
       "berhenti-menunda",
@@ -41,4 +75,5 @@
     "hidup": ["syukuri-hari", "belajar-dari-gagal"],
     "karier": ["berani-mencoba", "pantang-menyerah"]
   }
+  
 }
