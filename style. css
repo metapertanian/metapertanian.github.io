@@ -1,54 +1,310 @@
-/* =========================
-   BERTUNAS – GLOBAL STYLE
-   Bertani, Bertumbuh, Berbagi
-   ========================= */
-/* ================================================== RISMA FARM – Global Style Tema terang · Modern · Konsisten ================================================== */
+/* ===============================
+   BERTUNAS – Global Style
+   Tema terang • modern • elegan
+================================ */
 
-:root { --bg: #f8fafc; --card: #ffffff; --text: #0f172a; --muted: #64748b; --primary: #16a34a; --primary-soft: #dcfce7; --border: #e2e8f0; --shadow: 0 10px 30px rgba(0,0,0,.06); --radius: 14px; }
+:root {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --primary: #16a34a;
+  --primary-soft: #dcfce7;
+  --text-main: #0f172a;
+  --text-soft: #64748b;
+  --border: #e2e8f0;
+  --shadow: 0 10px 30px rgba(0,0,0,0.06);
+  --radius: 16px;
+}
 
-{ box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.6;
+}
 
-body { margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif; background: var(--bg); color: var(--text); }
+/* ===============================
+   TYPOGRAPHY
+================================ */
 
-/* ================= NAVBAR ================= */ .navbar { position: sticky; top: 0; z-index: 100; background: var(--card); display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; box-shadow: var(--shadow); }
+h1 {
+  font-size: 2.2rem;
+  margin: 0;
+}
 
-.nav-brand { font-weight: 800; font-size: 18px; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
 
-.nav-links { display: flex; gap: 6px; }
+h3 {
+  margin: 0 0 6px;
+}
 
-.nav-links a { text-decoration: none; padding: 8px 14px; border-radius: 999px; font-weight: 600; font-size: 14px; color: var(--muted); transition: all .2s ease; }
+small {
+  color: var(--text-soft);
+}
 
-.nav-links a:hover { background: var(--primary-soft); color: var(--primary); }
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
 
-.nav-links a.active { background: var(--primary); color: #ffffff; }
+/* ===============================
+   LAYOUT
+================================ */
 
-/* ================= LAYOUT ================= */ .container { max-width: 1000px; margin: 32px auto; padding: 0 20px; }
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 24px;
+}
 
-h1 { margin-bottom: 4px; }
+.section {
+  margin-top: 40px;
+}
 
-.subtitle { color: var(--muted); margin-bottom: 24px; }
+/* ===============================
+   NAVBAR
+================================ */
 
-/* ================= CARD ================= */ .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; margin-bottom: 24px; }
+.navbar {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
 
-.card h2 { margin-top: 0; margin-bottom: 16px; }
+.navbar-inner {
+  max-width: 1100px;
+  margin: auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
-/* ================= FORM ================= */ label { display: block; margin-top: 14px; font-weight: 600; }
+.brand {
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
 
-input, select, textarea { width: 100%; margin-top: 6px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; }
+.nav-links {
+  display: flex;
+  gap: 16px;
+}
 
-textarea { min-height: 120px; resize: vertical; }
+.nav-links a {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--text-soft);
+}
 
-.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 14px; }
+.nav-links a.active,
+.nav-links a:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
 
-/* ================= BUTTON ================= */ .btn { margin-top: 16px; background: var(--primary); color: #ffffff; border: none; padding: 12px 18px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: transform .1s ease, box-shadow .1s ease; }
+/* ===============================
+   CARD
+================================ */
 
-.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(22,163,74,.25); }
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  border: 1px solid var(--border);
+}
 
-/* ================= OUTPUT ================= */ pre { background: #0f172a; color: #e5e7eb; padding: 16px; border-radius: 12px; overflow-x: auto; font-size: 13px; }
+.card.stat {
+  text-align: center;
+}
 
-/* ================= ANGGOTA ================= */ .anggota-box label { display: block; margin: 6px 0; font-weight: 500; }
+.stat-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 6px 0;
+}
 
-/* ================= UTIL ================= */ .muted { color: var(--muted); font-size: 14px; }
+/* ===============================
+   GRID
+================================ */
 
-.separator { height: 1px; background: var(--border); margin: 20px 0; }
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* ===============================
+   BUTTON
+================================ */
+
+button {
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  background: var(--primary);
+  color: #fff;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button.outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+}
+
+button.outline:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+/* ===============================
+   PAGINATION
+================================ */
+
+.pagination {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination button {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+}
+
+.pagination button.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ===============================
+   TABLE
+================================ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+th {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  text-transform: uppercase;
+}
+
+/* ===============================
+   FORM
+================================ */
+
+label {
+  font-weight: 600;
+  margin-top: 14px;
+  display: block;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ===============================
+   CODE / COPY
+================================ */
+
+pre {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 16px;
+  border-radius: 14px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+}
+
+.copy-btn {
+  margin-top: 10px;
+  background: #334155;
+}
+
+/* ===============================
+   BADGE
+================================ */
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ===============================
+   FOOTER NOTE
+================================ */
+
+.note {
+  margin-top: 20px;
+  padding: 14px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  color: var(--text-soft);
+  font-size: 0.85rem;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 1.7rem;
+  }
+  .navbar-inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
