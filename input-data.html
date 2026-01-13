@@ -1,104 +1,214 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RISMA FARM – Input Data</title>
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Input Data Lahan – BERTUNAS</title>
+
+  <link rel="stylesheet" href="/style.css">
+  <script src="/anggota.js"></script>
+  <script src="/navbar2.js"></script>
 </head>
-<body><div class="container">
-  <h1>Input Data Usaha</h1>
-  <p class="subtitle">RISMA FARM · Input Modal, Biaya, dan Hasil Panen</p>  <!-- ================= MODAL ================= -->  <section class="card">
-    <h2>Modal</h2>
-    <label>Modal RISMA</label>
-    <input type="number" id="modalRisma" placeholder="contoh: 380000" /><label>Modal Manajemen</label>
-<input type="number" id="modalManajemen" placeholder="contoh: 500000" />
+<body>
 
-<button class="btn" onclick="generateModal()">Generate Modal</button>
-<pre id="outputModal"></pre>
+<main class="container">
+  <h1>🧾 Input Data Lahan</h1>
+  <p class="muted">Satu alat untuk semua lahan (RISMA · UMI · UMI 2)</p>
 
-  </section>  <!-- ================= BIAYA ================= -->  <section class="card">
-    <h2>Biaya</h2>
-    <label>Tanggal</label>
-    <input type="date" id="biayaTanggal" /><label>Keterangan</label>
-<input type="text" id="biayaKet" placeholder="Pupuk / Tenaga / dll" />
-
-<label>Jumlah</label>
-<input type="number" id="biayaJumlah" />
-
-<button class="btn" onclick="generateBiaya()">Generate Biaya</button>
-<pre id="outputBiaya"></pre>
-
-  </section>  <!-- ================= PANEN ================= -->  <section class="card">
-    <h2>Hasil Panen</h2><label>Tanggal Panen</label>
-<input type="date" id="panenTanggal" />
-
-<label>Komoditas</label>
-<input type="text" id="panenKomoditas" placeholder="Cabai / Timun" />
-
-<div class="row">
-  <div>
-    <label>Jumlah</label>
-    <input type="number" id="panenQty" />
-  </div>
-  <div>
-    <label>Satuan</label>
-    <input type="text" id="panenSatuan" value="kg" />
-  </div>
-</div>
-
-<label>Omzet</label>
-<input type="number" id="panenNilai" />
-
-<label>Biaya Panen</label>
-<input type="number" id="panenBiaya" />
-
-<label>Bonus Panen (opsional)</label>
-<input type="number" id="bonusTotal" placeholder="contoh: 400000" />
-
-<div class="anggota-box">
-  <p><b>Anggota Hadir</b></p>
-  <div id="anggotaList"></div>
-</div>
-
-<button class="btn" onclick="generatePanen()">Generate Panen</button>
-<pre id="outputPanen"></pre>
-
+  <!-- PILIH LAHAN -->
+  <section class="card">
+    <div class="form-row">
+      <label>Pilih Lahan</label>
+      <select id="lahan">
+        <option value="rismafarm">RISMA FARM</option>
+        <option value="umi">UMI</option>
+        <option value="umi2">UMI 2</option>
+      </select>
+    </div>
   </section>
-</div><script src="/anggota.js"></script><script src="/panen.js"></script><script>
-  // render checkbox anggota
-  const anggotaList = document.getElementById('anggotaList');
-  anggota.forEach(nama => {
-    const label = document.createElement('label');
-    label.innerHTML = `<input type="checkbox" value="${nama}"> ${nama}`;
-    anggotaList.appendChild(label);
+
+  <!-- JENIS INPUT -->
+  <section class="card">
+    <div class="form-row">
+      <label>Jenis Data</label>
+      <select id="jenis" onchange="toggleJenis()">
+        <option value="modal">Modal</option>
+        <option value="biaya">Biaya</option>
+        <option value="panen">Hasil Panen</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- FORM UMUM -->
+  <section class="card">
+    <div class="form-row">
+      <label>Tanggal</label>
+      <input type="date" id="tanggal">
+    </div>
+
+    <div class="form-row">
+      <label>Keterangan / Komoditas</label>
+      <input type="text" id="nama" placeholder="Contoh: Cabai / Pupuk dasar">
+    </div>
+
+    <div class="form-row">
+      <label>Jumlah / Nilai (Rp)</label>
+      <input type="number" id="nilai">
+    </div>
+  </section>
+
+  <!-- KHUSUS PANEN -->
+  <section class="card" id="panenBox" style="display:none">
+    <div class="form-row">
+      <label>Berat Panen</label>
+      <input type="number" id="qty" placeholder="Contoh: 400">
+    </div>
+
+    <div class="form-row">
+      <label>Satuan</label>
+      <select id="satuan">
+        <option value="kg">kg</option>
+        <option value="ton">ton</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Biaya Panen</label>
+      <input type="number" id="biayaPanen" placeholder="Opsional">
+    </div>
+  </section>
+
+  <!-- BONUS PANEN (KHUSUS RISMA FARM) -->
+  <section class="card" id="bonusBox" style="display:none">
+    <h3>🎁 Bonus Panen (RISMA FARM)</h3>
+
+    <div class="form-row">
+      <label>Total Bonus</label>
+      <input type="number" id="bonusTotal">
+    </div>
+
+    <div class="form-row">
+      <label>Anggota Hadir</label>
+      <div class="checklist" id="listAnggota"></div>
+    </div>
+  </section>
+
+  <!-- ACTION -->
+  <section class="card">
+    <button class="btn-primary" onclick="generate()">Generate Kode</button>
+  </section>
+
+  <!-- OUTPUT -->
+  <section class="card">
+    <h3>Hasil (salin ke file lahan)</h3>
+    <pre id="output">// hasil muncul di sini</pre>
+    <button class="btn-secondary" onclick="salin()">📋 Salin</button>
+  </section>
+
+</main>
+
+<script>
+/* =============================
+   INIT
+============================= */
+const anggotaBox = document.getElementById("listAnggota");
+anggota.forEach(a => {
+  anggotaBox.innerHTML += `
+    <label class="check-item">
+      <input type="checkbox" value="${a}"> ${a}
+    </label>
+  `;
+});
+
+/* =============================
+   TOGGLE FORM
+============================= */
+function toggleJenis() {
+  const jenis = document.getElementById("jenis").value;
+  const lahan = document.getElementById("lahan").value;
+
+  document.getElementById("panenBox").style.display =
+    jenis === "panen" ? "block" : "none";
+
+  document.getElementById("bonusBox").style.display =
+    (jenis === "panen" && lahan === "rismafarm") ? "block" : "none";
+}
+
+document.getElementById("lahan").addEventListener("change", toggleJenis);
+
+/* =============================
+   GENERATOR
+============================= */
+function generate() {
+  const lahan = document.getElementById("lahan").value;
+  const jenis = document.getElementById("jenis").value;
+  const tanggal = document.getElementById("tanggal").value;
+  const nama = document.getElementById("nama").value;
+  const nilai = Number(document.getElementById("nilai").value || 0);
+
+  if (!tanggal || !nama || !nilai) {
+    alert("Data belum lengkap");
+    return;
+  }
+
+  let obj = `{
+  tanggal: "${tanggal}",
+  nama: "${nama}",
+  nilai: ${nilai}`;
+
+  if (jenis === "panen") {
+    const qty = Number(document.getElementById("qty").value || 0);
+    const satuan = document.getElementById("satuan").value;
+    const biayaPanen = Number(document.getElementById("biayaPanen").value || 0);
+
+    if (!qty) {
+      alert("Berat panen wajib diisi");
+      return;
+    }
+
+    obj += `,
+  qty: ${qty},
+  satuan: "${satuan}"`;
+
+    if (biayaPanen > 0) {
+      obj += `,
+  biayaPanen: ${biayaPanen}`;
+    }
+
+    // BONUS HANYA RISMA FARM
+    if (lahan === "rismafarm") {
+      const bonus = Number(document.getElementById("bonusTotal").value || 0);
+      const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
+        .map(cb => cb.value);
+
+      if (bonus > 0 && anggotaDipilih.length > 0) {
+        obj += `,
+  bonusPanen: {
+    total: ${bonus},
+    anggota: ${JSON.stringify(anggotaDipilih)}
+  }`;
+      }
+    }
+  }
+
+  obj += `
+},`;
+
+  document.getElementById("output").textContent = obj;
+}
+
+/* =============================
+   COPY
+============================= */
+function salin() {
+  const teks = document.getElementById("output").textContent;
+  if (!teks || teks.includes("hasil")) return;
+
+  navigator.clipboard.writeText(teks).then(() => {
+    alert("Kode berhasil disalin");
   });
+}
+</script>
 
-  function generateModal() {
-    const risma = modalRisma.value || 0;
-    const manajemen = modalManajemen.value || 0;
-
-    outputModal.textContent = `modal: {\n  risma: ${risma},\n  manajemen: ${manajemen}\n},`;
-  }
-
-  function generateBiaya() {
-    outputBiaya.textContent = `{ tanggal: "${biayaTanggal.value}", keterangan: "${biayaKet.value}", jumlah: ${biayaJumlah.value} },`;
-  }
-
-  function generatePanen() {
-    const checked = [...document.querySelectorAll('#anggotaList input:checked')].map(i => i.value);
-
-    const data = buildPanenData({
-      tanggal: panenTanggal.value,
-      komoditas: panenKomoditas.value,
-      qty: panenQty.value,
-      satuan: panenSatuan.value,
-      nilai: panenNilai.value,
-      biayaPanen: panenBiaya.value,
-      bonusTotal: bonusTotal.value,
-      anggota: checked
-    });
-
-    outputPanen.textContent = data;
-  }
-</script></body>
+</body>
 </html>
