@@ -1,17 +1,49 @@
-// panen.js // Builder & validator data hasil panen RISMA FARM
+// panen.js
+// Builder & validator data hasil panen RISMA FARM
 
-function buildPanenData(input) { const { tanggal, komoditas, qty, satuan, nilai, biayaPanen, bonusTotal, anggota } = input;
+function buildPanenData(input) {
+  const {
+    tanggal,
+    komoditas,
+    qty,
+    satuan = "kg",
+    nilai,
+    biayaPanen = 0,
+    bonusTotal = 0,
+    anggota = []
+  } = input;
 
-if (!tanggal || !komoditas || !qty || !nilai) { return "// ❌ Data panen belum lengkap"; }
+  if (!tanggal || !komoditas || !qty || !nilai) {
+    return "// ❌ Data panen belum lengkap";
+  }
 
-let obj = { tanggal: \"${tanggal}\", komoditas: \"${komoditas}\", qty: ${qty}, satuan: \"${satuan || 'kg'}\", nilai: ${nilai};
+  let obj = `{
+  tanggal: "${tanggal}",
+  komoditas: "${komoditas}",
+  qty: ${qty},
+  satuan: "${satuan}",
+  nilai: ${nilai}`;
 
-if (biayaPanen && biayaPanen > 0) { obj += ,\n  biayaPanen: ${biayaPanen}; }
+  if (biayaPanen > 0) {
+    obj += `,
+  biayaPanen: ${biayaPanen}`;
+  }
 
-if (bonusTotal && bonusTotal > 0 && anggota && anggota.length > 0) { obj += ,\n  bonusPanen: {\n    total: ${bonusTotal},\n    anggota: ${JSON.stringify(anggota)}\n  }; }
+  if (bonusTotal > 0 && anggota.length > 0) {
+    obj += `,
+  bonusPanen: {
+    total: ${bonusTotal},
+    anggota: ${JSON.stringify(anggota)}
+  }`;
+  }
 
-obj += \n},;
+  obj += `
+},`;
 
-return obj; }
+  return obj;
+}
 
-// helper format angka (opsional untuk laporan) function formatAngka(num) { return Number(num || 0).toLocaleString('id-ID'); }
+// helper format angka (untuk laporan)
+function formatAngka(num) {
+  return Number(num || 0).toLocaleString("id-ID");
+}
