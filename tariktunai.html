@@ -1,92 +1,104 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tarik Tunai – BANK RISMA</title>  <link rel="stylesheet" href="/style.css" />  <!-- data & util -->  <script src="/anggota.js"></script>  <script src="/rismafarm.js"></script>  <script src="/umi.js"></script>  <script src="/umi2.js"></script>  <script src="/tariktunai.js"></script>  <script src="/bank-risma.js"></script>  <script src="/navbar.js"></script></head>
-<body><main class="container">  <h1>💸 Tarik Tunai Anggota</h1>
-  <p class="muted">Input penarikan bonus panen anggota (manual & transparan)</p>  <section class="card"><div class="form-row">
-  <label>Tanggal Penarikan</label>
-  <input type="date" id="tanggal" />
-</div>
+  <title>Tarik Tunai – BANK RISMA</title>
 
-<div class="form-row">
-  <label>Daftar Anggota</label>
-  <div class="checklist" id="listAnggota"></div>
-</div>
+  <link rel="stylesheet" href="/style.css" />
 
-<div class="form-row">
-  <label class="inline">
-    <input type="checkbox" id="ambilSemua" /> Ambil seluruh saldo bonus
-  </label>
-  <small class="hint">Jika dicentang, sistem akan mengambil sisa saldo bonus masing-masing anggota</small>
-</div>
+  <!-- DATA -->
+  <script src="/anggota.js"></script>
+  <script src="/rismafarm.js"></script>
+  <script src="/umi.js"></script>
+  <script src="/umi2.js"></script>
+  <script src="/tariktunai.js"></script>
+  <script src="/bank-risma.js"></script>
 
-<div class="form-row">
-  <label>Nominal Manual</label>
-  <input type="number" id="jumlah" placeholder="Isi jika tidak ambil semua" />
-</div>
+  <!-- NAV -->
+  <script src="/navbar2.js"></script>
+</head>
 
-<button class="btn-primary" onclick="generateTarik()">Generate Data Tarik Tunai</button>
+<body>
+<script>renderNavbar("tarik", "admin")</script>
 
-  </section>  <section class="card">
+<main class="container">
+  <h1>💸 Tarik Tunai Anggota</h1>
+  <small>Input penarikan bonus panen anggota</small>
+
+  <section class="card section">
+    <label>Tanggal Penarikan</label>
+    <input type="date" id="tanggal" />
+
+    <label>Daftar Anggota</label>
+    <div id="listAnggota" class="note"></div>
+
+    <label>
+      <input type="checkbox" id="ambilSemua" />
+      Ambil seluruh saldo bonus
+    </label>
+    <small>Jika dicentang, sistem akan mengambil sisa saldo masing-masing anggota</small>
+
+    <label>Nominal Manual</label>
+    <input type="number" id="jumlah" placeholder="Isi jika tidak ambil semua" />
+
+    <button onclick="generateTarik()">Generate Data Tarik Tunai</button>
+  </section>
+
+  <section class="card section">
     <h3>Hasil (salin ke <code>tariktunai.js</code>)</h3>
     <pre id="output">// hasil akan muncul di sini</pre>
-    <button class="btn-secondary" onclick="salinHasil()">📋 Salin</button>
-    <small class="hint">⚠️ Tempelkan data di BARIS PALING ATAS array <code>tarikTunai</code></small>
-  </section></main><script>
-// peta saldo dari BANK RISMA
+    <button class="outline" onclick="salinHasil()">📋 Salin</button>
+    <small>⚠️ Tempelkan di BARIS PALING ATAS array <code>tarikTunai</code></small>
+  </section>
+</main>
+
+<script>
 const saldoMap = {};
 BANK_RISMA_DATA.tabelAnggota.forEach(a => saldoMap[a.nama] = a.saldo);
 
-// render checklist anggota
-const list = document.getElementById('listAnggota');
+// checklist anggota
+const list = document.getElementById("listAnggota");
 anggota.forEach(nama => {
-  const row = document.createElement('label');
-  row.className = 'check-item';
-  row.innerHTML = `
-    <input type="checkbox" value="${nama}">
-    <span>${nama}</span>
-    <small>Saldo: ${saldoMap[nama].toLocaleString('id-ID')}</small>
+  list.innerHTML += `
+    <label>
+      <input type="checkbox" value="${nama}">
+      ${nama} — Saldo: ${saldoMap[nama].toLocaleString("id-ID")}
+    </label><br>
   `;
-  list.appendChild(row);
 });
 
 function generateTarik() {
-  const tanggal = document.getElementById('tanggal').value;
-  const ambilAll = document.getElementById('ambilSemua').checked;
-  const manual = Number(document.getElementById('jumlah').value || 0);
+  const tanggal = document.getElementById("tanggal").value;
+  const ambilAll = document.getElementById("ambilSemua").checked;
+  const manual = Number(document.getElementById("jumlah").value || 0);
 
-  if (!tanggal) {
-    alert('Tanggal wajib diisi');
-    return;
-  }
+  if (!tanggal) return alert("Tanggal wajib diisi");
 
-  let hasil = '';
+  let hasil = "";
 
-  document.querySelectorAll('#listAnggota input:checked').forEach(cb => {
+  document.querySelectorAll("#listAnggota input:checked").forEach(cb => {
     const nama = cb.value;
-    let jumlah = ambilAll ? saldoMap[nama] : manual;
-
+    const jumlah = ambilAll ? saldoMap[nama] : manual;
     if (!jumlah || jumlah <= 0) return;
 
     hasil += `{
-  tanggal: \"${tanggal}\",
-  nama: \"${nama}\",
+  tanggal: "${tanggal}",
+  nama: "${nama}",
   jumlah: ${jumlah}
 },
 `;
   });
 
-  document.getElementById('output').textContent = hasil || '// ❌ Tidak ada data valid';
+  document.getElementById("output").textContent =
+    hasil || "// ❌ Tidak ada data valid";
 }
 
 function salinHasil() {
-  const teks = document.getElementById('output').textContent;
-  if (!teks || teks.includes('❌')) return alert('Tidak ada data untuk disalin');
-
-  navigator.clipboard.writeText(teks).then(() => {
-    alert('Data berhasil disalin');
-  });
+  const teks = document.getElementById("output").textContent;
+  if (!teks || teks.includes("❌")) return;
+  navigator.clipboard.writeText(teks).then(() => alert("Berhasil disalin"));
 }
-</script></body>
+</script>
+</body>
 </html>
