@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RISMA FARM – BERTUNAS</title>
+
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- DATA -->
+  <script src="/rismafarm.js"></script>
+
+  <!-- UI -->
+  <script src="/navbar.js"></script>
+</head>
+<body>
+
+<script>
+  renderNavbar("rismafarm", "public");
+</script>
+
+<main class="container">
+  <header class="hero">
+    <h1>🌾 RISMA FARM</h1>
+    <p class="tagline">Bertani bersama, bertumbuh bersama, berbagi bersama.</p>
+  </header>
+
+  <section class="card section">
+    <label>Pilih Musim Tanam</label>
+    <select id="musim"></select>
+  </section>
+
+  <section class="grid-4" id="ringkasan">
+    <div class="card">
+      <h4>Total Modal</h4>
+      <div class="big-number" id="totalModal">0</div>
+    </div>
+    <div class="card">
+      <h4>Total Biaya</h4>
+      <div class="big-number" id="totalBiaya">0</div>
+    </div>
+    <div class="card">
+      <h4>Omzet Panen</h4>
+      <div class="big-number" id="totalPanen">0</div>
+    </div>
+    <div class="card">
+      <h4>Laba Bersih</h4>
+      <div class="big-number" id="laba">0</div>
+    </div>
+  </section>
+
+  <section class="card section" id="bagiHasilBox" style="display:none;">
+    <h3>📊 Pembagian Hasil</h3>
+    <div id="bagiHasil"></div>
+  </section>
+
+  <section class="card section">
+    <h3>🌱 Komoditas</h3>
+    <ul id="komoditas"></ul>
+  </section>
+
+  <section class="card section">
+    <h3>📆 Riwayat Panen</h3>
+    <div id="panenList"></div>
+  </section>
+</main>
+
+<script>
+function rupiah(n) {
+  return Number(n || 0).toLocaleString("id-ID");
+}
+
+// init musim
+const musimSelect = document.getElementById("musim");
+Object.entries(rismaFarm.musim).forEach(([key, m]) => {
+  const opt = document.createElement("option");
+  opt.value = key;
+  opt.textContent = m.label;
+  musimSelect.appendChild(opt);
+});
+
+musimSelect.addEventListener("change", render);
+render();
+
+function render() {
+  const musim = rismaFarm.musim[musimSelect.value];
+
+  const totalModal = Object.values(musim.modal || {}).reduce((a,b)=>a+b,0);
+  const totalBiaya = (musim.biaya || []).reduce((a,b)=>a+b.jumlah,0);
+  const totalPanen = (musim.panen || []).reduce((a,b)=>a+b.nilai,0);
+  const laba = totalPanen - totalBiaya;
+
+  document.getElementById("totalModal").textContent = rupiah(totalModal);
+  document.getElementById("totalBiaya").textContent = rupiah(totalBiaya);
+  document.getElementById("totalPanen").textContent = rupiah(totalPanen);
+  document.getElementById("laba").textContent = rupiah(laba);
+
+  // komoditas
+  const ul = document.getElementById("komoditas");
+  ul.innerHTML = "";
+  (musim.komoditas || []).forEach(k => {
+    const li = document.createElement("li");
+    li.textContent = k;
+    ul.appendChild(li);
+  });
+
+  // panen
+  const panenBox = document.getElementById("panenList");
+  panenBox.innerHTML = "";
+  (musim.panen || []).forEach(p => {
+    const div = document.createElement("div");
+    div.className = "riwayat-item";
+    div.innerHTML = `
+      <strong>${p.tanggal}</strong><br>
+      ${p.komoditas} – ${p.qty} ${p.satuan || "kg"}<br>
+      Omzet: ${rupiah(p.nilai)}
+    `;
+    panenBox.appendChild(div);
+  });
+
+  // bagi hasil
+  const box = document.getElementById("bagiHasilBox");
+  const list = document.getElementById("bagiHasil");
+  list.innerHTML = "";
+
+  if (musim.skema && musim.skema.tipe === "laba_bersih") {
+    box.style.display = "block";
+    Object.entries(musim.skema.pembagian).forEach(([k,v]) => {
+      const p = document.createElement("p");
+      p.textContent = `${k} : ${rupiah(laba * v / 100)} (${v}%)`;
+      list.appendChild(p);
+    });
+  } else {
+    box.style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>
