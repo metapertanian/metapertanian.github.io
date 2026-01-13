@@ -9,6 +9,8 @@ nav.innerHTML = ` <div class="nav-brand">🧾 RISMA FARM</div>
   <a href="/input-data.html">Input Data</a>
   <a href="/laporan.html">Laporan</a>
 </div>
+<a href="/tariktunai.html">Tarik Tunai</a>
+</div>
 
 <div class="nav-links">
   <a href="/index.html">BERTUNAS</a>
