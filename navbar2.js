@@ -1,25 +1,45 @@
-// navbar2.js // Navbar khusus halaman kerja (Input & Laporan)
+// navbar2.js
+// Navbar universal BERTUNAS / RISMA FARM / BANK RISMA
 
-document.addEventListener("DOMContentLoaded", () => { const nav = document.createElement("nav"); nav.className = "navbar";
+function renderNavbar(active = "") {
+  const nav = document.createElement("div");
+  nav.className = "navbar";
 
-nav.innerHTML = ` <div class="nav-brand">🧾 RISMA FARM</div>
+  nav.innerHTML = `
+    <div class="navbar-inner">
+      <div class="brand">🌱 BERTUNAS</div>
 
-<div class="nav-links">
-  <a href="/input-musim.html">Input Musim</a>
-  <a href="/input-data.html">Input Data</a>
-  <a href="/laporan.html">Laporan</a>
-</div>
-<a href="/tariktunai.html">Tarik Tunai</a>
-</div>
+      <div class="nav-links">
+        <a href="/index.html" class="${active === 'bertunas' ? 'active' : ''}">
+          BERTUNAS
+        </a>
 
-<div class="nav-links">
-  <a href="/index.html">BERTUNAS</a>
-  <a href="/rismafarm.html">RISMA FARM</a>
-  <a href="/bank-risma.html">BANK RISMA</a>
-</div>
+        <a href="/rismafarm.html" class="${active === 'rismafarm' ? 'active' : ''}">
+          RISMA FARM
+        </a>
 
-`;
+        <a href="/bankrisma.html" class="${active === 'bank' ? 'active' : ''}">
+          BANK RISMA
+        </a>
 
-document.body.prepend(nav);
+        <a href="/input-musim.html" class="${active === 'musim' ? 'active' : ''}">
+          Input Musim
+        </a>
 
-// active state const links = nav.querySelectorAll("a"); links.forEach(link => { if (location.pathname === link.getAttribute("href")) { link.classList.add("active"); } }); });
+        <a href="/input-data.html" class="${active === 'input' ? 'active' : ''}">
+          Input Data
+        </a>
+
+        <a href="/tariktunai.html" class="${active === 'tarik' ? 'active' : ''}">
+          Tarik Tunai
+        </a>
+
+        <a href="/laporan.html" class="${active === 'laporan' ? 'active' : ''}">
+          Laporan
+        </a>
+      </div>
+    </div>
+  `;
+
+  document.body.prepend(nav);
+}
