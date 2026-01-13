@@ -129,13 +129,14 @@ function salin() {
 }
 
 function emojiKomoditas(nama) {
+  const key = nama.trim().toLowerCase();
   const map = {
-    Cabai: "🌶️",
-    Timun: "🥒",
-    Jagung: "🌽",
-    Terong: "🍆",
-    Singkong: "🍠",
-    Jagung Manis: "🌽"
+    "cabai": "🌶️",
+    "timun": "🥒",
+    "jagung": "🌽",
+    "jagung manis": "🌽",
+    "terong": "🍆",
+    "singkong": "🍠"
   };
-  return map[nama] || "🌾";
+  return map[key] || "🌾";
 }
