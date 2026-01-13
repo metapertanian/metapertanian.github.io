@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>BERTUNAS | Bertani, Bertumbuh, Berbagi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="hero">
+  <h1>BERTUNAS</h1>
+  <p class="tagline">Bertani, Bertumbuh, Berbagi.</p>
+</header>
+
+<!-- ================= TOTAL PANEN ================= -->
+<section class="container">
+  <h2 class="section-title">🌾 Total Panen</h2>
+
+  <div id="totalPanen" class="grid-3">
+    <!-- diisi JS -->
+  </div>
+</section>
+
+<!-- ================= RIWAYAT PANEN ================= -->
+<section class="container">
+  <h2 class="section-title">📆 Riwayat Panen Terbaru</h2>
+
+  <div id="riwayatPanen" class="stack">
+    <!-- diisi JS -->
+  </div>
+
+  <div id="pagination" class="pagination"></div>
+</section>
+
+<footer class="footer">
+  <p>© <span id="year"></span> BERTUNAS</p>
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+<script src="rismafarm.js"></script>
+<script src="umi.js"></script>
+<script src="umi2.js"></script>
+<script src="index.js"></script>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
