@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Input Musim – BERTUNAS</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="/navbar2.js"></script>
+</head>
+<body><script>
+  renderNavbar("input-musim", "admin");
+</script><main class="container">
+  <h1>🌱 Input Musim Tanam Baru</h1>
+  <p class="muted">Digunakan untuk menambahkan musim tanam baru (tulis di paling atas file lahan)</p>  <section class="card">
+    <label>Nomor Musim Tanam</label>
+    <input type="number" id="noMusim" placeholder="contoh: 3" /><label>Label Musim (otomatis)</label>
+<input type="text" id="label" readonly />
+
+<label>Lokasi Lahan</label>
+<input type="text" id="lokasi" placeholder="contoh: Lahan Masjid Tanjung Bulan" />
+
+<label>Komoditas (pisahkan dengan koma)</label>
+<input type="text" id="komoditas" placeholder="Cabai, Timun" />
+
+<label>Skema Laporan / Bagi Hasil</label>
+<select id="skema">
+  <option value="info">Hanya tampilkan laba</option>
+  <option value="laba_bersih">Laba bersih dibagi</option>
+  <option value="laba_kotor">Laba kotor dibagi</option>
+</select>
+
+<div id="pembagian" class="grid-3" style="display:none; margin-top:12px">
+  <div>
+    <label>Pelaksana (%)</label>
+    <input type="number" id="pelaksana" value="50" />
+  </div>
+  <div>
+    <label>RISMA (%)</label>
+    <input type="number" id="risma" value="30" />
+  </div>
+  <div>
+    <label>Manajemen (%)</label>
+    <input type="number" id="manajemen" value="20" />
+  </div>
+</div>
+
+<button class="btn-primary" onclick="generate()">Generate Kode Musim</button>
+
+  </section>  <section class="card">
+    <h3>Hasil (salin ke file lahan)</h3>
+    <pre id="output">// hasil akan muncul di sini</pre>
+    <button class="btn-secondary" onclick="copy()">📋 Salin</button>
+    <small class="hint">⚠️ Tempel di PALING ATAS objek <code>musim</code> dan JANGAN hapus koma</small>
+  </section>
+</main><script>
+const noMusim = document.getElementById('noMusim');
+const label = document.getElementById('label');
+const skema = document.getElementById('skema');
+const pembagian = document.getElementById('pembagian');
+
+noMusim.addEventListener('input', () => {
+  label.value = noMusim.value ? `Musim Tanam Ke-${noMusim.value}` : '';
+});
+
+skema.addEventListener('change', () => {
+  pembagian.style.display = skema.value === 'info' ? 'none' : 'grid';
+});
+
+function generate() {
+  const no = noMusim.value;
+  if (!no) return alert('Nomor musim wajib diisi');
+
+  const komoditas = document.getElementById('komoditas').value
+    .split(',').map(v => v.trim()).filter(Boolean);
+
+  let skemaText = `tipe: "${skema.value}"`;
+
+  if (skema.value !== 'info') {
+    skemaText += `,\n      pembagian: {\n        pelaksana: ${pelaksana.value},\n        risma: ${risma.value},\n        manajemen: ${manajemen.value}\n      }`;
+  }
+
+  const result = `${no}: {\n  label: \"${label.value}\",\n  lokasi: \"${lokasi.value}\",\n  komoditas: ${JSON.stringify(komoditas)},\n\n  modal: {},\n  biaya: [],\n  panen: [],\n\n  skema: {\n      ${skemaText}\n  }\n},`;
+
+  document.getElementById('output').textContent = result;
+}
+
+function copy() {
+  const text = document.getElementById('output').textContent;
+  if (!text || text.startsWith('//')) return alert('Tidak ada data untuk disalin');
+  navigator.clipboard.writeText(text).then(() => alert('Kode berhasil disalin'));
+}
+</script></body>
+</html>
