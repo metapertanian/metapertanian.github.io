@@ -143,9 +143,28 @@ function generate() {
   const lahan = document.getElementById("lahan").value;
   const jenis = document.getElementById("jenis").value;
   const tanggal = document.getElementById("tanggal").value;
-  const nama = document.getElementById("nama").value;
+  const nama = document.getElementById("nama").value.trim();
   const nilai = Number(document.getElementById("nilai").value || 0);
 
+  /* ========= MODAL ========= */
+  if (jenis === "modal") {
+    if (!nama || !nilai) {
+      alert("Nama sumber modal & nilai wajib diisi");
+      return;
+    }
+
+    // nama otomatis jadi key object (aman)
+    const key = nama.toLowerCase().replace(/\s+/g, "_");
+
+    const obj = `modal: {
+  ${key}: ${nilai}
+},`;
+
+    document.getElementById("output").textContent = obj;
+    return;
+  }
+
+  /* ========= BIAYA & PANEN ========= */
   if (!tanggal || !nama || !nilai) {
     alert("Data belum lengkap");
     return;
@@ -153,8 +172,8 @@ function generate() {
 
   let obj = `{
   tanggal: "${tanggal}",
-  nama: "${nama}",
-  nilai: ${nilai}`;
+  keterangan: "${nama}",
+  jumlah: ${nilai}`;
 
   if (jenis === "panen") {
     const qty = Number(document.getElementById("qty").value || 0);
@@ -166,16 +185,19 @@ function generate() {
       return;
     }
 
-    obj += `,
+    obj = `{
+  tanggal: "${tanggal}",
+  komoditas: "${nama}",
   qty: ${qty},
-  satuan: "${satuan}"`;
+  satuan: "${satuan}",
+  nilai: ${nilai}`;
 
     if (biayaPanen > 0) {
       obj += `,
   biayaPanen: ${biayaPanen}`;
     }
 
-    // BONUS HANYA RISMA FARM
+    // BONUS KHUSUS RISMA FARM
     if (lahan === "rismafarm") {
       const bonus = Number(document.getElementById("bonusTotal").value || 0);
       const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
