@@ -2,25 +2,25 @@ const RISMA_FARM = {
   nama: "RISMA FARM",
 
   musim: {
-    3: {
-      label: "Musim Tanam Ke-3",
-      modal: { risma: 500000 },
-      biaya: [],
-      panen: []
-    },
+    
+1: {
+  label: "Musim Tanam Ke-1",
+  lokasi: "Lahan RISMA di masjid",
+  komoditas: ["Timun","Cabai"],
 
-    2: {
-      label: "Musim Tanam Ke-2",
-      modal: {},
-      biaya: [],
-      panen: []
-    },
+  modal: {},
+  biaya: [],
+  panen: [],
 
-    1: {
-      label: "Musim Tanam Ke-1",
-      modal: {},
-      biaya: [],
-      panen: []
-    }
+  skema: {
+      tipe: "laba_bersih",
+      pembagian: {
+        pelaksana: 50,
+        risma: 30,
+        manajemen: 20
+      }
+  }
+},
+
   }
 };
