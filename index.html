@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BERTUNAS | Bertani, Bertumbuh, Berbagi</title>
+  <title>BERTUNAS – Bertani, Berbisnis, Berbagi</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -12,9 +12,10 @@
   <script src="/umi.js"></script>
   <script src="/umi2.js"></script>
 
-  <!-- NAVBAR PUBLIK -->
-  <script src="/navbar.js"></script>
+  <!-- NAVBAR -->
+  <script src="/navbar2.js"></script>
 </head>
+
 <body>
 
 <script>
@@ -24,20 +25,19 @@
 <main class="container">
 
   <!-- HEADER -->
-  <header class="hero">
+  <section class="hero">
     <h1>BERTUNAS</h1>
-    <p class="tagline">Bertani · Bertumbuh · Berbagi</p>
-  </header>
+    <p class="tagline">Bertani, Berbisnis, Berbagi</p>
+  </section>
 
-  <!-- TOTAL PANEN -->
-  <section class="card">
-    <h2>🌾 Total Hasil Panen</h2>
-    <div class="grid-3" id="totalKomoditas"></div>
+  <!-- RINGKASAN TONASE -->
+  <section class="grid-3" id="ringkasanTonase">
+    <!-- diisi JS -->
   </section>
 
   <!-- RIWAYAT PANEN -->
   <section class="card">
-    <h2>📦 Riwayat Panen Terbaru</h2>
+    <h2>🌾 Riwayat Panen Terbaru</h2>
     <div id="riwayatPanen"></div>
     <div class="pagination" id="pagination"></div>
   </section>
@@ -46,119 +46,149 @@
 
 <script>
 /* ===============================
-   KUMPULKAN DATA PANEN
+   UTIL DATA PANEN
 ================================ */
+function ambilSemuaPanen() {
+  const lahanList = [
+    typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
+    typeof UMI !== "undefined" ? UMI : null,
+    typeof UMI2 !== "undefined" ? UMI2 : null,
+  ].filter(Boolean);
 
-const LAHAN = [
-  typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
-  typeof umi !== "undefined" ? umi : null,
-  typeof umi2 !== "undefined" ? umi2 : null
-].filter(Boolean);
+  let semua = [];
 
-let semuaPanen = [];
-
-// ambil SEMUA panen dari SEMUA musim
-LAHAN.forEach(lahan => {
-  Object.values(lahan.musim || {}).forEach(musim => {
-    (musim.panen || []).forEach(p => {
-      semuaPanen.push({
-        ...p,
-        lahan: lahan.nama || "Lahan"
+  lahanList.forEach(lahan => {
+    Object.values(lahan.musim || {}).forEach(musim => {
+      (musim.panen || []).forEach(p => {
+        semua.push({
+          tanggal: p.tanggal,
+          nama: p.nama || p.komoditas,
+          qty: p.qty || 0,
+          satuan: p.satuan || "kg",
+          nilai: p.nilai || 0,
+          lahan: lahan.nama
+        });
       });
     });
   });
-});
 
-// urutkan terbaru
-semuaPanen.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+  return semua;
+}
 
 /* ===============================
-   TOTAL KOMODITAS
+   ANIMASI ANGKA
 ================================ */
-
-const totalMap = {};
-
-semuaPanen.forEach(p => {
-  if (!totalMap[p.komoditas]) totalMap[p.komoditas] = 0;
-  totalMap[p.komoditas] += Number(p.qty || 0);
-});
-
-const totalBox = document.getElementById("totalKomoditas");
-
-Object.entries(totalMap).forEach(([komoditas, qty]) => {
-  const card = document.createElement("div");
-  card.className = "stat-card";
-  card.innerHTML = `
-    <h3>${komoditas}</h3>
-    <div class="big-number" data-value="${qty}">0</div>
-    <small>kg</small>
-  `;
-  totalBox.appendChild(card);
-});
-
-// animasi angka
-document.querySelectorAll(".big-number").forEach(el => {
-  const end = Number(el.dataset.value);
+function animateNumber(el, end) {
   let start = 0;
-  const duration = 2500;
+  const duration = 3000;
   const startTime = performance.now();
 
   function step(now) {
     const progress = Math.min((now - startTime) / duration, 1);
-    el.textContent = Math.floor(progress * end).toLocaleString("id-ID");
+    const value = Math.floor(progress * end);
+    el.textContent = value.toLocaleString("id-ID");
     if (progress < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
-});
+}
 
 /* ===============================
-   RIWAYAT PANEN + PAGINATION
+   RINGKASAN TONASE
 ================================ */
+function renderRingkasan(panen) {
+  const map = {};
 
-const perPage = 5;
-let page = 1;
+  panen.forEach(p => {
+    if (!map[p.nama]) map[p.nama] = 0;
+    map[p.nama] += p.qty;
+  });
 
-function renderRiwayat() {
-  const box = document.getElementById("riwayatPanen");
+  const box = document.getElementById("ringkasanTonase");
   box.innerHTML = "";
 
-  const start = (page - 1) * perPage;
-  const slice = semuaPanen.slice(start, start + perPage);
+  Object.entries(map).forEach(([komoditas, total]) => {
+    const card = document.createElement("div");
+    card.className = "card center";
+    card.innerHTML = `
+      <h3>${komoditas}</h3>
+      <div class="big-number">0</div>
+      <small>kg</small>
+    `;
+    box.appendChild(card);
+    animateNumber(card.querySelector(".big-number"), total);
+  });
+}
+
+/* ===============================
+   PAGINATION RIWAYAT PANEN
+================================ */
+const PER_PAGE = 5;
+let currentPage = 1;
+let dataGlobal = [];
+
+function renderRiwayatPagination(data) {
+  dataGlobal = data.sort(
+    (a, b) => new Date(b.tanggal) - new Date(a.tanggal)
+  );
+  renderPage(1);
+}
+
+function renderPage(page) {
+  currentPage = page;
+
+  const box = document.getElementById("riwayatPanen");
+  const pag = document.getElementById("pagination");
+  box.innerHTML = "";
+  pag.innerHTML = "";
+
+  const start = (page - 1) * PER_PAGE;
+  const slice = dataGlobal.slice(start, start + PER_PAGE);
 
   slice.forEach(p => {
     const div = document.createElement("div");
-    div.className = "riwayat-item";
+    div.className = "panen-card";
     div.innerHTML = `
-      <strong>📆 ${p.tanggal}</strong><br>
-      🌱 ${p.komoditas} — ${p.qty} ${p.satuan || "kg"}<br>
-      📍 ${p.lahan}
+      <strong>${p.nama}</strong>
+      <div class="muted">
+        📆 ${p.tanggal} · ${p.qty} ${p.satuan} · ${p.lahan}
+      </div>
+      <div class="nilai">
+        Rp ${p.nilai.toLocaleString("id-ID")}
+      </div>
     `;
     box.appendChild(div);
   });
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
+  const totalPage = Math.ceil(dataGlobal.length / PER_PAGE);
+  if (totalPage <= 1) return;
 
-function renderPagination() {
-  const totalPage = Math.ceil(semuaPanen.length / perPage);
-  const pag = document.getElementById("pagination");
-  pag.innerHTML = "";
+  if (page > 1) {
+    pag.innerHTML += `<button onclick="gotoPage(${page - 1})">‹</button>`;
+  }
 
   for (let i = 1; i <= totalPage; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    if (i === page) btn.classList.add("active");
-    btn.onclick = () => {
-      page = i;
-      renderRiwayat();
-      renderPagination();
-    };
-    pag.appendChild(btn);
+    pag.innerHTML += `
+      <button class="${i === page ? 'active' : ''}"
+        onclick="gotoPage(${i})">${i}</button>
+    `;
+  }
+
+  if (page < totalPage) {
+    pag.innerHTML += `<button onclick="gotoPage(${page + 1})">›</button>`;
   }
 }
 
-renderRiwayat();
-renderPagination();
+function gotoPage(page) {
+  renderPage(page);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ===============================
+   INIT
+================================ */
+const semuaPanen = ambilSemuaPanen();
+renderRingkasan(semuaPanen);
+renderRiwayatPagination(semuaPanen);
 </script>
 
 </body>
