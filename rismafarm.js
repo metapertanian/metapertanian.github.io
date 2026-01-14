@@ -8,8 +8,14 @@ const RISMA_FARM = {
   lokasi: "Lahan RISMA di masjid",
   komoditas: ["Timun","Cabai"],
 
-  modal: {},
-  biaya: [],
+  modal: {RISMA : "380000" },
+  biaya: [
+{
+  tanggal: "2026-01-15",
+  keterangan: "2 Benih Timun",
+  jumlah: 90000
+},
+],
   panen: [],
 
   skema: {
