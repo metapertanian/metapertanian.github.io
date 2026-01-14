@@ -1,310 +1,230 @@
-/* ===============================
-   BERTUNAS – Global Style
-   Tema terang • modern • elegan
-================================ */
-
+/* =========================
+   ROOT & RESET
+========================= */
 :root {
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
-  --primary: #16a34a;
-  --primary-soft: #dcfce7;
-  --text-main: #0f172a;
-  --text-soft: #64748b;
-  --border: #e2e8f0;
-  --shadow: 0 10px 30px rgba(0,0,0,0.06);
-  --radius: 16px;
+  --primary: #2f855a;
+  --primary-dark: #276749;
+  --secondary: #edf2f7;
+  --accent: #38a169;
+  --text: #2d3748;
+  --muted: #718096;
+  --card: #ffffff;
+  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+  --radius: 14px;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 body {
-  margin: 0;
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg-main);
-  color: var(--text-main);
-  line-height: 1.6;
+  background: linear-gradient(135deg, #f7fafc, #e6fffa);
+  color: var(--text);
+  padding-top: 70px; /* ruang navbar */
 }
 
-/* ===============================
-   TYPOGRAPHY
-================================ */
-
-h1 {
-  font-size: 2.2rem;
-  margin: 0;
-}
-
-h2 {
-  font-size: 1.6rem;
-  margin-bottom: 12px;
-}
-
-h3 {
-  margin: 0 0 6px;
-}
-
-small {
-  color: var(--text-soft);
-}
-
-a {
-  color: var(--primary);
-  text-decoration: none;
-}
-
-/* ===============================
-   LAYOUT
-================================ */
-
-.container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 24px;
-}
-
-.section {
-  margin-top: 40px;
-}
-
-/* ===============================
-   NAVBAR
-================================ */
-
+/* =========================
+   NAVBAR FIXED
+========================= */
 .navbar {
-  background: var(--bg-card);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 10;
-}
-
-.navbar-inner {
-  max-width: 1100px;
-  margin: auto;
-  padding: 14px 24px;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 20px;
+  z-index: 999;
 }
 
-.brand {
+.navbar .brand {
   font-weight: 800;
   font-size: 1.1rem;
-  letter-spacing: 0.5px;
-}
-
-.nav-links {
-  display: flex;
-  gap: 16px;
-}
-
-.nav-links a {
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-weight: 500;
-  color: var(--text-soft);
-}
-
-.nav-links a.active,
-.nav-links a:hover {
-  background: var(--primary-soft);
   color: var(--primary);
 }
 
-/* ===============================
-   CARD
-================================ */
+.navbar button {
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: var(--primary-dark);
+}
 
-.card {
-  background: var(--bg-card);
+/* =========================
+   MENU DROPDOWN
+========================= */
+.nav-menu {
+  position: fixed;
+  top: 64px;
+  right: 16px;
+  background: var(--card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  overflow: hidden;
+  width: 220px;
+  transform: scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.25s ease;
+}
+
+.nav-menu.active {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav-menu a {
+  display: block;
+  padding: 14px 18px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-menu a:hover {
+  background: var(--secondary);
+  color: var(--primary);
+}
+
+/* =========================
+   LAYOUT
+========================= */
+.container {
+  max-width: 720px;
+  margin: auto;
   padding: 20px;
-  border: 1px solid var(--border);
 }
 
-.card.stat {
-  text-align: center;
+h1 {
+  margin-bottom: 6px;
+  font-size: 1.8rem;
 }
 
-.stat-value {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: var(--primary);
-  margin: 6px 0;
+.muted {
+  color: var(--muted);
+  margin-bottom: 20px;
 }
 
-/* ===============================
-   GRID
-================================ */
-
-.grid {
-  display: grid;
-  gap: 20px;
+/* =========================
+   CARD
+========================= */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.4s ease;
 }
 
-.grid-3 {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.grid-2 {
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-/* ===============================
-   BUTTON
-================================ */
-
-button {
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;
-  padding: 8px 14px;
-  font-weight: 600;
-  background: var(--primary);
-  color: #fff;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-button.outline {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-soft);
-}
-
-button.outline:hover {
-  background: var(--primary-soft);
-  color: var(--primary);
-}
-
-/* ===============================
-   PAGINATION
-================================ */
-
-.pagination {
-  display: flex;
-  gap: 8px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
-
-.pagination button {
-  background: #fff;
-  border: 1px solid var(--border);
-  color: var(--text-soft);
-}
-
-.pagination button.active {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
-}
-
-/* ===============================
-   TABLE
-================================ */
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th, td {
-  padding: 12px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-}
-
-th {
-  font-size: 0.85rem;
-  color: var(--text-soft);
-  text-transform: uppercase;
-}
-
-/* ===============================
+/* =========================
    FORM
-================================ */
+========================= */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 14px;
+}
 
 label {
+  font-size: 0.85rem;
   font-weight: 600;
-  margin-top: 14px;
-  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
 }
 
-input, select, textarea {
-  width: 100%;
-  padding: 10px 12px;
-  margin-top: 6px;
+input,
+select {
+  padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid var(--border);
+  border: 1px solid #e2e8f0;
   font-size: 0.95rem;
+  transition: 0.2s;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(47,133,90,0.15);
 }
 
-/* ===============================
-   CODE / COPY
-================================ */
+/* =========================
+   CHECKLIST
+========================= */
+.checklist {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
 
-pre {
-  background: #0f172a;
-  color: #e5e7eb;
-  padding: 16px;
-  border-radius: 14px;
-  overflow-x: auto;
+.check-item {
+  background: var(--secondary);
+  padding: 8px 10px;
+  border-radius: 8px;
   font-size: 0.85rem;
 }
 
-.copy-btn {
-  margin-top: 10px;
-  background: #334155;
+/* =========================
+   BUTTON
+========================= */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
 }
 
-/* ===============================
-   BADGE
-================================ */
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(56,161,105,0.35);
+}
 
-.badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: var(--primary-soft);
-  color: var(--primary);
-  font-size: 0.75rem;
+.btn-secondary {
+  margin-top: 10px;
+  padding: 10px 14px;
+  background: var(--secondary);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
   font-weight: 600;
 }
 
-/* ===============================
-   FOOTER NOTE
-================================ */
-
-.note {
-  margin-top: 20px;
-  padding: 14px;
-  background: #f1f5f9;
+/* =========================
+   OUTPUT
+========================= */
+pre {
+  background: #1a202c;
+  color: #e2e8f0;
+  padding: 16px;
   border-radius: 12px;
-  color: var(--text-soft);
+  overflow-x: auto;
   font-size: 0.85rem;
-}
-
-/* ===============================
-   RESPONSIVE
-================================ */
-
-@media (max-width: 640px) {
-  h1 {
-    font-size: 1.7rem;
-  }
-  .navbar-inner {
-    flex-direction: column;
-    gap: 10px;
-  }
 }
