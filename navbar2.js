@@ -28,7 +28,7 @@ function renderNavbar(active = "", mode = "public") {
     <a href="/rismafarm.html" class="${active === 'rismafarm' ? 'active' : ''}">
       🌾 RISMA FARM
     </a>
-    <a href="/bankrisma.html" class="${active === 'bank' ? 'active' : ''}">
+    <a href="/bank-risma.html" class="${active === 'bank' ? 'active' : ''}">
       💰 BANK RISMA
     </a>
   `;
