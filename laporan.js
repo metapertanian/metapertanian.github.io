@@ -1,129 +1,152 @@
-// =====================================================
 // laporan.js
-// LAPORAN PER MUSIM – RISMA FARM
-// ❌ Tidak ada laporan gabungan antar musim
-// =====================================================
+// Generator laporan BERTUNAS (per lahan & per musim tanam)
+// Output WA-friendly (text only)
 
-// ---------- UTIL ----------
-function rupiah(n) {
-  return Number(n || 0).toLocaleString("id-ID");
-}
+/* =============================
+   PETA LAHAN
+============================= */
+const LAHAN_MAP = {
+  rismafarm: typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
+  umi: typeof UMI !== "undefined" ? UMI : null,
+  umi2: typeof UMI2 !== "undefined" ? UMI2 : null
+};
 
-function pilihLahan(key) {
-  if (key === "risma") return rismaFarm;
-  if (key === "umi") return umi;
-  if (key === "umi2") return umi2;
-  return null;
-}
-
-// ---------- INIT ----------
-window.addEventListener("DOMContentLoaded", () => {
-  const lahanSelect = document.getElementById("lahan");
-  lahanSelect.addEventListener("change", isiMusim);
-  isiMusim(); // load awal
-});
-
-// ---------- ISI MUSIM ----------
-function isiMusim() {
+/* =============================
+   INIT MUSIM SELECT
+============================= */
+function initMusim() {
   const lahanKey = document.getElementById("lahan").value;
-  const lahan = pilihLahan(lahanKey);
-  const musimSelect = document.getElementById("musim");
+  const lahan = LAHAN_MAP[lahanKey];
+  const select = document.getElementById("musim");
 
-  musimSelect.innerHTML = "";
+  select.innerHTML = "";
 
   if (!lahan || !lahan.musim) return;
 
-  // data terbaru selalu di atas → urutan object dipertahankan
-  Object.entries(lahan.musim).forEach(([key, m]) => {
-    const opt = document.createElement("option");
-    opt.value = key;
-    opt.textContent = m.label;
-    musimSelect.appendChild(opt);
-  });
+  // urutkan musim DESC (terbaru di atas)
+  Object.keys(lahan.musim)
+    .sort((a, b) => b - a)
+    .forEach(key => {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = lahan.musim[key].label || `Musim Tanam Ke-${key}`;
+      select.appendChild(opt);
+    });
 }
 
-// ---------- GENERATE LAPORAN ----------
+document.getElementById("lahan").addEventListener("change", initMusim);
+document.addEventListener("DOMContentLoaded", initMusim);
+
+/* =============================
+   GENERATE LAPORAN
+============================= */
 function generateLaporan() {
   const jenis = document.getElementById("jenis").value;
   const lahanKey = document.getElementById("lahan").value;
   const musimKey = document.getElementById("musim").value;
 
-  const lahan = pilihLahan(lahanKey);
+  const lahan = LAHAN_MAP[lahanKey];
   if (!lahan || !lahan.musim || !lahan.musim[musimKey]) {
     alert("Data musim tidak ditemukan");
     return;
   }
 
   const musim = lahan.musim[musimKey];
+  let output = "";
 
-  let teks = `*LAPORAN ${musim.label.toUpperCase()}*\n`;
-  teks += `${lahan.nama || ""}\n\n`;
+  /* =============================
+     HEADER
+  ============================= */
+  output += `*${lahan.nama || lahanKey.toUpperCase()}*\n`;
+  output += `${musim.label || `Musim Tanam Ke-${musimKey}`}\n`;
+  output += `——————————————\n\n`;
 
-  // ===== MODAL =====
-  if (jenis === "modal") {
-    teks += "*MODAL*\n";
-    Object.entries(musim.modal || {}).forEach(([k, v]) => {
-      teks += `- ${k}: ${rupiah(v)}\n`;
-    });
-  }
+  /* =============================
+     MODAL
+  ============================= */
+  if (jenis === "modal" || jenis === "full") {
+    output += `*MODAL USAHA*\n`;
 
-  // ===== BIAYA =====
-  if (jenis === "biaya") {
-    teks += "*BIAYA PRODUKSI*\n";
-    (musim.biaya || []).forEach(b => {
-      teks += `📆 ${b.tanggal}\n${b.keterangan}\n💸 ${rupiah(b.jumlah)}\n\n`;
-    });
-  }
+    const modal = musim.modal || {};
+    const totalModal = Object.values(modal).reduce((a, b) => a + b, 0);
 
-  // ===== PANEN (PHP) =====
-  if (jenis === "panen") {
-    teks += "*PHP* (Pencatatan Hasil Panen)\n\n";
-
-    (musim.panen || []).forEach(p => {
-      const biayaPanen = p.biayaPanen || 0;
-      const surplus = (p.nilai || 0) - biayaPanen;
-
-      teks += "—————\n\n";
-      teks += `📆 ${p.tanggal}\n`;
-      teks += `${p.komoditas}\n`;
-      teks += `⚖️ ${p.qty} ${p.satuan || "kg"}\n`;
-      teks += `💰 Omzet: ${rupiah(p.nilai)}\n`;
-      teks += `🚜 Biaya Panen: ${rupiah(biayaPanen)}\n`;
-      teks += `📊 *Surplus Panen: ${rupiah(surplus)}*\n\n`;
-    });
-
-    teks += "*Catatan:*\nSurplus panen belum memperhitungkan biaya produksi lain.";
-  }
-
-  // ===== LAPORAN PENUH =====
-  if (jenis === "full") {
-    const totalModal = Object.values(musim.modal || {}).reduce((a, b) => a + b, 0);
-    const totalBiaya = (musim.biaya || []).reduce((a, b) => a + b.jumlah, 0);
-    const totalPanen = (musim.panen || []).reduce((a, b) => a + b.nilai, 0);
-    const laba = totalPanen - totalBiaya;
-
-    teks += "*RINGKASAN USAHA*\n";
-    teks += `Modal: ${rupiah(totalModal)}\n`;
-    teks += `Biaya Produksi: ${rupiah(totalBiaya)}\n`;
-    teks += `Omzet Panen: ${rupiah(totalPanen)}\n`;
-    teks += `*Laba Bersih: ${rupiah(laba)}*\n\n`;
-
-    // ===== BAGI HASIL (HANYA JIKA ADA) =====
-    if (musim.skema && musim.skema.tipe === "laba_bersih") {
-      teks += "*PEMBAGIAN LABA*\n";
-      Object.entries(musim.skema.pembagian || {}).forEach(([k, v]) => {
-        teks += `- ${k}: ${rupiah((laba * v) / 100)} (${v}%)\n`;
+    if (totalModal === 0) {
+      output += `- Tidak ada data modal\n\n`;
+    } else {
+      Object.entries(modal).forEach(([sumber, nilai]) => {
+        output += `- ${sumber.toUpperCase()}: ${nilai.toLocaleString("id-ID")}\n`;
       });
+      output += `Total Modal: ${totalModal.toLocaleString("id-ID")}\n\n`;
     }
   }
 
-  document.getElementById("output").textContent = teks;
+  /* =============================
+     BIAYA
+  ============================= */
+  if (jenis === "biaya" || jenis === "full") {
+    output += `*BIAYA PRODUKSI*\n`;
+
+    const biaya = musim.biaya || [];
+    let totalBiaya = 0;
+
+    if (biaya.length === 0) {
+      output += `- Tidak ada data biaya\n\n`;
+    } else {
+      biaya.forEach(b => {
+        totalBiaya += b.nilai;
+        output += `📆 ${b.tanggal}\n${b.nama}\nRp ${b.nilai.toLocaleString("id-ID")}\n\n`;
+      });
+      output += `Total Biaya: ${totalBiaya.toLocaleString("id-ID")}\n\n`;
+    }
+  }
+
+  /* =============================
+     PANEN (PHP)
+  ============================= */
+  if (jenis === "panen" || jenis === "full") {
+    output += `*PHP* (Pencatatan Hasil Panen)\n\n`;
+
+    const panen = musim.panen || [];
+    if (panen.length === 0) {
+      output += `- Tidak ada data panen\n\n`;
+    } else {
+      panen.forEach(p => {
+        const biayaPanen = p.biayaPanen || 0;
+        const surplus = p.nilai - biayaPanen;
+
+        output += `—————\n\n`;
+        output += `📆 ${p.tanggal}\n`;
+        output += `${p.nama}\n`;
+        output += `⚖️ ${p.qty} ${p.satuan || "kg"}\n`;
+        output += `💰 Omzet: ${p.nilai.toLocaleString("id-ID")}\n`;
+        output += `🚜 Biaya Panen: ${biayaPanen.toLocaleString("id-ID")}\n`;
+        output += `📊 *Surplus Panen: ${surplus.toLocaleString("id-ID")}*\n\n`;
+
+        if (p.bonusPanen && p.bonusPanen.total > 0) {
+          const perOrang =
+            p.bonusPanen.total / p.bonusPanen.anggota.length;
+
+          output += `*Bonus Panen*: ${p.bonusPanen.total.toLocaleString("id-ID")}\n`;
+          p.bonusPanen.anggota.forEach((a, i) => {
+            output += `${i + 1}. ${a}: ${perOrang.toLocaleString("id-ID")}\n`;
+          });
+          output += `\n`;
+        }
+      });
+
+      output += `*Catatan:*\nSurplus panen belum dikurangi biaya produksi lain.\n\n`;
+    }
+  }
+
+  document.getElementById("output").textContent = output;
 }
 
-// ---------- SALIN ----------
-function salin() {
+/* =============================
+   COPY
+============================= */
+function salinLaporan() {
   const teks = document.getElementById("output").textContent;
-  if (!teks) return alert("Tidak ada laporan untuk disalin");
+  if (!teks || teks.includes("pilih")) return;
 
   navigator.clipboard.writeText(teks).then(() => {
     alert("Laporan berhasil disalin");
