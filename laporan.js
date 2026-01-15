@@ -13,6 +13,7 @@ const LAHAN_MAP = {
 
 /* =============================
    INIT MUSIM SELECT
+   - otomatis pilih musim TERBARU
 ============================= */
 function initMusim() {
   const lahanKey = document.getElementById("lahan").value;
@@ -23,15 +24,19 @@ function initMusim() {
 
   if (!lahan || !lahan.musim) return;
 
-  // urutkan musim DESC (terbaru di atas)
   Object.keys(lahan.musim)
-    .sort((a, b) => b - a)
+    .sort((a, b) => b - a) // musim terbaru di atas
     .forEach(key => {
       const opt = document.createElement("option");
       opt.value = key;
       opt.textContent = lahan.musim[key].label || `Musim Tanam Ke-${key}`;
       select.appendChild(opt);
     });
+
+  // 🔴 PENTING: auto pilih musim teratas agar tidak error
+  if (select.options.length > 0) {
+    select.selectedIndex = 0;
+  }
 }
 
 document.getElementById("lahan").addEventListener("change", initMusim);
@@ -68,13 +73,16 @@ function generateLaporan() {
     output += `*MODAL USAHA*\n`;
 
     const modal = musim.modal || {};
-    const totalModal = Object.values(modal).reduce((a, b) => a + b, 0);
+    const totalModal = Object.values(modal).reduce(
+      (a, b) => a + Number(b || 0),
+      0
+    );
 
     if (totalModal === 0) {
       output += `- Tidak ada data modal\n\n`;
     } else {
       Object.entries(modal).forEach(([sumber, nilai]) => {
-        output += `- ${sumber.toUpperCase()}: ${nilai.toLocaleString("id-ID")}\n`;
+        output += `- ${sumber.toUpperCase()}: ${Number(nilai).toLocaleString("id-ID")}\n`;
       });
       output += `Total Modal: ${totalModal.toLocaleString("id-ID")}\n\n`;
     }
@@ -93,36 +101,46 @@ function generateLaporan() {
       output += `- Tidak ada data biaya\n\n`;
     } else {
       biaya.forEach(b => {
-        totalBiaya += b.nilai;
-        output += `📆 ${b.tanggal}\n${b.nama}\nRp ${b.nilai.toLocaleString("id-ID")}\n\n`;
+        const nilai = Number(b.nilai || 0);
+        totalBiaya += nilai;
+
+        output += `📆 ${b.tanggal}\n`;
+        output += `${b.nama}\n`;
+        output += `Rp ${nilai.toLocaleString("id-ID")}\n\n`;
       });
+
       output += `Total Biaya: ${totalBiaya.toLocaleString("id-ID")}\n\n`;
     }
   }
 
   /* =============================
-     PANEN (PHP)
+     HASIL PANEN
   ============================= */
   if (jenis === "panen" || jenis === "full") {
-    output += `*PHP* (Pencatatan Hasil Panen)\n\n`;
+    output += `*HASIL PANEN*\n\n`;
 
     const panen = musim.panen || [];
+
     if (panen.length === 0) {
       output += `- Tidak ada data panen\n\n`;
     } else {
       panen.forEach(p => {
-        const biayaPanen = p.biayaPanen || 0;
-        const surplus = p.nilai - biayaPanen;
+        const omzet = Number(p.nilai || 0);
+        const biayaPanen = Number(p.biayaPanen || 0);
+        const surplus = omzet - biayaPanen;
 
-        output += `—————\n\n`;
         output += `📆 ${p.tanggal}\n`;
         output += `${p.nama}\n`;
         output += `⚖️ ${p.qty} ${p.satuan || "kg"}\n`;
-        output += `💰 Omzet: ${p.nilai.toLocaleString("id-ID")}\n`;
+        output += `💰 Omzet: ${omzet.toLocaleString("id-ID")}\n`;
         output += `🚜 Biaya Panen: ${biayaPanen.toLocaleString("id-ID")}\n`;
         output += `📊 *Surplus Panen: ${surplus.toLocaleString("id-ID")}*\n\n`;
 
-        if (p.bonusPanen && p.bonusPanen.total > 0) {
+        if (
+          p.bonusPanen &&
+          p.bonusPanen.total > 0 &&
+          Array.isArray(p.bonusPanen.anggota)
+        ) {
           const perOrang =
             p.bonusPanen.total / p.bonusPanen.anggota.length;
 
@@ -142,11 +160,11 @@ function generateLaporan() {
 }
 
 /* =============================
-   COPY
+   COPY LAPORAN
 ============================= */
 function salinLaporan() {
   const teks = document.getElementById("output").textContent;
-  if (!teks || teks.includes("pilih")) return;
+  if (!teks || teks.includes("Pilih")) return;
 
   navigator.clipboard.writeText(teks).then(() => {
     alert("Laporan berhasil disalin");
