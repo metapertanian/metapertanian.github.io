@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laporan – BERTUNAS</title>
 
+  <!-- STYLE -->
   <link rel="stylesheet" href="/style.css" />
+
+  <!-- NAVBAR -->
+  <script src="/navbar2.js"></script>
 
   <!-- DATA -->
   <script src="/anggota.js"></script>
@@ -15,47 +19,79 @@
 
   <!-- LOGIC -->
   <script src="/laporan.js"></script>
-  <script src="/navbar2.js"></script>
 </head>
 <body>
 
 <script>
-  renderNavbar("laporan", "admin")
+  renderNavbar("laporan", "admin");
 </script>
 
 <main class="container">
-  <h1>📊 Laporan</h1>
-  <small>Laporan usaha per musim tanam</small>
 
-  <section class="card section">
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1>📊 Laporan Usaha</h1>
+    <p class="muted">
+      Laporan per musim tanam · transparan · siap dibagikan
+    </p>
+  </header>
 
-    <label>Jenis Laporan</label>
-    <select id="jenis">
-      <option value="modal">Modal</option>
-      <option value="biaya">Biaya</option>
-      <option value="panen">Hasil Panen (PHP)</option>
-      <option value="full">Laporan Penuh</option>
-    </select>
+  <!-- FILTER -->
+  <section class="card">
 
-    <label>Lahan</label>
-    <select id="lahan">
-      <option value="risma">RISMA FARM</option>
-      <option value="umi">UMI</option>
-      <option value="umi2">UMI 2</option>
-    </select>
+    <div class="form-grid">
 
-    <label>Musim Tanam</label>
-    <select id="musim"></select>
+      <div class="form-row">
+        <label>Jenis Laporan</label>
+        <select id="jenis">
+          <option value="modal">Laporan Modal</option>
+          <option value="biaya">Laporan Biaya</option>
+          <option value="panen">PHP – Hasil Panen</option>
+          <option value="full">Laporan Penuh</option>
+        </select>
+      </div>
 
-    <button onclick="generateLaporan()">Tampilkan Laporan</button>
+      <div class="form-row">
+        <label>Lahan</label>
+        <select id="lahan">
+          <option value="rismafarm">RISMA FARM</option>
+          <option value="umi">UMI</option>
+          <option value="umi2">UMI 2</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label>Musim Tanam</label>
+        <select id="musim">
+          <!-- diisi otomatis oleh laporan.js -->
+        </select>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" onclick="generateLaporan()">
+      📄 Tampilkan Laporan
+    </button>
+
   </section>
 
-  <section class="card section">
-    <h3>Hasil Laporan</h3>
-    <pre id="output">// pilih opsi lalu klik tampilkan</pre>
-    <button class="outline" onclick="salin()">📋 Salin</button>
+  <!-- OUTPUT -->
+  <section class="card">
+
+    <div class="card-header">
+      <h3>Hasil Laporan</h3>
+      <button class="btn-secondary" onclick="salinLaporan()">📋 Salin</button>
+    </div>
+
+    <pre id="output">// Pilih opsi lalu klik “Tampilkan Laporan”</pre>
+
+    <p class="hint">
+      💡 Format laporan disesuaikan agar mudah dibagikan ke WhatsApp
+    </p>
+
   </section>
 
 </main>
+
 </body>
 </html>
