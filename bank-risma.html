@@ -1,43 +1,107 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BANK RISMA by RISMA FARM</title>  <link rel="stylesheet" href="/style.css" />
-  <script src="/anggota.js"></script>  <!-- data lahan -->  <script src="/rismafarm.js"></script>  <script src="/umi.js"></script>  <script src="/umi2.js"></script>  <!-- transaksi -->  <script src="/tariktunai.js"></script>  <script src="/bank-risma.js"></script>  <script src="/navbar.js"></script></head>
-<body><main class="container">  <h1>🏦 BANK RISMA</h1>
-  <p class="muted">Rekap bonus panen & saldo anggota RISMA FARM</p>  <!-- SUMMARY -->  <section class="grid-3" id="summary">
-    <div class="card">
-      <h3>Total Bonus Panen</h3>
+  <title>BANK RISMA – RISMA FARM</title>
+
+  <!-- STYLE -->
+  <link rel="stylesheet" href="/style.css" />
+
+  <!-- NAVBAR -->
+  <script src="/navbar2.js"></script>
+
+  <!-- DATA -->
+  <script src="/anggota.js"></script>
+  <script src="/rismafarm.js"></script>
+  <script src="/umi.js"></script>
+  <script src="/umi2.js"></script>
+
+  <!-- TRANSAKSI -->
+  <script src="/tariktunai.js"></script>
+
+  <!-- LOGIC -->
+  <script src="/bank-risma.js"></script>
+</head>
+<body>
+
+<script>
+  renderNavbar("bank", "public");
+</script>
+
+<main class="container">
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <h1>🏦 BANK RISMA</h1>
+    <p class="muted">Rekap bonus panen & saldo anggota RISMA FARM</p>
+  </header>
+
+  <!-- SUMMARY -->
+  <section class="grid-3">
+    <div class="card summary-card">
+      <h4>Total Bonus Panen</h4>
       <div class="big-number" id="totalBonus">0</div>
     </div>
-    <div class="card">
-      <h3>Bonus Diambil</h3>
-      <div class="big-number" id="totalTarik">0</div>
-    </div>
-    <div class="card">
-      <h3>Sisa Saldo</h3>
-      <div class="big-number" id="sisaSaldo">0</div>
-    </div>
-  </section>  <p class="update" id="lastUpdate"></p>  <!-- TABEL ANGGOTA -->  <section class="card">
-    <h2>Saldo Bonus Anggota</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Anggota</th>
-          <th>Bonus</th>
-          <th>Diambil</th>
-          <th>Saldo</th>
-        </tr>
-      </thead>
-      <tbody id="tabelAnggota"></tbody>
-    </table>
-  </section>  <!-- RIWAYAT -->  <section class="card">
-    <h2>Riwayat Bonus & Tarik Tunai</h2>
-    <div id="riwayat"></div>
-    <div class="pagination" id="pagination"></div>
-  </section></main><script>
-const { totalBonus, totalTarik, sisaSaldo, tabelAnggota, riwayat } = window.BANK_RISMA_DATA;
 
+    <div class="card summary-card">
+      <h4>Bonus Diambil</h4>
+      <div class="big-number danger" id="totalTarik">0</div>
+    </div>
+
+    <div class="card summary-card">
+      <h4>Sisa Saldo</h4>
+      <div class="big-number success" id="sisaSaldo">0</div>
+    </div>
+  </section>
+
+  <p class="update" id="lastUpdate"></p>
+
+  <!-- TABEL ANGGOTA -->
+  <section class="card">
+    <h2>Saldo Bonus Anggota</h2>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Anggota</th>
+            <th>Total Bonus</th>
+            <th>Sudah Diambil</th>
+            <th>Sisa Saldo</th>
+          </tr>
+        </thead>
+        <tbody id="tabelAnggota"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- RIWAYAT -->
+  <section class="card">
+    <h2>Riwayat Bonus & Tarik Tunai</h2>
+
+    <div id="riwayat"></div>
+
+    <div class="pagination" id="pagination"></div>
+  </section>
+
+</main>
+
+<script>
+/* =============================
+   DATA DARI bank-risma.js
+============================= */
+const {
+  totalBonus,
+  totalTarik,
+  sisaSaldo,
+  tabelAnggota,
+  riwayat
+} = window.BANK_RISMA_DATA;
+
+/* =============================
+   ANIMASI ANGKA
+============================= */
 function animateValue(el, end) {
   let start = 0;
   const duration = 3000;
@@ -45,74 +109,92 @@ function animateValue(el, end) {
 
   function step(now) {
     const progress = Math.min((now - startTime) / duration, 1);
-    const value = Math.floor(progress * end);
-    el.textContent = value.toLocaleString('id-ID');
+    el.textContent = Math.floor(progress * end).toLocaleString("id-ID");
     if (progress < 1) requestAnimationFrame(step);
   }
+
   requestAnimationFrame(step);
 }
 
-animateValue(document.getElementById('totalBonus'), totalBonus);
-animateValue(document.getElementById('totalTarik'), totalTarik);
-animateValue(document.getElementById('sisaSaldo'), sisaSaldo);
+animateValue(document.getElementById("totalBonus"), totalBonus);
+animateValue(document.getElementById("totalTarik"), totalTarik);
+animateValue(document.getElementById("sisaSaldo"), sisaSaldo);
 
-// update terakhir
+/* =============================
+   UPDATE TERAKHIR
+============================= */
 if (riwayat.length) {
-  document.getElementById('lastUpdate').textContent = `Terakhir diperbarui: ${riwayat[0].tanggal}`;
+  document.getElementById("lastUpdate").textContent =
+    "Terakhir diperbarui: " + riwayat[0].tanggal;
 }
 
-// tabel anggota
-const tbody = document.getElementById('tabelAnggota');
+/* =============================
+   TABEL ANGGOTA
+============================= */
+const tbody = document.getElementById("tabelAnggota");
+
 tabelAnggota.forEach(a => {
-  const tr = document.createElement('tr');
+  const tr = document.createElement("tr");
   tr.innerHTML = `
     <td>${a.nama}</td>
-    <td>${a.bonus.toLocaleString('id-ID')}</td>
-    <td>${a.tarik.toLocaleString('id-ID')}</td>
-    <td class="saldo">${a.saldo.toLocaleString('id-ID')}</td>
+    <td>${a.bonus.toLocaleString("id-ID")}</td>
+    <td>${a.tarik.toLocaleString("id-ID")}</td>
+    <td class="saldo">${a.saldo.toLocaleString("id-ID")}</td>
   `;
   tbody.appendChild(tr);
 });
 
-// RIWAYAT + PAGINATION
+/* =============================
+   RIWAYAT + PAGINATION
+============================= */
 const perPage = 5;
-let current = 1;
+let currentPage = 1;
 
 function renderRiwayat(page) {
-  const box = document.getElementById('riwayat');
-  box.innerHTML = '';
+  const box = document.getElementById("riwayat");
+  box.innerHTML = "";
 
   const start = (page - 1) * perPage;
-  const slice = riwayat.slice(start, start + perPage);
+  const items = riwayat.slice(start, start + perPage);
 
-  slice.forEach(r => {
-    const div = document.createElement('div');
-    div.className = 'riwayat-item';
+  items.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "riwayat-item";
     div.innerHTML = `
-      <strong>${r.tanggal}</strong> — ${r.keterangan}<br>
-      <span class="${r.tipe}">${r.jumlah.toLocaleString('id-ID')}</span>
+      <strong>${r.tanggal}</strong><br>
+      ${r.keterangan}<br>
+      <span class="${r.tipe}">
+        ${r.tipe === "tarik" ? "-" : "+"}
+        ${r.jumlah.toLocaleString("id-ID")}
+      </span>
     `;
     box.appendChild(div);
   });
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function renderPagination() {
   const pages = Math.ceil(riwayat.length / perPage);
-  const pag = document.getElementById('pagination');
-  pag.innerHTML = '';
+  const pag = document.getElementById("pagination");
+  pag.innerHTML = "";
 
   for (let i = 1; i <= pages; i++) {
-    const btn = document.createElement('button');
+    const btn = document.createElement("button");
     btn.textContent = i;
-    btn.onclick = () => { current = i; renderRiwayat(i); };
-    if (i === current) btn.classList.add('active');
+    if (i === currentPage) btn.classList.add("active");
+    btn.onclick = () => {
+      currentPage = i;
+      renderRiwayat(i);
+      renderPagination();
+    };
     pag.appendChild(btn);
   }
 }
 
-renderRiwayat(current);
+renderRiwayat(currentPage);
 renderPagination();
-</script></body>
+</script>
+
+</body>
 </html>
