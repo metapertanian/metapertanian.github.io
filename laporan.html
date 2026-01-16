@@ -18,7 +18,7 @@
   <script src="/umi2.js"></script>
 
   <!-- LOGIC -->
-  <script src="/laporan.js"></script>
+  <script src="/laporan.js" defer></script>
 </head>
 <body>
 
@@ -41,18 +41,7 @@
 
     <div class="form-grid">
 
-      <div class="form-row">
-        <label>Jenis Laporan</label>
-        <select id="jenis">
-  <option value="modal">Modal Saja</option>
-  <option value="biaya">Biaya & Skincare Saja</option>
-  <option value="panen">PHP Saja</option>
-  <option value="modal-biaya">Modal + Biaya</option>
-  <option value="modal-biaya-panen">Modal + Biaya + PHP</option>
-  <option value="lengkap">Lengkap + Bagi Hasil</option>
-</select>
-      </div>
-
+      <!-- LAHAN -->
       <div class="form-row">
         <label>Lahan</label>
         <select id="lahan">
@@ -62,9 +51,49 @@
         </select>
       </div>
 
+      <!-- MUSIM -->
       <div class="form-row">
         <label>Musim Tanam</label>
         <select id="musim">
+          <!-- diisi otomatis oleh laporan.js -->
+        </select>
+      </div>
+
+      <!-- JENIS LAPORAN -->
+      <div class="form-row">
+        <label>Jenis Laporan</label>
+
+        <div class="checkbox-group">
+          <label>
+            <input type="checkbox" id="chkModal">
+            Modal
+          </label>
+
+          <label>
+            <input type="checkbox" id="chkBiaya">
+            Biaya & Skincare
+          </label>
+
+          <label>
+            <input type="checkbox" id="chkPanen">
+            PHP (Hasil Panen)
+          </label>
+
+          <label>
+            <input type="checkbox" id="chkLengkap">
+            Lengkap + Bagi Hasil
+          </label>
+        </div>
+
+        <p class="hint">
+          💡 Centang <b>PHP saja</b> untuk laporan panen tunggal (detail lengkap)
+        </p>
+      </div>
+
+      <!-- TANGGAL PANEN (PHP SAJA) -->
+      <div class="form-row">
+        <label>Tanggal Panen (PHP)</label>
+        <select id="panenTanggal">
           <!-- diisi otomatis oleh laporan.js -->
         </select>
       </div>
@@ -85,10 +114,10 @@
       <button class="btn-secondary" onclick="salinLaporan()">📋 Salin</button>
     </div>
 
-    <pre id="output">// Pilih opsi lalu klik “Tampilkan Laporan”</pre>
+    <pre id="output">// Pilih lahan, musim, dan jenis laporan</pre>
 
     <p class="hint">
-      💡 Format laporan disesuaikan agar mudah dibagikan ke WhatsApp
+      💡 Format laporan dioptimalkan untuk WhatsApp & arsip keuangan
     </p>
 
   </section>
