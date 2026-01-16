@@ -113,7 +113,7 @@ function generateLaporan() {
      HEADER
   ============================= */
   const tglBiaya = (data.biaya || []).map(b => b.tanggal).sort();
-  out += `*${lahan.nama}* \`Bertani, Berbisnis, Berbagi\`\n\n`;
+  out += `*${lahan.nama}* \n\`Bertani, Berbisnis, Berbagi\`\n\n`;
   out += `${data.label}\n`;
   out += `${formatTanggal(tglBiaya[0])} - ${formatTanggal(tglBiaya.at(-1))}\n`;
   out += `——————————————\n\n`;
