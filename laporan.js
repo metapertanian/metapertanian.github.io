@@ -1,5 +1,14 @@
-// laporan.js FINAL — BERTUNAS
+// laporan.js FINAL — BERTUNAS (FIXED)
 // Auto laba bersih, PHP mode, skema bagi hasil
+// COMPATIBLE dengan struktur lahan.js
+
+/* =============================
+   DOM ELEMENT (WAJIB ADA)
+============================= */
+const jenisSelect = document.getElementById("jenis");
+const lahanSelect = document.getElementById("lahan");
+const musimSelect = document.getElementById("musim");
+const output = document.getElementById("output");
 
 /* =============================
    MAP LAHAN
@@ -11,62 +20,80 @@ const LAHAN_MAP = {
 /* =============================
    UTIL
 ============================= */
-function formatTanggal(tgl) {
-  if (!tgl) return "-";
-  const bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
-  const d = new Date(tgl);
-  return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
-}
-
 function rupiah(n) {
   return Number(n || 0).toLocaleString("id-ID");
 }
 
-/* =============================
-   INIT MUSIM
-============================= */
-function initMusim() {
-  const lahan = LAHAN_MAP[lahanSelect.value];
-  musim.innerHTML = "";
-  if (!lahan) return;
-
-  Object.keys(lahan.musim)
-    .sort((a, b) => b - a)
-    .forEach(k => {
-      const o = document.createElement("option");
-      o.value = k;
-      o.textContent = lahan.musim[k].label;
-      musim.appendChild(o);
-    });
+function formatTanggal(tgl) {
+  if (!tgl) return "-";
+  const b = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+  const d = new Date(tgl);
+  return `${d.getDate()} ${b[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 /* =============================
-   EVENT
+   INIT MUSIM (FIXED)
 ============================= */
-document.addEventListener("DOMContentLoaded", () => setTimeout(initMusim, 100));
-lahan.addEventListener("change", initMusim);
+function initMusim() {
+  const lahanKey = lahanSelect.value;
+  const lahan = LAHAN_MAP[lahanKey];
+
+  musimSelect.innerHTML = "";
+
+  if (!lahan || !lahan.musim) {
+    musimSelect.innerHTML = `<option value="">Tidak ada musim</option>`;
+    return;
+  }
+
+  Object.keys(lahan.musim)
+    .sort((a, b) => Number(b) - Number(a))
+    .forEach(k => {
+      const opt = document.createElement("option");
+      opt.value = k;
+      opt.textContent = lahan.musim[k].label || `Musim Tanam Ke-${k}`;
+      musimSelect.appendChild(opt);
+    });
+
+  musimSelect.selectedIndex = 0;
+}
 
 /* =============================
-   GENERATE
+   EVENT LISTENER (AMAN HP)
+============================= */
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(initMusim, 100);
+});
+
+lahanSelect.addEventListener("change", () => {
+  setTimeout(initMusim, 50);
+});
+
+/* =============================
+   GENERATE LAPORAN
 ============================= */
 function generateLaporan() {
   const jenis = jenisSelect.value;
-  const lahanKey = lahan.value;
-  const musimKey = musim.value;
+  const lahanKey = lahanSelect.value;
+  const musimKey = musimSelect.value;
 
-  const data = LAHAN_MAP[lahanKey]?.musim?.[musimKey];
-  if (!data) return alert("Data musim tidak ditemukan");
+  const lahan = LAHAN_MAP[lahanKey];
+  const data = lahan?.musim?.[musimKey];
+
+  if (!data) {
+    alert("Data musim tidak ditemukan");
+    return;
+  }
 
   let out = "";
 
   /* =============================
-     HEADER & TANGGAL
+     HEADER + TANGGAL
   ============================= */
-  const tanggalBiaya = (data.biaya || []).map(b => b.tanggal).sort();
-  const tAwal = formatTanggal(tanggalBiaya[0]);
-  const tAkhir = formatTanggal(tanggalBiaya[tanggalBiaya.length - 1]);
+  const tglBiaya = (data.biaya || []).map(b => b.tanggal).sort();
+  const tAwal = formatTanggal(tglBiaya[0]);
+  const tAkhir = formatTanggal(tglBiaya[tglBiaya.length - 1]);
 
-  out += `*${LAHAN_MAP[lahanKey].nama}*\n \`Bertani, Berbisnis, Berbagi\`\n\n`;
+  out += `*${lahan.nama}* \`Bertani, Berbisnis, Berbagi\`\n\n`;
   out += `${data.label}\n${tAwal} - ${tAkhir}\n`;
   out += `——————————————\n\n`;
 
@@ -89,7 +116,7 @@ function generateLaporan() {
   let totalBiaya = 0;
   if (["biaya","modal-biaya","modal-biaya-panen","lengkap"].includes(jenis)) {
     out += `*BIAYA & SKINCARE* Untuk Perawatan ${data.komoditas.join(", ")}\n\n`;
-    data.biaya.forEach(b => {
+    (data.biaya || []).forEach(b => {
       totalBiaya += Number(b.jumlah);
       out += `- ${b.keterangan} : ${rupiah(b.jumlah)}\n`;
     });
@@ -100,26 +127,29 @@ function generateLaporan() {
      PHP SAJA (DETAIL)
   ============================= */
   if (jenis === "panen") {
-    data.panen.forEach(p => {
-      out += `*HASIL PANEN : ${p.komoditas}*\n`;
-      out += `${formatTanggal(p.tanggal)}\n`;
-      out += `Berat : ${p.qty} ${p.satuan || "kg"}\n`;
-      out += `Omzet : ${rupiah(p.nilai)}\n`;
-      out += `Biaya Panen : ${rupiah(p.biayaPanen)}\n\n`;
+    if (!data.panen.length) {
+      out += `*HASIL PANEN*\n\n(belum ada data panen)\n`;
+    } else {
+      data.panen.forEach(p => {
+        const surplus = p.nilai - p.biayaPanen;
+        out += `*HASIL PANEN : ${p.komoditas}*\n`;
+        out += `${formatTanggal(p.tanggal)}\n`;
+        out += `Berat : ${p.qty} ${p.satuan || "kg"}\n`;
+        out += `Omzet : ${rupiah(p.nilai)}\n`;
+        out += `Biaya Panen : ${rupiah(p.biayaPanen)}\n\n`;
+        out += `Surplus : *${rupiah(surplus)}*\n\n`;
 
-      const surplus = p.nilai - p.biayaPanen;
-      out += `Surplus : *${rupiah(surplus)}*\n\n`;
+        if (p.bonusPanen?.total) {
+          const per = p.bonusPanen.total / p.bonusPanen.anggota.length;
+          out += `*BONUS PANEN* : ${rupiah(p.bonusPanen.total)}\n`;
+          p.bonusPanen.anggota.forEach((a,i)=>{
+            out += `${i+1}. ${a} : ${rupiah(per)}\n`;
+          });
+        }
 
-      if (p.bonusPanen?.total) {
-        const per = p.bonusPanen.total / p.bonusPanen.anggota.length;
-        out += `*BONUS PANEN* : ${rupiah(p.bonusPanen.total)}\n`;
-        p.bonusPanen.anggota.forEach((a,i)=>{
-          out += `${i+1}. ${a} : ${rupiah(per)}\n`;
-        });
-      }
-
-      out += `\n👉 pulungriswanto.my.id/bank-risma\n\n`;
-    });
+        out += `\n👉 pulungriswanto.my.id/bank-risma\n\n`;
+      });
+    }
 
     output.textContent = out;
     return;
@@ -131,7 +161,7 @@ function generateLaporan() {
   let totalSurplus = 0;
   if (["modal-biaya-panen","lengkap"].includes(jenis)) {
     out += `*HASIL PANEN*\n\n`;
-    if (data.panen.length === 0) {
+    if (!data.panen.length) {
       out += `(belum ada data panen)\n\n`;
     } else {
       const map = {};
@@ -157,7 +187,7 @@ function generateLaporan() {
   }
 
   /* =============================
-     BAGI HASIL OTOMATIS
+     BAGI HASIL
   ============================= */
   if (jenis === "lengkap" && data.skema) {
     out += `*BAGI HASIL*\n\n`;
@@ -168,7 +198,7 @@ function generateLaporan() {
     out += `\n`;
   }
 
-  out += `> Note:\nbagi hasil dilakukan setelah didapat *keuntungan*, yaitu *surplus* dikurangi *biaya*.\n`;
+  out += `> Note:\nBagi hasil dilakukan setelah *keuntungan* (surplus dikurangi biaya).\n`;
   out += `📌 pulungriswanto.my.id/${lahanKey}`;
 
   output.textContent = out;
