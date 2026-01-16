@@ -15,6 +15,11 @@ const RISMA_FARM = {
   keterangan: "2 Benih Timun",
   jumlah: 90000
 },
+{
+  tanggal: "2025-12-24",
+  keterangan: "Benih Cabai Roket",
+  jumlah: 90000
+},
 ],
   panen: [],
 
