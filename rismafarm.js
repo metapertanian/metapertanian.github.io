@@ -12,6 +12,11 @@ const RISMA_FARM = {
   biaya: [
 {
   tanggal: "2026-01-15",
+  keterangan: "3 Telek Ayam",
+  jumlah: 90000
+},
+{
+  tanggal: "2026-01-15",
   keterangan: "2 Benih Timun",
   jumlah: 90000
 },
