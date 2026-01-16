@@ -1,14 +1,5 @@
-// laporan.js FINAL — BERTUNAS (FIXED)
-// Auto laba bersih, PHP mode, skema bagi hasil
-// COMPATIBLE dengan struktur lahan.js
-
-/* =============================
-   DOM ELEMENT (WAJIB ADA)
-============================= */
-const jenisSelect = document.getElementById("jenis");
-const lahanSelect = document.getElementById("lahan");
-const musimSelect = document.getElementById("musim");
-const output = document.getElementById("output");
+// laporan.js FINAL — BERTUNAS (FIXED TOTAL)
+// Musim muncul • laporan reaktif • skema jalan
 
 /* =============================
    MAP LAHAN
@@ -32,9 +23,14 @@ function formatTanggal(tgl) {
 }
 
 /* =============================
-   INIT MUSIM (FIXED)
+   INIT MUSIM (FIX UTAMA)
 ============================= */
 function initMusim() {
+  const lahanSelect = document.getElementById("lahan");
+  const musimSelect = document.getElementById("musim");
+
+  if (!lahanSelect || !musimSelect) return;
+
   const lahanKey = lahanSelect.value;
   const lahan = LAHAN_MAP[lahanKey];
 
@@ -46,7 +42,7 @@ function initMusim() {
   }
 
   Object.keys(lahan.musim)
-    .sort((a, b) => Number(b) - Number(a))
+    .sort((a, b) => Number(b) - Number(a)) // terbaru di atas
     .forEach(k => {
       const opt = document.createElement("option");
       opt.value = k;
@@ -58,23 +54,22 @@ function initMusim() {
 }
 
 /* =============================
-   EVENT LISTENER (AMAN HP)
+   EVENT (100% AMAN)
 ============================= */
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(initMusim, 100);
-});
-
-lahanSelect.addEventListener("change", () => {
-  setTimeout(initMusim, 50);
+  initMusim();
+  document.getElementById("lahan")
+    ?.addEventListener("change", initMusim);
 });
 
 /* =============================
    GENERATE LAPORAN
 ============================= */
 function generateLaporan() {
-  const jenis = jenisSelect.value;
-  const lahanKey = lahanSelect.value;
-  const musimKey = musimSelect.value;
+  const jenis = document.getElementById("jenis").value;
+  const lahanKey = document.getElementById("lahan").value;
+  const musimKey = document.getElementById("musim").value;
+  const output = document.getElementById("output");
 
   const lahan = LAHAN_MAP[lahanKey];
   const data = lahan?.musim?.[musimKey];
@@ -124,39 +119,7 @@ function generateLaporan() {
   }
 
   /* =============================
-     PHP SAJA (DETAIL)
-  ============================= */
-  if (jenis === "panen") {
-    if (!data.panen.length) {
-      out += `*HASIL PANEN*\n\n(belum ada data panen)\n`;
-    } else {
-      data.panen.forEach(p => {
-        const surplus = p.nilai - p.biayaPanen;
-        out += `*HASIL PANEN : ${p.komoditas}*\n`;
-        out += `${formatTanggal(p.tanggal)}\n`;
-        out += `Berat : ${p.qty} ${p.satuan || "kg"}\n`;
-        out += `Omzet : ${rupiah(p.nilai)}\n`;
-        out += `Biaya Panen : ${rupiah(p.biayaPanen)}\n\n`;
-        out += `Surplus : *${rupiah(surplus)}*\n\n`;
-
-        if (p.bonusPanen?.total) {
-          const per = p.bonusPanen.total / p.bonusPanen.anggota.length;
-          out += `*BONUS PANEN* : ${rupiah(p.bonusPanen.total)}\n`;
-          p.bonusPanen.anggota.forEach((a,i)=>{
-            out += `${i+1}. ${a} : ${rupiah(per)}\n`;
-          });
-        }
-
-        out += `\n👉 pulungriswanto.my.id/bank-risma\n\n`;
-      });
-    }
-
-    output.textContent = out;
-    return;
-  }
-
-  /* =============================
-     PANEN RINGKAS
+     HASIL PANEN (RINGKAS)
   ============================= */
   let totalSurplus = 0;
   if (["modal-biaya-panen","lengkap"].includes(jenis)) {
@@ -198,7 +161,7 @@ function generateLaporan() {
     out += `\n`;
   }
 
-  out += `> Note:\nBagi hasil dilakukan setelah *keuntungan* (surplus dikurangi biaya).\n`;
+  out += `> Note:\nBagi hasil dilakukan setelah *keuntungan*.\n`;
   out += `📌 pulungriswanto.my.id/${lahanKey}`;
 
   output.textContent = out;
@@ -208,6 +171,7 @@ function generateLaporan() {
    COPY
 ============================= */
 function salinLaporan() {
+  const output = document.getElementById("output");
   navigator.clipboard.writeText(output.textContent);
   alert("Laporan disalin");
 }
