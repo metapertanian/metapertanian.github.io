@@ -1,9 +1,8 @@
 // laporan.js
-// Generator laporan BERTUNAS (per lahan & per musim tanam)
-// WA-friendly, mobile-safe
+// Generator laporan BERTUNAS (WA Friendly)
 
 /* =============================
-   PETA LAHAN (HARUS SAMA DENGAN FILE LAHAN)
+   PETA LAHAN
 ============================= */
 const LAHAN_MAP = {
   rismafarm: typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
@@ -12,124 +11,98 @@ const LAHAN_MAP = {
 };
 
 /* =============================
-   INIT MUSIM (ANTI KOSONG)
+   INIT MUSIM
 ============================= */
 function initMusim() {
-  const lahanSelect = document.getElementById("lahan");
+  const lahan = LAHAN_MAP[document.getElementById("lahan").value];
   const musimSelect = document.getElementById("musim");
-  if (!lahanSelect || !musimSelect) return;
-
-  const lahanKey = lahanSelect.value;
-  const lahan = LAHAN_MAP[lahanKey];
-
   musimSelect.innerHTML = "";
 
   if (!lahan || !lahan.musim) {
-    musimSelect.innerHTML = `<option value="">Tidak ada musim</option>`;
+    musimSelect.innerHTML = `<option>Tidak ada musim</option>`;
     return;
   }
 
-  const musimKeys = Object.keys(lahan.musim)
-    .map(k => Number(k))
-    .sort((a, b) => b - a); // TERBARU DI ATAS
-
-  musimKeys.forEach(k => {
-    const musim = lahan.musim[k];
-    const opt = document.createElement("option");
-    opt.value = k;
-    opt.textContent = musim.label || `Musim Tanam Ke-${k}`;
-    musimSelect.appendChild(opt);
-  });
-
-  // 🔴 PENTING: AUTO PILIH MUSIM TERBARU
-  musimSelect.selectedIndex = 0;
+  Object.keys(lahan.musim)
+    .sort((a, b) => b - a)
+    .forEach(k => {
+      const opt = document.createElement("option");
+      opt.value = k;
+      opt.textContent = lahan.musim[k].label || `Musim Tanam Ke-${k}`;
+      musimSelect.appendChild(opt);
+    });
 }
 
-/* =============================
-   EVENT (AMAN DI MOBILE)
-============================= */
 document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(initMusim, 100); // delay kecil utk HP
+  setTimeout(initMusim, 100);
 });
 
-document.getElementById("lahan")?.addEventListener("change", () => {
-  setTimeout(initMusim, 50);
-});
+document.getElementById("lahan")?.addEventListener("change", initMusim);
 
 /* =============================
    GENERATE LAPORAN
 ============================= */
 function generateLaporan() {
-  const jenis = document.getElementById("jenis").value;
   const lahanKey = document.getElementById("lahan").value;
   const musimKey = document.getElementById("musim").value;
 
   const lahan = LAHAN_MAP[lahanKey];
-  if (!lahan || !lahan.musim || !musimKey) {
-    alert("Musim tanam belum tersedia");
+  if (!lahan || !musimKey) {
+    alert("Data belum lengkap");
     return;
   }
 
   const musim = lahan.musim[musimKey];
   let out = "";
 
+  /* RANGE TANGGAL BIAYA */
+  const biaya = musim.biaya || [];
+  const tanggalList = biaya.map(b => b.tanggal).sort();
+  const tAwal = tanggalList[0] || "-";
+  const tAkhir = tanggalList[tanggalList.length - 1] || "-";
+
   /* HEADER */
-  out += `*${lahan.nama || lahanKey.toUpperCase()}*\n`;
+  out += `*${lahan.nama || "RISMA FARM"}* ^Bertani, Berbisnis, Berbagi^\n`;
   out += `${musim.label || `Musim Tanam Ke-${musimKey}`}\n`;
+  out += `${tAwal} - ${tAkhir}\n`;
   out += `——————————————\n\n`;
 
   /* MODAL */
-  if (jenis === "modal" || jenis === "full") {
-    out += `*MODAL USAHA*\n`;
-    const modal = musim.modal || {};
-    const total = Object.values(modal).reduce((a, b) => a + Number(b || 0), 0);
+  out += `*MODAL USAHA*\n`;
+  const modal = musim.modal || {};
+  const totalModal = Object.values(modal).reduce((a, b) => a + Number(b || 0), 0);
 
-    if (total === 0) {
-      out += `- Tidak ada data modal\n\n`;
-    } else {
-      Object.entries(modal).forEach(([k, v]) => {
-        out += `- ${k.toUpperCase()}: ${Number(v).toLocaleString("id-ID")}\n`;
-      });
-      out += `Total Modal: ${total.toLocaleString("id-ID")}\n\n`;
-    }
-  }
+  Object.entries(modal).forEach(([k, v]) => {
+    out += `- ${k.toUpperCase()}: ${Number(v).toLocaleString("id-ID")}\n`;
+  });
+  out += `Total Modal: *${totalModal.toLocaleString("id-ID")}*\n\n`;
 
   /* BIAYA */
-  if (jenis === "biaya" || jenis === "full") {
-    out += `*BIAYA PRODUKSI*\n`;
-    const biaya = musim.biaya || [];
-    let total = 0;
+  out += `*BIAYA SKINCARE* Untuk Perawatan ${musim.komoditas || "Tanaman"}\n`;
 
-    if (biaya.length === 0) {
-      out += `- Tidak ada data biaya\n\n`;
-    } else {
-      biaya.forEach(b => {
-        total += Number(b.nilai || 0);
-        out += `📆 ${b.tanggal}\n${b.nama}\nRp ${Number(b.nilai).toLocaleString("id-ID")}\n\n`;
-      });
-      out += `Total Biaya: ${total.toLocaleString("id-ID")}\n\n`;
-    }
+  let totalBiaya = 0;
+  if (biaya.length === 0) {
+    out += `- Tidak ada data biaya\n\n`;
+  } else {
+    biaya.forEach(b => {
+      totalBiaya += Number(b.jumlah || 0);
+      out += `${b.keterangan} : ${Number(b.jumlah).toLocaleString("id-ID")}\n`;
+    });
+    out += `\nTotal Biaya: *${totalBiaya.toLocaleString("id-ID")}*\n\n`;
   }
 
   /* PANEN */
-  if (jenis === "panen" || jenis === "full") {
-    out += `*HASIL PANEN*\n\n`;
-    const panen = musim.panen || [];
+  out += `*HASIL PANEN*\n\n`;
+  const panen = musim.panen || [];
 
-    if (panen.length === 0) {
-      out += `- Tidak ada data panen\n\n`;
-    } else {
-      panen.forEach(p => {
-        const omzet = Number(p.nilai || 0);
-        const biayaPanen = Number(p.biayaPanen || 0);
-        out += `📆 ${p.tanggal}\n${p.nama}\n`;
-        out += `⚖️ ${p.qty} ${p.satuan || "kg"}\n`;
-        out += `💰 Omzet: ${omzet.toLocaleString("id-ID")}\n`;
-        out += `🚜 Biaya Panen: ${biayaPanen.toLocaleString("id-ID")}\n`;
-        out += `📊 *Surplus: ${(omzet - biayaPanen).toLocaleString("id-ID")}*\n\n`;
-      });
-    }
+  if (panen.length === 0) {
+    out += `- Tidak ada data panen\n\n`;
   }
+
+  /* NOTE */
+  out += `> Note:\n`;
+  out += `Pembagian hasil dilakukan setelah dikurangi modal & biaya produksi sesuai kesepakatan.\n`;
+  out += `📌 pulungriswanto.my.id/${lahanKey}`;
 
   document.getElementById("output").textContent = out;
 }
@@ -138,7 +111,7 @@ function generateLaporan() {
    COPY
 ============================= */
 function salinLaporan() {
-  const t = document.getElementById("output").textContent;
-  if (!t || t.includes("Pilih")) return;
-  navigator.clipboard.writeText(t).then(() => alert("Laporan disalin"));
+  navigator.clipboard.writeText(
+    document.getElementById("output").textContent
+  ).then(() => alert("Laporan disalin"));
 }
