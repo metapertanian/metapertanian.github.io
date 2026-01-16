@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laporan – BERTUNAS</title>
+  <title>Laporan Usaha – BERTUNAS</title>
 
-  <!-- STYLE -->
+  <!-- STYLE UTAMA -->
   <link rel="stylesheet" href="/style.css" />
 
   <!-- NAVBAR -->
   <script src="/navbar2.js"></script>
 
-  <!-- DATA -->
+  <!-- DATA (WAJIB URUTAN) -->
   <script src="/anggota.js"></script>
+  <script src="/bank-risma.js"></script>
+
   <script src="/rismafarm.js"></script>
   <script src="/umi.js"></script>
   <script src="/umi2.js"></script>
+  <script src="/horti.js"></script>
+  <script src="/pangan.js"></script>
 
   <!-- LOGIC -->
   <script src="/laporan.js" defer></script>
@@ -28,73 +32,58 @@
 
 <main class="container">
 
-  <!-- HEADER -->
+  <!-- ================= HEADER ================= -->
   <header class="page-header">
     <h1>📊 Laporan Usaha</h1>
     <p class="muted">
-      Laporan per musim tanam · transparan · siap dibagikan
+      Bertunas · Bertani · Berbisnis · Berbagi
     </p>
   </header>
 
-  <!-- FILTER -->
+  <!-- ================= FILTER ================= -->
   <section class="card">
 
     <div class="form-grid">
 
       <!-- LAHAN -->
       <div class="form-row">
-        <label>Lahan</label>
+        <label for="lahan">Lahan</label>
         <select id="lahan">
           <option value="rismafarm">RISMA FARM</option>
           <option value="umi">UMI</option>
           <option value="umi2">UMI 2</option>
+          <option value="horti">HORTI</option>
+          <option value="pangan">PANGAN</option>
         </select>
       </div>
 
       <!-- MUSIM -->
       <div class="form-row">
-        <label>Musim Tanam</label>
+        <label for="musim">Musim Tanam</label>
         <select id="musim">
-          <!-- diisi otomatis oleh laporan.js -->
+          <!-- diisi otomatis -->
         </select>
       </div>
 
       <!-- JENIS LAPORAN -->
       <div class="form-row">
-        <label>Jenis Laporan</label>
-
-        <div class="checkbox-group">
-          <label>
-            <input type="checkbox" id="chkModal">
-            Modal
-          </label>
-
-          <label>
-            <input type="checkbox" id="chkBiaya">
-            Biaya & Skincare
-          </label>
-
-          <label>
-            <input type="checkbox" id="chkPanen">
-            PHP (Hasil Panen)
-          </label>
-
-          <label>
-            <input type="checkbox" id="chkLengkap">
-            Lengkap + Bagi Hasil
-          </label>
-        </div>
-
-        <p class="hint">
-          💡 Centang <b>PHP saja</b> untuk laporan panen tunggal (detail lengkap)
-        </p>
+        <label for="jenis">Jenis Laporan</label>
+        <select id="jenis">
+          <option value="modal">Modal Saja</option>
+          <option value="biaya">Biaya Saja</option>
+          <option value="panen">Panen Saja (Detail)</option>
+          <option value="modal-biaya">Modal + Biaya</option>
+          <option value="biaya-panen">Biaya + Panen</option>
+          <option value="modal-biaya-panen">Modal + Biaya + Panen</option>
+          <option value="lengkap">Lengkap (Sesuai Skema)</option>
+        </select>
       </div>
 
-      <!-- TANGGAL PANEN (PHP SAJA) -->
+      <!-- TANGGAL PANEN (KHUSUS PANEN SAJA) -->
       <div class="form-row">
-        <label>Tanggal Panen (PHP)</label>
+        <label for="panenTanggal">Tanggal Panen</label>
         <select id="panenTanggal">
-          <!-- diisi otomatis oleh laporan.js -->
+          <!-- muncul otomatis jika panen saja -->
         </select>
       </div>
 
@@ -106,7 +95,7 @@
 
   </section>
 
-  <!-- OUTPUT -->
+  <!-- ================= OUTPUT ================= -->
   <section class="card">
 
     <div class="card-header">
@@ -114,7 +103,7 @@
       <button class="btn-secondary" onclick="salinLaporan()">📋 Salin</button>
     </div>
 
-    <pre id="output">// Pilih lahan, musim, dan jenis laporan</pre>
+    <pre id="output">// Pilih lahan → musim → jenis laporan lalu klik "Tampilkan Laporan"</pre>
 
     <p class="hint">
       💡 Format laporan dioptimalkan untuk WhatsApp & arsip keuangan
