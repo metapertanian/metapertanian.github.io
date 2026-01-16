@@ -1,99 +1,187 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laporan – BERTUNAS</title>
+// laporan.js — FINAL SESUAI STRUKTUR lahan.js BERTUNAS
+// Mobile & WA Friendly
 
-  <!-- STYLE -->
-  <link rel="stylesheet" href="/style.css" />
+/* =============================
+   PETA LAHAN
+============================= */
+const LAHAN_MAP = {
+  rismafarm: typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null
+};
 
-  <!-- NAVBAR -->
-  <script src="/navbar2.js"></script>
+/* =============================
+   INIT MUSIM
+============================= */
+function initMusim() {
+  const lahanSelect = document.getElementById("lahan");
+  const musimSelect = document.getElementById("musim");
+  if (!lahanSelect || !musimSelect) return;
 
-  <!-- DATA -->
-  <script src="/anggota.js"></script>
-  <script src="/rismafarm.js"></script>
-  <script src="/umi.js"></script>
-  <script src="/umi2.js"></script>
+  const lahanKey = lahanSelect.value;
+  const lahan = LAHAN_MAP[lahanKey];
 
-  <!-- LOGIC -->
-  <script src="/laporan.js"></script>
-</head>
-<body>
+  musimSelect.innerHTML = "";
 
-<script>
-  renderNavbar("laporan", "admin");
-</script>
+  if (!lahan || !lahan.musim) {
+    musimSelect.innerHTML = `<option value="">Tidak ada musim</option>`;
+    return;
+  }
 
-<main class="container">
+  Object.keys(lahan.musim)
+    .sort((a, b) => b - a)
+    .forEach(key => {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent =
+        lahan.musim[key].label || `Musim Tanam Ke-${key}`;
+      musimSelect.appendChild(opt);
+    });
+}
 
-  <!-- HEADER -->
-  <header class="page-header">
-    <h1>📊 Laporan Usaha</h1>
-    <p class="muted">
-      Laporan per musim tanam · transparan · siap dibagikan
-    </p>
-  </header>
+/* =============================
+   EVENT
+============================= */
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(initMusim, 100);
+});
 
-  <!-- FILTER -->
-  <section class="card">
+document.getElementById("lahan")?.addEventListener("change", initMusim);
 
-    <div class="form-grid">
+/* =============================
+   GENERATE LAPORAN
+============================= */
+function generateLaporan() {
+  const jenis = document.getElementById("jenis").value;
+  const lahanKey = document.getElementById("lahan").value;
+  const musimKey = document.getElementById("musim").value;
 
-      <div class="form-row">
-        <label>Jenis Laporan</label>
-        <select id="jenis">
-  <option value="modal">Modal Saja</option>
-  <option value="biaya">Biaya & Skincare Saja</option>
-  <option value="panen">PHP Saja</option>
-  <option value="modal-biaya">Modal + Biaya</option>
-  <option value="modal-biaya-panen">Modal + Biaya + PHP</option>
-  <option value="lengkap">Lengkap + Bagi Hasil</option>
-</select>
-      </div>
+  const lahan = LAHAN_MAP[lahanKey];
+  if (!lahan || !musimKey) {
+    alert("Musim tanam belum dipilih");
+    return;
+  }
 
-      <div class="form-row">
-        <label>Lahan</label>
-        <select id="lahan">
-          <option value="rismafarm">RISMA FARM</option>
-          <option value="umi">UMI</option>
-          <option value="umi2">UMI 2</option>
-        </select>
-      </div>
+  const musim = lahan.musim[musimKey];
+  let out = "";
 
-      <div class="form-row">
-        <label>Musim Tanam</label>
-        <select id="musim">
-          <!-- diisi otomatis oleh laporan.js -->
-        </select>
-      </div>
+  /* =============================
+     RANGE TANGGAL DARI BIAYA
+  ============================= */
+  const biaya = musim.biaya || [];
+  const tanggalList = biaya.map(b => b.tanggal).sort();
+  const tanggalAwal = tanggalList[0] || "-";
+  const tanggalAkhir = tanggalList[tanggalList.length - 1] || "-";
 
-    </div>
+  /* =============================
+     HEADER
+  ============================= */
+  out += `*${lahan.nama}* \`Bertani, Berbisnis, Berbagi\`\n\n`;
+  out += `${musim.label}\n`;
+  out += `${tanggalAwal} - ${tanggalAkhir}\n`;
+  out += `——————————————\n\n`;
 
-    <button class="btn-primary" onclick="generateLaporan()">
-      📄 Tampilkan Laporan
-    </button>
+  /* =============================
+     MODAL
+  ============================= */
+  if (
+    ["modal", "modal-biaya", "modal-biaya-panen", "lengkap"].includes(jenis)
+  ) {
+    const modal = musim.modal || {};
+    let totalModal = 0;
 
-  </section>
+    out += `*MODAL USAHA*\n\n`;
 
-  <!-- OUTPUT -->
-  <section class="card">
+    Object.entries(modal).forEach(([nama, nilai]) => {
+      const n = Number(nilai);
+      totalModal += n;
+      out += `- ${nama}: ${n.toLocaleString("id-ID")}\n`;
+    });
 
-    <div class="card-header">
-      <h3>Hasil Laporan</h3>
-      <button class="btn-secondary" onclick="salinLaporan()">📋 Salin</button>
-    </div>
+    out += `\nTotal Modal: *${totalModal.toLocaleString("id-ID")}*\n\n`;
+  }
 
-    <pre id="output">// Pilih opsi lalu klik “Tampilkan Laporan”</pre>
+  /* =============================
+     BIAYA & SKINCARE
+  ============================= */
+  if (
+    ["biaya", "modal-biaya", "modal-biaya-panen", "lengkap"].includes(jenis)
+  ) {
+    let totalBiaya = 0;
+    const komoditas = (musim.komoditas || []).join(", ");
 
-    <p class="hint">
-      💡 Format laporan disesuaikan agar mudah dibagikan ke WhatsApp
-    </p>
+    out += `*BIAYA & SKINCARE* Untuk Perawatan ${komoditas}\n\n`;
 
-  </section>
+    if (biaya.length === 0) {
+      out += `(belum ada data biaya)\n\n`;
+    } else {
+      biaya.forEach(b => {
+        totalBiaya += Number(b.jumlah);
+        out += `- ${b.keterangan} : ${Number(
+          b.jumlah
+        ).toLocaleString("id-ID")}\n`;
+      });
 
-</main>
+      out += `\nTotal Biaya: *${totalBiaya.toLocaleString("id-ID")}*\n\n`;
+    }
+  }
 
-</body>
-</html>
+  /* =============================
+     HASIL PANEN
+  ============================= */
+  if (
+    ["panen", "modal-biaya-panen", "lengkap"].includes(jenis)
+  ) {
+    const panen = musim.panen || [];
+    let totalSurplus = 0;
+
+    out += `*HASIL PANEN* (Surplus)\n\n`;
+
+    if (panen.length === 0) {
+      out += `(belum ada data panen)\n\n`;
+    } else {
+      panen.forEach(p => {
+        totalSurplus += Number(p.surplus || 0);
+        out += `- ${p.nama} : ${Number(
+          p.surplus
+        ).toLocaleString("id-ID")}\n`;
+      });
+
+      out += `\nTotal Surplus : *${totalSurplus.toLocaleString(
+        "id-ID"
+      )}*\n\n`;
+    }
+
+    /* =============================
+       BAGI HASIL
+    ============================= */
+    if (jenis === "lengkap" && musim.skema) {
+      out += `*BAGI HASIL*\n`;
+      out += `(Skema: ${musim.skema.tipe.replace("_", " ")})\n\n`;
+
+      Object.entries(musim.skema.pembagian).forEach(([nama, persen]) => {
+        out += `- ${nama} : ${persen}%\n`;
+      });
+
+      out += `\n`;
+    }
+  }
+
+  /* =============================
+     NOTE
+  ============================= */
+  out += `> Note:\n`;
+  out += `Pembagian hasil dilakukan setelah keuntungan dikurangi biaya.\n`;
+  out += `📌 pulungriswanto.my.id/${lahanKey}`;
+
+  document.getElementById("output").textContent = out;
+}
+
+/* =============================
+   COPY
+============================= */
+function salinLaporan() {
+  const teks = document.getElementById("output").textContent;
+  if (!teks) return;
+  navigator.clipboard.writeText(teks).then(() => {
+    alert("Laporan berhasil disalin");
+  });
+}
