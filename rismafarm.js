@@ -12,18 +12,18 @@ const RISMA_FARM = {
   biaya: [
 {
   tanggal: "2026-01-15",
-  keterangan: "3 Telek Ayam",
+  keterangan: "Telek Ayam",
   jumlah: 90000
 },
 {
   tanggal: "2026-01-15",
-  keterangan: "2 Benih Timun",
+  keterangan: "Benih Timun",
   jumlah: 90000
 },
 {
   tanggal: "2025-12-24",
-  keterangan: "Benih Cabai Roket",
-  jumlah: 90000
+  keterangan: "Benih Cabai",
+  jumlah: 80000
 },
 ],
   panen: [
