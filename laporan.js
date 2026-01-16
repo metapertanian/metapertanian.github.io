@@ -88,7 +88,7 @@ function generateLaporan() {
   const tAwal = formatTanggal(tglBiaya[0]);
   const tAkhir = formatTanggal(tglBiaya[tglBiaya.length - 1]);
 
-  out += `*${lahan.nama}* \`Bertani, Berbisnis, Berbagi\`\n\n`;
+  out += `*${lahan.nama}* \n\`Bertani, Berbisnis, Berbagi\`\n\n`;
   out += `${data.label}\n${tAwal} - ${tAkhir}\n`;
   out += `——————————————\n\n`;
 
@@ -161,7 +161,7 @@ function generateLaporan() {
     out += `\n`;
   }
 
-  out += `> Note:\nBagi hasil dilakukan setelah *keuntungan*.\n`;
+  out += `> Note:\nBagi hasil dilakukan setelah didapat *keuntungan*, yaitu *surplus* dikurangi *biaya*.\n`;
   out += `📌 pulungriswanto.my.id/${lahanKey}`;
 
   output.textContent = out;
