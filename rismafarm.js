@@ -26,7 +26,56 @@ const RISMA_FARM = {
   jumlah: 90000
 },
 ],
-  panen: [],
+  panen: [
+{
+  tanggal: "2026-01-15",
+  komoditas: "Timun",
+  qty: 120,
+  satuan: "kg",
+  nilai: 450000,
+  biayaPanen: 60000,
+  bonusPanen: {
+    total: 60000,
+    anggota: ["Pulung","Faisol","Putri","Nadia","Anis","Tama"]
+  }
+},
+{
+  tanggal: "2026-01-12",
+  komoditas: "Timun",
+  qty: 100,
+  satuan: "kg",
+  nilai: 400000,
+  biayaPanen: 50000,
+  bonusPanen: {
+    total: 40000,
+    anggota: ["Pulung","Faisol","Putri","Nadia"]
+  }
+},
+{
+  tanggal: "2026-01-10",
+  komoditas: "Cabai",
+  qty: 10,
+  satuan: "kg",
+  nilai: 500000,
+  biayaPanen: 50000,
+  bonusPanen: {
+    total: 50000,
+    anggota: ["Pulung","Faisol","Putri","Nadia"]
+  }
+},
+{
+  tanggal: "2026-01-16",
+  komoditas: "Cabai",
+  qty: 12,
+  satuan: "kg",
+  nilai: 600000,
+  biayaPanen: 100000,
+  bonusPanen: {
+    total: 50000,
+    anggota: ["Pulung","Tama","Putri","Nadia"]
+  }
+},
+],
 
   skema: {
       tipe: "laba_bersih",
