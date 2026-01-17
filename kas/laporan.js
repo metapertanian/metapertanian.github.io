@@ -2,6 +2,9 @@ const periodeSelect = document.getElementById("periode");
 const checklist = document.getElementById("checklist");
 const output = document.getElementById("reportOutput");
 
+
+const jenisKasSelect = document.getElementById("jenisKas");
+
 // =========================================================
 // 🗓 Populate periode options
 // =========================================================
