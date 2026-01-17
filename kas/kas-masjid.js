@@ -182,7 +182,7 @@ video: ""
         amount: 825000,  
         note: "Sisa uang infak dan sumbangan warga yang di pegang oleh bapak Suhdi selaku bendahara lama, sisa 824 RB digenapkan 825.",  
         video: "",  
-        foto: "/masjid/bukti/IMG_20250812_171022_375.jpg"  
+        foto: "/kas/bukti/IMG_20250812_171022_375.jpg"  
       },  
       {  
         date: "2025-08-08",  
@@ -191,7 +191,7 @@ video: ""
         amount: 3000000,  
         note: "Pemesanan pasang kaca kepada mas SAKIP tanjung sari 2",  
         video: "",  
-        foto: "/masjid/bukti/IMG-20250811-WA0006.jpg"  
+        foto: "/kas/bukti/IMG-20250811-WA0006.jpg"  
       },  
       {  
         date: "2025-08-08",  
@@ -236,7 +236,7 @@ video: ""
         amount: 235000,  
         note: "Harga mic 225.000 dan untuk beli bensin motor bapak RT Suhdi 10.000",  
         video: "",  
-        foto: "/masjid/bukti/Screenshot_20250822-170932.jpg"  
+        foto: "/kas/bukti/Screenshot_20250822-170932.jpg"  
       },  
       {  
         date: "2025-08-23",  
@@ -245,7 +245,7 @@ video: ""
         amount: 514000,  
         note: "Pembelian amplifier 2000watt 4 channel",  
         video: "",  
-        foto: "/masjid/bukti/beli-ampli-masjid-2000watt-4channel.jpg"  
+        foto: "/kas/bukti/beli-ampli-masjid-2000watt-4channel.jpg"  
       },  
       {  
         date: "2025-08-29",  
@@ -272,7 +272,7 @@ video: ""
         amount: 70000,  
         note: "beli online Herbisida GluBest 65.000 + biaya admin brilink 5.000",  
         video: "",  
-        foto: "/masjid/bukti/obat-lulangan-16sep2025.jpg"  
+        foto: "/kas/bukti/obat-lulangan-16sep2025.jpg"  
       },  
       {  
         date: "2025-09-19",  
