@@ -14,7 +14,11 @@ function tambahNol() {
 
 function generateCode() {
   let description = document.getElementById("description").value.trim();
-  if (!description) description = "Infak Jumat"; // ✅ isi default jika kosong
+  const jenisKas = document.getElementById("jenisKas").value;
+
+  if (!description && jenisKas === "masjid") {
+    description = "Infak Jumat";
+  }
 
   const type = document.getElementById("type").value;
   const amount = parseInt(document.getElementById("amount").value);
@@ -28,18 +32,17 @@ function generateCode() {
     return;
   }
 
-  const date = new Date(dateInput);
-  const formattedDate = formatTanggal(date);
+  const formattedDate = formatTanggal(new Date(dateInput));
 
-  // Tampilkan preview
   document.getElementById("previewDate").innerText = formattedDate;
-  document.getElementById("previewDesc").innerText = description;
+  document.getElementById("previewDesc").innerText = description || "-";
   document.getElementById("previewType").innerText =
     type === "income" ? "Pemasukan" : "Pengeluaran";
   document.getElementById("previewAmount").innerText =
     amount.toLocaleString("id-ID");
   document.getElementById("previewNote").innerText = note || "-";
 
+  // Foto
   if (foto) {
     document.getElementById("previewImage").src = foto;
     document.getElementById("previewImageContainer").style.display = "block";
@@ -47,18 +50,17 @@ function generateCode() {
     document.getElementById("previewImageContainer").style.display = "none";
   }
 
+  // Video
+  const videoLink = document.getElementById("previewVideoLink");
   if (video) {
-    const videoLink = document.getElementById("previewVideoLink");
     videoLink.href = video;
     videoLink.style.display = "inline-block";
   } else {
-    const videoLink = document.getElementById("previewVideoLink");
     videoLink.style.display = "none";
   }
 
   document.getElementById("preview").style.display = "block";
 
-  // Kode untuk disalin (sesuai kas.js terbaru)
   const output = `{
   date: "${formattedDate}",
   description: "${description}",
@@ -67,13 +69,10 @@ function generateCode() {
   note: "${note}",
   foto: "${foto}",
   video: "${video}"
-  
 },`;
 
-  const resultDiv = document.getElementById("result");
-  resultDiv.innerText = output;
-  resultDiv.style.display = "block";
-
+  document.getElementById("result").innerText = output;
+  document.getElementById("result").style.display = "block";
   document.getElementById("copyBtn").style.display = "block";
 }
 
