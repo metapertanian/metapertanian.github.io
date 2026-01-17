@@ -38,6 +38,25 @@ checkboxes.forEach(cb => cb.checked = true);
 checklist.appendChild(selectAllBtn);
 checklist.appendChild(document.createElement("hr"));
 
+
+//Tombol bulan sebelumnya
+const lastMonthBtn = document.createElement("button");
+lastMonthBtn.textContent = "Pilih 1 Bulan Terakhir";
+lastMonthBtn.style.margin = "6px";
+lastMonthBtn.onclick = () => {
+  const now = new Date();
+  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const endLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+  const checkboxes = checklist.querySelectorAll("input[type=checkbox]");
+  checkboxes.forEach(cb => {
+    const txDate = new Date(txs[cb.value].date);
+    cb.checked = txDate >= lastMonth && txDate <= endLastMonth;
+  });
+};
+checklist.appendChild(lastMonthBtn);
+
+
 // Daftar transaksi
 txs.forEach((t, i) => {
 const label = document.createElement("label");
@@ -119,11 +138,13 @@ const endMonthYear = formatMonthYear(endDate);
 // ================= Teks laporan untuk WA =================
 const lines = [];
 if (startMonthYear === endMonthYear) {
-lines.push(*📢 Laporan Bulanan Kas Masjid Al-Huda*);
-lines.push(📅 ${startMonthYear});
-} else {
-lines.push(*📢 Laporan Tahunan Kas Masjid Al-Huda*);
-lines.push(📅 ${startMonthYear} - ${endMonthYear});
+const jenisKas = jenisKasSelect.value;
+const namaKas =
+  jenisKas === "masjid" ? "Kas Masjid Al-Huda" :
+  jenisKas === "ris" ? "Kas RIS" :
+  "Kas Lainnya";
+
+lines.push(`*📢 Laporan ${startMonthYear === endMonthYear ? "Bulanan" : "Tahunan"} ${namaKas}*`);
 }
 
 lines.push(-------------------------);
@@ -134,7 +155,15 @@ if (pemasukan.length === 0) {
 lines.push((Tidak ada));
 } else {
 for (const [desc, obj] of Object.entries(groupedIn)) {
-const label = obj.count > 1 ? (${obj.count}x) ${desc} : desc;
+const labelText = desc && desc.trim() !== ""
+  ? desc
+  : new Date(obj.list[0].date).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+
+const label = obj.count > 1 ? `(${obj.count}x) ${labelText}` : labelText;
 lines.push(+ ${label}: ${obj.total.toLocaleString("id-ID")});
 }
 }
@@ -146,7 +175,15 @@ if (pengeluaran.length === 0) {
 lines.push((Tidak ada));
 } else {
 for (const [desc, obj] of Object.entries(groupedOut)) {
-const label = obj.count > 1 ? (${obj.count}x) ${desc} : desc;
+const labelText = desc && desc.trim() !== ""
+  ? desc
+  : new Date(obj.list[0].date).toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+
+const label = obj.count > 1 ? `(${obj.count}x) ${labelText}` : labelText;
 lines.push(- ${label}: ${obj.total.toLocaleString("id-ID")});
 }
 }
@@ -171,7 +208,7 @@ lines.push(  (${humanDate}));
 });
 }
 
-lines.push(📌 Info: 👉 pulungriswanto.my.id/kas/masjid);
+lines.push(`📌 Info: 👉 pulungriswanto.my.id/kas/${jenisKas}`);
 lines.push(> dibuat otomatis oleh sistem);
 
 output.value = lines.join("\n");
@@ -183,7 +220,7 @@ let html = `
 
   <div class="laporan-elegan">      
     <div class="header">      
-      <img class="logo" src="https://tanjungbulan.my.id/img/risma_1.png" alt="RISMA Logo" style="      
+      <img class="logo" src="/img/risma_1.png" alt="RISMA Logo" style="      
   width:100px;      
   height:100px;      
   border-radius:50%;      
@@ -192,7 +229,7 @@ let html = `
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);      
   margin-bottom:15px;      
 ">      
-      <h2>📊 ${startMonthYear === endMonthYear ? "Laporan Bulanan" : "Laporan Tahunan"} Kas Masjid Al-Huda</h2>      
+      <h2>📊 ${startMonthYear === endMonthYear ? "Laporan Bulanan" : "Laporan Tahunan"} Kas</h2>      
       <p>📆 ${startMonthYear === endMonthYear ? startMonthYear : `${startMonthYear} - ${endMonthYear}`}</p>      
       <hr>      
     </div>      <p><b>Saldo Awal:</b> Rp ${saldoAwal.toLocaleString("id-ID")}</p>      
@@ -244,7 +281,7 @@ html += <hr>;
 
 html += `
 <div class="footer">
-📌 Info: <a href="https://pulungriswanto.my.id/kas/masjid" target="_blank">pulungriswanto.my.id/kas/masjid</a><br>
+📌 Info: <a href="https://pulungriswanto.my.id/kas/${jenisKas}">pulungriswanto.my.id/kas/${jenisKas}</a><br>
 <small>Dibuat otomatis oleh sistem</small>
 </div>
 
@@ -287,7 +324,7 @@ year: "numeric"
 function printReport() {
 const previewDiv = document.getElementById("reportPreview");
 const win = window.open("", "_blank");
-win.document.write(      <html>       <head>       <title>Laporan Kas Masjid Al-Huda</title>       <style>       body { font-family: 'Poppins', sans-serif; padding: 30px; color:#000; }       .logo { width:80px; height:80px; margin-bottom:10px; }       .header, .footer { text-align:center; }       h2 { margin:0; }       hr { margin:10px 0; border:1px solid #ccc; }       ul { text-align:left; }       @media print { body { margin:0; } a { color: #000; text-decoration:none; } }       </style>       </head>       <body>       ${previewDiv.innerHTML.replace(/<h3>🎥 Dokumentasi Video<\/h3>[\s\S]*?<hr>/, "")}       <script>window.onload=function(){window.print();}</script>       </body>       </html>      );
+win.document.write(      <html>       <head>       <title>Laporan Kas ${namaKas}</title>       <style>       body { font-family: 'Poppins', sans-serif; padding: 30px; color:#000; }       .logo { width:80px; height:80px; margin-bottom:10px; }       .header, .footer { text-align:center; }       h2 { margin:0; }       hr { margin:10px 0; border:1px solid #ccc; }       ul { text-align:left; }       @media print { body { margin:0; } a { color: #000; text-decoration:none; } }       </style>       </head>       <body>       ${previewDiv.innerHTML.replace(/<h3>🎥 Dokumentasi Video<\/h3>[\s\S]*?<hr>/, "")}       <script>window.onload=function(){window.print();}</script>       </body>       </html>      );
 win.document.close();
 }
 
