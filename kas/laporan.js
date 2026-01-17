@@ -25,13 +25,27 @@ function populateChecklist() {
   const txs = kasData[periode]?.transaksi || [];
   checklist.innerHTML = "";
 
-  // Tombol centang bulan lalu
-  const lastMonthBtn = document.createElement("button");
-  lastMonthBtn.textContent = "Centang Bulan Sebelumnya";
-  lastMonthBtn.style.margin = "6px 0";
-  lastMonthBtn.onclick = selectLastMonth;
-  checklist.appendChild(lastMonthBtn);
+  const selectAllBtn = document.createElement("button");
+  selectAllBtn.textContent = "Pilih Semua Transaksi";
+  selectAllBtn.onclick = () => {
+    checklist.querySelectorAll("input[type=checkbox]").forEach(cb => cb.checked = true);
+  };
 
+  const selectLastMonthBtn = document.createElement("button");
+  selectLastMonthBtn.textContent = "Pilih 1 Bulan Terakhir";
+  selectLastMonthBtn.style.marginLeft = "8px";
+  selectLastMonthBtn.onclick = () => {
+    const now = new Date();
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    checklist.querySelectorAll("input[type=checkbox]").forEach(cb => {
+      const tx = txs[cb.value];
+      const d = new Date(tx.date);
+      cb.checked = (d.getMonth() === lastMonth.getMonth() && d.getFullYear() === lastMonth.getFullYear());
+    });
+  };
+
+  checklist.appendChild(selectAllBtn);
+  checklist.appendChild(selectLastMonthBtn);
   checklist.appendChild(document.createElement("hr"));
 
   txs.forEach((t, i) => {
@@ -40,28 +54,9 @@ function populateChecklist() {
     checkbox.type = "checkbox";
     checkbox.value = i;
     label.appendChild(checkbox);
-    label.append(` ${t.date} - ${t.description || "(Tanpa keterangan)"}`);
+    label.append(` ${t.date} - ${t.description || formatTanggal(new Date(t.date))}`);
     checklist.appendChild(label);
     checklist.appendChild(document.createElement("br"));
-  });
-}
-
-// =========================================================
-// ✅ Centang otomatis bulan sebelumnya
-// =========================================================
-function selectLastMonth() {
-  const periode = periodeSelect.value;
-  const txs = kasData[periode]?.transaksi || [];
-
-  const now = new Date();
-  const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-  const checkboxes = checklist.querySelectorAll("input[type=checkbox]");
-  checkboxes.forEach((cb, i) => {
-    const d = new Date(txs[i].date);
-    cb.checked =
-      d.getMonth() === lastMonth.getMonth() &&
-      d.getFullYear() === lastMonth.getFullYear();
   });
 }
 
@@ -73,130 +68,98 @@ function generateReport() {
   const jenisKas = jenisKasSelect.value;
   const txs = kasData[periode]?.transaksi || [];
 
-  const checked = [...checklist.querySelectorAll("input:checked")]
+  const checked = Array.from(checklist.querySelectorAll("input[type=checkbox]:checked"))
     .map(cb => parseInt(cb.value));
 
-  if (checked.length === 0) {
-    output.value = "❗ Pilih minimal satu transaksi.";
+  if (!checked.length) {
+    output.value = "❗ Harap pilih setidaknya satu transaksi.";
     return;
   }
 
-  const selected = checked.map(i => txs[i]);
-  const sortedSelected = [...selected].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
-  );
+  const selected = checked.map(i => txs[i]).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const startDate = new Date(selected[0].date);
+  const endDate = new Date(selected.at(-1).date);
 
-  const startDate = new Date(sortedSelected[0].date);
-  const endDate = new Date(sortedSelected.at(-1).date);
-
-  // ================= SALDO AWAL =================
   let saldoAwal = txs
     .filter(t => new Date(t.date) < startDate)
-    .reduce((s, t) =>
-      s + (t.type === "income" ? t.amount : -t.amount), 0
-    );
+    .reduce((s, t) => s + (t.type === "income" ? t.amount : -t.amount), 0);
 
-  // ================= GROUPING =================
-  function groupByDescription(arr) {
+  const filtered = selected.filter(t => !t.description?.toLowerCase().includes("saldo awal"));
+
+  function group(arr) {
     const map = {};
     arr.forEach(t => {
-      const key = t.description || new Date(t.date).toLocaleDateString("id-ID");
-      if (!map[key]) map[key] = { total: 0, count: 0, list: [] };
-      map[key].total += t.amount;
-      map[key].count++;
-      map[key].list.push(t);
+      const label = t.description || formatTanggal(new Date(t.date));
+      if (!map[label]) map[label] = { total: 0, count: 0 };
+      map[label].total += t.amount;
+      map[label].count++;
     });
     return map;
   }
 
-  const pemasukan = sortedSelected.filter(t => t.type === "income");
-  const pengeluaran = sortedSelected.filter(t => t.type === "expense");
+  const pemasukan = filtered.filter(t => t.type === "income");
+  const pengeluaran = filtered.filter(t => t.type === "expense");
 
-  const groupedIn = groupByDescription(pemasukan);
-  const groupedOut = groupByDescription(pengeluaran);
+  const groupedIn = group(pemasukan);
+  const groupedOut = group(pengeluaran);
 
-  const totalIn = pemasukan.reduce((s, t) => s + t.amount, 0);
-  const totalOut = pengeluaran.reduce((s, t) => s + t.amount, 0);
+  const totalIn = pemasukan.reduce((s,t)=>s+t.amount,0);
+  const totalOut = pengeluaran.reduce((s,t)=>s+t.amount,0);
   const saldoAkhir = saldoAwal + totalIn - totalOut;
 
-  // ================= INFO KAS =================
-  const namaKas = {
+  const judulKas = {
     masjid: "Kas Masjid",
     ris: "Kas RIS",
     lainnya: "Kas Lainnya"
   }[jenisKas];
 
-  const urlKas = `https://pulungriswanto.my.id/kas/${jenisKas}`;
+  const linkKas = `https://pulungriswanto.my.id/kas/${jenisKas}`;
 
-  // ================= TEXT WA =================
   const lines = [];
-  lines.push(`📢 *Laporan ${namaKas}*`);
+  lines.push(`📢 *Laporan ${judulKas}*`);
   lines.push(`📅 ${formatMonthYear(startDate)} - ${formatMonthYear(endDate)}`);
   lines.push(`-------------------------`);
   lines.push(`💰 Saldo Awal: ${saldoAwal.toLocaleString("id-ID")}`);
 
   lines.push(`\n🟢 Pemasukan:`);
-  Object.entries(groupedIn).forEach(([k, v]) => {
+  for (const [k,v] of Object.entries(groupedIn))
     lines.push(`+ ${k}: ${v.total.toLocaleString("id-ID")}`);
-  });
 
   lines.push(`\n🔴 Pengeluaran:`);
-  Object.entries(groupedOut).forEach(([k, v]) => {
+  for (const [k,v] of Object.entries(groupedOut))
     lines.push(`- ${k}: ${v.total.toLocaleString("id-ID")}`);
-  });
 
   lines.push(`\n💰 Saldo Akhir: ${saldoAkhir.toLocaleString("id-ID")}`);
-  lines.push(`📌 Info: ${urlKas}`);
-  lines.push(`> dibuat otomatis oleh sistem`);
+  lines.push(`📌 Info: ${linkKas}`);
 
   output.value = lines.join("\n");
 
-  // ================= PREVIEW =================
-  const previewDiv = document.getElementById("reportPreview");
-  previewDiv.innerHTML = `
-  <div class="laporan-elegan">
-    <h2>📊 ${namaKas}</h2>
-    <p>📅 ${formatMonthYear(startDate)} - ${formatMonthYear(endDate)}</p>
+  document.getElementById("reportPreview").innerHTML = `
+    <h2>${judulKas}</h2>
+    <p>${formatMonthYear(startDate)} - ${formatMonthYear(endDate)}</p>
+    <p><b>Saldo Awal:</b> ${saldoAwal.toLocaleString("id-ID")}</p>
+    <p><b>Total Masuk:</b> ${totalIn.toLocaleString("id-ID")}</p>
+    <p><b>Total Keluar:</b> ${totalOut.toLocaleString("id-ID")}</p>
+    <p><b>Saldo Akhir:</b> ${saldoAkhir.toLocaleString("id-ID")}</p>
     <hr>
-    <p><b>Saldo Awal:</b> Rp ${saldoAwal.toLocaleString("id-ID")}</p>
-
-    <h3>🟢 Pemasukan</h3>
-    <ul>${Object.entries(groupedIn).map(([k,v]) =>
-      `<li>${k}: Rp ${v.total.toLocaleString("id-ID")}</li>`).join("")}
-    </ul>
-
-    <h3>🔴 Pengeluaran</h3>
-    <ul>${Object.entries(groupedOut).map(([k,v]) =>
-      `<li>${k}: Rp ${v.total.toLocaleString("id-ID")}</li>`).join("")}
-    </ul>
-
-    <p><b>Saldo Akhir:</b> Rp ${saldoAkhir.toLocaleString("id-ID")}</p>
-    <hr>
-    <small>${urlKas}</small>
-  </div>
+    <small>${linkKas}</small>
   `;
 }
 
 // =========================================================
-// 🧾 Utilities
-// =========================================================
-function formatMonthYear(date) {
-  return date.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
-}
-
 function copyReport() {
   output.select();
   document.execCommand("copy");
-  alert("Laporan disalin!");
 }
 
 function sendToWhatsApp() {
-  window.open(`https://wa.me/?text=${encodeURIComponent(output.value)}`);
+  window.open(`https://wa.me/?text=${encodeURIComponent(output.value)}`, "_blank");
 }
 
-// =========================================================
-// Init
-// =========================================================
+function formatMonthYear(d) {
+  return d.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   populatePeriodeOptions();
   populateChecklist();
