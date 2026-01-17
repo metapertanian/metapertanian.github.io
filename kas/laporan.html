@@ -241,11 +241,19 @@ pre {
 <div class="container">
   <h2 class="text-center mb-4">📢 Laporan Kas</h2>
 
+<select id="jenisKas">
+  <option value="masjid">Kas Masjid</option>
+  <option value="ris">Kas RIS</option>
+  <option value="mbamar">Kas Mba Mar</option>
+</select>
+
   <!-- Pilih Periode -->
   <div class="section">
     <label for="periode" class="form-label">Pilih Periode:</label>
     <select id="periode" class="form-select mb-3" onchange="populateChecklist()"></select>
   </div>
+
+<button onclick="selectLastMonth()">✔️Bulan Sebelumnya</button>
 
   <!-- Checklist Transaksi -->
   <div class="section">
