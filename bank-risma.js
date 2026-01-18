@@ -1,12 +1,22 @@
 // =============================
-// BANK RISMA – FINAL STABLE
+// BANK RISMA – FIX FINAL
 // =============================
 
 // -----------------------------
-// AMBIL DATA LAHAN
+// VALIDASI DATA
+// -----------------------------
+if (typeof RISMA_FARM === "undefined") {
+  console.error("RISMA_FARM tidak terbaca");
+}
+if (!Array.isArray(anggota)) {
+  console.error("anggota.js tidak terbaca");
+}
+
+// -----------------------------
+// DAFTAR LAHAN
 // -----------------------------
 const LAHAN_LIST = [
-  typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
+  RISMA_FARM,
   typeof UMI !== "undefined" ? UMI : null,
   typeof UMI2 !== "undefined" ? UMI2 : null
 ].filter(Boolean);
@@ -17,77 +27,36 @@ const LAHAN_LIST = [
 const bonusAnggota = {};
 const tarikAnggota = {};
 const riwayat = [];
-const panenSudahDihitung = new Set();
+const panenKey = new Set();
 
 // -----------------------------
 // INIT ANGGOTA
 // -----------------------------
-if (!Array.isArray(anggota)) {
-  console.error("anggota.js tidak terbaca");
-}
-
 anggota.forEach(nama => {
   bonusAnggota[nama] = 0;
   tarikAnggota[nama] = 0;
 });
 
 // -----------------------------
-// FUNGSI AMBIL BONUS PANEN
-// -----------------------------
-function extractBonusPanen(p) {
-  if (!p) return null;
-
-  // Format 1 (ideal)
-  if (
-    p.bonusPanen &&
-    typeof p.bonusPanen === "object" &&
-    p.bonusPanen.total > 0 &&
-    Array.isArray(p.bonusPanen.anggota)
-  ) {
-    return {
-      total: Number(p.bonusPanen.total),
-      anggota: p.bonusPanen.anggota
-    };
-  }
-
-  // Format 2 (bonus angka langsung)
-  if (typeof p.bonusPanen === "number" && p.bonusPanen > 0) {
-    return {
-      total: p.bonusPanen,
-      anggota: anggota
-    };
-  }
-
-  // Format 3 (bonus / bonus_panen / bagiHasil)
-  const alt = p.bonus || p.bonus_panen || p.bagiHasil;
-  if (alt && alt.total > 0 && Array.isArray(alt.anggota)) {
-    return {
-      total: Number(alt.total),
-      anggota: alt.anggota
-    };
-  }
-
-  return null;
-}
-
-// -----------------------------
-// BACA PANEN
+// BACA BONUS PANEN
 // -----------------------------
 LAHAN_LIST.forEach(lahan => {
   Object.values(lahan.musim || {}).forEach(musim => {
     (musim.panen || []).forEach(p => {
 
-      // VALIDASI DOUBEL
-      const idPanen = `${lahan.nama}-${p.tanggal}-${p.komoditas || ""}`;
-      if (panenSudahDihitung.has(idPanen)) return;
-      panenSudahDihitung.add(idPanen);
+      if (!p.bonusPanen) return;
 
-      const bonus = extractBonusPanen(p);
-      if (!bonus) return;
+      const { total, anggota: list } = p.bonusPanen;
+      if (!total || !Array.isArray(list)) return;
 
-      const perOrang = bonus.total / bonus.anggota.length;
+      // cegah dobel
+      const key = `${lahan.nama}-${p.tanggal}-${p.komoditas}-${total}`;
+      if (panenKey.has(key)) return;
+      panenKey.add(key);
 
-      bonus.anggota.forEach(nama => {
+      const perOrang = total / list.length;
+
+      list.forEach(nama => {
         if (bonusAnggota[nama] !== undefined) {
           bonusAnggota[nama] += perOrang;
         }
@@ -96,8 +65,8 @@ LAHAN_LIST.forEach(lahan => {
       riwayat.push({
         tipe: "bonus",
         tanggal: p.tanggal,
-        keterangan: `${p.komoditas || "Panen"} (${lahan.nama || "Lahan"})`,
-        jumlah: bonus.total
+        keterangan: `${p.komoditas} – ${lahan.nama}`,
+        jumlah: total
       });
 
     });
@@ -155,4 +124,4 @@ window.BANK_RISMA_DATA = {
   riwayat
 };
 
-console.log("BANK RISMA OK", window.BANK_RISMA_DATA);
+console.log("BANK RISMA BERHASIL", window.BANK_RISMA_DATA);
