@@ -1,7 +1,8 @@
 // bank-risma.js
 // Rekap BONUS PANEN & SALDO BANK RISMA
-// Membaca data dari file lahan (RISMA_FARM, UMI, UMI2)
-// Mengurangi saldo berdasarkan tariktunai.js
+// Membaca data dari semua lahan
+// Bonus dihitung SEKALI per panen (anti dobel)
+// Tarik tunai mengurangi saldo
 
 /* =============================
    KONFIGURASI LAHAN
@@ -9,7 +10,9 @@
 const LAHAN_LIST = [
   typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
   typeof UMI !== "undefined" ? UMI : null,
-  typeof UMI2 !== "undefined" ? UMI2 : null
+  typeof UMI2 !== "undefined" ? UMI2 : null,
+  typeof HORTI !== "undefined" ? HORTI : null,
+  typeof PANGAN !== "undefined" ? PANGAN : null
 ].filter(Boolean);
 
 /* =============================
@@ -20,12 +23,19 @@ let tarikAnggota = {};
 let riwayat = [];
 
 /* =============================
+   VALIDASI PANEN (ANTI DOBEL)
+============================= */
+const PANEN_UNIK = new Set();
+
+/* =============================
    INIT ANGGOTA
 ============================= */
-anggota.forEach(nama => {
-  bonusAnggota[nama] = 0;
-  tarikAnggota[nama] = 0;
-});
+if (typeof anggota !== "undefined") {
+  anggota.forEach(nama => {
+    bonusAnggota[nama] = 0;
+    tarikAnggota[nama] = 0;
+  });
+}
 
 /* =============================
    BACA BONUS PANEN
@@ -34,6 +44,12 @@ LAHAN_LIST.forEach(lahan => {
   Object.values(lahan.musim || {}).forEach(musim => {
     (musim.panen || []).forEach(p => {
 
+      // ===== VALIDASI PANEN UNIK =====
+      const panenID = `${lahan.nama}|${musim.label}|${p.tanggal}|${p.komoditas}`;
+      if (PANEN_UNIK.has(panenID)) return;
+      PANEN_UNIK.add(panenID);
+
+      // ===== HITUNG BONUS =====
       if (
         p.bonusPanen &&
         p.bonusPanen.total > 0 &&
@@ -51,7 +67,7 @@ LAHAN_LIST.forEach(lahan => {
         riwayat.push({
           tipe: "bonus",
           tanggal: p.tanggal,
-          keterangan: `${p.nama} (${lahan.nama || "Lahan"})`,
+          keterangan: `Bonus Panen ${p.komoditas} – ${lahan.nama}`,
           jumlah: p.bonusPanen.total
         });
       }
@@ -72,7 +88,7 @@ if (typeof tarikTunai !== "undefined") {
     riwayat.push({
       tipe: "tarik",
       tanggal: t.tanggal,
-      keterangan: `Tarik Tunai - ${t.nama}`,
+      keterangan: `Tarik Tunai – ${t.nama}`,
       jumlah: t.jumlah
     });
   });
@@ -94,17 +110,17 @@ const sisaSaldo = totalBonus - totalTarik;
 ============================= */
 riwayat.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
-const tabelAnggota = anggota
+const tabelAnggota = (typeof anggota !== "undefined" ? anggota : [])
   .map(nama => ({
     nama,
-    bonus: bonusAnggota[nama],
-    tarik: tarikAnggota[nama],
-    saldo: bonusAnggota[nama] - tarikAnggota[nama]
+    bonus: bonusAnggota[nama] || 0,
+    tarik: tarikAnggota[nama] || 0,
+    saldo: (bonusAnggota[nama] || 0) - (tarikAnggota[nama] || 0)
   }))
   .sort((a, b) => b.saldo - a.saldo);
 
 /* =============================
-   EXPORT
+   EXPORT GLOBAL
 ============================= */
 window.BANK_RISMA_DATA = {
   totalBonus,
