@@ -1,11 +1,10 @@
 // =======================================================
-// BANK RISMA
-// Rekap BONUS PANEN & SALDO ANGGOTA RISMA FARM
-// =======================================================
-// Membaca data dari:
-// - rismafarm.js (RISMA_FARM)
-// - umi.js (UMI)
-// - umi2.js (UMI2)
+// bank-risma.js
+// BANK RISMA – Rekap BONUS PANEN & SALDO ANGGOTA
+// Sumber data:
+// - rismafarm.js
+// - umi.js
+// - umi2.js
 // - tariktunai.js
 // =======================================================
 
@@ -19,56 +18,73 @@ const LAHAN_LIST = [
 ].filter(Boolean);
 
 /* =============================
-   STATE
-============================= */
-let bonusAnggota = {};
-let tarikAnggota = {};
-let riwayat = [];
-
-/* =============================
-   INIT ANGGOTA
+   VALIDASI DATA DASAR
 ============================= */
 if (typeof anggota === "undefined") {
   console.error("❌ anggota.js belum dimuat");
 }
 
+/* =============================
+   STATE
+============================= */
+const bonusAnggota = {};
+const tarikAnggota = {};
+const riwayat = [];
+
+// 🔒 KUNCI UNIK PANEN (ANTI HITUNG 2x)
+const PANEN_UNIK = new Set();
+
+/* =============================
+   INIT ANGGOTA
+============================= */
 anggota.forEach(nama => {
   bonusAnggota[nama] = 0;
   tarikAnggota[nama] = 0;
 });
 
 /* =============================
-   BACA BONUS PANEN (ANTI DOBEL)
+   BACA BONUS PANEN DARI SEMUA LAHAN
 ============================= */
-const PANEN_UNIK = new Set();
-
 LAHAN_LIST.forEach(lahan => {
-  Object.values(lahan.musim || {}).forEach(musim => {
-    (musim.panen || []).forEach(p => {
+  if (!lahan.musim) return;
 
-      // === VALIDASI DATA PANEN ===
-      if (!p.tanggal || !p.nama || !p.bonus) return;
+  Object.values(lahan.musim).forEach(musim => {
+    if (!Array.isArray(musim.panen)) return;
 
-      // === KUNCI UNIK PANEN ===
-      const key = `${lahan.nama}|${p.tanggal}|${p.nama}|${p.bonus}`;
+    musim.panen.forEach(p => {
+
+      // VALIDASI STRUKTUR BONUS PANEN
+      if (
+        !p.bonusPanen ||
+        !p.bonusPanen.total ||
+        !Array.isArray(p.bonusPanen.anggota) ||
+        p.bonusPanen.anggota.length === 0
+      ) return;
+
+      const totalBonus = Number(p.bonusPanen.total);
+      if (totalBonus <= 0) return;
+
+      // 🔒 KUNCI UNIK (lahan + tanggal + komoditas + total bonus)
+      const key = `${lahan.nama}|${p.tanggal}|${p.komoditas}|${totalBonus}`;
       if (PANEN_UNIK.has(key)) return;
       PANEN_UNIK.add(key);
 
-      // === BONUS PER ANGGOTA ===
-      if (p.bonusAnggota && typeof p.bonusAnggota === "object") {
-        Object.entries(p.bonusAnggota).forEach(([nama, jumlah]) => {
-          if (bonusAnggota[nama] !== undefined) {
-            bonusAnggota[nama] += Number(jumlah);
-          }
-        });
+      const perOrang = totalBonus / p.bonusPanen.anggota.length;
 
-        riwayat.push({
-          tipe: "bonus",
-          tanggal: p.tanggal,
-          keterangan: `${p.nama} (${lahan.nama})`,
-          jumlah: Number(p.bonus)
-        });
-      }
+      // TAMBAHKAN KE SALDO ANGGOTA
+      p.bonusPanen.anggota.forEach(nama => {
+        if (bonusAnggota[nama] !== undefined) {
+          bonusAnggota[nama] += perOrang;
+        }
+      });
+
+      // RIWAYAT BONUS
+      riwayat.push({
+        tipe: "bonus",
+        tanggal: p.tanggal,
+        keterangan: `${p.komoditas} (${lahan.nama})`,
+        jumlah: totalBonus
+      });
 
     });
   });
@@ -79,7 +95,7 @@ LAHAN_LIST.forEach(lahan => {
 ============================= */
 if (typeof tarikTunai !== "undefined" && Array.isArray(tarikTunai)) {
   tarikTunai.forEach(t => {
-    if (!t.nama || !t.jumlah) return;
+    if (!t || !t.nama || !t.jumlah) return;
 
     if (tarikAnggota[t.nama] !== undefined) {
       tarikAnggota[t.nama] += Number(t.jumlah);
@@ -87,7 +103,7 @@ if (typeof tarikTunai !== "undefined" && Array.isArray(tarikTunai)) {
 
     riwayat.push({
       tipe: "tarik",
-      tanggal: t.tanggal || "-",
+      tanggal: t.tanggal,
       keterangan: `Tarik Tunai - ${t.nama}`,
       jumlah: Number(t.jumlah)
     });
@@ -106,22 +122,27 @@ const totalTarik = hitungTotal(tarikAnggota);
 const sisaSaldo = totalBonus - totalTarik;
 
 /* =============================
+   TABEL ANGGOTA
+============================= */
+const tabelAnggota = anggota.map(nama => {
+  const bonus = bonusAnggota[nama] || 0;
+  const tarik = tarikAnggota[nama] || 0;
+
+  return {
+    nama,
+    bonus,
+    tarik,
+    saldo: bonus - tarik
+  };
+}).sort((a, b) => b.saldo - a.saldo);
+
+/* =============================
    SORT RIWAYAT (TERBARU DI ATAS)
 ============================= */
 riwayat.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
 /* =============================
-   TABEL ANGGOTA
-============================= */
-const tabelAnggota = anggota.map(nama => ({
-  nama,
-  bonus: bonusAnggota[nama],
-  tarik: tarikAnggota[nama],
-  saldo: bonusAnggota[nama] - tarikAnggota[nama]
-})).sort((a, b) => b.saldo - a.saldo);
-
-/* =============================
-   EXPORT KE HTML
+   EXPORT GLOBAL
 ============================= */
 window.BANK_RISMA_DATA = {
   totalBonus,
@@ -131,7 +152,5 @@ window.BANK_RISMA_DATA = {
   riwayat
 };
 
-/* =============================
-   DEBUG (BOLEH DIHAPUS)
-============================= */
-// console.log("BANK RISMA DATA:", window.BANK_RISMA_DATA);
+// DEBUG (boleh dihapus kalau sudah yakin)
+console.log("✅ BANK RISMA OK", window.BANK_RISMA_DATA);
