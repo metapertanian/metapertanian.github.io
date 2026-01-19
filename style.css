@@ -353,3 +353,13 @@ pre {
   overflow-x: auto;
   font-size: 0.85rem;
 }
+
+
+.highlight-name {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.summary-stack .summary-item {
+  margin: 12px 0;
+}
