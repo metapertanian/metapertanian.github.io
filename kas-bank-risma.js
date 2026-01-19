@@ -61,7 +61,7 @@ const KAS_BANK_RISMA = {
     "Pulung": 100000,
     "Nadia": 50000
   }
- "bukti": "/img/pulung.jpg"
+ bukti: "/img/pulung.jpg"
 }
 
   ]
