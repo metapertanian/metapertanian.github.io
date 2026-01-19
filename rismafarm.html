@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RISMA FARM x BERTUNAS | Bertani Berbisnis Berbagi</title>
+  <title>RISMA FARM x BERTUNAS</title>
 
   <link rel="stylesheet" href="/style.css" />
 
@@ -23,9 +23,12 @@
 <main class="container">
 
   <!-- HEADER -->
-  <section class="hero">
-    <h1>🌾 RISMA FARM</h1>
-    <p class="tagline">Lahan Utama Produksi & Bagi Hasil</p>
+  <section class="bank-header" style="margin-bottom:20px">
+    <img src="/img/risma_1.png" class="bank-logo">
+    <h1 class="bank-title">RISMA FARM</h1>
+    <p class="muted" style="text-align:center">
+      Lahan Produksi · Bagi Hasil · Transparan
+    </p>
   </section>
 
   <!-- RINGKASAN MUSIM -->
@@ -44,43 +47,60 @@
 /* ===============================
    UTIL
 ================================ */
-function format(num) {
-  return Number(num || 0).toLocaleString("id-ID");
+function rupiah(n) {
+  return Number(n || 0).toLocaleString("id-ID");
+}
+
+function tanggalIndo(t) {
+  return new Date(t).toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
 }
 
 /* ===============================
-   AMBIL MUSIM (AMAN URUTAN)
+   AMBIL MUSIM (AMAN)
 ================================ */
 const musimList = Object.values(RISMA_FARM.musim || {});
 
 /* ===============================
-   RINGKASAN PER MUSIM
+   RINGKASAN MUSIM
 ================================ */
 function renderRingkasanMusim() {
   const box = document.getElementById("ringkasanMusim");
   box.innerHTML = "";
 
   musimList.forEach(musim => {
-    const totalModal = Object.values(musim.modal || {}).reduce((a, b) => a + b, 0);
-    const totalBiaya = (musim.biaya || []).reduce((a, b) => a + b.nilai, 0);
-    const totalPanen = (musim.panen || []).reduce((a, b) => a + b.nilai, 0);
+
+    const totalModal = Object.values(musim.modal || {})
+      .map(v => Number(v))
+      .reduce((a,b)=>a+b,0);
+
+    const totalBiaya = (musim.biaya || [])
+      .reduce((a,b)=>a + Number(b.jumlah || 0),0);
+
+    const totalPanen = (musim.panen || [])
+      .reduce((a,b)=>a + Number(b.nilai || 0),0);
 
     const card = document.createElement("section");
     card.className = "card";
     card.innerHTML = `
       <h3>${musim.label}</h3>
+      <p class="muted">${musim.lokasi}</p>
+
       <div class="grid-3">
         <div class="stat">
           <small>Modal</small>
-          <strong>Rp ${format(totalModal)}</strong>
+          <strong>Rp ${rupiah(totalModal)}</strong>
         </div>
         <div class="stat">
           <small>Biaya</small>
-          <strong>Rp ${format(totalBiaya)}</strong>
+          <strong>Rp ${rupiah(totalBiaya)}</strong>
         </div>
         <div class="stat">
           <small>Omzet Panen</small>
-          <strong>Rp ${format(totalPanen)}</strong>
+          <strong>Rp ${rupiah(totalPanen)}</strong>
         </div>
       </div>
     `;
@@ -95,21 +115,24 @@ const PER_PAGE = 5;
 let currentPage = 1;
 let panenGlobal = [];
 
-function ambilPanen() {
+function kumpulkanPanen() {
+  panenGlobal = [];
+
   musimList.forEach(musim => {
     (musim.panen || []).forEach(p => {
       panenGlobal.push({
         tanggal: p.tanggal,
-        nama: p.nama || p.komoditas,
-        qty: p.qty || 0,
-        satuan: p.satuan || "kg",
-        nilai: p.nilai || 0,
-        musim: musim.label
+        komoditas: p.komoditas,
+        qty: p.qty,
+        satuan: p.satuan,
+        nilai: p.nilai,
+        musim: musim.label,
+        bonus: p.bonusPanen || null
       });
     });
   });
 
-  panenGlobal.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+  panenGlobal.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
 }
 
 function renderPanen(page = 1) {
@@ -125,14 +148,24 @@ function renderPanen(page = 1) {
 
   slice.forEach(p => {
     const div = document.createElement("div");
-    div.className = "panen-card";
+    div.className = "riwayat-item";
     div.innerHTML = `
-      <strong>${p.nama}</strong>
-      <div class="muted">
-        📆 ${p.tanggal} · ${p.qty} ${p.satuan} · ${p.musim}
-      </div>
-      <div class="nilai">
-        Rp ${format(p.nilai)}
+      <div class="riwayat-date">${tanggalIndo(p.tanggal)}</div>
+      <div>
+        <strong>${p.komoditas}</strong><br>
+        <span class="muted">
+          ${p.qty} ${p.satuan} · ${p.musim}
+        </span>
+        <div class="big-number success" style="font-size:1.2rem;margin-top:4px">
+          Rp ${rupiah(p.nilai)}
+        </div>
+        ${
+          p.bonus
+            ? `<div class="muted" style="font-size:.8rem;margin-top:4px">
+                🎁 Bonus: Rp ${rupiah(p.bonus.total)} · ${p.bonus.anggota.join(", ")}
+              </div>`
+            : ""
+        }
       </div>
     `;
     box.appendChild(div);
@@ -157,7 +190,7 @@ function renderPanen(page = 1) {
    INIT
 ================================ */
 renderRingkasanMusim();
-ambilPanen();
+kumpulkanPanen();
 renderPanen(1);
 </script>
 
