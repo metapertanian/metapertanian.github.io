@@ -11,9 +11,13 @@
 </head>
 <body>
 
+<script>
+  renderNavbar("input", "private");
+</script>
+
 <main class="container">
   <h1>🧾 Input Data Lahan</h1>
-  <p class="muted">Satu alat untuk semua lahan (RISMA · UMI · UMI 2)</p>
+  <p class="muted">Satu alat untuk semua lahan</p>
 
   <!-- PILIH LAHAN -->
   <section class="card">
@@ -21,8 +25,8 @@
       <label>Pilih Lahan</label>
       <select id="lahan">
         <option value="rismafarm">RISMA FARM</option>
-        <option value="umi">UMI</option>
-        <option value="umi2">UMI 2</option>
+        <option value="umi">UMUM</option>
+
       </select>
     </div>
   </section>
@@ -48,12 +52,17 @@
 
     <div class="form-row">
       <label>Keterangan / Komoditas</label>
-      <input type="text" id="nama" placeholder="Contoh: Cabai / Pupuk dasar">
+      <input type="text" id="nama">
     </div>
 
     <div class="form-row">
       <label>Jumlah / Nilai (Rp)</label>
       <input type="number" id="nilai">
+    </div>
+
+    <div class="form-row">
+      <label>Link Bukti (opsional)</label>
+      <input type="text" id="bukti" placeholder="Pisahkan dengan koma">
     </div>
   </section>
 
@@ -61,7 +70,7 @@
   <section class="card" id="panenBox" style="display:none">
     <div class="form-row">
       <label>Berat Panen</label>
-      <input type="number" id="qty" placeholder="Contoh: 400">
+      <input type="number" id="qty">
     </div>
 
     <div class="form-row">
@@ -74,11 +83,11 @@
 
     <div class="form-row">
       <label>Biaya Panen</label>
-      <input type="number" id="biayaPanen" placeholder="Opsional">
+      <input type="number" id="biayaPanen">
     </div>
   </section>
 
-  <!-- BONUS PANEN (KHUSUS RISMA FARM) -->
+  <!-- BONUS PANEN -->
   <section class="card" id="bonusBox" style="display:none">
     <h3>🎁 Bonus Panen (RISMA FARM)</h3>
 
@@ -100,16 +109,22 @@
 
   <!-- OUTPUT -->
   <section class="card">
-    <h3>Hasil (salin ke file lahan)</h3>
-    <pre id="output">// hasil muncul di sini</pre>
-    <button class="btn-secondary" onclick="salin()">📋 Salin</button>
+    <h3>📄 Kode untuk lahan.js</h3>
+    <pre id="outputLahan">// -</pre>
+    <button class="btn-secondary" onclick="salin('outputLahan')">📋 Salin</button>
+  </section>
+
+  <section class="card">
+    <h3>🏦 Kode untuk kas-bank-risma.js</h3>
+    <pre id="outputKas">// -</pre>
+    <button class="btn-secondary" onclick="salin('outputKas')">📋 Salin</button>
   </section>
 
 </main>
 
 <script>
 /* =============================
-   INIT
+   INIT ANGGOTA
 ============================= */
 const anggotaBox = document.getElementById("listAnggota");
 anggota.forEach(a => {
@@ -133,102 +148,95 @@ function toggleJenis() {
   document.getElementById("bonusBox").style.display =
     (jenis === "panen" && lahan === "rismafarm") ? "block" : "none";
 }
-
 document.getElementById("lahan").addEventListener("change", toggleJenis);
 
 /* =============================
-   GENERATOR
+   UTIL
+============================= */
+function kasId(tanggal) {
+  return `KAS-${tanggal}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
+function parseBukti(v) {
+  if (!v) return null;
+  const a = v.split(",").map(x => x.trim()).filter(Boolean);
+  return a.length === 1 ? a[0] : a;
+}
+
+/* =============================
+   GENERATE
 ============================= */
 function generate() {
   const lahan = document.getElementById("lahan").value;
   const jenis = document.getElementById("jenis").value;
   const tanggal = document.getElementById("tanggal").value;
   const nama = document.getElementById("nama").value.trim();
-  const nilai = Number(document.getElementById("nilai").value || 0);
+  const nilai = Number(document.getElementById("nilai").value);
+  const bukti = parseBukti(document.getElementById("bukti").value);
 
-  /* ========= MODAL ========= */
-  if (jenis === "modal") {
-    if (!nama || !nilai) {
-      alert("Nama sumber modal & nilai wajib diisi");
-      return;
-    }
-
-    // nama otomatis jadi key object (aman)
-    const key = nama.toLowerCase().replace(/\s+/g, "_");
-
-    const obj = `modal: {
-  ${key}: ${nilai}
-},`;
-
-    document.getElementById("output").textContent = obj;
-    return;
-  }
-
-  /* ========= BIAYA & PANEN ========= */
-  if (!tanggal || !nama || !nilai) {
-    alert("Data belum lengkap");
-    return;
-  }
-
-  let obj = `{
-  tanggal: "${tanggal}",
-  keterangan: "${nama}",
-  jumlah: ${nilai}`;
-
-  if (jenis === "panen") {
-    const qty = Number(document.getElementById("qty").value || 0);
-    const satuan = document.getElementById("satuan").value;
-    const biayaPanen = Number(document.getElementById("biayaPanen").value || 0);
-
-    if (!qty) {
-      alert("Berat panen wajib diisi");
-      return;
-    }
-
-    obj = `{
+  let lahanObj = `{
   tanggal: "${tanggal}",
   komoditas: "${nama}",
-  qty: ${qty},
-  satuan: "${satuan}",
+  qty: ${Number(document.getElementById("qty").value || 0)},
+  satuan: "${document.getElementById("satuan").value}",
   nilai: ${nilai}`;
 
-    if (biayaPanen > 0) {
-      obj += `,
+  const biayaPanen = Number(document.getElementById("biayaPanen").value || 0);
+  if (biayaPanen) lahanObj += `,
   biayaPanen: ${biayaPanen}`;
-    }
 
-    // BONUS KHUSUS RISMA FARM
-    if (lahan === "rismafarm") {
-      const bonus = Number(document.getElementById("bonusTotal").value || 0);
-      const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
-        .map(cb => cb.value);
+  if (jenis === "panen" && lahan === "rismafarm") {
+    const bonus = Number(document.getElementById("bonusTotal").value || 0);
+    const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
+      .map(cb => cb.value);
 
-      if (bonus > 0 && anggotaDipilih.length > 0) {
-        obj += `,
+    if (bonus && anggotaDipilih.length) {
+      lahanObj += `,
   bonusPanen: {
     total: ${bonus},
     anggota: ${JSON.stringify(anggotaDipilih)}
   }`;
-      }
     }
   }
 
-  obj += `
+  if (bukti) lahanObj += `,
+  bukti: ${JSON.stringify(bukti, null, 2)}`;
+
+  lahanObj += `
 },`;
 
-  document.getElementById("output").textContent = obj;
+  document.getElementById("outputLahan").textContent = lahanObj;
+
+  /* KAS BANK */
+  if (jenis === "panen" && lahan === "rismafarm") {
+    const bonus = Number(document.getElementById("bonusTotal").value || 0);
+    const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
+      .map(cb => cb.value);
+
+    if (bonus && anggotaDipilih.length) {
+      const per = Math.floor(bonus / anggotaDipilih.length);
+      const detail = {};
+      anggotaDipilih.forEach(a => detail[a] = per);
+
+      document.getElementById("outputKas").textContent = `{
+  id: "${kasId(tanggal)}",
+  tanggal: "${tanggal}",
+  tipe: "masuk",
+  kategori: "Bonus Panen",
+  sumber: "Panen ${nama} RISMA FARM",
+  detail: ${JSON.stringify(detail, null, 2)}${bukti ? `,
+  bukti: ${JSON.stringify(bukti, null, 2)}` : ""}
+},`;
+    }
+  }
 }
 
 /* =============================
    COPY
 ============================= */
-function salin() {
-  const teks = document.getElementById("output").textContent;
-  if (!teks || teks.includes("hasil")) return;
-
-  navigator.clipboard.writeText(teks).then(() => {
-    alert("Kode berhasil disalin");
-  });
+function salin(id) {
+  navigator.clipboard.writeText(
+    document.getElementById(id).textContent
+  ).then(() => alert("Berhasil disalin"));
 }
 </script>
 
