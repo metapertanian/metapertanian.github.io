@@ -34,10 +34,25 @@
   <!-- RINGKASAN MUSIM -->
   <section id="ringkasanMusim"></section>
 
-  <!-- RIWAYAT PANEN -->
+  <!-- LABA & BAGI HASIL -->
+  <section id="labaSection"></section>
+
+  <!-- TABEL BIAYA -->
   <section class="card">
-    <h2>🌽 Riwayat Panen</h2>
-    <div id="riwayatPanen"></div>
+    <h2>💸 Tabel Biaya</h2>
+    <div id="tabelBiaya"></div>
+  </section>
+
+  <!-- TABEL PANEN -->
+  <section class="card">
+    <h2>🌾 Panen per Komoditas</h2>
+    <div id="tabelPanen"></div>
+  </section>
+
+  <!-- RIWAYAT -->
+  <section class="card" id="riwayatSection">
+    <h2>📜 Riwayat Transaksi</h2>
+    <div id="riwayatTransaksi"></div>
     <div class="pagination" id="pagination"></div>
   </section>
 
@@ -47,142 +62,155 @@
 /* ===============================
    UTIL
 ================================ */
-function rupiah(n) {
-  return Number(n || 0).toLocaleString("id-ID");
+function rupiah(n){
+  return Number(n||0).toLocaleString("id-ID");
 }
-
-function tanggalIndo(t) {
-  return new Date(t).toLocaleDateString("id-ID", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  });
+function tgl(t){
+  return new Date(t).toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
 }
 
 /* ===============================
-   AMBIL MUSIM (AMAN)
+   DATA MUSIM
 ================================ */
 const musimList = Object.values(RISMA_FARM.musim || {});
+const musim = musimList[0]; // fokus 1 musim dulu
 
 /* ===============================
-   RINGKASAN MUSIM
+   RINGKASAN + LABA
 ================================ */
-function renderRingkasanMusim() {
-  const box = document.getElementById("ringkasanMusim");
-  box.innerHTML = "";
+function renderRingkasanMusim(){
+  const totalModal = Object.values(musim.modal||{}).reduce((a,b)=>a+Number(b),0);
+  const totalBiaya = (musim.biaya||[]).reduce((a,b)=>a+Number(b.jumlah||0),0);
+  const totalOmzet = (musim.panen||[]).reduce((a,b)=>a+Number(b.nilai||0),0);
+  const totalBiayaPanen = (musim.panen||[]).reduce((a,b)=>a+Number(b.biayaPanen||0),0);
 
-  musimList.forEach(musim => {
+  const labaBersih = totalOmzet - totalBiaya - totalBiayaPanen;
 
-    const totalModal = Object.values(musim.modal || {})
-      .map(v => Number(v))
-      .reduce((a,b)=>a+b,0);
-
-    const totalBiaya = (musim.biaya || [])
-      .reduce((a,b)=>a + Number(b.jumlah || 0),0);
-
-    const totalPanen = (musim.panen || [])
-      .reduce((a,b)=>a + Number(b.nilai || 0),0);
-
-    const card = document.createElement("section");
-    card.className = "card";
-    card.innerHTML = `
+  document.getElementById("ringkasanMusim").innerHTML = `
+    <section class="card">
       <h3>${musim.label}</h3>
-      <p class="muted">${musim.lokasi}</p>
-
       <div class="grid-3">
-        <div class="stat">
-          <small>Modal</small>
-          <strong>Rp ${rupiah(totalModal)}</strong>
-        </div>
-        <div class="stat">
-          <small>Biaya</small>
-          <strong>Rp ${rupiah(totalBiaya)}</strong>
-        </div>
-        <div class="stat">
-          <small>Omzet Panen</small>
-          <strong>Rp ${rupiah(totalPanen)}</strong>
-        </div>
+        <div class="stat"><small>Modal</small><strong>Rp ${rupiah(totalModal)}</strong></div>
+        <div class="stat"><small>Biaya</small><strong>Rp ${rupiah(totalBiaya)}</strong></div>
+        <div class="stat"><small>Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
       </div>
-    `;
-    box.appendChild(card);
-  });
+    </section>
+  `;
+
+  const skema = musim.skema.pembagian;
+  document.getElementById("labaSection").innerHTML = `
+    <section class="card">
+      <h2>📊 Laba & Bagi Hasil</h2>
+      <div class="grid-3">
+        <div class="stat"><small>Laba Bersih</small><strong class="success">Rp ${rupiah(labaBersih)}</strong></div>
+        <div class="stat"><small>Pelaksana</small><strong>Rp ${rupiah(labaBersih*skema.pelaksana/100)}</strong></div>
+        <div class="stat"><small>RISMA</small><strong>Rp ${rupiah(labaBersih*skema.risma/100)}</strong></div>
+      </div>
+    </section>
+  `;
 }
 
 /* ===============================
-   PANEN + PAGINATION
+   TABEL BIAYA
+================================ */
+function renderTabelBiaya(){
+  let total = 0;
+  let html = `<table class="table">
+    <tr><th>No</th><th>Keterangan</th><th>Harga</th></tr>`;
+  musim.biaya.forEach((b,i)=>{
+    total += b.jumlah;
+    html += `<tr>
+      <td>${i+1}</td>
+      <td>${b.keterangan}</td>
+      <td>Rp ${rupiah(b.jumlah)}</td>
+    </tr>`;
+  });
+  html += `<tr class="total">
+    <td colspan="2"><strong>Total</strong></td>
+    <td><strong>Rp ${rupiah(total)}</strong></td>
+  </tr></table>`;
+  document.getElementById("tabelBiaya").innerHTML = html;
+}
+
+/* ===============================
+   TABEL PANEN
+================================ */
+function renderTabelPanen(){
+  let html = `<table class="table">
+    <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
+  musim.panen.forEach((p,i)=>{
+    const surplus = p.nilai - (p.biayaPanen||0);
+    html += `<tr>
+      <td>${i+1}</td>
+      <td>${tgl(p.tanggal)}</td>
+      <td>Rp ${rupiah(surplus)}</td>
+    </tr>`;
+  });
+  html += `</table>`;
+  document.getElementById("tabelPanen").innerHTML = html;
+}
+
+/* ===============================
+   RIWAYAT GABUNGAN
 ================================ */
 const PER_PAGE = 5;
-let currentPage = 1;
-let panenGlobal = [];
+let transaksi = [];
 
-function kumpulkanPanen() {
-  panenGlobal = [];
+function kumpulkanRiwayat(){
+  transaksi = [];
 
-  musimList.forEach(musim => {
-    (musim.panen || []).forEach(p => {
-      panenGlobal.push({
-        tanggal: p.tanggal,
-        komoditas: p.komoditas,
-        qty: p.qty,
-        satuan: p.satuan,
-        nilai: p.nilai,
-        musim: musim.label,
-        bonus: p.bonusPanen || null
-      });
+  musim.biaya.forEach(b=>{
+    transaksi.push({
+      tanggal:b.tanggal,
+      jenis:"Biaya",
+      ket:b.keterangan,
+      nilai:-b.jumlah
     });
   });
 
-  panenGlobal.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
-}
-
-function renderPanen(page = 1) {
-  currentPage = page;
-  const box = document.getElementById("riwayatPanen");
-  const pag = document.getElementById("pagination");
-
-  box.innerHTML = "";
-  pag.innerHTML = "";
-
-  const start = (page - 1) * PER_PAGE;
-  const slice = panenGlobal.slice(start, start + PER_PAGE);
-
-  slice.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "riwayat-item";
-    div.innerHTML = `
-      <div class="riwayat-date">${tanggalIndo(p.tanggal)}</div>
-      <div>
-        <strong>${p.komoditas}</strong><br>
-        <span class="muted">
-          ${p.qty} ${p.satuan} · ${p.musim}
-        </span>
-        <div class="big-number success" style="font-size:1.2rem;margin-top:4px">
-          Rp ${rupiah(p.nilai)}
-        </div>
-        ${
-          p.bonus
-            ? `<div class="muted" style="font-size:.8rem;margin-top:4px">
-                🎁 Bonus: Rp ${rupiah(p.bonus.total)} · ${p.bonus.anggota.join(", ")}
-              </div>`
-            : ""
-        }
-      </div>
-    `;
-    box.appendChild(div);
+  musim.panen.forEach(p=>{
+    const surplus = p.nilai - (p.biayaPanen||0);
+    transaksi.push({
+      tanggal:p.tanggal,
+      jenis:"Panen",
+      ket:`${p.komoditas} | Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}`,
+      nilai:surplus
+    });
   });
 
-  const totalPage = Math.ceil(panenGlobal.length / PER_PAGE);
-  if (totalPage <= 1) return;
+  transaksi.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
+}
 
-  for (let i = 1; i <= totalPage; i++) {
-    const btn = document.createElement("button");
-    btn.textContent = i;
-    if (i === page) btn.classList.add("active");
-    btn.onclick = () => {
-      renderPanen(i);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+function renderRiwayat(page=1){
+  const box = document.getElementById("riwayatTransaksi");
+  const pag = document.getElementById("pagination");
+  box.innerHTML = ""; pag.innerHTML="";
+
+  const slice = transaksi.slice((page-1)*PER_PAGE, page*PER_PAGE);
+  slice.forEach(t=>{
+    box.innerHTML += `
+      <div class="riwayat-item">
+        <div class="riwayat-date">${tgl(t.tanggal)}</div>
+        <div>
+          <strong>${t.jenis}</strong>
+          <div class="muted">${t.ket}</div>
+          <div class="${t.nilai>=0?'success':'danger'}">
+            Rp ${rupiah(t.nilai)}
+          </div>
+        </div>
+      </div>`;
+  });
+
+  const totalPage = Math.min(5, Math.ceil(transaksi.length/PER_PAGE));
+  for(let i=1;i<=totalPage;i++){
+    const b=document.createElement("button");
+    b.textContent=i;
+    if(i===page) b.classList.add("active");
+    b.onclick=()=>{
+      renderRiwayat(i);
+      document.getElementById("riwayatSection").scrollIntoView({behavior:"smooth"});
     };
-    pag.appendChild(btn);
+    pag.appendChild(b);
   }
 }
 
@@ -190,8 +218,10 @@ function renderPanen(page = 1) {
    INIT
 ================================ */
 renderRingkasanMusim();
-kumpulkanPanen();
-renderPanen(1);
+renderTabelBiaya();
+renderTabelPanen();
+kumpulkanRiwayat();
+renderRiwayat(1);
 </script>
 
 </body>
