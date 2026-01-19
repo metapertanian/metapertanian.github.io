@@ -4,13 +4,20 @@
 :root {
   --primary: #2f855a;
   --primary-dark: #276749;
-  --secondary: #edf2f7;
   --accent: #38a169;
+
+  --bg: #f7fafc;
+  --secondary: #edf2f7;
+  --card: #ffffff;
+
   --text: #2d3748;
   --muted: #718096;
-  --card: #ffffff;
-  --shadow: 0 10px 30px rgba(0,0,0,0.08);
+
+  --success: #38a169;
+  --danger: #e53e3e;
+
   --radius: 14px;
+  --shadow: 0 12px 32px rgba(0,0,0,0.08);
 }
 
 * {
@@ -21,21 +28,19 @@
 }
 
 body {
-  background: linear-gradient(135deg, #f7fafc, #e6fffa);
+  background: linear-gradient(160deg, #f7fafc, #e6fffa);
   color: var(--text);
-  padding-top: 70px; /* ruang navbar */
+  padding-top: 72px;
 }
 
 /* =========================
-   NAVBAR FIXED
+   NAVBAR
 ========================= */
 .navbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: 64px;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.85);
   backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
   display: flex;
@@ -60,7 +65,7 @@ body {
 }
 
 /* =========================
-   MENU DROPDOWN
+   NAV DROPDOWN
 ========================= */
 .nav-menu {
   position: fixed;
@@ -69,9 +74,8 @@ body {
   background: var(--card);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  overflow: hidden;
   width: 220px;
-  transform: scale(0.9);
+  transform: scale(0.95);
   opacity: 0;
   pointer-events: none;
   transition: 0.25s ease;
@@ -88,8 +92,7 @@ body {
   padding: 14px 18px;
   color: var(--text);
   text-decoration: none;
-  font-weight: 500;
-  transition: 0.2s;
+  font-weight: 600;
 }
 
 .nav-menu a:hover {
@@ -101,19 +104,20 @@ body {
    LAYOUT
 ========================= */
 .container {
-  max-width: 720px;
+  max-width: 780px;
   margin: auto;
   padding: 20px;
 }
 
 h1 {
+  font-size: 1.9rem;
   margin-bottom: 6px;
-  font-size: 1.8rem;
 }
 
 .muted {
   color: var(--muted);
-  margin-bottom: 20px;
+  margin-bottom: 22px;
+  font-size: 0.95rem;
 }
 
 /* =========================
@@ -129,14 +133,81 @@ h1 {
 }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   BANK HEADER
+========================= */
+.bank-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.bank-logo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.bank-title {
+  margin-top: 12px;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+/* =========================
+   SUMMARY
+========================= */
+.bank-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.big-number {
+  font-size: 1.7rem;
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.big-number.success {
+  color: var(--success);
+}
+
+.big-number.danger {
+  color: var(--danger);
+}
+
+/* =========================
+   TABLE
+========================= */
+.bank-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.bank-table th {
+  background: var(--secondary);
+  padding: 10px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.bank-table td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bank-table tr:last-child td {
+  border-bottom: none;
 }
 
 /* =========================
@@ -148,24 +219,30 @@ h1 {
   margin-bottom: 14px;
 }
 
+.form-row.inline {
+  flex-direction: row;
+  gap: 8px;
+}
+
 label {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   margin-bottom: 6px;
   color: var(--muted);
 }
 
 input,
-select {
+select,
+textarea {
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid #e2e8f0;
   font-size: 0.95rem;
-  transition: 0.2s;
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 2px rgba(47,133,90,0.15);
@@ -196,35 +273,83 @@ select:focus {
   background: linear-gradient(135deg, var(--primary), var(--accent));
   border: none;
   color: #fff;
-  font-weight: 700;
-  border-radius: 12px;
+  font-weight: 800;
+  border-radius: 14px;
   cursor: pointer;
-  transition: 0.25s;
 }
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(56,161,105,0.35);
+  box-shadow: 0 8px 24px rgba(56,161,105,0.35);
 }
 
 .btn-secondary {
-  margin-top: 10px;
   padding: 10px 14px;
   background: var(--secondary);
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 /* =========================
-   OUTPUT
+   RIWAYAT
+========================= */
+.riwayat-item {
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--secondary);
+  margin-bottom: 10px;
+}
+
+.riwayat-date {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.riwayat-item .masuk {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.riwayat-item .keluar {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+/* =========================
+   PAGINATION
+========================= */
+.pagination {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background: var(--secondary);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.pagination button.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* =========================
+   CODE OUTPUT
 ========================= */
 pre {
   background: #1a202c;
   color: #e2e8f0;
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow-x: auto;
   font-size: 0.85rem;
 }
