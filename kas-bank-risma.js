@@ -1,30 +1,32 @@
+/* =========================================================
+   KAS BANK RISMA
+   INPUT DATA MASUK / KELUAR
+========================================================= */
+
 function kasId(tanggal) {
   return `KAS-${tanggal}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 }
 
-/* =========================================================
-   DATA KAS BANK RISMA (PER TAHUN)
-   👉 PERIODE TERBARU DI PALING ATAS
-========================================================= */
 const KAS_BANK_RISMA = {
 
   /* =============================
-     TAHUN 2026
+     TAHUN 2026 (TERBARU DI ATAS)
   ============================= */
   2026: [
 
     {
       id: kasId("2026-01-16"),
       tanggal: "2026-01-16",
-      tipe: "masuk",                 // masuk | keluar
+      tipe: "masuk", // masuk | keluar
       kategori: "Bonus Panen",
-      sumber: "Panen Cabai",
+      sumber: "Panen Cabai RISMA FARM",
       detail: {
         Pulung: 12500,
         Tama: 12500,
         Putri: 12500,
         Nadia: 12500
-      }
+      },
+      bukti: "https://imgur.com/bonus-cabai-16jan.jpg"
     },
 
     {
@@ -36,7 +38,11 @@ const KAS_BANK_RISMA = {
       detail: {
         Pulung: 20000,
         Putri: 10000
-      }
+      },
+      bukti: [
+        "https://imgur.com/tarik-pulung.jpg",
+        "https://imgur.com/tarik-putri.jpg"
+      ]
     }
 
   ],
@@ -51,11 +57,12 @@ const KAS_BANK_RISMA = {
       tanggal: "2025-12-30",
       tipe: "masuk",
       kategori: "Bonus Panen",
-      sumber: "Panen Cabai Awal",
+      sumber: "Panen Awal",
       detail: {
         Faisol: 20000,
         Nadia: 20000
       }
+      // bukti boleh tidak diisi
     }
 
   ]
