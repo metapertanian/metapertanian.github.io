@@ -53,7 +53,6 @@
         <option value="Bonus Panen">Bonus Panen</option>
         <option value="Operasional">Operasional</option>
         <option value="Sosial">Sosial</option>
-        
       </select>
     </div>
 
@@ -120,13 +119,27 @@ function onTipeChange() {
 }
 
 /* =============================
+   TEMPLATE SELECT ANGGOTA
+============================= */
+function anggotaSelect(selected = "") {
+  return `
+    <select>
+      <option value="">Pilih Anggota</option>
+      ${anggota.map(a =>
+        `<option value="${a}" ${a === selected ? "selected" : ""}>${a}</option>`
+      ).join("")}
+    </select>
+  `;
+}
+
+/* =============================
    BARIS ANGGOTA
 ============================= */
 function tambahBaris(nama = "", nilai = "") {
   const row = document.createElement("div");
   row.className = "form-row inline";
   row.innerHTML = `
-    <input placeholder="Nama" value="${nama}">
+    ${anggotaSelect(nama)}
     <input type="number" placeholder="Nominal" value="${nilai}">
     <button onclick="this.parentElement.remove()">❌</button>
   `;
@@ -144,6 +157,7 @@ function ambilSemuaSaldo() {
 
   if (!window.BANK_RISMA_DATA) {
     alert("Data bank belum tersedia");
+    tambahBaris();
     return;
   }
 
@@ -175,9 +189,9 @@ function simpanKas() {
 
   const detail = {};
   [...list.children].forEach(row => {
-    const [nama, nilai] = row.querySelectorAll("input");
-    if (nama.value && nilai.value) {
-      detail[nama.value] = Number(nilai.value);
+    const [select, input] = row.querySelectorAll("select, input");
+    if (select.value && input.value) {
+      detail[select.value] = Number(input.value);
     }
   });
 
@@ -187,7 +201,7 @@ function simpanKas() {
   }
 
   const buktiRaw = document.getElementById("bukti").value.trim();
-  let bukti = undefined;
+  let bukti;
 
   if (buktiRaw) {
     const arr = buktiRaw.split("\n").filter(Boolean);
