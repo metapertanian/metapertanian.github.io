@@ -355,11 +355,144 @@ pre {
 }
 
 
-.highlight-name {
-  color: #2e7d32;
-  font-weight: 600;
+/* =========================
+   ANIMASI ANGKA (COUNT + FADE)
+========================= */
+
+/* angka besar */
+.big-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.summary-stack .summary-item {
-  margin: 12px 0;
+/* status warna */
+.big-number.success {
+  color: #2f855a;
+}
+
+.big-number.danger {
+  color: #c53030;
+}
+
+/* =========================
+   SUMMARY STACK
+========================= */
+.summary-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+}
+
+.summary-item {
+  width: 100%;
+  text-align: center;
+}
+
+.summary-item small {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}
+
+/* =========================
+   RIWAYAT ITEM ANIMASI
+========================= */
+.riwayat-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffffff, #f7fafc);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  margin-bottom: 12px;
+  animation: fadeSlide 0.6s ease both;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   TANGGAL RIWAYAT
+========================= */
+.riwayat-date {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* =========================
+   FILTER HIGHLIGHT NAMA
+========================= */
+.highlight-name {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* =========================
+   FILTER SELECT
+========================= */
+select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(47,133,90,0.15);
+}
+
+/* =========================
+   PAGINATION
+========================= */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.pagination button {
+  border: none;
+  background: #edf2f7;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagination button.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: #fff;
+}
+
+.pagination button:hover {
+  transform: translateY(-1px);
 }
