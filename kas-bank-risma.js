@@ -31,7 +31,7 @@ const KAS_BANK_RISMA = {
 },
 {
   "id": "KAS-2026-01-20-1768842965866",
-  "tanggal": "2026-01-20",
+  "tanggal": "2026-01-19",
   "tipe": "masuk",
   "kategori": "Tabungan",
   "sumber": "setoran bulan januari 2026",
@@ -53,7 +53,7 @@ const KAS_BANK_RISMA = {
 
     {
   "id": "KAS-2026-01-20-1768843264649",
-  "tanggal": "2026-01-20",
+  "tanggal": "2025-11-15",
   "tipe": "masuk",
   "kategori": "Tabungan",
   "sumber": "setoran bulan januari 2026",
