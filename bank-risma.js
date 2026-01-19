@@ -74,19 +74,10 @@
       <h1 class="bank-title">BANK RISMA</h1>
     </div>
 
-    <section class="bank-summary">
-      <div class="card">
-        <small>Total Saldo</small>
-        <div class="big-number" id="totalMasuk">0</div>
-      </div>
-      <div class="card">
-        <small>Tarik Tunai</small>
-        <div class="big-number danger" id="totalKeluar">0</div>
-      </div>
-      <div class="card">
-        <small>Sisa Saldo</small>
-        <div class="big-number success" id="sisaSaldo">0</div>
-      </div>
+    <!-- SUMMARY MENURUN -->
+    <section class="card" style="text-align:center">
+      <small id="summaryLabel">Total Saldo</small>
+      <div class="big-number success" id="summaryValue">0</div>
     </section>
 
     <section class="card">
@@ -128,22 +119,43 @@
   }
 
   /* =============================
+     ANIMASI SUMMARY BERGANTIAN
+  ============================= */
+  let summaryIndex = 0;
+  function animateSummary(data) {
+    const list = [
+      { label: "Total Saldo", value: data.totalMasuk, cls: "success" },
+      { label: "Tarik Tunai", value: data.totalKeluar, cls: "danger" },
+      { label: "Sisa Saldo", value: data.sisaSaldo, cls: "success" }
+    ];
+
+    const item = list[summaryIndex % list.length];
+    const labelEl = el("summaryLabel");
+    const valueEl = el("summaryValue");
+
+    labelEl.textContent = item.label;
+    valueEl.className = `big-number ${item.cls}`;
+    animate(valueEl, item.value);
+
+    summaryIndex++;
+  }
+
+  /* =============================
      RENDER DATA
   ============================= */
   let currentPage = 1;
   const perPage = 5;
+  let globalData;
 
   function render() {
-    const { tabel, riwayat, totalMasuk, totalKeluar, sisaSaldo } =
-      hitungGlobal();
+    globalData = hitungGlobal();
 
-    animate(el("totalMasuk"), totalMasuk);
-    animate(el("totalKeluar"), totalKeluar);
-    animate(el("sisaSaldo"), sisaSaldo);
+    animateSummary(globalData);
+    setInterval(() => animateSummary(globalData), 3000);
 
     const tbody = el("tabelAnggota");
     tbody.innerHTML = "";
-    tabel.forEach((a, i) => {
+    globalData.tabel.forEach((a, i) => {
       tbody.innerHTML += `
         <tr>
           <td>${i + 1}</td>
@@ -155,7 +167,7 @@
       `;
     });
 
-    renderRiwayat(riwayat);
+    renderRiwayat(globalData.riwayat);
   }
 
   function renderRiwayat(data) {
@@ -166,15 +178,23 @@
     const items = data.slice(start, start + perPage);
 
     items.forEach(r => {
+      const total = Object.values(r.detail).reduce((a,b)=>a+b,0);
+      const anggotaDetail = Object.entries(r.detail)
+        .map(([n,v]) => `${n}: ${v.toLocaleString("id-ID")}`)
+        .join("<br>");
+
       box.innerHTML += `
         <div class="riwayat-item">
           <div class="riwayat-date">${r.tanggal}</div>
-          <div class="riwayat-text">
-            ${r.kategori} – ${r.sumber}<br>
-            <strong class="${r.tipe}">
+          <div>
+            <strong>${r.kategori}</strong> – ${r.sumber}<br>
+            <span class="${r.tipe}">
               ${r.tipe === "masuk" ? "+" : "-"}
-              ${Object.values(r.detail).reduce((a,b)=>a+b,0).toLocaleString("id-ID")}
-            </strong>
+              ${total.toLocaleString("id-ID")}
+            </span>
+            <div class="muted" style="margin-top:6px;font-size:.85rem">
+              ${anggotaDetail}
+            </div>
           </div>
         </div>
       `;
@@ -194,7 +214,7 @@
       if (i === currentPage) b.classList.add("active");
       b.onclick = () => {
         currentPage = i;
-        render();
+        renderRiwayat(globalData.riwayat);
         el("riwayatSection").scrollIntoView({ behavior: "smooth" });
       };
       pag.appendChild(b);
