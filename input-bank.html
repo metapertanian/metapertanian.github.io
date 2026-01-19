@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Input Bank RISMA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- NAVBAR -->
+  <script src="/navbar2.js"></script>
+
+  <!-- DATA -->
+  <script src="/anggota.js"></script>
+  <script src="/kas-bank-risma.js"></script>
+  <script src="/bank-risma.js"></script>
+</head>
+<body>
+
+<script>
+  renderNavbar("bank", "admin");
+</script>
+
+<main class="container">
+
+<header class="page-header">
+  <h1>✏️ Input Bank RISMA</h1>
+  <p class="muted">Masuk / Keluar · Multi Anggota · Bukti Opsional</p>
+</header>
+
+<section class="card">
+
+  <div class="form-grid">
+
+    <div class="form-row">
+      <label>Tanggal</label>
+      <input type="date" id="tanggal">
+    </div>
+
+    <div class="form-row">
+      <label>Tipe</label>
+      <select id="tipe" onchange="onTipeChange()">
+        <option value="masuk">Masuk</option>
+        <option value="keluar">Keluar</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Kategori</label>
+      <select id="kategori">
+        <option value="Tarik Tunai">Tarik Tunai</option>
+        <option value="Tabungan">Tabungan</option>
+        <option value="Bonus Panen">Bonus Panen</option>
+        <option value="Operasional">Operasional</option>
+        <option value="Sosial">Sosial</option>
+        
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Sumber / Keterangan</label>
+      <input type="text" id="sumber" placeholder="Panen Cabai RISMA FARM">
+    </div>
+
+  </div>
+
+</section>
+
+<section class="card">
+  <h3>Detail Anggota</h3>
+
+  <button id="btnAmbilSemua"
+    class="btn-secondary"
+    style="display:none;margin-bottom:10px"
+    onclick="ambilSemuaSaldo()">
+    ⚡ Ambil Semua Saldo Anggota
+  </button>
+
+  <div id="listAnggota"></div>
+
+  <button class="btn-secondary" onclick="tambahBaris()">
+    ➕ Tambah Anggota
+  </button>
+</section>
+
+<section class="card">
+  <h3>Bukti (Opsional)</h3>
+  <textarea id="bukti" rows="3"
+    placeholder="Pisahkan dengan enter jika lebih dari satu link"></textarea>
+</section>
+
+<button class="btn-primary" onclick="simpanKas()">
+  💾 Simpan Data
+</button>
+
+<pre id="hasil" class="code-preview"></pre>
+
+</main>
+
+<script>
+/* =============================
+   UTIL ID
+============================= */
+function kasId(tanggal) {
+  return `KAS-${tanggal}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+}
+
+/* =============================
+   STATE
+============================= */
+const list = document.getElementById("listAnggota");
+
+/* =============================
+   EVENT TIPE
+============================= */
+function onTipeChange() {
+  const tipe = document.getElementById("tipe").value;
+  document.getElementById("btnAmbilSemua").style.display =
+    tipe === "keluar" ? "inline-block" : "none";
+}
+
+/* =============================
+   BARIS ANGGOTA
+============================= */
+function tambahBaris(nama = "", nilai = "") {
+  const row = document.createElement("div");
+  row.className = "form-row inline";
+  row.innerHTML = `
+    <input placeholder="Nama" value="${nama}">
+    <input type="number" placeholder="Nominal" value="${nilai}">
+    <button onclick="this.parentElement.remove()">❌</button>
+  `;
+  list.appendChild(row);
+}
+
+// default 1 baris
+tambahBaris();
+
+/* =============================
+   AMBIL SEMUA SALDO
+============================= */
+function ambilSemuaSaldo() {
+  list.innerHTML = "";
+
+  if (!window.BANK_RISMA_DATA) {
+    alert("Data bank belum tersedia");
+    return;
+  }
+
+  BANK_RISMA_DATA.tabelAnggota.forEach(a => {
+    if (a.saldo > 0) {
+      tambahBaris(a.nama, a.saldo);
+    }
+  });
+
+  if (!list.children.length) {
+    alert("Semua saldo sudah 0");
+    tambahBaris();
+  }
+}
+
+/* =============================
+   SIMPAN DATA
+============================= */
+function simpanKas() {
+  const tanggal = document.getElementById("tanggal").value;
+  const tipe = document.getElementById("tipe").value;
+  const kategori = document.getElementById("kategori").value;
+  const sumber = document.getElementById("sumber").value;
+
+  if (!tanggal || !kategori || !sumber) {
+    alert("Tanggal, kategori, dan sumber wajib diisi");
+    return;
+  }
+
+  const detail = {};
+  [...list.children].forEach(row => {
+    const [nama, nilai] = row.querySelectorAll("input");
+    if (nama.value && nilai.value) {
+      detail[nama.value] = Number(nilai.value);
+    }
+  });
+
+  if (!Object.keys(detail).length) {
+    alert("Minimal 1 anggota");
+    return;
+  }
+
+  const buktiRaw = document.getElementById("bukti").value.trim();
+  let bukti = undefined;
+
+  if (buktiRaw) {
+    const arr = buktiRaw.split("\n").filter(Boolean);
+    bukti = arr.length === 1 ? arr[0] : arr;
+  }
+
+  const tahun = tanggal.slice(0,4);
+  if (!KAS_BANK_RISMA[tahun]) KAS_BANK_RISMA[tahun] = [];
+
+  const data = {
+    id: kasId(tanggal),
+    tanggal,
+    tipe,
+    kategori,
+    sumber,
+    detail,
+    bukti
+  };
+
+  // terbaru di atas
+  KAS_BANK_RISMA[tahun].unshift(data);
+
+  document.getElementById("hasil").textContent =
+`// Salin dan tempel ke kas-bank-risma.js
+
+${JSON.stringify(data, null, 2)}`;
+
+  alert("Data siap disalin");
+}
+</script>
+
+</body>
+</html>
