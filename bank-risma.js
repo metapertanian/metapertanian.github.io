@@ -24,6 +24,8 @@
     });
   };
 
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+
   /* =============================
      GABUNG SEMUA TRANSAKSI
   ============================= */
@@ -32,22 +34,15 @@
     .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
   /* =============================
-     HITUNG GLOBAL
+     HITUNG GLOBAL (TABEL TIDAK TERFILTER)
   ============================= */
-  function hitungGlobal(filterAnggota = null) {
+  function hitungGlobal() {
     const anggota = {};
     let totalMasuk = 0;
     let totalKeluar = 0;
 
-    const riwayat = semuaTransaksi.filter(trx => {
-      if (!filterAnggota) return true;
-      return trx.detail && trx.detail[filterAnggota];
-    });
-
-    riwayat.forEach(trx => {
+    semuaTransaksi.forEach(trx => {
       Object.entries(trx.detail || {}).forEach(([nama, nilai]) => {
-        if (filterAnggota && nama !== filterAnggota) return;
-
         if (!anggota[nama]) {
           anggota[nama] = { masuk: 0, keluar: 0 };
         }
@@ -73,7 +68,7 @@
 
     return {
       tabel,
-      riwayat,
+      riwayat: semuaTransaksi,
       totalMasuk,
       totalKeluar,
       sisaSaldo: totalMasuk - totalKeluar
@@ -90,8 +85,7 @@
       <h1 class="bank-title">BANK RISMA</h1>
     </div>
 
-    <!-- SUMMARY MENURUN -->
-    <section class="card summary-stack">
+    <section class="card summary-stack" style="text-align:center">
       <div class="summary-item">
         <small>Total Saldo</small>
         <div class="big-number success" id="totalMasuk">0</div>
@@ -107,7 +101,7 @@
     </section>
 
     <section class="card">
-      <label><strong>Filter Anggota</strong></label>
+      <label><strong>Filter Riwayat Anggota</strong></label>
       <select id="filterAnggota">
         <option value="">Semua Anggota</option>
       </select>
@@ -136,17 +130,17 @@
   `;
 
   /* =============================
-     ANIMASI ANGKA (BERGANTIAN HITUNG)
+     ANIMASI ANGKA (LEMBUT & LAMBAT)
   ============================= */
   function animate(elm, end, delay = 0) {
     setTimeout(() => {
-      let start = 0;
-      const dur = 1000;
+      const dur = 1800;
       const t0 = performance.now();
 
       function step(t) {
         const p = Math.min((t - t0) / dur, 1);
-        elm.textContent = Math.floor(p * end).toLocaleString("id-ID");
+        const v = Math.floor(easeOut(p) * end);
+        elm.textContent = v.toLocaleString("id-ID");
         if (p < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
@@ -161,12 +155,11 @@
   let globalData;
 
   function render() {
-    const filter = el("filterAnggota").value || null;
-    globalData = hitungGlobal(filter);
+    globalData = hitungGlobal();
 
     animate(el("totalMasuk"), globalData.totalMasuk, 0);
-    animate(el("totalKeluar"), globalData.totalKeluar, 600);
-    animate(el("sisaSaldo"), globalData.sisaSaldo, 1200);
+    animate(el("totalKeluar"), globalData.totalKeluar, 800);
+    animate(el("sisaSaldo"), globalData.sisaSaldo, 1600);
 
     const tbody = el("tabelAnggota");
     tbody.innerHTML = "";
@@ -182,20 +175,29 @@
       `;
     });
 
-    renderRiwayat(globalData.riwayat);
+    renderRiwayat();
   }
 
-  function renderRiwayat(data) {
+  function renderRiwayat() {
     const box = el("riwayat");
     box.innerHTML = "";
+
+    const filter = el("filterAnggota").value;
+    const data = filter
+      ? globalData.riwayat.filter(r => r.detail && r.detail[filter])
+      : globalData.riwayat;
 
     const start = (currentPage - 1) * perPage;
     const items = data.slice(start, start + perPage);
 
     items.forEach(r => {
       const total = Object.values(r.detail).reduce((a,b)=>a+b,0);
+
       const anggotaDetail = Object.entries(r.detail)
-        .map(([n,v]) => `${n}: ${v.toLocaleString("id-ID")}`)
+        .map(([n,v]) => {
+          const cls = filter && n === filter ? "highlight-name" : "muted";
+          return `<span class="${cls}">${n}: ${v.toLocaleString("id-ID")}</span>`;
+        })
         .join("<br>");
 
       box.innerHTML += `
@@ -207,7 +209,7 @@
               ${r.tipe === "masuk" ? "+" : "-"}
               ${total.toLocaleString("id-ID")}
             </span>
-            <div class="muted" style="margin-top:6px;font-size:.85rem">
+            <div style="margin-top:6px;font-size:.85rem">
               ${anggotaDetail}
             </div>
           </div>
@@ -229,7 +231,7 @@
       if (i === currentPage) b.classList.add("active");
       b.onclick = () => {
         currentPage = i;
-        renderRiwayat(globalData.riwayat);
+        renderRiwayat();
         el("riwayatSection").scrollIntoView({ behavior: "smooth" });
       };
       pag.appendChild(b);
@@ -255,7 +257,7 @@
 
   filterSelect.onchange = () => {
     currentPage = 1;
-    render();
+    renderRiwayat();
   };
 
   render();
