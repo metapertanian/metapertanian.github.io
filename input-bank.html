@@ -13,7 +13,6 @@
   <!-- DATA -->
   <script src="/anggota.js"></script>
   <script src="/kas-bank-risma.js"></script>
-  <script src="/bank-risma.js"></script>
 </head>
 <body>
 
@@ -25,11 +24,10 @@
 
 <header class="page-header">
   <h1>✏️ Input Bank RISMA</h1>
-  <p class="muted">Masuk / Keluar · Multi Anggota · Bukti Opsional</p>
+  <p class="muted">Masuk / Keluar · Multi Anggota · Otomatis dari Data Bank</p>
 </header>
 
 <section class="card">
-
   <div class="form-grid">
 
     <div class="form-row">
@@ -48,8 +46,8 @@
     <div class="form-row">
       <label>Kategori</label>
       <select id="kategori">
-        <option value="Tarik Tunai">Tarik Tunai</option>
         <option value="Tabungan">Tabungan</option>
+        <option value="Tarik Tunai">Tarik Tunai</option>
         <option value="Bonus Panen">Bonus Panen</option>
         <option value="Operasional">Operasional</option>
         <option value="Sosial">Sosial</option>
@@ -62,7 +60,6 @@
     </div>
 
   </div>
-
 </section>
 
 <section class="card">
@@ -98,16 +95,32 @@
 
 <script>
 /* =============================
-   UTIL ID
+   UTIL
 ============================= */
 function kasId(tanggal) {
-  return `KAS-${tanggal}-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+  return `KAS-${tanggal}-${Date.now()}`;
 }
 
-/* =============================
-   STATE
-============================= */
 const list = document.getElementById("listAnggota");
+
+/* =============================
+   HITUNG SALDO AKTIF
+   (LOGIC SAMA DENGAN bank-risma.js)
+============================= */
+function hitungSaldoAktif() {
+  const map = {};
+
+  Object.values(KAS_BANK_RISMA).forEach(dataTahun => {
+    dataTahun.forEach(trx => {
+      Object.entries(trx.detail || {}).forEach(([nama, nilai]) => {
+        if (!map[nama]) map[nama] = 0;
+        map[nama] += trx.tipe === "masuk" ? nilai : -nilai;
+      });
+    });
+  });
+
+  return map;
+}
 
 /* =============================
    EVENT TIPE
@@ -119,34 +132,26 @@ function onTipeChange() {
 }
 
 /* =============================
-   TEMPLATE SELECT ANGGOTA
-============================= */
-function anggotaSelect(selected = "") {
-  return `
-    <select>
-      <option value="">Pilih Anggota</option>
-      ${anggota.map(a =>
-        `<option value="${a}" ${a === selected ? "selected" : ""}>${a}</option>`
-      ).join("")}
-    </select>
-  `;
-}
-
-/* =============================
    BARIS ANGGOTA
 ============================= */
 function tambahBaris(nama = "", nilai = "") {
   const row = document.createElement("div");
   row.className = "form-row inline";
+
   row.innerHTML = `
-    ${anggotaSelect(nama)}
-    <input type="number" placeholder="Nominal" value="${nilai}">
+    <select class="nama">
+      <option value="">-- Pilih Anggota --</option>
+      ${anggota.map(a => `<option value="${a}">${a}</option>`).join("")}
+    </select>
+    <input type="number" class="nilai" placeholder="Nominal" value="${nilai}">
     <button onclick="this.parentElement.remove()">❌</button>
   `;
+
+  if (nama) row.querySelector(".nama").value = nama;
+
   list.appendChild(row);
 }
 
-// default 1 baris
 tambahBaris();
 
 /* =============================
@@ -155,20 +160,18 @@ tambahBaris();
 function ambilSemuaSaldo() {
   list.innerHTML = "";
 
-  if (!window.BANK_RISMA_DATA) {
-    alert("Data bank belum tersedia");
-    tambahBaris();
-    return;
-  }
+  const saldo = hitungSaldoAktif();
+  let ada = false;
 
-  BANK_RISMA_DATA.tabelAnggota.forEach(a => {
-    if (a.saldo > 0) {
-      tambahBaris(a.nama, a.saldo);
+  Object.entries(saldo).forEach(([nama, nilai]) => {
+    if (nilai > 0) {
+      tambahBaris(nama, nilai);
+      ada = true;
     }
   });
 
-  if (!list.children.length) {
-    alert("Semua saldo sudah 0");
+  if (!ada) {
+    alert("Semua saldo anggota sudah 0");
     tambahBaris();
   }
 }
@@ -189,10 +192,9 @@ function simpanKas() {
 
   const detail = {};
   [...list.children].forEach(row => {
-    const [select, input] = row.querySelectorAll("select, input");
-    if (select.value && input.value) {
-      detail[select.value] = Number(input.value);
-    }
+    const nama = row.querySelector(".nama").value;
+    const nilai = Number(row.querySelector(".nilai").value);
+    if (nama && nilai > 0) detail[nama] = nilai;
   });
 
   if (!Object.keys(detail).length) {
@@ -202,7 +204,6 @@ function simpanKas() {
 
   const buktiRaw = document.getElementById("bukti").value.trim();
   let bukti;
-
   if (buktiRaw) {
     const arr = buktiRaw.split("\n").filter(Boolean);
     bukti = arr.length === 1 ? arr[0] : arr;
@@ -221,16 +222,17 @@ function simpanKas() {
     bukti
   };
 
-  // terbaru di atas
   KAS_BANK_RISMA[tahun].unshift(data);
 
   document.getElementById("hasil").textContent =
-`// Salin dan tempel ke kas-bank-risma.js
+`// Salin ke kas-bank-risma.js
 
 ${JSON.stringify(data, null, 2)}`;
 
   alert("Data siap disalin");
 }
+
+onTipeChange();
 </script>
 
 </body>
