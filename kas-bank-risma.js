@@ -14,36 +14,35 @@ const KAS_BANK_RISMA = {
   ============================= */
   Idul Fitri 1447H: [
 
-    {
-      id: kasId("2026-01-16"),
-      tanggal: "2026-01-16",
-      tipe: "masuk", // masuk | keluar
-      kategori: "Bonus Panen",
-      sumber: "Panen Cabai RISMA FARM",
-      detail: {
-        Pulung: 12500,
-        Tama: 12500,
-        Putri: 12500,
-        Nadia: 12500
-      },
-      bukti: "https://imgur.com/bonus-cabai-16jan.jpg"
-    },
-
-    {
-      id: kasId("2026-01-20"),
-      tanggal: "2026-01-20",
-      tipe: "keluar",
-      kategori: "Tarik Tunai",
-      sumber: "Penarikan Bonus",
-      detail: {
-        Pulung: 20000,
-        Putri: 10000
-      },
-      bukti: [
-        "https://imgur.com/tarik-pulung.jpg",
-        "https://imgur.com/tarik-putri.jpg"
-      ]
-    }
+    
+{
+  "id": "KAS-2026-01-20-1768843120485",
+  "tanggal": "2026-01-20",
+  "tipe": "keluar",
+  "kategori": "Tabungan",
+  "sumber": "setoran bulan januari 2026",
+  "detail": {
+    "Faisol": 30000,
+    "Nadia": 32500,
+    "Pulung": 42500,
+    "Tama": 12500,
+    "Putri": 2500
+  }
+},
+{
+  "id": "KAS-2026-01-20-1768842965866",
+  "tanggal": "2026-01-20",
+  "tipe": "masuk",
+  "kategori": "Tabungan",
+  "sumber": "setoran bulan januari 2026",
+  "detail": {
+    "Faisol": 30000,
+    "Nadia": 32500,
+    "Pulung": 42500,
+    "Tama": 12500,
+    "Putri": 2500
+  }
+}
 
   ],
 
@@ -53,17 +52,16 @@ const KAS_BANK_RISMA = {
   Idul Fitri 1446H: [
 
     {
-      id: kasId("2025-12-30"),
-      tanggal: "2025-12-30",
-      tipe: "masuk",
-      kategori: "Bonus Panen",
-      sumber: "Panen Awal",
-      detail: {
-        Faisol: 20000,
-        Nadia: 20000
-      }
-      // bukti boleh tidak diisi
-    }
+  "id": "KAS-2026-01-20-1768843264649",
+  "tanggal": "2026-01-20",
+  "tipe": "masuk",
+  "kategori": "Tabungan",
+  "sumber": "setoran bulan januari 2026",
+  "detail": {
+    "Pulung": 100000,
+    "Nadia": 50000
+  }
+}
 
   ]
 };
