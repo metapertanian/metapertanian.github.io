@@ -1,5 +1,5 @@
 /* =========================================================
-   BANK RISMA – FULL UI & LOGIC
+   BANK RISMA – TANPA PERIODE (GLOBAL)
 ========================================================= */
 
 (function () {
@@ -12,54 +12,52 @@
   /* =============================
      UTIL
   ============================= */
-  const rupiahRibu = n => Math.floor(n / 1000);
   const el = id => document.getElementById(id);
+  const ribu = n => Math.floor(n / 1000);
 
   /* =============================
-     SORT PERIODE (TERBARU)
+     GABUNG SEMUA TRANSAKSI
   ============================= */
-  const periodeList = Object.keys(KAS_BANK_RISMA)
-    .map(Number)
-    .sort((a, b) => b - a);
-
-  let periodeAktif = periodeList[0];
+  const semuaTransaksi = Object.values(KAS_BANK_RISMA)
+    .flat()
+    .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
   /* =============================
-     HITUNG DATA PERIODE
+     HITUNG GLOBAL
   ============================= */
-  function hitungPeriode(tahun) {
-    const data = KAS_BANK_RISMA[tahun] || [];
-
-    const anggotaMap = {};
+  function hitungGlobal() {
+    const anggota = {};
     let totalMasuk = 0;
     let totalKeluar = 0;
 
-    data.forEach(trx => {
+    semuaTransaksi.forEach(trx => {
       Object.entries(trx.detail || {}).forEach(([nama, nilai]) => {
-        if (!anggotaMap[nama]) {
-          anggotaMap[nama] = { masuk: 0, keluar: 0 };
+        if (!anggota[nama]) {
+          anggota[nama] = { masuk: 0, keluar: 0 };
         }
 
         if (trx.tipe === "masuk") {
-          anggotaMap[nama].masuk += nilai;
+          anggota[nama].masuk += nilai;
           totalMasuk += nilai;
         } else {
-          anggotaMap[nama].keluar += nilai;
+          anggota[nama].keluar += nilai;
           totalKeluar += nilai;
         }
       });
     });
 
-    const tabel = Object.keys(anggotaMap).map(nama => ({
-      nama,
-      masuk: anggotaMap[nama].masuk,
-      keluar: anggotaMap[nama].keluar,
-      saldo: anggotaMap[nama].masuk - anggotaMap[nama].keluar
-    })).sort((a, b) => b.saldo - a.saldo);
+    const tabel = Object.entries(anggota)
+      .map(([nama, v]) => ({
+        nama,
+        masuk: v.masuk,
+        keluar: v.keluar,
+        saldo: v.masuk - v.keluar
+      }))
+      .sort((a, b) => b.saldo - a.saldo);
 
     return {
       tabel,
-      riwayat: data.slice().sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal)),
+      riwayat: semuaTransaksi,
       totalMasuk,
       totalKeluar,
       sisaSaldo: totalMasuk - totalKeluar
@@ -67,25 +65,32 @@
   }
 
   /* =============================
-     RENDER HALAMAN
+     RENDER UI
   ============================= */
-  const app = document.getElementById("bankApp");
+  const app = el("bankApp");
   app.innerHTML = `
-    <div style="text-align:center">
-      <img src="/img/risma_1.png" style="width:110px;border-radius:50%;box-shadow:0 4px 12px rgba(0,0,0,.3)">
-      <h1 style="margin:10px 0">BANK RISMA</h1>
-
-      <select id="periodeSelect"></select>
+    <div class="bank-header">
+      <img src="/img/risma_1.png" class="bank-logo">
+      <h1 class="bank-title">BANK RISMA</h1>
     </div>
 
-    <section class="grid-3" style="margin-top:20px">
-      <div class="card"><small>Total Saldo</small><div class="big-number" id="totalMasuk">0</div></div>
-      <div class="card"><small>Tarik Tunai</small><div class="big-number danger" id="totalKeluar">0</div></div>
-      <div class="card"><small>Sisa Saldo</small><div class="big-number success" id="sisaSaldo">0</div></div>
+    <section class="bank-summary">
+      <div class="card">
+        <small>Total Saldo</small>
+        <div class="big-number" id="totalMasuk">0</div>
+      </div>
+      <div class="card">
+        <small>Tarik Tunai</small>
+        <div class="big-number danger" id="totalKeluar">0</div>
+      </div>
+      <div class="card">
+        <small>Sisa Saldo</small>
+        <div class="big-number success" id="sisaSaldo">0</div>
+      </div>
     </section>
 
     <section class="card">
-      <table>
+      <table class="bank-table">
         <thead>
           <tr>
             <th>No</th>
@@ -99,7 +104,7 @@
       </table>
     </section>
 
-    <section class="card">
+    <section class="card" id="riwayatSection">
       <h3>Riwayat Transaksi</h3>
       <div id="riwayat"></div>
       <div id="pagination" class="pagination"></div>
@@ -107,23 +112,11 @@
   `;
 
   /* =============================
-     DROPDOWN PERIODE
-  ============================= */
-  const periodeSelect = el("periodeSelect");
-  periodeList.forEach(p => {
-    const o = document.createElement("option");
-    o.value = p;
-    o.textContent = p;
-    periodeSelect.appendChild(o);
-  });
-  periodeSelect.value = periodeAktif;
-
-  /* =============================
      ANIMASI ANGKA
   ============================= */
   function animate(elm, end) {
     let start = 0;
-    const dur = 3000;
+    const dur = 1200;
     const t0 = performance.now();
 
     function step(t) {
@@ -142,7 +135,7 @@
 
   function render() {
     const { tabel, riwayat, totalMasuk, totalKeluar, sisaSaldo } =
-      hitungPeriode(periodeAktif);
+      hitungGlobal();
 
     animate(el("totalMasuk"), totalMasuk);
     animate(el("totalKeluar"), totalKeluar);
@@ -155,9 +148,9 @@
         <tr>
           <td>${i + 1}</td>
           <td>${a.nama}</td>
-          <td>${rupiahRibu(a.masuk)}</td>
-          <td>${rupiahRibu(a.keluar)}</td>
-          <td><strong>${rupiahRibu(a.saldo)}</strong></td>
+          <td>${ribu(a.masuk)}</td>
+          <td>${ribu(a.keluar)}</td>
+          <td><strong>${ribu(a.saldo)}</strong></td>
         </tr>
       `;
     });
@@ -175,9 +168,14 @@
     items.forEach(r => {
       box.innerHTML += `
         <div class="riwayat-item">
-          <strong>${r.tanggal}</strong><br>
-          ${r.kategori} – ${r.sumber}<br>
-          <b>${r.tipe === "masuk" ? "+" : "-"}${Object.values(r.detail).reduce((a,b)=>a+b,0).toLocaleString("id-ID")}</b>
+          <div class="riwayat-date">${r.tanggal}</div>
+          <div class="riwayat-text">
+            ${r.kategori} – ${r.sumber}<br>
+            <strong class="${r.tipe}">
+              ${r.tipe === "masuk" ? "+" : "-"}
+              ${Object.values(r.detail).reduce((a,b)=>a+b,0).toLocaleString("id-ID")}
+            </strong>
+          </div>
         </div>
       `;
     });
@@ -197,17 +195,11 @@
       b.onclick = () => {
         currentPage = i;
         render();
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        el("riwayatSection").scrollIntoView({ behavior: "smooth" });
       };
       pag.appendChild(b);
     }
   }
-
-  periodeSelect.onchange = () => {
-    periodeAktif = Number(periodeSelect.value);
-    currentPage = 1;
-    render();
-  };
 
   render();
 
