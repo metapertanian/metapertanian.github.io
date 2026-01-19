@@ -15,6 +15,15 @@
   const el = id => document.getElementById(id);
   const ribu = n => Math.floor(n / 1000);
 
+  const formatTanggal = t => {
+    const d = new Date(t);
+    return d.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  };
+
   /* =============================
      GABUNG SEMUA TRANSAKSI
   ============================= */
@@ -25,13 +34,20 @@
   /* =============================
      HITUNG GLOBAL
   ============================= */
-  function hitungGlobal() {
+  function hitungGlobal(filterAnggota = null) {
     const anggota = {};
     let totalMasuk = 0;
     let totalKeluar = 0;
 
-    semuaTransaksi.forEach(trx => {
+    const riwayat = semuaTransaksi.filter(trx => {
+      if (!filterAnggota) return true;
+      return trx.detail && trx.detail[filterAnggota];
+    });
+
+    riwayat.forEach(trx => {
       Object.entries(trx.detail || {}).forEach(([nama, nilai]) => {
+        if (filterAnggota && nama !== filterAnggota) return;
+
         if (!anggota[nama]) {
           anggota[nama] = { masuk: 0, keluar: 0 };
         }
@@ -57,7 +73,7 @@
 
     return {
       tabel,
-      riwayat: semuaTransaksi,
+      riwayat,
       totalMasuk,
       totalKeluar,
       sisaSaldo: totalMasuk - totalKeluar
@@ -75,9 +91,26 @@
     </div>
 
     <!-- SUMMARY MENURUN -->
-    <section class="card" style="text-align:center">
-      <small id="summaryLabel">Total Saldo</small>
-      <div class="big-number success" id="summaryValue">0</div>
+    <section class="card summary-stack">
+      <div class="summary-item">
+        <small>Total Saldo</small>
+        <div class="big-number success" id="totalMasuk">0</div>
+      </div>
+      <div class="summary-item">
+        <small>Tarik Tunai</small>
+        <div class="big-number danger" id="totalKeluar">0</div>
+      </div>
+      <div class="summary-item">
+        <small>Sisa Saldo</small>
+        <div class="big-number success" id="sisaSaldo">0</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <label><strong>Filter Anggota</strong></label>
+      <select id="filterAnggota">
+        <option value="">Semua Anggota</option>
+      </select>
     </section>
 
     <section class="card">
@@ -103,41 +136,21 @@
   `;
 
   /* =============================
-     ANIMASI ANGKA
+     ANIMASI ANGKA (BERGANTIAN HITUNG)
   ============================= */
-  function animate(elm, end) {
-    let start = 0;
-    const dur = 1200;
-    const t0 = performance.now();
+  function animate(elm, end, delay = 0) {
+    setTimeout(() => {
+      let start = 0;
+      const dur = 1000;
+      const t0 = performance.now();
 
-    function step(t) {
-      const p = Math.min((t - t0) / dur, 1);
-      elm.textContent = Math.floor(p * end).toLocaleString("id-ID");
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
-  /* =============================
-     ANIMASI SUMMARY BERGANTIAN
-  ============================= */
-  let summaryIndex = 0;
-  function animateSummary(data) {
-    const list = [
-      { label: "Total Saldo", value: data.totalMasuk, cls: "success" },
-      { label: "Tarik Tunai", value: data.totalKeluar, cls: "danger" },
-      { label: "Sisa Saldo", value: data.sisaSaldo, cls: "success" }
-    ];
-
-    const item = list[summaryIndex % list.length];
-    const labelEl = el("summaryLabel");
-    const valueEl = el("summaryValue");
-
-    labelEl.textContent = item.label;
-    valueEl.className = `big-number ${item.cls}`;
-    animate(valueEl, item.value);
-
-    summaryIndex++;
+      function step(t) {
+        const p = Math.min((t - t0) / dur, 1);
+        elm.textContent = Math.floor(p * end).toLocaleString("id-ID");
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }, delay);
   }
 
   /* =============================
@@ -148,10 +161,12 @@
   let globalData;
 
   function render() {
-    globalData = hitungGlobal();
+    const filter = el("filterAnggota").value || null;
+    globalData = hitungGlobal(filter);
 
-    animateSummary(globalData);
-    setInterval(() => animateSummary(globalData), 3000);
+    animate(el("totalMasuk"), globalData.totalMasuk, 0);
+    animate(el("totalKeluar"), globalData.totalKeluar, 600);
+    animate(el("sisaSaldo"), globalData.sisaSaldo, 1200);
 
     const tbody = el("tabelAnggota");
     tbody.innerHTML = "";
@@ -185,7 +200,7 @@
 
       box.innerHTML += `
         <div class="riwayat-item">
-          <div class="riwayat-date">${r.tanggal}</div>
+          <div class="riwayat-date">${formatTanggal(r.tanggal)}</div>
           <div>
             <strong>${r.kategori}</strong> – ${r.sumber}<br>
             <span class="${r.tipe}">
@@ -220,6 +235,28 @@
       pag.appendChild(b);
     }
   }
+
+  /* =============================
+     INIT FILTER
+  ============================= */
+  const filterSelect = el("filterAnggota");
+  const namaUnik = new Set();
+
+  semuaTransaksi.forEach(t =>
+    Object.keys(t.detail || {}).forEach(n => namaUnik.add(n))
+  );
+
+  [...namaUnik].sort().forEach(n => {
+    const o = document.createElement("option");
+    o.value = n;
+    o.textContent = n;
+    filterSelect.appendChild(o);
+  });
+
+  filterSelect.onchange = () => {
+    currentPage = 1;
+    render();
+  };
 
   render();
 
