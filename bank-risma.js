@@ -43,9 +43,7 @@
 
     semuaTransaksi.forEach(trx => {
       Object.entries(trx.detail || {}).forEach(([nama, nilai]) => {
-        if (!anggota[nama]) {
-          anggota[nama] = { masuk: 0, keluar: 0 };
-        }
+        if (!anggota[nama]) anggota[nama] = { masuk: 0, keluar: 0 };
 
         if (trx.tipe === "masuk") {
           anggota[nama].masuk += nilai;
@@ -101,13 +99,6 @@
     </section>
 
     <section class="card">
-      <label><strong>Filter Riwayat Anggota</strong></label>
-      <select id="filterAnggota">
-        <option value="">Semua Anggota</option>
-      </select>
-    </section>
-
-    <section class="card">
       <table class="bank-table">
         <thead>
           <tr>
@@ -124,23 +115,40 @@
 
     <section class="card" id="riwayatSection">
       <h3>Riwayat Transaksi</h3>
+
+      <!-- FILTER DIPINDAHKAN KE SINI -->
+      <div style="margin:10px 0 16px">
+        <label><strong>Filter Anggota</strong></label>
+        <select id="filterAnggota">
+          <option value="">Semua Anggota</option>
+        </select>
+      </div>
+
       <div id="riwayat"></div>
       <div id="pagination" class="pagination"></div>
     </section>
   `;
 
   /* =============================
-     ANIMASI ANGKA (LEMBUT & LAMBAT)
+     ANIMASI COUNT UP + FADE
   ============================= */
   function animate(elm, end, delay = 0) {
     setTimeout(() => {
-      const dur = 1800;
+      elm.style.opacity = 0;
+      elm.style.transform = "translateY(8px)";
+
+      const dur = 2400;
       const t0 = performance.now();
 
       function step(t) {
         const p = Math.min((t - t0) / dur, 1);
-        const v = Math.floor(easeOut(p) * end);
-        elm.textContent = v.toLocaleString("id-ID");
+        const eased = easeOut(p);
+        const value = Math.floor(eased * end);
+
+        elm.textContent = value.toLocaleString("id-ID");
+        elm.style.opacity = eased;
+        elm.style.transform = `translateY(${8 - 8 * eased}px)`;
+
         if (p < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
@@ -158,8 +166,8 @@
     globalData = hitungGlobal();
 
     animate(el("totalMasuk"), globalData.totalMasuk, 0);
-    animate(el("totalKeluar"), globalData.totalKeluar, 800);
-    animate(el("sisaSaldo"), globalData.sisaSaldo, 1600);
+    animate(el("totalKeluar"), globalData.totalKeluar, 900);
+    animate(el("sisaSaldo"), globalData.sisaSaldo, 1800);
 
     const tbody = el("tabelAnggota");
     tbody.innerHTML = "";
@@ -206,8 +214,7 @@
           <div>
             <strong>${r.kategori}</strong> – ${r.sumber}<br>
             <span class="${r.tipe}">
-              ${r.tipe === "masuk" ? "+" : "-"}
-              ${total.toLocaleString("id-ID")}
+              ${r.tipe === "masuk" ? "+" : "-"}${total.toLocaleString("id-ID")}
             </span>
             <div style="margin-top:6px;font-size:.85rem">
               ${anggotaDetail}
