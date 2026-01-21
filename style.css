@@ -685,3 +685,24 @@ select:focus {
 }
 
 
+/* ======================================================
+   FOOTER
+====================================================== */
+.site-footer {
+  margin-top: 40px;
+  padding: 16px 12px;
+  text-align: center;
+  background: #f9fafb;
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.footer-inner {
+  font-size: 13px;
+  color: #666;
+  letter-spacing: 0.3px;
+}
+
+.footer-inner strong {
+  color: #222;
+  font-weight: 600;
+}
