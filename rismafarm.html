@@ -43,7 +43,7 @@
 3. MODAL
 ====================================================== -->
 <section class="card">
-  <h2>💰 Modal</h2>
+  <h2>💰 Investor</h2>
   <div id="tabelModal"></div>
 </section>
 
@@ -51,7 +51,7 @@
 4. TABEL BIAYA
 ====================================================== -->
 <section class="card">
-  <h2>💸 Tabel Biaya</h2>
+  <h2>💸 Biaya & Skincare</h2>
   <div id="tabelBiaya"></div>
 </section>
 
@@ -59,7 +59,7 @@
 5. PANEN PER KOMODITAS
 ====================================================== -->
 <section class="card">
-  <h2>🌾 Panen per Komoditas</h2>
+  <h2>🌾 Hasil Panen</h2>
   <div id="tabelPanen"></div>
 </section>
 
@@ -197,7 +197,7 @@ function renderTabelPanen(){
     html += `<tr class="total">
       <td colspan="2"><strong>Total</strong></td>
       <td><strong>Rp ${rupiah(totalSurplus)}</strong></td>
-    </tr></table>`;
+    </tr></table><br/>`;
     box.innerHTML += html;
   });
 }
@@ -212,7 +212,7 @@ function renderLaba(){
   const laba = totalOmzet - totalBiaya - totalBiayaPanen;
 
   let html = `<section class="card">
-    <h2>📊 Laba & Bagi Hasil</h2>
+    <h2>📊 Bagi Hasil</h2>
     <div class="stat">
       <small>Laba Bersih</small>
       <strong class="success">Rp ${rupiah(laba)}</strong>
