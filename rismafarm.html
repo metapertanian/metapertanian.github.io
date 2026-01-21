@@ -88,29 +88,7 @@ const tgl = t => new Date(t).toLocaleDateString("id-ID",{
   day:"2-digit", month:"short", year:"numeric"
 });
 
-/* =========================================
-   HELPER KONVERSI LINK GAMBAR
-========================================= */
-function normalizeImageLink(link) {
-  if (!link) return null;
 
-  if (link.startsWith("http") && /\.(jpg|jpeg|png|webp)$/i.test(link)) {
-    return link;
-  }
-
-  if (link.includes("drive.google.com")) {
-    const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match) {
-      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-    }
-  }
-
-  if (!link.startsWith("http")) {
-    return `/${link}`;
-  }
-
-  return link;
-}
 
 /* ======================================================
 DATA MUSIM
@@ -297,32 +275,40 @@ function showImage(src){
 function renderRiwayat(page=1){
   const box=document.getElementById("riwayatTransaksi");
   const pag=document.getElementById("pagination");
-  box.innerHTML=""; pag.innerHTML="";
+  box.innerHTML=""; 
+  pag.innerHTML="";
 
   riwayat.slice((page-1)*PER_PAGE,page*PER_PAGE).forEach(r=>{
     box.innerHTML+=`
     <div class="riwayat-item">
-      <div class="riwayat-thumb ${r.bukti?'':'empty'}">
-  ${r.bukti ? `
-    <img 
-      src="${normalizeImageLink(r.bukti)}"
-      class="bukti-img"
-      onclick="showImage('${normalizeImageLink(r.bukti)}')"
-    >
-  ` : "NO FOTO"}
-</div>
+
+      <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
+        ${
+          r.bukti
+          ? `<img 
+              src="${r.bukti}"
+              class="bukti-img"
+              loading="lazy"
+              alt="Bukti transaksi"
+              onclick="showImage(this.src)"
+            >`
+          : `<span class="no-photo">NO FOTO</span>`
+        }
+      </div>
+
       <div>
         <div class="riwayat-date">${tgl(r.tanggal)}</div>
         <div class="riwayat-title">${r.jenis}</div>
 
-<div class="riwayat-detail">
-  ${r.ket.replaceAll(" | ","<br>")}
-</div>
+        <div class="riwayat-detail">
+          ${r.ket.replaceAll(" | ","<br>")}
+        </div>
 
-<div class="riwayat-value ${r.nilai>=0?'success':'danger'}">
-  Rp ${rupiah(r.nilai)}
-</div>
+        <div class="riwayat-value ${r.nilai>=0?'success':'danger'}">
+          Rp ${rupiah(r.nilai)}
+        </div>
       </div>
+
     </div>`;
   });
 
