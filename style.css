@@ -64,6 +64,12 @@ body {
   color: var(--primary-dark);
 }
 
+@media (max-width: 600px) {
+  .container {
+    padding-top: 80px;
+  }
+}
+
 /* =========================
    NAV DROPDOWN
 ========================= */
