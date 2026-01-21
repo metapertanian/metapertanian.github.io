@@ -34,7 +34,8 @@ const RISMA_FARM = {
   qty: 280,
   satuan: "kg",
   nilai: 780000,
-  biayaPanen: 150000
+  biayaPanen: 150000,
+  bukti: "https://res.cloudinary.com/deojvpzhv/image/upload/v1769016005/beli-ampli-masjid-2000watt-4channel_orqpqr.jpg"
 },
 {
   tanggal: "2026-01-15",
