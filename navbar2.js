@@ -25,25 +25,25 @@ function renderNavbar(active = "", mode = "public") {
     <a href="/index.html" class="${active === 'bertunas' ? 'active' : ''}">
       🏠 BERTUNAS
     </a>
-    <a href="/rismafarm.html" class="${active === 'rismafarm' ? 'active' : ''}">
-      🌾 RISMA FARM
+    <a href="/rismafarm" class="${active === 'rismafarm' ? 'active' : ''}">
+      🌱 RISMA FARM
     </a>
-    <a href="/bank-risma.html" class="${active === 'bank' ? 'active' : ''}">
-      💰 BANK RISMA
+    <a href="/bank-risma" class="${active === 'bank' ? 'active' : ''}">
+      🏦 BANK RISMA
     </a>
   `;
 
   let linksAdmin = `
-    <a href="/input-musim.html" class="${active === 'musim' ? 'active' : ''}">
+    <a href="/input-musim" class="${active === 'musim' ? 'active' : ''}">
       🌱 Input Musim
     </a>
-    <a href="/input-data.html" class="${active === 'input' ? 'active' : ''}">
+    <a href="/input-data" class="${active === 'input' ? 'active' : ''}">
       🧾 Input Data
     </a>
-    <a href="/tariktunai.html" class="${active === 'tarik' ? 'active' : ''}">
-      💸 Tarik Tunai
+    <a href="/input-bank" class="${active === 'kas' ? 'active' : ''}">
+      💸 Input Bank
     </a>
-    <a href="/laporan.html" class="${active === 'laporan' ? 'active' : ''}">
+    <a href="/laporan" class="${active === 'laporan' ? 'active' : ''}">
       📊 Laporan
     </a>
   `;
