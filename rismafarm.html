@@ -250,13 +250,14 @@ function kumpulkanRiwayat(){
   });
 
   musimAktif.panen.forEach(p=>{
-    riwayat.push({
-      tanggal:p.tanggal,
-      jenis:"Panen",
-      ket:`${p.komoditas} | Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}`,
-      nilai:p.nilai - (p.biayaPanen||0)
-    });
+  riwayat.push({
+    tanggal: p.tanggal,
+    jenis: "Panen",
+    ket: `${p.komoditas} | Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}`,
+    nilai: p.nilai - (p.biayaPanen||0),
+    bukti: p.bukti || null   // ✅ INI KUNCI
   });
+});
 
   riwayat.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
 }
