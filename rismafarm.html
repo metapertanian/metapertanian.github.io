@@ -149,7 +149,11 @@ function renderTabelBiaya(){
   let total = 0;
   let html = `<table class="table">
     <tr><th>No</th><th>Tanggal</th><th>Keterangan</th><th>Harga</th></tr>`;
-  musimAktif.biaya.forEach((b,i)=>{
+  const biayaSorted = [...musimAktif.biaya].sort(
+  (a,b) => new Date(a.tanggal) - new Date(b.tanggal)
+);
+
+biayaSorted.forEach((b,i)=>{
     total += b.jumlah;
     html += `<tr>
       <td>${i+1}</td>
@@ -183,7 +187,11 @@ function renderTabelPanen(){
     let html = `<br/><h3 style="margin-top:14px">${komoditas}</h3>
     <table class="table">
       <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
-    data.forEach((p,i)=>{
+    const dataSorted = [...data].sort(
+  (a,b) => new Date(a.tanggal) - new Date(b.tanggal)
+);
+
+dataSorted.forEach((p,i)=>{
       const surplus = p.nilai - (p.biayaPanen||0);
       totalSurplus += surplus;
       html += `<tr>
