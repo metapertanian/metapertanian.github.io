@@ -35,8 +35,8 @@
 2. PILIH MUSIM
 ====================================================== -->
 <section class="card" style="text-align:center">
-  <select id="pilihMusim" class="select-center"></select>
-  <div id="infoMusim" class="muted" style="margin-top:8px"></div>
+  <select id="pilihMusim" style="max-width:320px;margin:auto"></select>
+  <div id="infoMusim" class="muted" style="margin-top:10px"></div>
 </section>
 
 <!-- ======================================================
@@ -84,7 +84,13 @@
 UTIL
 ====================================================== */
 const rupiah = n => Number(n||0).toLocaleString("id-ID");
-const tgl = t => new Date(t).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"});
+
+/* format tanggal singkat */
+const tgl = t => new Date(t).toLocaleDateString("id-ID",{
+  day:"2-digit",
+  month:"short",
+  year:"numeric"
+});
 
 /* ======================================================
 DATA MUSIM
@@ -109,11 +115,11 @@ selectMusim.onchange = () => {
 };
 
 /* ======================================================
-INFO MUSIM
+INFO MUSIM (HANYA LOKASI)
 ====================================================== */
 function renderInfoMusim(){
   document.getElementById("infoMusim").innerHTML =
-    `<strong>${musimAktif.label}</strong> · ${musimAktif.lokasi}`;
+    musimAktif.lokasi || "";
 }
 
 /* ======================================================
@@ -176,7 +182,7 @@ function renderTabelPanen(){
 
   Object.entries(grup).forEach(([komoditas,data])=>{
     let totalSurplus = 0;
-    let html = `<h3>${komoditas}</h3>
+    let html = `<h3 style="margin-top:14px">${komoditas}</h3>
     <table class="table">
       <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
     data.forEach((p,i)=>{
@@ -197,7 +203,7 @@ function renderTabelPanen(){
 }
 
 /* ======================================================
-LABA & BAGI HASIL (DINAMIS SKEMA)
+LABA & BAGI HASIL (KAPITAL + PERSEN)
 ====================================================== */
 function renderLaba(){
   const totalBiaya = musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
@@ -207,13 +213,15 @@ function renderLaba(){
 
   let html = `<section class="card">
     <h2>📊 Laba & Bagi Hasil</h2>
-    <div class="stat"><small>Laba Bersih</small>
+    <div class="stat">
+      <small>Laba Bersih</small>
       <strong class="success">Rp ${rupiah(laba)}</strong>
-    </div><hr>`;
+    </div>
+    <hr style="margin:14px 0">`;
 
   Object.entries(musimAktif.skema.pembagian||{}).forEach(([n,p])=>{
     html += `<div class="stat">
-      <small>${n}</small>
+      <small>${n.toUpperCase()} (${p}%)</small>
       <strong>Rp ${rupiah(laba*p/100)}</strong>
     </div>`;
   });
@@ -223,7 +231,7 @@ function renderLaba(){
 }
 
 /* ======================================================
-RIWAYAT TRANSAKSI + FOTO
+RIWAYAT TRANSAKSI + FOTO (THUMBNAIL)
 ====================================================== */
 const PER_PAGE = 5;
 let riwayat = [];
@@ -253,34 +261,46 @@ function kumpulkanRiwayat(){
   riwayat.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
 }
 
+function showImage(src){
+  const m=document.createElement("div");
+  m.className="img-modal";
+  m.innerHTML=`<img src="${src}">`;
+  m.onclick=()=>m.remove();
+  document.body.appendChild(m);
+}
+
 function renderRiwayat(page=1){
-  const box = document.getElementById("riwayatTransaksi");
-  const pag = document.getElementById("pagination");
+  const box=document.getElementById("riwayatTransaksi");
+  const pag=document.getElementById("pagination");
   box.innerHTML=""; pag.innerHTML="";
 
   riwayat.slice((page-1)*PER_PAGE,page*PER_PAGE).forEach(r=>{
-    box.innerHTML += `
-      <div class="riwayat-item">
+    box.innerHTML+=`
+    <div class="riwayat-item">
+      <div class="riwayat-thumb ${r.bukti?'':'empty'}"
+        ${r.bukti?`onclick="showImage('/${r.bukti}')"`:""}>
+        ${r.bukti?`<img src="/${r.bukti}">`:"NO IMG"}
+      </div>
+      <div>
         <div class="riwayat-date">${tgl(r.tanggal)}</div>
-        <div>
-          <strong>${r.jenis}</strong>
-          <div class="muted">${r.ket}</div>
-          <div class="${r.nilai>=0?'success':'danger'}">
-            Rp ${rupiah(r.nilai)}
-          </div>
-          ${r.bukti?`<img src="/${r.bukti}" class="bukti-img">`:""}
+        <strong>${r.jenis}</strong>
+        <div class="muted">${r.ket}</div>
+        <div class="${r.nilai>=0?'success':'danger'}">
+          Rp ${rupiah(r.nilai)}
         </div>
-      </div>`;
+      </div>
+    </div>`;
   });
 
-  const max = Math.min(5,Math.ceil(riwayat.length/PER_PAGE));
+  const max=Math.min(5,Math.ceil(riwayat.length/PER_PAGE));
   for(let i=1;i<=max;i++){
     const b=document.createElement("button");
     b.textContent=i;
-    if(i===page) b.classList.add("active");
+    if(i===page)b.classList.add("active");
     b.onclick=()=>{
       renderRiwayat(i);
-      document.getElementById("riwayatSection").scrollIntoView({behavior:"smooth"});
+      document.getElementById("riwayatSection")
+        .scrollIntoView({behavior:"smooth"});
     };
     pag.appendChild(b);
   }
