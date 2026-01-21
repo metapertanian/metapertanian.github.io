@@ -279,15 +279,19 @@ function renderRiwayat(page=1){
     <div class="riwayat-item">
       <div class="riwayat-thumb ${r.bukti?'':'empty'}"
         ${r.bukti?`onclick="showImage('/${r.bukti}')"`:""}>
-        ${r.bukti?`<img src="/${r.bukti}">`:"NO IMG"}
+        ${r.bukti?`<img src="/${r.bukti}">`:"TIDAK ADA FOTO"}
       </div>
       <div>
         <div class="riwayat-date">${tgl(r.tanggal)}</div>
-        <strong>${r.jenis}</strong>
-        <div class="muted">${r.ket}</div>
-        <div class="${r.nilai>=0?'success':'danger'}">
-          Rp ${rupiah(r.nilai)}
-        </div>
+        <div class="riwayat-title">${r.jenis}</div>
+
+<div class="riwayat-detail">
+  ${r.ket.replaceAll(" | ","<br>")}
+</div>
+
+<div class="riwayat-value ${r.nilai>=0?'success':'danger'}">
+  Rp ${rupiah(r.nilai)}
+</div>
       </div>
     </div>`;
   });
