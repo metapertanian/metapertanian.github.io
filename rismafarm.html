@@ -270,6 +270,41 @@ function showImage(src){
   document.body.appendChild(m);
 }
 
+
+/* =========================================
+   HELPER KONVERSI LINK GAMBAR
+========================================= */
+function normalizeImageLink(link) {
+  if (!link) return null;
+
+  // Jika sudah link langsung (http & image)
+  if (link.startsWith("http") && (
+      link.endsWith(".jpg") ||
+      link.endsWith(".jpeg") ||
+      link.endsWith(".png") ||
+      link.endsWith(".webp")
+  )) {
+    return link;
+  }
+
+  // Google Drive (format share)
+  // contoh: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  if (link.includes("drive.google.com")) {
+    const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match && match[1]) {
+      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    }
+  }
+
+  // Path lokal (img/xxx.png)
+  if (!link.startsWith("http")) {
+    return `/${link}`;
+  }
+
+  return link;
+}
+
+
 function renderRiwayat(page=1){
   const box=document.getElementById("riwayatTransaksi");
   const pag=document.getElementById("pagination");
@@ -279,7 +314,13 @@ function renderRiwayat(page=1){
     box.innerHTML+=`
     <div class="riwayat-item">
       <div class="riwayat-thumb ${r.bukti?'':'empty'}"
-        ${r.bukti?`onclick="showImage('/${r.bukti}')"`:""}>
+        ${r.bukti ? `
+  <img 
+    src="${normalizeImageLink(r.bukti)}" 
+    class="bukti-img"
+    onclick="showImage('${normalizeImageLink(r.bukti)}')"
+  >
+` : ""}>
         ${r.bukti?`<img src="/${r.bukti}">`:"NO FOTO"}
       </div>
       <div>
