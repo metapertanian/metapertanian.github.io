@@ -46,7 +46,8 @@ const RISMA_FARM = {
   bonusPanen: {
     total: 60000,
     anggota: ["Pulung","Faisol","Putri","Nadia","Anis","Tama"]
-  }
+  },
+ bukti: "https://drive.google.com/file/d/0B4kc71qLTSxcd1FncnZNUnZ1NXM/view?usp=drivesdk&resourcekey=0-IWTlLihtlYoyYBNjxg81PA"
 },
 {
   tanggal: "2026-01-12",
