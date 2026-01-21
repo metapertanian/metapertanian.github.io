@@ -405,6 +405,17 @@ pre {
   text-transform: uppercase;
 }
 
+/* === DROPDOWN MUSIM AUTO WIDTH === */
+#pilihMusim {
+  width: fit-content;
+  min-width: 220px;
+  margin: auto;
+  text-align: center;
+  text-align-last: center;
+  padding: 12px 18px;
+  font-weight: 600;
+}
+
 /* =========================
    RIWAYAT ITEM ANIMASI
 ========================= */
@@ -494,6 +505,41 @@ pre {
   border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.4);
 }
+
+/* === RIWAYAT TRANSAKSI === */
+.riwayat-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.riwayat-date {
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.riwayat-title {
+  font-weight: 700;
+  margin: 4px 0;
+}
+
+.riwayat-detail {
+  font-size: .85rem;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
+.riwayat-value {
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.success { color: #15803d; }
+.danger  { color: #b91c1c; }
+
+
 
 /* =========================
    FILTER HIGHLIGHT NAMA
