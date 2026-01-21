@@ -145,6 +145,50 @@ function renderModal(){
 }
 
 /* ======================================================
+   POPUP DETAIL TRANSAKSI
+====================================================== */
+function showDetailTransaksi(data) {
+  const modal = document.createElement("div");
+  modal.className = "detail-modal";
+
+  modal.innerHTML = `
+    <div class="detail-card">
+      <div class="detail-header">
+        <strong>${data.jenis}</strong>
+        <span class="close-btn">&times;</span>
+      </div>
+
+      <div class="detail-body">
+        <div class="detail-date">${tgl(data.tanggal)}</div>
+
+        <div class="detail-text">
+          ${data.keterangan.replaceAll(" | ","<br>")}
+        </div>
+
+        <div class="detail-value ${data.nilai >= 0 ? "success":"danger"}">
+          Rp ${rupiah(data.nilai)}
+        </div>
+
+        ${
+          data.bukti
+          ? `<img src="${data.bukti}" class="detail-img"
+              onclick="showImage(this.src)">`
+          : `<div class="no-photo">Tidak ada foto</div>`
+        }
+      </div>
+    </div>
+  `;
+
+  modal.onclick = e => {
+    if (e.target === modal || e.target.classList.contains("close-btn")) {
+      modal.remove();
+    }
+  };
+
+  document.body.appendChild(modal);
+}
+
+/* ======================================================
 TABEL BIAYA
 ====================================================== */
 function renderTabelBiaya(){
@@ -157,7 +201,14 @@ function renderTabelBiaya(){
 
 biayaSorted.forEach((b,i)=>{
     total += b.jumlah;
-    html += `<tr>
+    html += `<tr style="cursor:pointer"
+  onclick='showDetailTransaksi({
+    jenis:"Biaya",
+    tanggal:"${b.tanggal}",
+    keterangan:"${b.keterangan}",
+    nilai:-${b.jumlah},
+    bukti:${b.bukti ? `"${b.bukti}"` : "null"}
+  })'>
       <td>${i+1}</td>
       <td>${tgl(b.tanggal)}</td>
       <td>${b.keterangan}</td>
@@ -196,7 +247,14 @@ function renderTabelPanen(){
 dataSorted.forEach((p,i)=>{
       const surplus = p.nilai - (p.biayaPanen||0);
       totalSurplus += surplus;
-      html += `<tr>
+      html += `<tr style="cursor:pointer"
+  onclick='showDetailTransaksi({
+    jenis:"Panen ${komoditas}",
+    tanggal:"${p.tanggal}",
+    keterangan:"Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}",
+    nilai:${surplus},
+    bukti:${p.bukti ? `"${p.bukti}"` : "null"}
+  })'>
         <td>${i+1}</td>
         <td>${tgl(p.tanggal)}</td>
         <td>Rp ${rupiah(surplus)}</td>
