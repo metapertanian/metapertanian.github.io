@@ -182,7 +182,7 @@ function renderTabelPanen(){
 
   Object.entries(grup).forEach(([komoditas,data])=>{
     let totalSurplus = 0;
-    let html = `<h3 style="margin-top:14px">${komoditas}</h3>
+    let html = `<br/><h3 style="margin-top:14px">${komoditas}</h3>
     <table class="table">
       <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
     data.forEach((p,i)=>{
@@ -197,7 +197,7 @@ function renderTabelPanen(){
     html += `<tr class="total">
       <td colspan="2"><strong>Total</strong></td>
       <td><strong>Rp ${rupiah(totalSurplus)}</strong></td>
-    </tr></table><br/>`;
+    </tr></table>`;
     box.innerHTML += html;
   });
 }
@@ -279,7 +279,7 @@ function renderRiwayat(page=1){
     <div class="riwayat-item">
       <div class="riwayat-thumb ${r.bukti?'':'empty'}"
         ${r.bukti?`onclick="showImage('/${r.bukti}')"`:""}>
-        ${r.bukti?`<img src="/${r.bukti}">`:"TIDAK ADA FOTO"}
+        ${r.bukti?`<img src="/${r.bukti}">`:"NO FOTO"}
       </div>
       <div>
         <div class="riwayat-date">${tgl(r.tanggal)}</div>
