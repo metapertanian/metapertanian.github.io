@@ -22,7 +22,7 @@
 
 <main class="container">
 
-  <!-- HEADER -->
+  <!-- 1. HEADER -->
   <section class="bank-header" style="margin-bottom:20px">
     <img src="/img/risma_1.png" class="bank-logo">
     <h1 class="bank-title">RISMA FARM</h1>
@@ -31,25 +31,30 @@
     </p>
   </section>
 
-  <!-- RINGKASAN MUSIM -->
-  <section id="ringkasanMusim"></section>
+  <!-- 2. PILIH MUSIM -->
+  <section class="card" style="text-align:center">
+    <select id="pilihMusim" class="select-elegan"></select>
+  </section>
 
-  <!-- LABA & BAGI HASIL -->
-  <section id="labaSection"></section>
+  <!-- 3. MODAL -->
+  <section class="card" id="modalSection"></section>
 
-  <!-- TABEL BIAYA -->
+  <!-- 4. BIAYA -->
   <section class="card">
     <h2>💸 Tabel Biaya</h2>
     <div id="tabelBiaya"></div>
   </section>
 
-  <!-- TABEL PANEN -->
+  <!-- 5. PANEN -->
   <section class="card">
     <h2>🌾 Panen per Komoditas</h2>
     <div id="tabelPanen"></div>
   </section>
 
-  <!-- RIWAYAT -->
+  <!-- 6. LABA -->
+  <section class="card" id="labaSection"></section>
+
+  <!-- 7. RIWAYAT -->
   <section class="card" id="riwayatSection">
     <h2>📜 Riwayat Transaksi</h2>
     <div id="riwayatTransaksi"></div>
@@ -62,154 +67,151 @@
 /* ===============================
    UTIL
 ================================ */
-function rupiah(n){
-  return Number(n||0).toLocaleString("id-ID");
-}
-function tgl(t){
-  return new Date(t).toLocaleDateString("id-ID",{day:"2-digit",month:"short",year:"numeric"});
-}
+const rupiah = n => Number(n||0).toLocaleString("id-ID");
+const tgl = t => new Date(t).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"});
 
 /* ===============================
-   DATA MUSIM
+   MUSIM
 ================================ */
-const musimList = Object.values(RISMA_FARM.musim || {});
-const musim = musimList[0]; // fokus 1 musim dulu
+const musimKeys = Object.keys(RISMA_FARM.musim || {});
+let musimAktif = RISMA_FARM.musim[musimKeys[0]];
 
 /* ===============================
-   RINGKASAN + LABA
+   DROPDOWN MUSIM
 ================================ */
-function renderRingkasanMusim(){
-  const totalModal = Object.values(musim.modal||{}).reduce((a,b)=>a+Number(b),0);
-  const totalBiaya = (musim.biaya||[]).reduce((a,b)=>a+Number(b.jumlah||0),0);
-  const totalOmzet = (musim.panen||[]).reduce((a,b)=>a+Number(b.nilai||0),0);
-  const totalBiayaPanen = (musim.panen||[]).reduce((a,b)=>a+Number(b.biayaPanen||0),0);
+const select = document.getElementById("pilihMusim");
+musimKeys.forEach(k=>{
+  const o = document.createElement("option");
+  o.value = k;
+  o.textContent = RISMA_FARM.musim[k].label;
+  select.appendChild(o);
+});
+select.onchange = ()=>{
+  musimAktif = RISMA_FARM.musim[select.value];
+  renderAll();
+};
 
-  const labaBersih = totalOmzet - totalBiaya - totalBiayaPanen;
-
-  document.getElementById("ringkasanMusim").innerHTML = `
-    <section class="card">
-      <h3>${musim.label}</h3>
-      <div class="grid-3">
-        <div class="stat"><small>Modal</small><strong>Rp ${rupiah(totalModal)}</strong></div>
-        <div class="stat"><small>Biaya</small><strong>Rp ${rupiah(totalBiaya)}</strong></div>
-        <div class="stat"><small>Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
-      </div>
-    </section>
-  `;
-
-  const skema = musim.skema.pembagian;
-  document.getElementById("labaSection").innerHTML = `
-    <section class="card">
-      <h2>📊 Laba & Bagi Hasil</h2>
-      <div class="grid-3">
-        <div class="stat"><small>Laba Bersih</small><strong class="success">Rp ${rupiah(labaBersih)}</strong></div>
-        <div class="stat"><small>Pelaksana</small><strong>Rp ${rupiah(labaBersih*skema.pelaksana/100)}</strong></div>
-        <div class="stat"><small>RISMA</small><strong>Rp ${rupiah(labaBersih*skema.risma/100)}</strong></div>
-      </div>
-    </section>
-  `;
+/* ===============================
+   MODAL
+================================ */
+function renderModal(){
+  let html = `<h2>💰 Modal ${musimAktif.label}</h2><ul>`;
+  Object.entries(musimAktif.modal||{}).forEach(([n,v])=>{
+    html += `<li>${n} — <strong>Rp ${rupiah(v)}</strong></li>`;
+  });
+  html += `</ul>`;
+  document.getElementById("modalSection").innerHTML = html;
 }
 
 /* ===============================
-   TABEL BIAYA
+   BIAYA
 ================================ */
-function renderTabelBiaya(){
-  let total = 0;
-  let html = `<table class="table">
+function renderBiaya(){
+  let total=0, html=`<table class="table">
     <tr><th>No</th><th>Keterangan</th><th>Harga</th></tr>`;
-  musim.biaya.forEach((b,i)=>{
-    total += b.jumlah;
-    html += `<tr>
-      <td>${i+1}</td>
-      <td>${b.keterangan}</td>
-      <td>Rp ${rupiah(b.jumlah)}</td>
-    </tr>`;
+  musimAktif.biaya.forEach((b,i)=>{
+    total+=b.jumlah;
+    html+=`<tr><td>${i+1}</td><td>${b.keterangan}</td><td>Rp ${rupiah(b.jumlah)}</td></tr>`;
   });
-  html += `<tr class="total">
-    <td colspan="2"><strong>Total</strong></td>
-    <td><strong>Rp ${rupiah(total)}</strong></td>
-  </tr></table>`;
-  document.getElementById("tabelBiaya").innerHTML = html;
+  html+=`<tr class="total"><td colspan="2">Total</td><td>Rp ${rupiah(total)}</td></tr></table>`;
+  document.getElementById("tabelBiaya").innerHTML=html;
 }
 
 /* ===============================
-   TABEL PANEN
+   PANEN PER KOMODITAS
 ================================ */
-function renderTabelPanen(){
-  let html = `<table class="table">
-    <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
-  musim.panen.forEach((p,i)=>{
-    const surplus = p.nilai - (p.biayaPanen||0);
-    html += `<tr>
-      <td>${i+1}</td>
-      <td>${tgl(p.tanggal)}</td>
-      <td>Rp ${rupiah(surplus)}</td>
-    </tr>`;
+function renderPanen(){
+  const box=document.getElementById("tabelPanen");
+  box.innerHTML="";
+  const grup={};
+
+  musimAktif.panen.forEach(p=>{
+    if(!grup[p.komoditas]) grup[p.komoditas]=[];
+    grup[p.komoditas].push(p);
   });
-  html += `</table>`;
-  document.getElementById("tabelPanen").innerHTML = html;
+
+  Object.entries(grup).forEach(([komo,list])=>{
+    let html=`<h3>${komo}</h3><table class="table">
+      <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
+    list.forEach((p,i)=>{
+      const surplus=p.nilai-(p.biayaPanen||0);
+      html+=`<tr><td>${i+1}</td><td>${tgl(p.tanggal)}</td><td>Rp ${rupiah(surplus)}</td></tr>`;
+    });
+    html+=`</table>`;
+    box.innerHTML+=html;
+  });
 }
 
 /* ===============================
-   RIWAYAT GABUNGAN
+   LABA
 ================================ */
-const PER_PAGE = 5;
-let transaksi = [];
+function renderLaba(){
+  const omzet=musimAktif.panen.reduce((a,b)=>a+b.nilai,0);
+  const biaya=musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
+  const biayaPanen=musimAktif.panen.reduce((a,b)=>a+(b.biayaPanen||0),0);
+  const laba=omzet-biaya-biayaPanen;
+  const s=musimAktif.skema.pembagian;
+
+  document.getElementById("labaSection").innerHTML=`
+    <h2>📊 Laba & Bagi Hasil</h2>
+    <p>Laba Bersih: <strong class="success">Rp ${rupiah(laba)}</strong></p>
+    <ul>
+      <li>Pelaksana (${s.pelaksana}%) — Rp ${rupiah(laba*s.pelaksana/100)}</li>
+      <li>RISMA (${s.risma}%) — Rp ${rupiah(laba*s.risma/100)}</li>
+      <li>Manajemen (${s.manajemen}%) — Rp ${rupiah(laba*s.manajemen/100)}</li>
+    </ul>`;
+}
+
+/* ===============================
+   RIWAYAT
+================================ */
+const PER_PAGE=5; let page=1, riwayat=[];
 
 function kumpulkanRiwayat(){
-  transaksi = [];
-
-  musim.biaya.forEach(b=>{
-    transaksi.push({
-      tanggal:b.tanggal,
-      jenis:"Biaya",
-      ket:b.keterangan,
-      nilai:-b.jumlah
-    });
-  });
-
-  musim.panen.forEach(p=>{
-    const surplus = p.nilai - (p.biayaPanen||0);
-    transaksi.push({
+  riwayat=[];
+  musimAktif.biaya.forEach(b=>riwayat.push({tipe:"Biaya",tanggal:b.tanggal,keterangan:b.keterangan,nilai:-b.jumlah,foto:b.foto}));
+  musimAktif.panen.forEach(p=>{
+    riwayat.push({
+      tipe:"Panen",
       tanggal:p.tanggal,
-      jenis:"Panen",
-      ket:`${p.komoditas} | Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}`,
-      nilai:surplus
+      komoditas:p.komoditas,
+      omzet:p.nilai,
+      biayaPanen:p.biayaPanen||0,
+      surplus:p.nilai-(p.biayaPanen||0),
+      foto:p.foto
     });
   });
-
-  transaksi.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
+  riwayat.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
 }
 
-function renderRiwayat(page=1){
-  const box = document.getElementById("riwayatTransaksi");
-  const pag = document.getElementById("pagination");
-  box.innerHTML = ""; pag.innerHTML="";
+function renderRiwayat(){
+  const box=document.getElementById("riwayatTransaksi");
+  const pag=document.getElementById("pagination");
+  box.innerHTML=""; pag.innerHTML="";
 
-  const slice = transaksi.slice((page-1)*PER_PAGE, page*PER_PAGE);
-  slice.forEach(t=>{
-    box.innerHTML += `
+  riwayat.slice((page-1)*PER_PAGE,page*PER_PAGE).forEach(r=>{
+    box.innerHTML+=`
       <div class="riwayat-item">
-        <div class="riwayat-date">${tgl(t.tanggal)}</div>
-        <div>
-          <strong>${t.jenis}</strong>
-          <div class="muted">${t.ket}</div>
-          <div class="${t.nilai>=0?'success':'danger'}">
-            Rp ${rupiah(t.nilai)}
-          </div>
-        </div>
+        <div class="riwayat-date">${tgl(r.tanggal)}</div>
+        ${r.tipe==="Panen"?`
+          <div><strong>[Panen] ${r.komoditas}</strong></div>
+          <div>Omzet: Rp ${rupiah(r.omzet)}</div>
+          <div>Biaya Panen: Rp ${rupiah(r.biayaPanen)}</div>
+          <div class="success">Surplus: Rp ${rupiah(r.surplus)}</div>
+        `:`
+          <div><strong>[Biaya]</strong> ${r.keterangan}</div>
+          <div class="danger">Rp ${rupiah(Math.abs(r.nilai))}</div>
+        `}
+        ${r.foto?`<img src="${r.foto}" class="bukti-foto">`:""}
       </div>`;
   });
 
-  const totalPage = Math.min(5, Math.ceil(transaksi.length/PER_PAGE));
-  for(let i=1;i<=totalPage;i++){
+  const max=Math.min(5,Math.ceil(riwayat.length/PER_PAGE));
+  for(let i=1;i<=max;i++){
     const b=document.createElement("button");
     b.textContent=i;
-    if(i===page) b.classList.add("active");
-    b.onclick=()=>{
-      renderRiwayat(i);
-      document.getElementById("riwayatSection").scrollIntoView({behavior:"smooth"});
-    };
+    if(i===page)b.classList.add("active");
+    b.onclick=()=>{page=i;renderRiwayat();document.getElementById("riwayatSection").scrollIntoView({behavior:"smooth"});}
     pag.appendChild(b);
   }
 }
@@ -217,11 +219,16 @@ function renderRiwayat(page=1){
 /* ===============================
    INIT
 ================================ */
-renderRingkasanMusim();
-renderTabelBiaya();
-renderTabelPanen();
-kumpulkanRiwayat();
-renderRiwayat(1);
+function renderAll(){
+  renderModal();
+  renderBiaya();
+  renderPanen();
+  renderLaba();
+  kumpulkanRiwayat();
+  page=1;
+  renderRiwayat();
+}
+renderAll();
 </script>
 
 </body>
