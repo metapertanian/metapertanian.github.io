@@ -13,7 +13,8 @@ const RISMA_FARM = {
 {
   tanggal: "2026-01-15",
   keterangan: "Telek Ayam",
-  jumlah: 90000
+  jumlah: 90000,
+  bukti: "https://blogger.googleusercontent.com/img/a/AVvXsEjFjPc13W_6OSf5aiQei1q_R5NltDrqrnevYpz-R8MxYRAteP5_oUwVCZM9xYcpdsi4A0j_LxvzsAD81UGxIHtoHWD3Pd6JoN9RpEn0gnPXzUj4XDNb4Giy01pwzZz4HO0vVjcxKkjS995DAyue6DLKn9RqilYuq3VPUDSdGNfZwhnbidA9rFpB5IICkyCt"
 },
 {
   tanggal: "2026-01-15",
