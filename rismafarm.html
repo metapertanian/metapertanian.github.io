@@ -84,13 +84,33 @@
 UTIL
 ====================================================== */
 const rupiah = n => Number(n||0).toLocaleString("id-ID");
-
-/* format tanggal singkat */
 const tgl = t => new Date(t).toLocaleDateString("id-ID",{
-  day:"2-digit",
-  month:"short",
-  year:"numeric"
+  day:"2-digit", month:"short", year:"numeric"
 });
+
+/* =========================================
+   HELPER KONVERSI LINK GAMBAR
+========================================= */
+function normalizeImageLink(link) {
+  if (!link) return null;
+
+  if (link.startsWith("http") && /\.(jpg|jpeg|png|webp)$/i.test(link)) {
+    return link;
+  }
+
+  if (link.includes("drive.google.com")) {
+    const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (match) {
+      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+    }
+  }
+
+  if (!link.startsWith("http")) {
+    return `/${link}`;
+  }
+
+  return link;
+}
 
 /* ======================================================
 DATA MUSIM
@@ -271,38 +291,7 @@ function showImage(src){
 }
 
 
-/* =========================================
-   HELPER KONVERSI LINK GAMBAR
-========================================= */
-function normalizeImageLink(link) {
-  if (!link) return null;
 
-  // Jika sudah link langsung (http & image)
-  if (link.startsWith("http") && (
-      link.endsWith(".jpg") ||
-      link.endsWith(".jpeg") ||
-      link.endsWith(".png") ||
-      link.endsWith(".webp")
-  )) {
-    return link;
-  }
-
-  // Google Drive (format share)
-  // contoh: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
-  if (link.includes("drive.google.com")) {
-    const match = link.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if (match && match[1]) {
-      return `https://drive.google.com/uc?export=view&id=${match[1]}`;
-    }
-  }
-
-  // Path lokal (img/xxx.png)
-  if (!link.startsWith("http")) {
-    return `/${link}`;
-  }
-
-  return link;
-}
 
 
 function renderRiwayat(page=1){
@@ -313,16 +302,15 @@ function renderRiwayat(page=1){
   riwayat.slice((page-1)*PER_PAGE,page*PER_PAGE).forEach(r=>{
     box.innerHTML+=`
     <div class="riwayat-item">
-      <div class="riwayat-thumb ${r.bukti?'':'empty'}"
-        ${r.bukti ? `
-  <img 
-    src="${normalizeImageLink(r.bukti)}" 
-    class="bukti-img"
-    onclick="showImage('${normalizeImageLink(r.bukti)}')"
-  >
-` : ""}>
-        ${r.bukti?`<img src="/${r.bukti}">`:"NO FOTO"}
-      </div>
+      <div class="riwayat-thumb ${r.bukti?'':'empty'}">
+  ${r.bukti ? `
+    <img 
+      src="${normalizeImageLink(r.bukti)}"
+      class="bukti-img"
+      onclick="showImage('${normalizeImageLink(r.bukti)}')"
+    >
+  ` : "NO FOTO"}
+</div>
       <div>
         <div class="riwayat-date">${tgl(r.tanggal)}</div>
         <div class="riwayat-title">${r.jenis}</div>
