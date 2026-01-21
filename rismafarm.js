@@ -43,11 +43,11 @@ const RISMA_FARM = {
   satuan: "kg",
   nilai: 450000,
   biayaPanen: 60000,
-  bukti: "https://drive.google.com/file/d/0B4kc71qLTSxcd1FncnZNUnZ1NXM/view?usp=drivesdk&resourcekey=0-IWTlLihtlYoyYBNjxg81PA"
-  bonusPanen: {
+    bonusPanen: {
     total: 60000,
     anggota: ["Pulung","Faisol","Putri","Nadia","Anis","Tama"]
-  }
+  },
+  bukti: "https://drive.google.com/file/d/1kPQiJQegwaSKOWPPL2tdIHqvYfyf2gHa/view?usp=drivesdk"
  },
 {
   tanggal: "2026-01-12",
