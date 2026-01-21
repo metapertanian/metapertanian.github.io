@@ -22,8 +22,8 @@
 
 <main class="container">
 
-  <!-- HEADER -->
-  <section class="bank-header" style="margin-bottom:16px">
+  <!-- 1. HEADER -->
+  <section class="bank-header" style="margin-bottom:20px">
     <img src="/img/risma_1.png" class="bank-logo">
     <h1 class="bank-title">RISMA FARM</h1>
     <p class="muted" style="text-align:center">
@@ -31,33 +31,34 @@
     </p>
   </section>
 
-  <!-- PILIH MUSIM -->
+  <!-- 2. PILIH MUSIM -->
   <section class="card" style="text-align:center">
     <select id="pilihMusim" class="select-center"></select>
+    <div id="infoMusim" class="muted" style="margin-top:8px"></div>
   </section>
 
-  <!-- MODAL -->
+  <!-- 3. MODAL -->
   <section class="card">
-    <h2>💼 Modal</h2>
-    <div id="tabelModal"></div>
+    <h2>💰 Modal</h2>
+    <div id="modalBox"></div>
   </section>
 
-  <!-- TABEL BIAYA -->
+  <!-- 4. TABEL BIAYA -->
   <section class="card">
     <h2>💸 Tabel Biaya</h2>
     <div id="tabelBiaya"></div>
   </section>
 
-  <!-- PANEN PER KOMODITAS -->
+  <!-- 5. PANEN PER KOMODITAS -->
   <section class="card">
     <h2>🌾 Panen per Komoditas</h2>
     <div id="tabelPanen"></div>
   </section>
 
-  <!-- LABA -->
-  <section id="labaSection"></section>
+  <!-- 6. LABA & BAGI HASIL -->
+  <section class="card" id="labaSection"></section>
 
-  <!-- RIWAYAT -->
+  <!-- 7. RIWAYAT -->
   <section class="card" id="riwayatSection">
     <h2>📜 Riwayat Transaksi</h2>
     <div id="riwayatTransaksi"></div>
@@ -74,142 +75,157 @@ const rupiah = n => Number(n||0).toLocaleString("id-ID");
 const tgl = t => new Date(t).toLocaleDateString("id-ID",{day:"2-digit",month:"long",year:"numeric"});
 
 /* ===============================
-   MUSIM
+   DATA MUSIM
 ================================ */
 const musimKeys = Object.keys(RISMA_FARM.musim||{});
-let musimAktif = musimKeys[0];
+let musimAktif = RISMA_FARM.musim[musimKeys[0]];
 
-const selectMusim = document.getElementById("pilihMusim");
+/* ===============================
+   DROPDOWN MUSIM
+================================ */
+const select = document.getElementById("pilihMusim");
 musimKeys.forEach(k=>{
   const m = RISMA_FARM.musim[k];
-  selectMusim.innerHTML += `<option value="${k}">${m.label}</option>`;
+  const o = document.createElement("option");
+  o.value = k;
+  o.textContent = m.label;
+  select.appendChild(o);
 });
-selectMusim.onchange = e=>{
-  musimAktif = e.target.value;
+select.onchange = () => {
+  musimAktif = RISMA_FARM.musim[select.value];
   renderAll();
 };
 
 /* ===============================
+   INFO MUSIM
+================================ */
+function renderInfoMusim(){
+  document.getElementById("infoMusim").innerHTML = `
+    <strong>${musimAktif.label}</strong><br>
+    ${musimAktif.lokasi}
+  `;
+}
+
+/* ===============================
    MODAL
 ================================ */
-function renderModal(m){
-  let total = 0;
+function renderModal(){
   let html = `<table class="table">
-    <tr><th>No</th><th>Pemodal</th><th>Nilai</th></tr>`;
-  Object.entries(m.modal||{}).forEach(([n,v],i)=>{
-    total += Number(v);
-    html += `<tr><td>${i+1}</td><td>${n}</td><td>Rp ${rupiah(v)}</td></tr>`;
+    <tr><th>No</th><th>Nama</th><th>Nilai</th></tr>`;
+  let i=1,total=0;
+  Object.entries(musimAktif.modal||{}).forEach(([n,v])=>{
+    total+=Number(v);
+    html+=`<tr><td>${i++}</td><td>${n}</td><td>Rp ${rupiah(v)}</td></tr>`;
   });
-  html += `<tr class="total"><td colspan="2">Total</td><td>Rp ${rupiah(total)}</td></tr></table>`;
-  document.getElementById("tabelModal").innerHTML = html;
+  html+=`<tr class="total"><td colspan="2"><strong>Total</strong></td>
+    <td><strong>Rp ${rupiah(total)}</strong></td></tr></table>`;
+  document.getElementById("modalBox").innerHTML=html;
 }
 
 /* ===============================
    BIAYA
 ================================ */
-function renderBiaya(m){
+function renderBiaya(){
   let total=0;
-  let html=`<table class="table"><tr><th>No</th><th>Keterangan</th><th>Harga</th></tr>`;
-  (m.biaya||[]).forEach((b,i)=>{
+  let html=`<table class="table">
+  <tr><th>No</th><th>Keterangan</th><th>Harga</th></tr>`;
+  musimAktif.biaya.forEach((b,i)=>{
     total+=b.jumlah;
     html+=`<tr><td>${i+1}</td><td>${b.keterangan}</td><td>Rp ${rupiah(b.jumlah)}</td></tr>`;
   });
-  html+=`<tr class="total"><td colspan="2">Total</td><td>Rp ${rupiah(total)}</td></tr></table>`;
+  html+=`<tr class="total"><td colspan="2"><strong>Total</strong></td>
+  <td><strong>Rp ${rupiah(total)}</strong></td></tr></table>`;
   document.getElementById("tabelBiaya").innerHTML=html;
 }
 
 /* ===============================
    PANEN PER KOMODITAS
 ================================ */
-function renderPanen(m){
+function renderPanen(){
   const box=document.getElementById("tabelPanen");
   box.innerHTML="";
   const grup={};
-
-  (m.panen||[]).forEach(p=>{
+  musimAktif.panen.forEach(p=>{
     if(!grup[p.komoditas]) grup[p.komoditas]=[];
     grup[p.komoditas].push(p);
   });
 
-  Object.entries(grup).forEach(([komoditas,list])=>{
-    let totalSurplus=0;
-    let html=`<h3>${komoditas}</h3><table class="table">
-      <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
-    list.forEach((p,i)=>{
+  Object.entries(grup).forEach(([kom,arr])=>{
+    let total=0;
+    let html=`<h3>${kom}</h3><table class="table">
+    <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
+    arr.forEach((p,i)=>{
       const s=p.nilai-(p.biayaPanen||0);
-      totalSurplus+=s;
+      total+=s;
       html+=`<tr><td>${i+1}</td><td>${tgl(p.tanggal)}</td><td>Rp ${rupiah(s)}</td></tr>`;
     });
-    html+=`<tr class="total"><td colspan="2">Total</td><td>Rp ${rupiah(totalSurplus)}</td></tr></table>`;
+    html+=`<tr class="total"><td colspan="2"><strong>Total</strong></td>
+    <td><strong>Rp ${rupiah(total)}</strong></td></tr></table>`;
     box.innerHTML+=html;
   });
 }
 
 /* ===============================
-   LABA & BAGI HASIL
+   LABA & BAGI HASIL (DINAMIS)
 ================================ */
-function renderLaba(m){
-  const omzet=(m.panen||[]).reduce((a,b)=>a+b.nilai,0);
-  const biaya=(m.biaya||[]).reduce((a,b)=>a+b.jumlah,0);
-  const biayaPanen=(m.panen||[]).reduce((a,b)=>a+(b.biayaPanen||0),0);
-  const laba=omzet-biaya-biayaPanen;
+function renderLaba(){
+  const omzet=musimAktif.panen.reduce((a,b)=>a+b.nilai,0);
+  const biaya=musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
+  const panenBiaya=musimAktif.panen.reduce((a,b)=>a+(b.biayaPanen||0),0);
+  const laba=omzet-biaya-panenBiaya;
 
-  let html=`<section class="card"><h2>📊 Laba & Bagi Hasil</h2>
-    <div class="stat"><strong>Laba Bersih: Rp ${rupiah(laba)}</strong></div>`;
+  let html=`<h2>📊 Laba & Bagi Hasil</h2>
+  <div class="stat"><small>Laba Bersih</small>
+  <strong class="success">Rp ${rupiah(laba)}</strong></div>
+  <table class="table"><tr><th>Pihak</th><th>Bagian</th></tr>`;
 
-  const skema=m.skema?.pembagian||{};
-  Object.entries(skema).forEach(([k,v])=>{
-    html+=`<div class="muted">${k}: Rp ${rupiah(laba*v/100)} (${v}%)</div>`;
+  Object.entries(musimAktif.skema.pembagian||{}).forEach(([n,p])=>{
+    html+=`<tr><td>${n}</td><td>Rp ${rupiah(laba*p/100)}</td></tr>`;
   });
-  html+=`</section>`;
+  html+=`</table>`;
   document.getElementById("labaSection").innerHTML=html;
 }
 
 /* ===============================
-   RIWAYAT
+   RIWAYAT FULL
 ================================ */
 const PER_PAGE=5;
-let dataRiwayat=[];
+let riwayat=[],page=1;
 
-function kumpulkanRiwayat(m){
-  dataRiwayat=[];
-  (m.biaya||[]).forEach(b=>dataRiwayat.push({
-    t:b.tanggal, jenis:"Biaya", judul:b.keterangan,
-    nilai:b.jumlah, foto:b.foto||null
+function kumpulkanRiwayat(){
+  riwayat=[];
+  musimAktif.biaya.forEach(b=>riwayat.push({
+    tanggal:b.tanggal,tipe:"Biaya",ket:b.keterangan,nilai:-b.jumlah,bukti:b.bukti
   }));
-  (m.panen||[]).forEach(p=>dataRiwayat.push({
-    t:p.tanggal, jenis:`Panen ${p.komoditas}`,
-    omzet:p.nilai, biaya:p.biayaPanen||0,
-    surplus:p.nilai-(p.biayaPanen||0),
-    foto:p.foto||null
+  musimAktif.panen.forEach(p=>riwayat.push({
+    tanggal:p.tanggal,tipe:`Panen ${p.komoditas}`,
+    ket:`Omzet Rp ${rupiah(p.nilai)}<br>Biaya Panen Rp ${rupiah(p.biayaPanen||0)}`,
+    nilai:p.nilai-(p.biayaPanen||0),bukti:p.bukti
   }));
-  dataRiwayat.sort((a,b)=>new Date(b.t)-new Date(a.t));
+  riwayat.sort((a,b)=>new Date(b.tanggal)-new Date(a.tanggal));
 }
 
-function renderRiwayat(page=1){
+function renderRiwayat(){
   const box=document.getElementById("riwayatTransaksi");
   const pag=document.getElementById("pagination");
   box.innerHTML=""; pag.innerHTML="";
-
-  dataRiwayat.slice((page-1)*PER_PAGE,page*PER_PAGE).forEach(r=>{
+  riwayat.slice((page-1)*PER_PAGE,page*PER_PAGE).forEach(r=>{
     box.innerHTML+=`
-      <div class="riwayat-full">
-        <small>${tgl(r.t)}</small>
-        <h4>${r.jenis}</h4>
-        ${r.omzet?`<div>Omzet: Rp ${rupiah(r.omzet)}</div>
-        <div>Biaya Panen: Rp ${rupiah(r.biaya)}</div>
-        <strong>Surplus: Rp ${rupiah(r.surplus)}</strong>`
-        :`<strong>Rp ${rupiah(r.nilai)}</strong>`}
-        ${r.foto?`<img src="${r.foto}" class="bukti">`:""}
-      </div>`;
+    <div class="riwayat-full">
+      <div class="riwayat-date">${tgl(r.tanggal)}</div>
+      <strong>${r.tipe}</strong>
+      <div class="muted">${r.ket}</div>
+      <div class="${r.nilai>=0?'success':'danger'}">Rp ${rupiah(r.nilai)}</div>
+      ${r.bukti?`<img src="${r.bukti}" class="bukti">`:""}
+    </div>`;
   });
-
-  const max=Math.min(5,Math.ceil(dataRiwayat.length/PER_PAGE));
-  for(let i=1;i<=max;i++){
+  for(let i=1;i<=Math.min(5,Math.ceil(riwayat.length/PER_PAGE));i++){
     const b=document.createElement("button");
     b.textContent=i;
     if(i===page) b.classList.add("active");
-    b.onclick=()=>{renderRiwayat(i);riwayatSection.scrollIntoView({behavior:"smooth"});}
+    b.onclick=()=>{page=i;renderRiwayat();
+      document.getElementById("riwayatSection").scrollIntoView({behavior:"smooth"});
+    };
     pag.appendChild(b);
   }
 }
@@ -218,13 +234,13 @@ function renderRiwayat(page=1){
    INIT
 ================================ */
 function renderAll(){
-  const m=RISMA_FARM.musim[musimAktif];
-  renderModal(m);
-  renderBiaya(m);
-  renderPanen(m);
-  renderLaba(m);
-  kumpulkanRiwayat(m);
-  renderRiwayat(1);
+  renderInfoMusim();
+  renderModal();
+  renderBiaya();
+  renderPanen();
+  renderLaba();
+  kumpulkanRiwayat();
+  renderRiwayat();
 }
 renderAll();
 </script>
