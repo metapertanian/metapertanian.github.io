@@ -172,18 +172,14 @@ function showDetailTransaksi(data) {
         ${
           data.bukti
           ? `<img src="${data.bukti}" class="detail-img"
-              onclick="showImage(this.src)">`
+     onclick="event.stopPropagation(); showImage(this.src)">`
           : `<div class="no-photo">Tidak ada foto</div>`
         }
       </div>
     </div>
   `;
 
-  modal.onclick = e => {
-    if (e.target === modal || e.target.classList.contains("close-btn")) {
-      modal.remove();
-    }
-  };
+  modal.onclick = () => modal.remove();
 
   document.body.appendChild(modal);
 }
