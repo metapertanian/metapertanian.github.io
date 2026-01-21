@@ -23,7 +23,8 @@ const RISMA_FARM = {
 {
   tanggal: "2025-12-24",
   keterangan: "Benih Cabai",
-  jumlah: 80000
+  jumlah: 80000,
+  bukti: "img/pulung.png"
 },
 ],
   panen: [
