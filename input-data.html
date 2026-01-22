@@ -56,7 +56,7 @@
     </div>
 
     <div class="form-row">
-      <label>Nilai (Rp) <button type="button" class="btn-000" onclick="addZeros()">+000</button></label> 
+      <label>Nilai (Rp) <button type="button" class="btn-000" onclick="addZeros(this)">+000</button></label> 
       <input type="number" id="nilai">
     </div>
 
@@ -82,7 +82,7 @@
     </div>
 
     <div class="form-row">
-      <label>Biaya Panen <button type="button" class="btn-000" onclick="addZeros()">+000</button></label>
+      <label>Biaya Panen <button type="button" class="btn-000" onclick="addZeros(this)">+000</button></label>
       <input type="number" id="biayaPanen">
     </div>
   </section>
@@ -92,7 +92,7 @@
     <h3>🎁 Bonus Panen (RISMA FARM)</h3>
 
     <div class="form-row">
-      <label>Total Bonus <button type="button" class="btn-000" onclick="addZeros()">+000</button></label>
+      <label>Total Bonus <button type="button" class="btn-000" onclick="addZeros(this)">+000</button></label>
       <input type="number" id="bonusTotal">
     </div>
 
@@ -130,6 +130,17 @@
 
 <script>
 
+const tanggalInput = document.getElementById("tanggal");
+const namaInput = document.getElementById("nama");
+const nilaiInput = document.getElementById("nilai");
+const buktiInput = document.getElementById("bukti");
+
+const qtyInput = document.getElementById("qty");
+const satuanSelect = document.getElementById("satuan");
+const biayaPanenInput = document.getElementById("biayaPanen");
+
+const bonusTotalInput = document.getElementById("bonusTotal");
+
 /* STATE GLOBAL */
 
 let draftData = [];
@@ -141,6 +152,11 @@ let lockedLahan = null;
 function addDraft() {
   const lahan = document.getElementById("lahan").value;
   const jenis = document.getElementById("jenis").value;
+
+  if (!tanggalInput.value || !namaInput.value || !nilaiInput.value) {
+  alert("Tanggal, nama, dan nilai wajib diisi");
+  return;
+}
 
   if (!lockedJenis) {
     lockedJenis = jenis;
@@ -299,11 +315,11 @@ function clearForm() {
 /* =========================
 Tambah +000
 ========================== */
-function addZeros() {
-  const input = document.getElementById("nilai");
-  let v = input.value || "0";
+function addZeros(btn) {
+  const input = btn.closest(".form-row").querySelector("input");
+  if (!input) return;
 
-  // hindari NaN
+  let v = input.value || "0";
   if (isNaN(v)) v = "0";
 
   input.value = v + "000";
