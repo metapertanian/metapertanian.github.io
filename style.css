@@ -569,9 +569,18 @@ pre {
 /* =========================
    FILTER HIGHLIGHT NAMA
 ========================= */
-.highlight-name {
-  color: #6b46c1; /* ungu elegan */
+.highlight-masuk {
+  color: #16a34a; /* hijau masuk */
   font-weight: 700;
+}
+
+.highlight-keluar {
+  color: #dc2626; /* merah keluar */
+  font-weight: 700;
+}
+
+.muted {
+  color: #64748b;
 }
 
 /* =========================
