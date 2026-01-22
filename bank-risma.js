@@ -85,11 +85,11 @@
 
     <section class="card summary-stack" style="text-align:center">
       <div class="summary-item">
-        <small>Total Saldo</small>
+        <small>Saldo Masuk</small>
         <div class="big-number success" id="totalMasuk">0</div>
       </div>
       <div class="summary-item">
-        <small>Tarik Tunai</small>
+        <small>Saldo Keluar</small>
         <div class="big-number danger" id="totalKeluar">0</div>
       </div>
       <div class="summary-item">
@@ -174,11 +174,13 @@
     globalData.tabel.forEach((a, i) => {
       tbody.innerHTML += `
         <tr>
-          <td>${i + 1}</td>
+  <button class="link-name" onclick="filterByName('${a.nama}')">
+    
           <td>${a.nama}</td>
           <td>${ribu(a.masuk)}</td>
           <td>${ribu(a.keluar)}</td>
           <td><strong>${ribu(a.saldo)}</strong></td>
+  </button>
         </tr>
       `;
     });
@@ -186,46 +188,52 @@
     renderRiwayat();
   }
 
+
   function renderRiwayat() {
-    const box = el("riwayat");
-    box.innerHTML = "";
+  const box = el("riwayat");
+  box.innerHTML = "";
 
-    const filter = el("filterAnggota").value;
-    const data = filter
-      ? globalData.riwayat.filter(r => r.detail && r.detail[filter])
-      : globalData.riwayat;
+  const filter = el("filterAnggota").value;
+  const data = filter
+    ? globalData.riwayat.filter(r => r.detail && r.detail[filter])
+    : globalData.riwayat;
 
-    const start = (currentPage - 1) * perPage;
-    const items = data.slice(start, start + perPage);
+  const start = (currentPage - 1) * perPage;
+  const items = data.slice(start, start + perPage);
 
-    items.forEach(r => {
-      const total = Object.values(r.detail).reduce((a,b)=>a+b,0);
+  items.forEach(r => {
+    const total = Object.values(r.detail).reduce((a, b) => a + b, 0);
 
-      const anggotaDetail = Object.entries(r.detail)
-        .map(([n,v]) => {
-          const cls = filter && n === filter ? "highlight-name" : "muted";
-          return `<span class="${cls}">${n}: ${v.toLocaleString("id-ID")}</span>`;
-        })
-        .join("<br>");
+    const anggotaDetail = Object.entries(r.detail)
+      .map(([n, v]) => {
+        const cls =
+          filter && n === filter ? "highlight-name" : "muted";
+        return `<div class="${cls}">${n}: Rp ${v.toLocaleString("id-ID")}</div>`;
+      })
+      .join("");
 
-      box.innerHTML += `
-        <div class="riwayat-item">
+    box.innerHTML += `
+      <div class="riwayat-item">
+        <div>
           <div class="riwayat-date">${formatTanggal(r.tanggal)}</div>
-          <div>
-            <strong>${r.kategori}</strong> – ${r.sumber}<br>
-            <span class="${r.tipe}">
-              ${r.tipe === "masuk" ? "+" : "-"}${total.toLocaleString("id-ID")}
-            </span>
-            <div style="margin-top:6px;font-size:.85rem">
-              ${anggotaDetail}
-            </div>
+          <div class="riwayat-title">${r.kategori}</div>
+          <div class="riwayat-detail">${r.sumber}</div>
+
+          <div class="riwayat-value ${r.tipe === "masuk" ? "success" : "danger"}">
+            ${r.tipe === "masuk" ? "+" : "-"}Rp ${total.toLocaleString("id-ID")}
+          </div>
+
+          <div class="riwayat-detail" style="margin-top:8px">
+            ${anggotaDetail}
           </div>
         </div>
-      `;
-    });
+      </div>
+    `;
+  });
 
-    renderPagination(data.length);
-  }
+  renderPagination(data.length);
+}
+
 
   function renderPagination(total) {
     const pag = el("pagination");
@@ -244,6 +252,17 @@
       pag.appendChild(b);
     }
   }
+
+
+/* =================================
+   Klik Nama ke filter
+================================ */
+window.filterByName = function (nama) {
+  el("filterAnggota").value = nama;
+  currentPage = 1;
+  renderRiwayat();
+  el("riwayatSection").scrollIntoView({ behavior: "smooth" });
+};
 
   /* =============================
      INIT FILTER
