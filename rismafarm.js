@@ -12,14 +12,26 @@ const RISMA_FARM = {
       },
 
       biaya: [
+{
+  tanggal: "2026-01-21",
+  keterangan: "Regent",
+  jumlah: 24000
+},
+{
+  tanggal: "2026-01-20",
+  keterangan: "Karate Boroni",
+  jumlah: 10000
+},
+{
+  tanggal: "2026-01-20",
+  keterangan: "Perekat",
+  jumlah: 15500
+},
         {
           tanggal: "2026-01-15",
           keterangan: "Telek Ayam",
           jumlah: 90000,
-          bukti:
-            "https://blogger.googleusercontent.com/img/a/AVvXsEjFjPc13W_6OSf5aiQei1q_R5NltDrqrnevYpz-R8MxYRAteP5_oUwVCZM9xYcpdsi4A0j_LxvzsAD81UGxIHtoHWD3Pd6JoN9RpEn0gnPXzUj4XDNb4Giy01pwzZz4HO0vVjcxKkjS995DAyue6DLKn9RqilYuq3VPUDSdGNfZwhnbidA9rFpB5IICkyCt"
-        },
-        {
+          {
           tanggal: "2026-01-15",
           keterangan: "Benih Timun",
           jumlah: 90000
@@ -27,8 +39,7 @@ const RISMA_FARM = {
         {
           tanggal: "2025-12-24",
           keterangan: "Benih Cabai",
-          jumlah: 80000,
-          bukti: "img/pulung.png"
+          jumlah: 80000
         }
       ],
 
