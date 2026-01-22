@@ -123,6 +123,21 @@
 </main>
 
 <script>
+
+/* =========================
+Tambah +000
+========================== */
+function addZeros() {
+  const input = document.getElementById("nilai");
+  let v = input.value || "0";
+
+  // hindari NaN
+  if (isNaN(v)) v = "0";
+
+  input.value = v + "000";
+  input.focus();
+}
+
 /* =============================
    INIT ANGGOTA
 ============================= */
@@ -166,13 +181,16 @@ function parseBukti(v) {
    GENERATE
 ============================= */
 function generate() {
-  const lahan = lahanSelect.value;
-  const jenis = jenisSelect.value;
+  const lahan = document.getElementById("lahan").value;
+  const jenis = document.getElementById("jenis").value;
 
-  const tanggal = tanggalInput.value;
-  const nama = namaInput.value.trim();
-  const nilai = Number(nilaiInput.value);
-  const bukti = parseBukti(buktiInput.value);
+  const tanggal = document.getElementById("tanggal").value;
+  const nama = document.getElementById("nama").value.trim();
+  const nilai = Number(document.getElementById("nilai").value || 0);
+  const bukti = parseBukti(document.getElementById("bukti").value);
+
+  const outputLahan = document.getElementById("outputLahan");
+  const outputKas = document.getElementById("outputKas");
 
   let outLahan = "// -";
   let outKas = "// -";
@@ -194,9 +212,9 @@ function generate() {
 
   /* ================= PANEN ================= */
   if (jenis === "panen") {
-    const qty = Number(qtyInput.value);
-    const satuan = satuanSelect.value;
-    const biayaPanen = Number(biayaPanenInput.value || 0);
+    const qty = Number(document.getElementById("qty").value || 0);
+    const satuan = document.getElementById("satuan").value;
+    const biayaPanen = Number(document.getElementById("biayaPanen").value || 0);
 
     outLahan = `{
   tanggal: "${tanggal}",
@@ -207,8 +225,8 @@ function generate() {
   biayaPanen: ${biayaPanen}` : ""}`;
 
     /* ===== BONUS PANEN (OPSIONAL) ===== */
-    let bonusTotal = Number(bonusTotalInput.value || 0);
-    let anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
+    const bonusTotal = Number(document.getElementById("bonusTotal").value || 0);
+    const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
       .map(cb => cb.value);
 
     if (bonusTotal && anggotaDipilih.length) {
