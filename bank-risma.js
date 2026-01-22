@@ -226,7 +226,10 @@ if (filter && n === filter) {
     box.innerHTML += `
       <div class="riwayat-item">
         <div>
-          <div class="riwayat-date">${formatTanggal(r.tanggal)}</div>
+          <div class="riwayat-date ${r.nilai >= 0 ? "success" : "danger"}"
+     style="opacity:.65;font-size:13px">
+  ${tgl(r.tanggal)}
+</div>
           <div class="riwayat-title">${r.kategori}</div>
           <div class="riwayat-detail">${r.sumber}</div>
 
