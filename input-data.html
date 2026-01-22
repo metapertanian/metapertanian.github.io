@@ -166,68 +166,85 @@ function parseBukti(v) {
    GENERATE
 ============================= */
 function generate() {
-  const lahan = document.getElementById("lahan").value;
-  const jenis = document.getElementById("jenis").value;
-  const tanggal = document.getElementById("tanggal").value;
-  const nama = document.getElementById("nama").value.trim();
-  const nilai = Number(document.getElementById("nilai").value);
-  const bukti = parseBukti(document.getElementById("bukti").value);
+  const lahan = lahanSelect.value;
+  const jenis = jenisSelect.value;
 
-  let lahanObj = `{
-  tanggal: "${tanggal}",
-  komoditas: "${nama}",
-  qty: ${Number(document.getElementById("qty").value || 0)},
-  satuan: "${document.getElementById("satuan").value}",
-  nilai: ${nilai}`;
+  const tanggal = tanggalInput.value;
+  const nama = namaInput.value.trim();
+  const nilai = Number(nilaiInput.value);
+  const bukti = parseBukti(buktiInput.value);
 
-  const biayaPanen = Number(document.getElementById("biayaPanen").value || 0);
-  if (biayaPanen) lahanObj += `,
-  biayaPanen: ${biayaPanen}`;
+  let outLahan = "// -";
+  let outKas = "// -";
 
-  if (jenis === "panen" && lahan === "rismafarm") {
-    const bonus = Number(document.getElementById("bonusTotal").value || 0);
-    const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
-      .map(cb => cb.value);
-
-    if (bonus && anggotaDipilih.length) {
-      lahanObj += `,
-  bonusPanen: {
-    total: ${bonus},
-    anggota: ${JSON.stringify(anggotaDipilih)}
-  }`;
-    }
+  /* ================= MODAL ================= */
+  if (jenis === "modal") {
+    outLahan = `"${nama}": ${nilai},`;
   }
 
-  if (bukti) lahanObj += `,
-  bukti: ${JSON.stringify(bukti, null, 2)}`;
-
-  lahanObj += `
+  /* ================= BIAYA ================= */
+  if (jenis === "biaya") {
+    outLahan = `{
+  tanggal: "${tanggal}",
+  keterangan: "${nama}",
+  jumlah: ${nilai}${bukti ? `,
+  bukti: ${JSON.stringify(bukti)}` : ""}
 },`;
+  }
 
-  document.getElementById("outputLahan").textContent = lahanObj;
+  /* ================= PANEN ================= */
+  if (jenis === "panen") {
+    const qty = Number(qtyInput.value);
+    const satuan = satuanSelect.value;
+    const biayaPanen = Number(biayaPanenInput.value || 0);
 
-  /* KAS BANK */
-  if (jenis === "panen" && lahan === "rismafarm") {
-    const bonus = Number(document.getElementById("bonusTotal").value || 0);
-    const anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
+    outLahan = `{
+  tanggal: "${tanggal}",
+  komoditas: "${nama}",
+  qty: ${qty},
+  satuan: "${satuan}",
+  nilai: ${nilai}${biayaPanen ? `,
+  biayaPanen: ${biayaPanen}` : ""}`;
+
+    /* ===== BONUS PANEN (OPSIONAL) ===== */
+    let bonusTotal = Number(bonusTotalInput.value || 0);
+    let anggotaDipilih = [...document.querySelectorAll('#listAnggota input:checked')]
       .map(cb => cb.value);
 
-    if (bonus && anggotaDipilih.length) {
-      const per = Math.floor(bonus / anggotaDipilih.length);
+    if (bonusTotal && anggotaDipilih.length) {
+      outLahan += `,
+  bonusPanen: {
+    total: ${bonusTotal},
+    anggota: ${JSON.stringify(anggotaDipilih)}
+  }`;
+
+      /* ===== KAS BANK (BONUS PANEN) ===== */
+      const per = Math.floor(bonusTotal / anggotaDipilih.length);
       const detail = {};
       anggotaDipilih.forEach(a => detail[a] = per);
 
-      document.getElementById("outputKas").textContent = `{
+      outKas = `{
   id: "${kasId(tanggal)}",
   tanggal: "${tanggal}",
   tipe: "masuk",
   kategori: "Bonus Panen",
   sumber: "Panen ${nama} RISMA FARM",
   detail: ${JSON.stringify(detail, null, 2)}${bukti ? `,
-  bukti: ${JSON.stringify(bukti, null, 2)}` : ""}
+  bukti: ${JSON.stringify(bukti)}` : ""}
 },`;
     }
+
+    if (bukti) {
+      outLahan += `,
+  bukti: ${JSON.stringify(bukti)}`;
+    }
+
+    outLahan += `
+},`;
   }
+
+  outputLahan.textContent = outLahan;
+  outputKas.textContent = outKas;
 }
 
 /* =============================
