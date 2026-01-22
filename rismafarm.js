@@ -41,6 +41,7 @@ const RISMA_FARM = {
           tanggal: "2026-01-15",
           keterangan: "Telek Ayam",
           jumlah: 90000,
+          },
           {
           tanggal: "2026-01-15",
           keterangan: "Benih Timun",
