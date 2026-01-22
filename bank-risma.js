@@ -172,19 +172,24 @@
     const tbody = el("tabelAnggota");
     tbody.innerHTML = "";
     globalData.tabel.forEach((a, i) => {
-      tbody.innerHTML += `
-        <tr>
-          <td>${i + 1}</td>
-          <td>
-  <button class="link-name" onclick="filterByName('${a.nama}')">
-          ${a.nama}
-  </button></td>
-          <td>${ribu(a.masuk)}</td>
-          <td>${ribu(a.keluar)}</td>
-          <td><strong>${ribu(a.saldo)}</strong></td>
-        </tr>
-      `;
-    });
+  const cls =
+    a.masuk > a.keluar
+      ? "success"
+      : a.keluar > a.masuk
+      ? "danger"
+      : "";
+
+  tbody.innerHTML += `
+    <tr style="cursor:pointer"
+        onclick="filterByName('${a.nama}')">
+      <td>${i + 1}</td>
+      <td class="${cls}">${a.nama}</td>
+      <td class="${cls}">${ribu(a.masuk)}</td>
+      <td class="${cls}">${ribu(a.keluar)}</td>
+      <td class="${cls}"><strong>${ribu(a.saldo)}</strong></td>
+    </tr>
+  `;
+});
 
     renderRiwayat();
   }
