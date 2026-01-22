@@ -125,22 +125,52 @@ function renderInfoMusim(){
 /* ======================================================
 MODAL
 ====================================================== */
+
 function renderModal(){
-  let total = 0;
+  let totalModal = 0;
   let html = `<table class="table">
     <tr><th>No</th><th>Nama</th><th>Jumlah</th></tr>`;
-  Object.entries(musimAktif.modal||{}).forEach(([n,v],i)=>{
-    total += Number(v);
+
+  const entries = Object.entries(musimAktif.modal || {});
+
+  entries.forEach(([n,v],i)=>{
+    totalModal += Number(v);
     html += `<tr>
       <td>${i+1}</td>
       <td>${n}</td>
       <td>Rp ${rupiah(v)}</td>
     </tr>`;
   });
+
+  // ===============================
+  // HITUNG TOTAL BIAYA
+  // ===============================
+  const totalBiaya = (musimAktif.biaya || [])
+    .reduce((a,b)=>a + Number(b.jumlah||0), 0);
+
+  // ===============================
+  // JIKA BIAYA > MODAL → MODAL MANAJEMEN
+  // ===============================
+  let no = entries.length + 1;
+  if(totalBiaya > totalModal){
+    const tambahan = totalBiaya - totalModal;
+    totalModal += tambahan;
+
+    html += `<tr class="warning">
+      <td>${no}</td>
+      <td><strong>Modal Manajemen</strong></td>
+      <td><strong>Rp ${rupiah(tambahan)}</strong></td>
+    </tr>`;
+  }
+
+  // ===============================
+  // TOTAL
+  // ===============================
   html += `<tr class="total">
-    <td colspan="2"><strong>Total</strong></td>
-    <td><strong>Rp ${rupiah(total)}</strong></td>
+    <td colspan="2"><strong>Total Modal</strong></td>
+    <td><strong>Rp ${rupiah(totalModal)}</strong></td>
   </tr></table>`;
+
   document.getElementById("tabelModal").innerHTML = html;
 }
 
