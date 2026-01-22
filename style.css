@@ -213,6 +213,52 @@ h1 {
   border-bottom: none;
 }
 
+/* ===========================
+   TABEL ANGGOTA – ELEGAN
+=========================== */
+
+.bank-table td {
+  padding: 10px 12px;
+  vertical-align: middle;
+}
+
+.bank-table .nama-cell {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #222;
+}
+
+.bank-table .angka {
+  font-size: .95rem;
+  text-align: right;
+}
+
+.bank-table .saldo {
+  font-size: 1rem;
+}
+
+/* hover lembut */
+.bank-table .row-hover {
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.bank-table .row-hover:hover {
+  background: rgba(0,0,0,.035);
+}
+
+/* netral saldo 0 */
+.muted {
+  color: #888;
+}
+
+/* biar rapi di mobile */
+@media (max-width: 600px) {
+  .bank-table .nama-cell {
+    font-size: 1rem;
+  }
+}
+
 /* =========================
    FORM
 ========================= */
