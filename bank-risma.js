@@ -196,7 +196,7 @@
 
 
   function renderRiwayat() {
-  const box = el("riwayat");
+  const box = el("riwayatTransaksi");
   box.innerHTML = "";
 
   const filter = el("filterAnggota").value;
