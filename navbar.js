@@ -1,4 +1,4 @@
-// navbar2.js
+// navbar.js
 // Navbar universal BERTUNAS
 // Mode: "public" | "admin"
 
