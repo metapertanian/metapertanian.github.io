@@ -167,7 +167,7 @@ function renderModal(){
   // TOTAL
   // ===============================
   html += `<tr class="total">
-    <td colspan="2"><strong>Total Modal</strong></td>
+    <td colspan="2"><strong>Modal</strong></td>
     <td><strong>Rp ${rupiah(totalModal)}</strong></td>
   </tr></table>`;
 
@@ -245,7 +245,7 @@ biayaSorted.forEach((b,i)=>{
     </tr>`;
   });
   html += `<tr class="total">
-    <td colspan="3"><strong>Total Biaya</strong></td>
+    <td colspan="3"><strong>Total</strong></td>
     <td><strong>Rp ${rupiah(total)}</strong></td>
   </tr></table>`;
   document.getElementById("tabelBiaya").innerHTML = html;
@@ -290,7 +290,7 @@ dataSorted.forEach((p,i)=>{
       </tr>`;
     });
     html += `<tr class="total">
-      <td colspan="2"><strong>Total Surplus</strong></td>
+      <td colspan="2"><strong>Total</strong></td>
       <td><strong>Rp ${rupiah(totalSurplus)}</strong></td>
     </tr></table>`;
     box.innerHTML += html;
