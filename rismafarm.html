@@ -159,7 +159,10 @@ function showDetailTransaksi(data) {
       </div>
 
       <div class="detail-body">
-        <div class="detail-date">${tgl(data.tanggal)}</div>
+        <div class="detail-date ${data.nilai >= 0 ? "success" : "danger"}"
+     style="opacity:.7">
+  ${tgl(data.tanggal)}
+</div>
 
         <div class="detail-text">
           ${data.keterangan.replaceAll(" | ","<br>")}
@@ -361,7 +364,10 @@ function renderRiwayat(page=1){
       </div>
 
       <div>
-        <div class="riwayat-date">${tgl(r.tanggal)}</div>
+        <div class="riwayat-date ${r.nilai >= 0 ? "success" : "danger"}"
+     style="opacity:.65;font-size:13px">
+  ${tgl(r.tanggal)}
+</div>
         <div class="riwayat-title">${r.jenis}</div>
 
         <div class="riwayat-detail">
