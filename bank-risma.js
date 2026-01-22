@@ -207,8 +207,13 @@
 
     const anggotaDetail = Object.entries(r.detail)
       .map(([n, v]) => {
-        const cls =
-          filter && n === filter ? "highlight-name" : "muted";
+        let cls = "muted";
+
+if (filter && n === filter) {
+  cls = r.tipe === "masuk"
+    ? "highlight-masuk"
+    : "highlight-keluar";
+}
         return `<div class="${cls}">${n}: Rp ${v.toLocaleString("id-ID")}</div>`;
       })
       .join("");
