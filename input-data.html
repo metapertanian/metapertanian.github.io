@@ -102,10 +102,16 @@
     </div>
   </section>
 
+<section class="card">
+  <h3>📋 Daftar Transaksi (sementara)</h3>
+  <ul id="draftList" class="draft-list"></ul>
+</section>
+
   <!-- ACTION -->
   <section class="card">
-    <button class="btn-primary" onclick="generate()">Generate Kode</button>
-  </section>
+  <button class="btn-secondary" onclick="addDraft()">➕ Tambahkan</button>
+  <button class="btn-primary" onclick="generateAll()">⚙️ Buat Kode</button>
+</section>
 
   <!-- OUTPUT -->
   <section class="card">
@@ -123,6 +129,172 @@
 </main>
 
 <script>
+
+/* STATE GLOBAL */
+
+let draftData = [];
+let lockedJenis = null;
+let lockedLahan = null;
+
+/* ➕TAMBAHKAN KE DAFTAR */
+
+function addDraft() {
+  const lahan = document.getElementById("lahan").value;
+  const jenis = document.getElementById("jenis").value;
+
+  if (!lockedJenis) {
+    lockedJenis = jenis;
+    lockedLahan = lahan;
+  }
+
+  if (jenis !== lockedJenis || lahan !== lockedLahan) {
+    alert("Jenis & lahan harus sama untuk satu batch generate");
+    return;
+  }
+
+  const data = {
+    lahan,
+    jenis,
+    tanggal: tanggalInput.value,
+    nama: namaInput.value.trim(),
+    nilai: Number(nilaiInput.value),
+    bukti: parseBukti(buktiInput.value)
+  };
+
+  if (jenis === "panen") {
+    data.qty = Number(qtyInput.value);
+    data.satuan = satuanSelect.value;
+    data.biayaPanen = Number(biayaPanenInput.value || 0);
+
+    const bonus = Number(bonusTotalInput.value || 0);
+    const anggota = [...document.querySelectorAll('#listAnggota input:checked')]
+      .map(cb => cb.value);
+
+    if (bonus && anggota.length) {
+      data.bonusPanen = { total: bonus, anggota };
+    }
+  }
+
+  draftData.push(data);
+  renderDraftList();
+  clearForm();
+}
+
+/* LIST TRANSAKSI */
+
+function renderDraftList() {
+  const list = document.getElementById("draftList");
+  list.innerHTML = "";
+
+  draftData.forEach((d, i) => {
+    list.innerHTML += `
+      <li>
+        <strong>${i + 1}.</strong>
+        ${d.tanggal} – ${d.nama} – Rp ${d.nilai.toLocaleString()}
+        <button onclick="removeDraft(${i})">❌</button>
+      </li>
+    `;
+  });
+}
+
+function removeDraft(i) {
+  draftData.splice(i, 1);
+  if (draftData.length === 0) {
+    lockedJenis = null;
+    lockedLahan = null;
+  }
+  renderDraftList();
+}
+
+/* BUAT KODE */
+
+function generateAll() {
+  if (!draftData.length) {
+    alert("Belum ada transaksi");
+    return;
+  }
+
+  let lahanOut = "";
+  let kasOut = "";
+
+  draftData.forEach(d => {
+
+    /* ===== MODAL ===== */
+    if (d.jenis === "modal") {
+      lahanOut += `"${d.nama}": ${d.nilai},\n`;
+    }
+
+    /* ===== BIAYA ===== */
+    if (d.jenis === "biaya") {
+      lahanOut += `{
+  tanggal: "${d.tanggal}",
+  keterangan: "${d.nama}",
+  jumlah: ${d.nilai}${d.bukti ? `,
+  bukti: ${JSON.stringify(d.bukti)}` : ""}
+},\n`;
+    }
+
+    /* ===== PANEN ===== */
+    if (d.jenis === "panen") {
+      lahanOut += `{
+  tanggal: "${d.tanggal}",
+  komoditas: "${d.nama}",
+  qty: ${d.qty},
+  satuan: "${d.satuan}",
+  nilai: ${d.nilai}${d.biayaPanen ? `,
+  biayaPanen: ${d.biayaPanen}` : ""}`;
+
+      if (d.bonusPanen) {
+        lahanOut += `,
+  bonusPanen: {
+    total: ${d.bonusPanen.total},
+    anggota: ${JSON.stringify(d.bonusPanen.anggota)}
+  }`;
+
+        const per = Math.floor(d.bonusPanen.total / d.bonusPanen.anggota.length);
+        const detail = {};
+        d.bonusPanen.anggota.forEach(a => detail[a] = per);
+
+        kasOut += `{
+  id: "${kasId(d.tanggal)}",
+  tanggal: "${d.tanggal}",
+  tipe: "masuk",
+  kategori: "Bonus Panen",
+  sumber: "Panen ${d.nama} RISMA FARM",
+  detail: ${JSON.stringify(detail, null, 2)}
+},\n`;
+      }
+
+      if (d.bukti) {
+        lahanOut += `,
+  bukti: ${JSON.stringify(d.bukti)}`;
+      }
+
+      lahanOut += `
+},\n`;
+    }
+  });
+
+  outputLahan.textContent = lahanOut;
+  outputKas.textContent = kasOut || "// -";
+
+  draftData = [];
+  lockedJenis = null;
+  lockedLahan = null;
+  renderDraftList();
+}
+
+/* CLEAR FORM */
+
+function clearForm() {
+  namaInput.value = "";
+  nilaiInput.value = "";
+  buktiInput.value = "";
+  qtyInput && (qtyInput.value = "");
+  biayaPanenInput && (biayaPanenInput.value = "");
+  bonusTotalInput && (bonusTotalInput.value = "");
+  document.querySelectorAll('#listAnggota input').forEach(cb => cb.checked = false);
+}
 
 /* =========================
 Tambah +000
