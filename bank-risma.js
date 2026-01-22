@@ -155,6 +155,17 @@
     }, delay);
   }
 
+/* ===============================
+Tampilkan Foto Thumbnail 
+============================== */
+function showImage(src){
+  const m = document.createElement("div");
+  m.className = "img-modal";
+  m.innerHTML = `<img src="${src}">`;
+  m.onclick = () => m.remove();
+  document.body.appendChild(m);
+}
+
   /* =============================
      RENDER DATA
   ============================= */
