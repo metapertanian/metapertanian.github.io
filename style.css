@@ -163,29 +163,7 @@ h1 {
   letter-spacing: 1px;
 }
 
-/* =========================
-   SUMMARY
-========================= */
-.bank-summary {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 20px;
-}
 
-.big-number {
-  font-size: 1.7rem;
-  font-weight: 800;
-  margin-top: 6px;
-}
-
-.big-number.success {
-  color: var(--success);
-}
-
-.big-number.danger {
-  color: var(--danger);
-}
 
 /* =========================
    TABLE
@@ -452,6 +430,25 @@ pre {
   color: var(--muted);
   letter-spacing: 0.6px;
   text-transform: uppercase;
+}
+
+/* =========================
+   HIERARKI VISUAL SUMMARY
+========================= */
+
+/* Saldo masuk & keluar lebih kecil */
+.summary-stack .summary-item:nth-child(1) .big-number,
+.summary-stack .summary-item:nth-child(2) .big-number {
+  font-size: 1.85rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+/* Sisa saldo paling dominan */
+.summary-stack .summary-item:nth-child(3) .big-number {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: 0.6px;
 }
 
 /* === DROPDOWN MUSIM AUTO WIDTH === */
