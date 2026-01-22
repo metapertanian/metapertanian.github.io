@@ -183,21 +183,33 @@ window.showImage = function (src) {
     const tbody = el("tabelAnggota");
     tbody.innerHTML = "";
     globalData.tabel.forEach((a, i) => {
-  const cls =
-    a.masuk > a.keluar
-      ? "success"
-      : a.keluar > a.masuk
-      ? "danger"
-      : "";
+  let saldoCls =
+    a.saldo > 0 ? "success" :
+    a.saldo < 0 ? "danger"  :
+    "muted";
 
   tbody.innerHTML += `
-    <tr style="cursor:pointer"
+    <tr class="row-hover"
         onclick="filterByName('${a.nama}')">
-      <td>${i + 1}</td>
-      <td class="${cls}">${a.nama}</td>
-      <td class="${cls}">${ribu(a.masuk)}</td>
-      <td class="${cls}">${ribu(a.keluar)}</td>
-      <td class="${cls}"><strong>${ribu(a.saldo)}</strong></td>
+
+      <td class="muted">${i + 1}</td>
+
+      <td class="nama-cell">
+        ${a.nama}
+      </td>
+
+      <td class="success angka">
+        ${ribu(a.masuk)}
+      </td>
+
+      <td class="danger angka">
+        ${ribu(a.keluar)}
+      </td>
+
+      <td class="angka saldo ${saldoCls}">
+        <strong>${ribu(a.saldo)}</strong>
+      </td>
+
     </tr>
   `;
 });
