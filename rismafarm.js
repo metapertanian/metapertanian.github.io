@@ -5,7 +5,7 @@ const RISMA_FARM = {
     1: {
       label: "Musim Tanam Ke-1",
       lokasi: "Lahan RISMA di masjid",
-      komoditas: ["Timun", "Cabai"],
+      komoditas: ["TIMUN", "CABAI"],
 
       modal: {
         RISMA: 380000
@@ -13,43 +13,74 @@ const RISMA_FARM = {
 
       biaya: [
 {
+  tanggal: "2026-01-22",
+  keterangan: "SI BIRU",
+  jumlah: 35000
+},
+{
+  tanggal: "2026-01-22",
+  keterangan: "ANTRACOL",
+  jumlah: 25000
+},
+{
+  tanggal: "2026-01-22",
+  keterangan: "AGUS",
+  jumlah: 37000
+},
+{
+  tanggal: "2026-01-22",
+  keterangan: "ABACEL",
+  jumlah: 30000
+},
+{
+  tanggal: "2026-01-22",
+  keterangan: "APPLAUD",
+  jumlah: 9000
+},
+{
+  tanggal: "2026-01-22",
+  keterangan: "ULTRADAP",
+  jumlah: 50000
+},
+
+{
   tanggal: "2026-01-21",
-  keterangan: "Avidor",
+  keterangan: "AVIDOR",
   jumlah: 13000
 },
 {
   tanggal: "2026-01-21",
-  keterangan: "Besromil",
+  keterangan: "BESROMIL",
   jumlah: 16000
 },
 {
   tanggal: "2026-01-21",
-  keterangan: "Regent",
+  keterangan: "REGENT",
   jumlah: 24000
 },
 {
   tanggal: "2026-01-20",
-  keterangan: "Karate Boroni",
+  keterangan: "KARATE BORONI",
   jumlah: 10000
 },
 {
   tanggal: "2026-01-20",
-  keterangan: "Perekat",
+  keterangan: "PEREKAT",
   jumlah: 15500
 },
         {
           tanggal: "2026-01-15",
-          keterangan: "Telek Ayam",
+          keterangan: "TELEK AYAM",
           jumlah: 90000,
           },
           {
           tanggal: "2026-01-15",
-          keterangan: "Benih Timun",
+          keterangan: "BENIH TIMUN",
           jumlah: 90000
         },
         {
           tanggal: "2025-12-24",
-          keterangan: "Benih Cabai",
+          keterangan: "BENIH CABAI",
           jumlah: 80000
         }
       ],
@@ -57,7 +88,7 @@ const RISMA_FARM = {
       panen: [
         {
           tanggal: "2026-01-17",
-          komoditas: "Timun",
+          komoditas: "TIMUN",
           qty: 280,
           satuan: "kg",
           nilai: 780000,
@@ -67,7 +98,7 @@ const RISMA_FARM = {
         },
         {
           tanggal: "2026-01-15",
-          komoditas: "Timun",
+          komoditas: "TIMUN",
           qty: 120,
           satuan: "kg",
           nilai: 450000,
@@ -93,7 +124,7 @@ const RISMA_FARM = {
         },
         {
           tanggal: "2026-01-10",
-          komoditas: "Cabai",
+          komoditas: "CABAI",
           qty: 10,
           satuan: "kg",
           nilai: 500000,
@@ -105,7 +136,7 @@ const RISMA_FARM = {
         },
         {
           tanggal: "2026-01-16",
-          komoditas: "Cabai",
+          komoditas: "CABAI",
           qty: 12,
           satuan: "kg",
           nilai: 600000,
