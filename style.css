@@ -51,15 +51,21 @@ body {
 }
 
 .navbar .brand {
-  font-weight: 800;
-  font-size: 1.1rem;
-  color: var(--primary);
+  display: flex;
+  align-items: center;
 }
 
 .navbar .brand img {
   height: 28px;
+  max-height: 28px;
   width: auto;
-  display: block;
+}
+
+@media (max-width: 480px) {
+  .navbar .brand img {
+    height: 24px;
+    max-height: 24px;
+  }
 }
 
 .navbar button {
