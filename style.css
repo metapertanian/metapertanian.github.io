@@ -777,7 +777,7 @@ select:focus {
   max-width: 360px;
 
   /* ⬇️ KUNCI PEMBATAS UKURAN */
-  max-height: 85vh;
+  max-height: 80vh;
   overflow-y: auto;
 
   border-radius: 14px;
