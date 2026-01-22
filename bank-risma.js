@@ -208,17 +208,18 @@
   const items = data.slice(start, start + perPage);
 
   items.forEach(r => {
-    const total = Object.values(r.detail).reduce((a, b) => a + b, 0);
+    const total = Object.values(r.detail || {}).reduce((a, b) => a + b, 0);
 
-    const anggotaDetail = Object.entries(r.detail)
+    const anggotaDetail = Object.entries(r.detail || {})
       .map(([n, v]) => {
         let cls = "muted";
 
-if (filter && n === filter) {
-  cls = r.tipe === "masuk"
-    ? "highlight-masuk"
-    : "highlight-keluar";
-}
+        if (filter && n === filter) {
+          cls = r.tipe === "masuk"
+            ? "highlight-masuk"
+            : "highlight-keluar";
+        }
+
         return `<div class="${cls}">${n}: Rp ${v.toLocaleString("id-ID")}</div>`;
       })
       .join("");
@@ -226,17 +227,22 @@ if (filter && n === filter) {
     box.innerHTML += `
       <div class="riwayat-item">
 
-  <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
-    ${
-      r.bukti
-        ? `<img src="${r.bukti}" onclick="showImage(this.src)">`
-        : `<span class="no-photo">NO FOTO</span>`
-    }
-  
-          <div class="riwayat-date ${r.nilai >= 0 ? "success" : "danger"}"
-     style="opacity:.65;font-size:13px">
-  ${tgl(r.tanggal)}
-</div>
+        <!-- FOTO -->
+        <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
+          ${
+            r.bukti
+              ? `<img src="${r.bukti}" onclick="showImage(this.src)">`
+              : `<span class="no-photo">NO FOTO</span>`
+          }
+        </div>
+
+        <!-- INFO -->
+        <div>
+          <div class="riwayat-date ${r.tipe === "masuk" ? "success" : "danger"}"
+               style="opacity:.65;font-size:13px">
+            ${tgl(r.tanggal)}
+          </div>
+
           <div class="riwayat-title">${r.kategori}</div>
           <div class="riwayat-detail">${r.sumber}</div>
 
@@ -248,6 +254,7 @@ if (filter && n === filter) {
             ${anggotaDetail}
           </div>
         </div>
+
       </div>
     `;
   });
