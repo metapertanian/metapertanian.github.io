@@ -174,13 +174,14 @@
     globalData.tabel.forEach((a, i) => {
       tbody.innerHTML += `
         <tr>
-  <button class="link-name" onclick="filterByName('${a.nama}')">
           <td>${i + 1}</td>
-          <td>${a.nama}</td>
+          <td>
+  <button class="link-name" onclick="filterByName('${a.nama}')">
+          ${a.nama}
+  </button></td>
           <td>${ribu(a.masuk)}</td>
           <td>${ribu(a.keluar)}</td>
           <td><strong>${ribu(a.saldo)}</strong></td>
-  </button>
         </tr>
       `;
     });
