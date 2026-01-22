@@ -205,6 +205,9 @@ function showImage(src){
     renderRiwayat();
   }
 
+/* =========================
+Riwayat Transaksi 
+========================= */
 
   function renderRiwayat() {
   const box = el("riwayat");
@@ -240,45 +243,46 @@ function showImage(src){
   .join("");
 
     box.innerHTML += `
-      <div class="riwayat-item">
+  <div class="riwayat-item">
 
-        <!-- THUMB / FOTO -->
-        <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
-          ${
-            r.bukti
-              ? `<img 
-                    src="${r.bukti}"
-                    class="bukti-img"
-                    loading="lazy"
-                    alt="Bukti transaksi"
-                    onclick="showImage(this.src)"
-                 >`
-              : `<span class="no-photo">NO FOTO</span>`
-          }
-        </div>
+    <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
+      ${
+        r.bukti
+          ? `<img 
+              src="${r.bukti}" 
+              loading="lazy"
+              alt="Bukti transaksi"
+              onclick="event.stopPropagation(); showImage(this.src)"
+            >`
+          : `<span class="no-photo">NO FOTO</span>`
+      }
+    </div>
 
-        <!-- INFO -->
-        <div>
-          <div class="riwayat-date ${r.tipe === "masuk" ? "success" : "danger"}"
-               style="opacity:.65;font-size:13px">
-            ${formatTanggal(r.tanggal)}
-          </div>
-
-          <div class="riwayat-title">${r.kategori}</div>
-
-          <div class="riwayat-detail">${r.sumber}</div>
-
-          <div class="riwayat-value ${r.tipe === "masuk" ? "success" : "danger"}">
-            ${r.tipe === "masuk" ? "+" : "-"}Rp ${total.toLocaleString("id-ID")}
-          </div>
-
-          <div class="riwayat-detail" style="margin-top:8px">
-            ${anggotaDetail}
-          </div>
-        </div>
-
+    <div class="riwayat-content">
+      <div class="riwayat-date ${r.tipe === "masuk" ? "success" : "danger"}"
+           style="opacity:.65;font-size:13px">
+        ${formatTanggal(r.tanggal)}
       </div>
-    `;
+
+      <div class="riwayat-title">
+        ${r.kategori}
+      </div>
+
+      <div class="riwayat-detail">
+        ${r.sumber}
+      </div>
+
+      <div class="riwayat-value ${r.tipe === "masuk" ? "success" : "danger"}">
+        ${r.tipe === "masuk" ? "+" : "-"}Rp ${total.toLocaleString("id-ID")}
+      </div>
+
+      <div class="riwayat-detail" style="margin-top:6px">
+        ${anggotaDetail}
+      </div>
+    </div>
+
+  </div>
+`;
   });
 
   renderPagination(data.length);
