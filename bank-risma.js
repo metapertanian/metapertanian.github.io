@@ -225,7 +225,14 @@ if (filter && n === filter) {
 
     box.innerHTML += `
       <div class="riwayat-item">
-        <div>
+
+  <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
+    ${
+      r.bukti
+        ? `<img src="${r.bukti}" onclick="showImage(this.src)">`
+        : `<span class="no-photo">NO FOTO</span>`
+    }
+  
           <div class="riwayat-date ${r.nilai >= 0 ? "success" : "danger"}"
      style="opacity:.65;font-size:13px">
   ${tgl(r.tanggal)}
