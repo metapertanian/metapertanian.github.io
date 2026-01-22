@@ -175,7 +175,7 @@
       tbody.innerHTML += `
         <tr>
   <button class="link-name" onclick="filterByName('${a.nama}')">
-    
+          <td>${i + 1}</td>
           <td>${a.nama}</td>
           <td>${ribu(a.masuk)}</td>
           <td>${ribu(a.keluar)}</td>
