@@ -10,8 +10,11 @@ function renderNavbar(active = "", mode = "public") {
   navbar.className = "navbar";
 
   navbar.innerHTML = `
-    <div class="brand">🌱 BERTUNAS</div>
-    <button onclick="toggleMenu()">☰</button>
+    <div class="brand">
+      <img src="/img/bertunas.png" alt="BERTUNAS" class="brand-logo">
+      <span class="brand-text">BERTUNAS</span>
+    </div>
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
   `;
 
   /* =========================
