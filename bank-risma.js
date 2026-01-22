@@ -196,70 +196,45 @@
 
 
   function renderRiwayat() {
-  const box = el("riwayatTransaksi");
-  box.innerHTML = "";
+const box = el("riwayat");
+box.innerHTML = "";
 
-  const filter = el("filterAnggota").value;
-  const data = filter
-    ? globalData.riwayat.filter(r => r.detail && r.detail[filter])
-    : globalData.riwayat;
+const filter = el("filterAnggota").value;  
+const data = filter  
+  ? globalData.riwayat.filter(r => r.detail && r.detail[filter])  
+  : globalData.riwayat;  
 
-  const start = (currentPage - 1) * perPage;
-  const items = data.slice(start, start + perPage);
+const start = (currentPage - 1) * perPage;  
+const items = data.slice(start, start + perPage);  
 
-  items.forEach(r => {
-    const total = Object.values(r.detail || {}).reduce((a, b) => a + b, 0);
+items.forEach(r => {  
+  const total = Object.values(r.detail).reduce((a,b)=>a+b,0);  
 
-    const anggotaDetail = Object.entries(r.detail || {})
-      .map(([n, v]) => {
-        let cls = "muted";
+  const anggotaDetail = Object.entries(r.detail)  
+    .map(([n,v]) => {  
+      const cls = filter && n === filter ? "highlight-name" : "muted";  
+      return `<span class="${cls}">${n}: ${v.toLocaleString("id-ID")}</span>`;  
+    })  
+    .join("<br>");  
 
-        if (filter && n === filter) {
-          cls = r.tipe === "masuk"
-            ? "highlight-masuk"
-            : "highlight-keluar";
-        }
+  box.innerHTML += `  
+    <div class="riwayat-item">  
+      <div class="riwayat-date">${formatTanggal(r.tanggal)}</div>  
+      <div>  
+        <strong>${r.kategori}</strong> – ${r.sumber}<br>  
+        <span class="${r.tipe}">  
+          ${r.tipe === "masuk" ? "+" : "-"}${total.toLocaleString("id-ID")}  
+        </span>  
+        <div style="margin-top:6px;font-size:.85rem">  
+          ${anggotaDetail}  
+        </div>  
+      </div>  
+    </div>  
+  `;  
+});  
 
-        return `<div class="${cls}">${n}: Rp ${v.toLocaleString("id-ID")}</div>`;
-      })
-      .join("");
+renderPagination(data.length);
 
-    box.innerHTML += `
-      <div class="riwayat-item">
-
-        <!-- FOTO -->
-        <div class="riwayat-thumb ${r.bukti ? "" : "empty"}">
-          ${
-            r.bukti
-              ? `<img src="${r.bukti}" onclick="showImage(this.src)">`
-              : `<span class="no-photo">NO FOTO</span>`
-          }
-        </div>
-
-        <!-- INFO -->
-        <div>
-          <div class="riwayat-date ${r.tipe === "masuk" ? "success" : "danger"}"
-               style="opacity:.65;font-size:13px">
-            ${tgl(r.tanggal)}
-          </div>
-
-          <div class="riwayat-title">${r.kategori}</div>
-          <div class="riwayat-detail">${r.sumber}</div>
-
-          <div class="riwayat-value ${r.tipe === "masuk" ? "success" : "danger"}">
-            ${r.tipe === "masuk" ? "+" : "-"}Rp ${total.toLocaleString("id-ID")}
-          </div>
-
-          <div class="riwayat-detail" style="margin-top:8px">
-            ${anggotaDetail}
-          </div>
-        </div>
-
-      </div>
-    `;
-  });
-
-  renderPagination(data.length);
 }
 
 
