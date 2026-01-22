@@ -211,11 +211,22 @@
     const total = Object.values(r.detail || {}).reduce((a,b)=>a+b,0);
 
     const anggotaDetail = Object.entries(r.detail || {})
-      .map(([n,v]) => {
-        const cls = filter && n === filter ? "highlight-name" : "muted";
-        return `<div class="${cls}">${n}: Rp ${v.toLocaleString("id-ID")}</div>`;
-      })
-      .join("");
+  .map(([n,v]) => {
+    let cls = "muted";
+
+    if (filter && n === filter) {
+      cls = r.tipe === "masuk"
+        ? "highlight-masuk"
+        : "highlight-keluar";
+    }
+
+    return `
+      <div class="${cls}" style="line-height:1.3;margin-bottom:2px">
+        ${n}: Rp ${v.toLocaleString("id-ID")}
+      </div>
+    `;
+  })
+  .join("");
 
     box.innerHTML += `
       <div class="riwayat-item">
