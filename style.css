@@ -570,7 +570,7 @@ pre {
    FILTER HIGHLIGHT NAMA
 ========================= */
 .highlight-name {
-  color: var(--primary);
+  color: #6b46c1; /* ungu elegan */
   font-weight: 700;
 }
 
