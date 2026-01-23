@@ -1,11 +1,21 @@
 // kas-masjid.js  
-// Penyimpanan data arus kas per tahun Hijriah  
+// Penyimpanan data arus kas per idul fitri
 
 window.kasData = {  
   "Idul Fitri 1447H": {  
     periode: "Agustus 2025 – Maret 2026",  
     bendahara: "Pulung Riswanto",  
     transaksi: [  
+{
+date: "2026-01-23",
+description: "Infak Jumat",
+type: "income",
+amount: 17000,
+note: "",
+foto: "",
+video: ""
+
+},
 {
 date: "2026-01-16",
 description: "Infak Jumat",
