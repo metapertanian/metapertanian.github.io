@@ -103,13 +103,14 @@
   </section>
 
 <section class="card">
+<button class="btn-secondary" onclick="addDraft()">➕ Tambahkan</button>
   <h3>📋 Daftar Transaksi (sementara)</h3>
   <ul id="draftList" class="draft-list"></ul>
 </section>
 
   <!-- ACTION -->
   <section class="card">
-  <button class="btn-secondary" onclick="addDraft()">➕ Tambahkan</button>
+  
   <button class="btn-primary" onclick="generateAll()">⚙️ Buat Kode</button>
 </section>
 
@@ -207,6 +208,7 @@ function renderDraftList() {
       <li>
         <strong>${i + 1}.</strong>
         ${d.tanggal} – ${d.nama} – Rp ${d.nilai.toLocaleString()}
+        <button onclick="editDraft(${i})">✏️</button>
         <button onclick="removeDraft(${i})">❌</button>
       </li>
     `;
@@ -221,6 +223,46 @@ function removeDraft(i) {
   }
   renderDraftList();
 }
+
+
+function editDraft(i) {
+  const d = draftData[i];
+
+  // kunci tetap sama
+  document.getElementById("lahan").value = d.lahan;
+  document.getElementById("jenis").value = d.jenis;
+  toggleJenis();
+
+  // isi ulang form
+  tanggalInput.value = d.tanggal;
+  namaInput.value = d.nama;
+  nilaiInput.value = d.nilai;
+  buktiInput.value = d.bukti
+    ? Array.isArray(d.bukti) ? d.bukti.join(", ") : d.bukti
+    : "";
+
+  if (d.jenis === "panen") {
+    qtyInput.value = d.qty || "";
+    satuanSelect.value = d.satuan || "kg";
+    biayaPanenInput.value = d.biayaPanen || "";
+    bonusTotalInput.value = d.bonusPanen?.total || "";
+
+    document.querySelectorAll('#listAnggota input').forEach(cb => {
+      cb.checked = d.bonusPanen?.anggota?.includes(cb.value) || false;
+    });
+  }
+
+  // hapus dari draft sementara
+  draftData.splice(i, 1);
+
+  if (draftData.length === 0) {
+    lockedJenis = null;
+    lockedLahan = null;
+  }
+
+  renderDraftList();
+}
+
 
 /* BUAT KODE */
 
