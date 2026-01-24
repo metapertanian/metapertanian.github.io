@@ -52,7 +52,7 @@
 
     <div class="form-row">
       <label>Keterangan / Komoditas</label>
-      <input type="text" id="nama">
+      <input type="text" id="nama" oninput="toUppercase(this)">
     </div>
 
     <div class="form-row">
@@ -130,6 +130,11 @@
 </main>
 
 <script>
+
+/* Keterangan/Komoditas Huruf Kapital */
+function toUppercase(el) {
+  el.value = el.value.toUpperCase();
+}
 
 const tanggalInput = document.getElementById("tanggal");
 const namaInput = document.getElementById("nama");
