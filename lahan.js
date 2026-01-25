@@ -47,7 +47,7 @@ MODAL
 function renderModal(){
   let totalModal = 0;
   let html = `<table class="table">
-    <tr><th>No</th><th>Nama</th><th>Jumlah</th></tr>`;
+    <tr><th>No</th><th>Nama</th><th>Modal</th></tr>`;
 
   const entries = Object.entries(musimAktif.modal || {});
 
@@ -85,7 +85,7 @@ function renderModal(){
   // TOTAL
   // ===============================
   html += `<tr class="total">
-    <td colspan="2"><strong>Modal</strong></td>
+    <td colspan="2"><strong>Total</strong></td>
     <td><strong>Rp ${rupiah(totalModal)}</strong></td>
   </tr></table>`;
 
@@ -275,7 +275,7 @@ function renderLaba(){
 
   html += `
     <div class="stat"><small>Total Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
-    <div class="stat"><small>Total Biaya Produksi</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
+    <div class="stat"><small>Total Biaya Skincare</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
     <div class="stat"><small>Total Biaya Panen</small><strong>Rp ${rupiah(totalBiayaPanen)}</strong></div>
 
     <div class="stat">
@@ -307,7 +307,7 @@ function renderLaba(){
     <table class="table">
       <tr>
         <th>Penerima</th>
-        <th>Modal + Persentase</th>
+        <th>Modal + Persenan/th>
         <th>Total</th>
       </tr>
   `;
