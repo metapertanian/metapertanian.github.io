@@ -119,7 +119,7 @@ function generateLaporan() {
   ].sort();
 
   out+=`*${lahan.nama.toUpperCase()}*\n`;
-  out+=`\`Bertani, Berbisinis, Berbagi\`\n\n`;
+  out+=`> Bertani, Berbisinis, Berbagi \n\n`;
   out+=`${data.label}\n`;
   out+=`${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}\n`;
   out+=`——————————————\n\n`;
@@ -132,7 +132,7 @@ function generateLaporan() {
      MODAL
   ============================= */
   if(["modal","modal-biaya","modal-biaya-panen","lengkap"].includes(jenis)){
-    out+=`*MODAL USAHA*\n\n`;
+    out+=`*INVESTOR*\n\n`;
     Object.entries(data.modal||{}).forEach(([k,v])=>{
       totalModal+=Number(v);
       out+=`- ${k} : ${rupiah(v)}\n`;
