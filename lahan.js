@@ -504,3 +504,4 @@ function renderSemua(){
   kumpulkanRiwayat();
   renderRiwayat(1);
 }
+renderSemua();
