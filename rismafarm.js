@@ -8,7 +8,7 @@ const RISMA_FARM = {
       komoditas: ["TIMUN", "CABAI"],
 
       modal: {
-        RISMA: 380000
+        RISMA: 1380000
       },
 
       biaya: [
