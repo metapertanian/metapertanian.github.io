@@ -332,6 +332,42 @@ function renderLaba(){
   document.getElementById("labaSection").innerHTML = html;
 }
 
+
+/* RINGKASAN LAHAN */
+
+function hitungRingkasanLahan(){
+  const totalBiayaProduksi = musimAktif.biaya
+    .reduce((a,b)=>a + Number(b.jumlah||0), 0);
+
+  const totalBiayaPanen = musimAktif.panen
+    .reduce((a,b)=>a + Number(b.biayaPanen||0), 0);
+
+  const totalOmzet = musimAktif.panen
+    .reduce((a,b)=>a + Number(b.nilai||0), 0);
+
+  return {
+    omzet: totalOmzet,
+    biaya: totalBiayaProduksi + totalBiayaPanen,
+    laba: totalOmzet - (totalBiayaProduksi + totalBiayaPanen)
+  };
+}
+
+/* ANIMASI ANGKA */
+
+function animateNumber(el, end){
+  let start = 0;
+  const dur = 800;
+  const t0 = performance.now();
+
+  function step(t){
+    const p = Math.min((t - t0) / dur, 1);
+    const val = Math.floor(p * end);
+    el.textContent = rupiah(val);
+    if(p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
 /* ======================================================
 RIWAYAT TRANSAKSI + FOTO (THUMBNAIL)
 ====================================================== */
@@ -442,6 +478,12 @@ function renderSemua(){
   renderTabelBiaya();
   renderTabelPanen();
   renderLaba();
+
+const ringkasan = hitungRingkasanLahan();
+animateNumber(document.getElementById("totalOmzet"), ringkasan.omzet);
+animateNumber(document.getElementById("totalBiaya"), ringkasan.biaya);
+animateNumber(document.getElementById("totalLaba"), ringkasan.laba);
+
   kumpulkanRiwayat();
   renderRiwayat(1);
 }
