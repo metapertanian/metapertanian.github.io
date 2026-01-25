@@ -239,45 +239,89 @@ function renderTabelPanen(){
 LABA & BAGI HASIL (KAPITAL + PERSEN)
 ====================================================== */
 function renderLaba(){
-  const totalBiayaModal = musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
+  const totalBiayaProduksi = musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
   const totalBiayaPanen = musimAktif.panen.reduce((a,b)=>a+(b.biayaPanen||0),0);
   const totalOmzet = musimAktif.panen.reduce((a,b)=>a+b.nilai,0);
 
-  const totalBiaya = totalBiayaModal + totalBiayaPanen;
-  const laba = totalOmzet - totalBiaya;
+  /* ===============================
+     HITUNG MODAL MASUK
+  =============================== */
+  const totalModal = Object.values(musimAktif.modal || {})
+    .reduce((a,b)=>a+Number(b),0);
+
+  const sisaModal = totalModal > totalBiayaProduksi
+    ? totalModal - totalBiayaProduksi
+    : 0;
+
+  /* ===============================
+     LABA BERSIH
+  =============================== */
+  let laba = totalOmzet - totalBiayaProduksi - totalBiayaPanen;
+  laba += sisaModal;
 
   let html = `
   <section class="card">
     <h2>📊 Bagi Hasil</h2>
+  `;
 
+  if(sisaModal > 0){
+    html += `
+      <div class="stat">
+        <small>Sisa Modal</small>
+        <strong class="success">Rp ${rupiah(sisaModal)}</strong>
+      </div>
+    `;
+  }
+
+  html += `
     <div class="stat"><small>Total Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
-    <div class="stat"><small>Total Biaya</small><strong>Rp ${rupiah(totalBiaya)}</strong></div>
+    <div class="stat"><small>Total Biaya Produksi</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
+    <div class="stat"><small>Total Biaya Panen</small><strong>Rp ${rupiah(totalBiayaPanen)}</strong></div>
+
     <div class="stat">
       <small>Laba Bersih</small>
       <strong class="${laba>=0?'success':'danger'}">Rp ${rupiah(laba)}</strong>
     </div>
 
     <hr style="margin:12px 0">
+  `;
+
+  /* ===============================
+     HASIL PERSENTASE (RINGKAS)
+  =============================== */
+  Object.entries(musimAktif.skema.pembagian||{}).forEach(([nama,persen])=>{
+    const hasil = laba * persen / 100;
+    html += `
+      <div class="stat">
+        <small>${nama.toUpperCase()} ${persen}%</small>
+        <strong>Rp ${rupiah(hasil)}</strong>
+      </div>
+    `;
+  });
+
+  /* ===============================
+     TABEL DETAIL
+  =============================== */
+  html += `
+    <hr style="margin:14px 0">
     <table class="table">
       <tr>
-        <th>No</th>
         <th>Penerima</th>
         <th>Modal + Persentase</th>
         <th>Total</th>
       </tr>
   `;
 
-  let no = 1;
-
   Object.entries(musimAktif.skema.pembagian||{}).forEach(([nama,persen])=>{
-    const bagian = laba * persen / 100;
+    const modal = musimAktif.modal?.[nama] || 0;
+    const hasil = laba * persen / 100;
+    const total = modal + hasil;
 
     html += `
       <tr>
-        <td>${no++}</td>
         <td>${nama}</td>
-        <td>${persen}%</td>
-        <td>Rp ${rupiah(bagian)}</td>
+        <td>${rupiah(modal)} + ${rupiah(hasil)}</td>
+        <td>Rp ${rupiah(total)}</td>
       </tr>
     `;
   });
