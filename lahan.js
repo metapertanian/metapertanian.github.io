@@ -178,39 +178,59 @@ function renderTabelPanen(){
 
   const grup = {};
   musimAktif.panen.forEach(p=>{
-    if(!grup[p.komoditas]) grup[p.komoditas]=[];
+    if(!grup[p.komoditas]) grup[p.komoditas] = [];
     grup[p.komoditas].push(p);
   });
 
   Object.entries(grup).forEach(([komoditas,data])=>{
-    let totalSurplus = 0;
-    let html = `<br/><h3 style="margin-top:14px">${komoditas}</h3>
-    <table class="table">
-      <tr><th>No</th><th>Tanggal</th><th>Surplus</th></tr>`;
-    const dataSorted = [...data].sort(
-  (a,b) => new Date(a.tanggal) - new Date(b.tanggal)
-);
+    let totalOmzet = 0;
+    let totalBiayaPanen = 0;
 
-dataSorted.forEach((p,i)=>{
-      const surplus = p.nilai - (p.biayaPanen||0);
-      totalSurplus += surplus;
-      html += `<tr style="cursor:pointer"
-  onclick='showDetailTransaksi({
-    jenis:"Panen ${komoditas}",
-    tanggal:"${p.tanggal}",
-    keterangan:"Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}",
-    nilai:${surplus},
-    bukti:${p.bukti ? `"${p.bukti}"` : "null"}
-  })'>
-        <td>${i+1}</td>
-        <td>${tgl(p.tanggal)}</td>
-        <td>Rp ${rupiah(surplus)}</td>
-      </tr>`;
+    let html = `
+      <br/>
+      <h3 style="margin-top:14px">${komoditas}</h3>
+      <table class="table">
+        <tr>
+          <th>No</th>
+          <th>Tanggal</th>
+          <th>Biaya Panen</th>
+          <th>Omzet</th>
+        </tr>
+    `;
+
+    const dataSorted = [...data].sort(
+      (a,b)=>new Date(a.tanggal)-new Date(b.tanggal)
+    );
+
+    dataSorted.forEach((p,i)=>{
+      totalOmzet += p.nilai;
+      totalBiayaPanen += (p.biayaPanen || 0);
+
+      html += `
+        <tr style="cursor:pointer"
+          onclick='showDetailTransaksi({
+            jenis:"Panen ${komoditas}",
+            tanggal:"${p.tanggal}",
+            keterangan:"Omzet Rp ${rupiah(p.nilai)} | Biaya Panen Rp ${rupiah(p.biayaPanen||0)}",
+            nilai:${p.nilai - (p.biayaPanen||0)},
+            bukti:${p.bukti ? `"${p.bukti}"` : "null"}
+          })'>
+          <td>${i+1}</td>
+          <td>${tgl(p.tanggal)}</td>
+          <td>Rp ${rupiah(p.biayaPanen||0)}</td>
+          <td>Rp ${rupiah(p.nilai)}</td>
+        </tr>`;
     });
-    html += `<tr class="total">
-      <td colspan="2"><strong>Total</strong></td>
-      <td><strong>Rp ${rupiah(totalSurplus)}</strong></td>
-    </tr></table>`;
+
+    html += `
+      <tr class="total">
+        <td colspan="2"><strong>Total</strong></td>
+        <td><strong>Rp ${rupiah(totalBiayaPanen)}</strong></td>
+        <td><strong>Rp ${rupiah(totalOmzet)}</strong></td>
+      </tr>
+    </table>
+    `;
+
     box.innerHTML += html;
   });
 }
@@ -219,27 +239,54 @@ dataSorted.forEach((p,i)=>{
 LABA & BAGI HASIL (KAPITAL + PERSEN)
 ====================================================== */
 function renderLaba(){
-  const totalBiaya = musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
-  const totalOmzet = musimAktif.panen.reduce((a,b)=>a+b.nilai,0);
+  const totalBiayaModal = musimAktif.biaya.reduce((a,b)=>a+b.jumlah,0);
   const totalBiayaPanen = musimAktif.panen.reduce((a,b)=>a+(b.biayaPanen||0),0);
-  const laba = totalOmzet - totalBiaya - totalBiayaPanen;
+  const totalOmzet = musimAktif.panen.reduce((a,b)=>a+b.nilai,0);
 
-  let html = `<section class="card">
+  const totalBiaya = totalBiayaModal + totalBiayaPanen;
+  const laba = totalOmzet - totalBiaya;
+
+  let html = `
+  <section class="card">
     <h2>📊 Bagi Hasil</h2>
+
+    <div class="stat"><small>Total Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
+    <div class="stat"><small>Total Biaya</small><strong>Rp ${rupiah(totalBiaya)}</strong></div>
     <div class="stat">
       <small>Laba Bersih</small>
-      <strong class="success">Rp ${rupiah(laba)}</strong>
+      <strong class="${laba>=0?'success':'danger'}">Rp ${rupiah(laba)}</strong>
     </div>
-    <hr style="margin:14px 0">`;
 
-  Object.entries(musimAktif.skema.pembagian||{}).forEach(([n,p])=>{
-    html += `<div class="stat">
-      <small>${n.toUpperCase()} (${p}%)</small>
-      <strong>Rp ${rupiah(laba*p/100)}</strong>
-    </div>`;
+    <hr style="margin:12px 0">
+    <table class="table">
+      <tr>
+        <th>No</th>
+        <th>Penerima</th>
+        <th>Modal + %</th>
+        <th>Total</th>
+      </tr>
+  `;
+
+  let no = 1;
+
+  Object.entries(musimAktif.skema.pembagian||{}).forEach(([nama,persen])=>{
+    const bagian = laba * persen / 100;
+
+    html += `
+      <tr>
+        <td>${no++}</td>
+        <td>${nama}</td>
+        <td>${persen}%</td>
+        <td>Rp ${rupiah(bagian)}</td>
+      </tr>
+    `;
   });
 
-  html += `</section>`;
+  html += `
+    </table>
+  </section>
+  `;
+
   document.getElementById("labaSection").innerHTML = html;
 }
 
