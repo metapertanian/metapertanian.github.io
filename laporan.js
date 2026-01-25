@@ -16,15 +16,7 @@ const LAHAN_MAP = {
 /* =============================
    BANK
 ============================= */
-const BANK = window.BANK_RISMA;
-
-if (BANK) {
-  out += `\n*BANK RISMA : ${rupiah(BANK.saldo)}*\n`;
-  Object.entries(BANK.anggota || {}).forEach(([n, s], i) => {
-    out += `${i + 1}. ${n} : ${rupiah(s)}\n`;
-  });
-  out += `\n👉 pulungriswanto.my.id/bank-risma`;
-}
+const BANK = window.BANK_RISMA || null;
 
 /* =============================
    UTIL
@@ -157,17 +149,10 @@ function generateLaporan() {
   /* =============================
      HEADER + RENTANG TANGGAL
   ============================= */
-  const tglSemua=[
-    ...(data.biaya||[]).map(b=>b.tanggal),
-    ...(data.panen||[]).map(p=>p.tanggal)
-  ].sort();
-
-  const judulJenis = document
-  .getElementById("jenis")
-  .selectedOptions[0]
-  .textContent;
-
-const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
+  const tglSemua = [
+  ...(data.biaya || []).map(b => b.tanggal),
+  ...(data.panen || []).map(p => p.tanggal)
+].sort();
 
 const gayaJudul = document.getElementById("gayaJudul").value;
 
@@ -181,7 +166,10 @@ const komoditasJudul =
     ? data.panen?.[document.getElementById("panenTanggal")?.value]?.komoditas || "-"
     : (data.komoditas?.join(", ") || "-");
 
-const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
+const periode =
+  tglSemua.length
+    ? `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`
+    : "-";
 
 out += buatJudulLaporan({
   gaya: gayaJudul,
