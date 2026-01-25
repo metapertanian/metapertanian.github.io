@@ -16,7 +16,15 @@ const LAHAN_MAP = {
 /* =============================
    BANK
 ============================= */
-const BANK = typeof BANK_RISMA !== "undefined" ? BANK_RISMA : null;
+const BANK = window.BANK_RISMA;
+
+if (BANK) {
+  out += `\n*BANK RISMA : ${rupiah(BANK.saldo)}*\n`;
+  Object.entries(BANK.anggota || {}).forEach(([n, s], i) => {
+    out += `${i + 1}. ${n} : ${rupiah(s)}\n`;
+  });
+  out += `\n👉 pulungriswanto.my.id/bank-risma`;
+}
 
 /* =============================
    UTIL
@@ -95,6 +103,42 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("musim")?.addEventListener("change",initPanenTanggal);
 });
 
+
+
+/* Pembuat Judul Laporan */
+
+function buatJudulLaporan({
+  gaya,
+  jenisText,
+  komoditas,
+  lahan,
+  lokasi,
+  musim,
+  periode
+}) {
+  let out = "";
+
+  if (gaya === "lengkap") {
+    out += `Laporan ${jenisText} - Tanam ${komoditas}\n`;
+    out += `*${lahan.toUpperCase()}*\n`;
+    out += `> Bertani, Berbisnis, Berbagi\n\n`;
+    out += `${lokasi || "-"}\n`;
+    out += `${musim}\n`;
+    out += `${periode}\n`;
+    out += `————————————\n\n`;
+  }
+
+  if (gaya === "sederhana") {
+    out += `Laporan ${jenisText} - Tanam ${komoditas}\n\n`;
+    out += `${lokasi || "-"}\n`;
+    out += `${musim}\n`;
+    out += `${periode}\n`;
+    out += `————————————\n\n`;
+  }
+
+  return out;
+}
+
 /* =============================
    GENERATE LAPORAN
 ============================= */
@@ -110,32 +154,82 @@ function generateLaporan() {
 
   let out="";
 
-  /* ===== HEADER + RENTANG TANGGAL ===== */
+  /* =============================
+     HEADER + RENTANG TANGGAL
+  ============================= */
   const tglSemua=[
     ...(data.biaya||[]).map(b=>b.tanggal),
     ...(data.panen||[]).map(p=>p.tanggal)
   ].sort();
 
-  out+=`*${lahan.nama}* \`Bertani, Berbisnis, Berbagi\`\n\n`;
-  out+=`${data.label}\n`;
-  out+=`${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}\n`;
-  out+=`——————————————\n\n`;
+  const judulJenis = document
+  .getElementById("jenis")
+  .selectedOptions[0]
+  .textContent;
 
-  let totalModal=0,totalBiaya=0,totalSurplus=0;
+const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
 
-  /* ===== MODAL ===== */
+const gayaJudul = document.getElementById("gayaJudul").value;
+
+const judulJenis = document
+  .getElementById("jenis")
+  .selectedOptions[0]
+  .textContent;
+
+const komoditasJudul =
+  jenis === "panen"
+    ? data.panen?.[document.getElementById("panenTanggal")?.value]?.komoditas || "-"
+    : (data.komoditas?.join(", ") || "-");
+
+const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
+
+out += buatJudulLaporan({
+  gaya: gayaJudul,
+  jenisText: judulJenis,
+  komoditas: komoditasJudul,
+  lahan: lahan.nama,
+  lokasi: data.lokasi,
+  musim: data.label,
+  periode
+});
+
+  let totalModal=0;
+  let totalBiaya=0;
+  let totalSurplus=0;
+
+  /* =============================
+     MODAL
+  ============================= */
   if(["modal","modal-biaya","modal-biaya-panen","lengkap"].includes(jenis)){
-    out+=`*MODAL USAHA*\n\n`;
-    Object.entries(data.modal||{}).forEach(([k,v])=>{
-      totalModal+=Number(v);
-      out+=`- ${k} : ${rupiah(v)}\n`;
-    });
-    out+=`\nTotal Modal: *${rupiah(totalModal)}*\n\n`;
+    out+=`*INVESTOR*\n\n`;
+    Object.entries(data.modal || {}).forEach(([k, v]) => {
+  totalModal += Number(v);
+  out += `- ${k} : ${rupiah(v)}\n`;
+});
+
+// =============================
+// HITUNG TOTAL BIAYA
+// =============================
+const biayaTotal = (data.biaya || [])
+  .reduce((a, b) => a + Number(b.jumlah || 0), 0);
+
+// =============================
+// JIKA BIAYA > MODAL → MANAJEMEN
+// =============================
+if (biayaTotal > totalModal) {
+  const tambahan = biayaTotal - totalModal;
+  totalModal += tambahan;
+  out += `- MANAJEMEN : ${rupiah(tambahan)}\n`;
+}
+
+out += `\nTotal Modal: *${rupiah(totalModal)}*\n\n`;
   }
 
-  /* ===== BIAYA ===== */
+  /* =============================
+     BIAYA
+  ============================= */
   if(["biaya","modal-biaya","biaya-panen","modal-biaya-panen","lengkap"].includes(jenis)){
-    out+=`*BIAYA & SKINCARE* Untuk ${data.komoditas.join(", ")}\n\n`;
+    out+=`*BIAYA & SKINCARE*\n\n`;
     (data.biaya||[]).forEach(b=>{
       totalBiaya+=Number(b.jumlah);
       out+=`- ${b.keterangan} : ${rupiah(b.jumlah)}\n`;
@@ -143,43 +237,56 @@ function generateLaporan() {
     out+=`\nTotal Biaya: *${rupiah(totalBiaya)}*\n\n`;
   }
 
-  /* ===== PANEN SAJA (DETAIL 1 PANEN) ===== */
+  /* =============================
+     PANEN SAJA (DETAIL)
+  ============================= */
   if(jenis==="panen"){
     const idx=document.getElementById("panenTanggal")?.value;
     const p=data.panen?.[idx];
-    if(!p){output.textContent="*HASIL PANEN*\n\nBelum ada data";return;}
+    if(!p){
+      output.textContent="*HASIL PANEN*\n\nBelum ada data";
+      return;
+    }
 
     const surplus=p.nilai-(p.biayaPanen||0);
 
-    out+=`*HASIL PANEN : ${p.komoditas}*\n`;
-    out+=`${formatTanggal(p.tanggal)}\n`;
+    out+=`*HASIL PANEN* : ${p.komoditas}\n`;
+    out+=`📆 ${formatTanggal(p.tanggal)}\n`;
     out+=`Berat : ${p.qty} ${p.satuan||"kg"}\n`;
-    out+=`Omzet : ${rupiah(p.nilai)}\n`;
-    out+=`Biaya Panen : ${rupiah(p.biayaPanen)}\n\n`;
-    out+=`Surplus : *${rupiah(surplus)}*\n\n`;
+    out+=`Biaya Panen : ${rupiah(p.biayaPanen)}\n`;
+    out+=`Omzet : ${rupiah(p.nilai)}\n\n`;
+    out+=`Surplus : *${rupiah(surplus)}*\n`;
+    out+=`👉 pulungriswanto.my.id/${lahanKey}\n`;
 
-    if(p.bonusPanen?.total){
+    if (
+  p.bonusPanen &&
+  Number(p.bonusPanen.total) > 0 &&
+  Array.isArray(p.bonusPanen.anggota) &&
+  p.bonusPanen.anggota.length > 0
+) {
+      out+=`——————————————\n\n`;
+      out+=`*BONUS PANEN : ${rupiah(p.bonusPanen.total)}*\n`;
       const per=p.bonusPanen.total/p.bonusPanen.anggota.length;
-      out+=`*BONUS PANEN* : ${rupiah(p.bonusPanen.total)}\n`;
       p.bonusPanen.anggota.forEach((a,i)=>{
         out+=`${i+1}. ${a} : ${rupiah(per)}\n`;
       });
+
+      if(BANK){
+        out+=`\n*BANK RISMA : ${rupiah(BANK.saldo)}*\n`;
+        Object.entries(BANK.anggota||{}).forEach(([n,s],i)=>{
+          out+=`${i+1}. ${n} : ${rupiah(s)}\n`;
+        });
+        out+=`\n👉 pulungriswanto.my.id/bank-risma`;
+      }
     }
 
-    if(BANK){
-      out+=`\n*BANK RISMA*\n`;
-      out+=`Saldo : ${rupiah(BANK.saldo)}\n`;
-      Object.entries(BANK.anggota||{}).forEach(([n,s],i)=>{
-        out+=`${i+1}. ${n} : ${rupiah(s)}\n`;
-      });
-    }
-
-    out+=`\n👉 pulungriswanto.my.id/bank-risma`;
     output.textContent=out;
     return;
   }
 
-  /* ===== PANEN RINGKAS ===== */
+  /* =============================
+     PANEN RINGKAS
+  ============================= */
   if(["biaya-panen","modal-biaya-panen","lengkap"].includes(jenis)){
     out+=`*HASIL PANEN*\n\n`;
     if(!data.panen.length){
@@ -192,6 +299,7 @@ function generateLaporan() {
         map[p.komoditas]??=[];
         map[p.komoditas].push({tgl:p.tanggal,s});
       });
+
       Object.entries(map).forEach(([k,l])=>{
         out+=`# ${k}\n`;
         let tot=0;
@@ -201,12 +309,15 @@ function generateLaporan() {
         });
         out+=`Surplus ${k} : ${rupiah(tot)}\n\n`;
       });
+
       out+=`Total Surplus : *${rupiah(totalSurplus)}*\n\n`;
     }
   }
 
-  /* ===== BAGI HASIL ===== */
-  if(jenis==="lengkap"&&data.skema){
+  /* =============================
+     BAGI HASIL
+  ============================= */
+  if(jenis==="lengkap" && data.skema){
     out+=`*BAGI HASIL*\n\n`;
     const laba=totalSurplus-totalBiaya;
     Object.entries(data.skema.pembagian).forEach(([k,p])=>{
