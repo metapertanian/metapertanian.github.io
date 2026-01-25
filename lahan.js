@@ -262,7 +262,7 @@ function renderLaba(){
       <tr>
         <th>No</th>
         <th>Penerima</th>
-        <th>Modal + %</th>
+        <th>Modal + Persentase</th>
         <th>Total</th>
       </tr>
   `;
