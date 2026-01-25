@@ -16,7 +16,15 @@ const LAHAN_MAP = {
 /* =============================
    BANK
 ============================= */
-const BANK = typeof BANK_RISMA !== "undefined" ? BANK_RISMA : null;
+const BANK = window.BANK_RISMA;
+
+if (BANK) {
+  out += `\n*BANK RISMA : ${rupiah(BANK.saldo)}*\n`;
+  Object.entries(BANK.anggota || {}).forEach(([n, s], i) => {
+    out += `${i + 1}. ${n} : ${rupiah(s)}\n`;
+  });
+  out += `\n👉 pulungriswanto.my.id/bank-risma`;
+}
 
 /* =============================
    UTIL
@@ -197,7 +205,12 @@ out += `\nTotal Modal: *${rupiah(totalModal)}*\n\n`;
     out+=`Surplus : *${rupiah(surplus)}*\n`;
     out+=`👉 pulungriswanto.my.id/${lahanKey}\n`;
 
-    if(p.bonusPanen?.total){
+    if (
+  p.bonusPanen &&
+  Number(p.bonusPanen.total) > 0 &&
+  Array.isArray(p.bonusPanen.anggota) &&
+  p.bonusPanen.anggota.length > 0
+) {
       out+=`——————————————\n\n`;
       out+=`*BONUS PANEN : ${rupiah(p.bonusPanen.total)}*\n`;
       const per=p.bonusPanen.total/p.bonusPanen.anggota.length;
