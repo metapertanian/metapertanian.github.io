@@ -118,11 +118,19 @@ function generateLaporan() {
     ...(data.panen||[]).map(p=>p.tanggal)
   ].sort();
 
-  out+=`*${lahan.nama.toUpperCase()}*\n`;
-  out+=`> Bertani, Berbisinis, Berbagi \n\n`;
-  out+=`${data.label}\n`;
-  out+=`${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}\n`;
-  out+=`——————————————\n\n`;
+  const judulJenis = document
+  .getElementById("jenis")
+  .selectedOptions[0]
+  .textContent;
+
+const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
+
+out += `*Laporan ${judulJenis} ${lahan.nama.toUpperCase()}*\n`;
+out += `> Bertani, Berbisnis, Berbagi\n\n`;
+out += `${data.lokasi || "-"}\n`;
+out += `${data.label}\n`;
+out += `${periode}\n`;
+out += `————————————\n\n`;
 
   let totalModal=0;
   let totalBiaya=0;
@@ -133,11 +141,27 @@ function generateLaporan() {
   ============================= */
   if(["modal","modal-biaya","modal-biaya-panen","lengkap"].includes(jenis)){
     out+=`*INVESTOR*\n\n`;
-    Object.entries(data.modal||{}).forEach(([k,v])=>{
-      totalModal+=Number(v);
-      out+=`- ${k} : ${rupiah(v)}\n`;
-    });
-    out+=`\nTotal Modal: *${rupiah(totalModal)}*\n\n`;
+    Object.entries(data.modal || {}).forEach(([k, v]) => {
+  totalModal += Number(v);
+  out += `- ${k} : ${rupiah(v)}\n`;
+});
+
+// =============================
+// HITUNG TOTAL BIAYA
+// =============================
+const biayaTotal = (data.biaya || [])
+  .reduce((a, b) => a + Number(b.jumlah || 0), 0);
+
+// =============================
+// JIKA BIAYA > MODAL → MANAJEMEN
+// =============================
+if (biayaTotal > totalModal) {
+  const tambahan = biayaTotal - totalModal;
+  totalModal += tambahan;
+  out += `- MANAJEMEN : ${rupiah(tambahan)}\n`;
+}
+
+out += `\nTotal Modal: *${rupiah(totalModal)}*\n\n`;
   }
 
   /* =============================
