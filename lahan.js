@@ -244,38 +244,32 @@ function renderLaba(){
   const totalOmzet = musimAktif.panen.reduce((a,b)=>a+b.nilai,0);
 
   /* ===============================
-     HITUNG MODAL MASUK
+     HITUNG MODAL
   =============================== */
-  const totalModal = Object.values(musimAktif.modal || {})
+  const modalAwal = {...(musimAktif.modal || {})};
+
+  const totalModalInvestor = Object.values(modalAwal)
     .reduce((a,b)=>a+Number(b),0);
 
-  const sisaModal = totalModal > totalBiayaProduksi
-    ? totalModal - totalBiayaProduksi
-    : 0;
+  let modalManajemen = 0;
+  if(totalModalInvestor < totalBiayaProduksi){
+    modalManajemen = totalBiayaProduksi - totalModalInvestor;
+  }
 
   /* ===============================
-     LABA BERSIH
+     LABA
   =============================== */
   let laba = totalOmzet - totalBiayaProduksi - totalBiayaPanen;
-  laba += sisaModal;
 
+  /* ===============================
+     TAMPILAN
+  =============================== */
   let html = `
   <section class="card">
     <h2>📊 Bagi Hasil</h2>
-  `;
 
-  if(sisaModal > 0){
-    html += `
-      <div class="stat">
-        <small>Sisa Modal</small>
-        <strong class="success">Rp ${rupiah(sisaModal)}</strong>
-      </div>
-    `;
-  }
-
-  html += `
     <div class="stat"><small>Total Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
-    <div class="stat"><small>Total Biaya Skincare</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
+    <div class="stat"><small>Total Biaya Produksi</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
     <div class="stat"><small>Total Biaya Panen</small><strong>Rp ${rupiah(totalBiayaPanen)}</strong></div>
 
     <div class="stat">
@@ -287,7 +281,7 @@ function renderLaba(){
   `;
 
   /* ===============================
-     HASIL PERSENTASE (RINGKAS)
+     HASIL PERSENTASE
   =============================== */
   Object.entries(musimAktif.skema.pembagian||{}).forEach(([nama,persen])=>{
     const hasil = laba * persen / 100;
@@ -307,20 +301,24 @@ function renderLaba(){
     <table class="table">
       <tr>
         <th>Penerima</th>
-        <th>Modal + Persenan/th>
+        <th>Modal + Persentase</th>
         <th>Total</th>
       </tr>
   `;
 
   Object.entries(musimAktif.skema.pembagian||{}).forEach(([nama,persen])=>{
-    const modal = musimAktif.modal?.[nama] || 0;
+    const modalAwalPenerima = modalAwal[nama] || 0;
+    const modalFinal = nama.toLowerCase() === "manajemen"
+      ? modalAwalPenerima + modalManajemen
+      : modalAwalPenerima;
+
     const hasil = laba * persen / 100;
-    const total = modal + hasil;
+    const total = modalFinal + hasil;
 
     html += `
       <tr>
         <td>${nama}</td>
-        <td>${rupiah(modal)} + ${rupiah(hasil)}</td>
+        <td>${rupiah(modalFinal)} + ${rupiah(hasil)}</td>
         <td>Rp ${rupiah(total)}</td>
       </tr>
     `;
