@@ -473,21 +473,33 @@ function renderRiwayat(page=1){
 INIT
 ====================================================== */
 function renderSemua(){
+
+  // render data utama
   renderInfoMusim();
   renderModal();
   renderTabelBiaya();
   renderTabelPanen();
   renderLaba();
 
+  // ===== HITUNG RINGKASAN =====
   const ringkasan = hitungRingkasanLahan();
 
+  // ===== AMBIL ELEMEN =====
   const elOmzet = document.getElementById("totalOmzet");
   const elBiaya = document.getElementById("totalBiaya");
   const elLaba  = document.getElementById("totalLaba");
 
-  if (elOmzet) animateNumber(elOmzet, ringkasan.omzet);
-  if (elBiaya) animateNumber(elBiaya, ringkasan.biaya);
-  if (elLaba)  animateNumber(elLaba, ringkasan.laba);
+  // ===== RESET DULU (PENTING) =====
+  elOmzet.textContent = "0";
+  elBiaya.textContent = "0";
+  elLaba.textContent  = "0";
+
+  // ===== ANIMASI =====
+  setTimeout(() => {
+    animateNumber(elOmzet, Number(ringkasan.omzet || 0));
+    animateNumber(elBiaya, Number(ringkasan.biaya || 0));
+    animateNumber(elLaba,  Number(ringkasan.laba  || 0));
+  }, 100);
 
   kumpulkanRiwayat();
   renderRiwayat(1);
