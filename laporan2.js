@@ -103,6 +103,42 @@ document.addEventListener("DOMContentLoaded",()=>{
   document.getElementById("musim")?.addEventListener("change",initPanenTanggal);
 });
 
+
+
+/* Pembuat Judul Laporan */
+
+function buatJudulLaporan({
+  gaya,
+  jenisText,
+  komoditas,
+  lahan,
+  lokasi,
+  musim,
+  periode
+}) {
+  let out = "";
+
+  if (gaya === "lengkap") {
+    out += `Laporan ${jenisText} - Tanam ${komoditas}\n`;
+    out += `*${lahan.toUpperCase()}*\n`;
+    out += `> Bertani, Berbisnis, Berbagi\n\n`;
+    out += `${lokasi || "-"}\n`;
+    out += `${musim}\n`;
+    out += `${periode}\n`;
+    out += `————————————\n\n`;
+  }
+
+  if (gaya === "sederhana") {
+    out += `Laporan ${jenisText} - Tanam ${komoditas}\n\n`;
+    out += `${lokasi || "-"}\n`;
+    out += `${musim}\n`;
+    out += `${periode}\n`;
+    out += `————————————\n\n`;
+  }
+
+  return out;
+}
+
 /* =============================
    GENERATE LAPORAN
 ============================= */
@@ -133,12 +169,29 @@ function generateLaporan() {
 
 const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
 
-out += `*Laporan ${judulJenis} ${lahan.nama.toUpperCase()}*\n`;
-out += `> Bertani, Berbisnis, Berbagi\n\n`;
-out += `${data.lokasi || "-"}\n`;
-out += `${data.label}\n`;
-out += `${periode}\n`;
-out += `————————————\n\n`;
+const gayaJudul = document.getElementById("gayaJudul").value;
+
+const judulJenis = document
+  .getElementById("jenis")
+  .selectedOptions[0]
+  .textContent;
+
+const komoditasJudul =
+  jenis === "panen"
+    ? data.panen?.[document.getElementById("panenTanggal")?.value]?.komoditas || "-"
+    : (data.komoditas?.join(", ") || "-");
+
+const periode = `${formatTanggal(tglSemua[0])} - ${formatTanggal(tglSemua.at(-1))}`;
+
+out += buatJudulLaporan({
+  gaya: gayaJudul,
+  jenisText: judulJenis,
+  komoditas: komoditasJudul,
+  lahan: lahan.nama,
+  lokasi: data.lokasi,
+  musim: data.label,
+  periode
+});
 
   let totalModal=0;
   let totalBiaya=0;
