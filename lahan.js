@@ -269,7 +269,7 @@ function renderLaba(){
     <h2>📊 Bagi Hasil</h2>
 
     <div class="stat"><small>Total Omzet</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
-    <div class="stat"><small>Total Biaya Produksi</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
+    <div class="stat"><small>Total Biaya Skincare</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
     <div class="stat"><small>Total Biaya Panen</small><strong>Rp ${rupiah(totalBiayaPanen)}</strong></div>
 
     <div class="stat">
