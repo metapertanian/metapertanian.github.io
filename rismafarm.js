@@ -68,6 +68,12 @@ const RISMA_FARM = {
   keterangan: "PEREKAT",
   jumlah: 15500
 },
+{
+  tanggal: "2026-01-15",
+  keterangan: "PONSKA",
+  jumlah: 25000
+},
+
         {
           tanggal: "2026-01-15",
           keterangan: "TELEK AYAM",
