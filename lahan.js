@@ -485,9 +485,9 @@ function renderSemua(){
   const ringkasan = hitungRingkasanLahan();
 
   // ===== AMBIL ELEMEN =====
-  const elOmzet = document.getElementById("totalOmzet");
-  const elBiaya = document.getElementById("totalBiaya");
-  const elLaba  = document.getElementById("totalLaba");
+  const elOmzet = document.getElementById("animasiOmzet");
+const elBiaya = document.getElementById("animasiBiaya");
+const elLaba  = document.getElementById("animasiLaba");
 
   // ===== RESET DULU (PENTING) =====
   elOmzet.textContent = "0";
