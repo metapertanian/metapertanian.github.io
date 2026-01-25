@@ -479,14 +479,15 @@ function renderSemua(){
   renderTabelPanen();
   renderLaba();
 
-const ringkasan = hitungRingkasanLahan();
-const elOmzet = document.getElementById("totalOmzet");
-const elBiaya = document.getElementById("totalBiaya");
-const elLaba  = document.getElementById("totalLaba");
+  const ringkasan = hitungRingkasanLahan();
 
-if (elOmzet) animateNumber(elOmzet, ringkasan.omzet);
-if (elBiaya) animateNumber(elBiaya, ringkasan.biaya);
-if (elLaba)  animateNumber(elLaba, ringkasan.laba);
+  const elOmzet = document.getElementById("totalOmzet");
+  const elBiaya = document.getElementById("totalBiaya");
+  const elLaba  = document.getElementById("totalLaba");
+
+  if (elOmzet) animateNumber(elOmzet, ringkasan.omzet);
+  if (elBiaya) animateNumber(elBiaya, ringkasan.biaya);
+  if (elLaba)  animateNumber(elLaba, ringkasan.laba);
 
   kumpulkanRiwayat();
   renderRiwayat(1);
