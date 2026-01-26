@@ -355,6 +355,10 @@ function hitungRingkasanLahan(){
 /* ANIMASI ANGKA */
 
 function animateNumber(el, end){
+  if (!el) return;
+
+  el.classList.add("show"); // 🔥 INI KUNCINYA
+
   let start = 0;
   const dur = 800;
   const t0 = performance.now();
