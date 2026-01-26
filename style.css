@@ -421,6 +421,11 @@ pre {
   color: #c53030;
 }
 
+.big-number.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* =========================
    SUMMARY STACK
 ========================= */
