@@ -25,7 +25,7 @@ function renderNavbar(active = "", mode = "public") {
   menu.id = "navMenu";
 
   let linksPublic = `
-    <a href="/index.html" class="${active === 'bertunas' ? 'active' : ''}">
+    <a href="/" class="${active === 'bertunas' ? 'active' : ''}">
       🏠 BERTUNAS
     </a>
     <a href="/rismafarm" class="${active === 'rismafarm' ? 'active' : ''}">
