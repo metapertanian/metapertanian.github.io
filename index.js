@@ -45,15 +45,24 @@ function ambilSemuaPanen() {
    ANIMASI ANGKA HALUS
 ================================ */
 function animateNumber(el, end, dur = 1400) {
-  const t0 = performance.now();
+  if (!el) return;
 
-  function step(t) {
-    const p = Math.min((t - t0) / dur, 1);
-    const eased = 1 - Math.pow(1 - p, 3);
+  let start = 0;
+  const startTime = performance.now();
+
+  function frame(now) {
+    const progress = Math.min((now - startTime) / dur, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
     el.textContent = rupiah(Math.floor(eased * end));
-    if (p < 1) requestAnimationFrame(step);
+
+    if (progress < 1) {
+      requestAnimationFrame(frame);
+    }
   }
-  requestAnimationFrame(step);
+
+  // pastikan angka terlihat dulu
+  el.textContent = "0";
+  requestAnimationFrame(frame);
 }
 
 /* ===============================
@@ -83,8 +92,10 @@ function renderRingkasan(data) {
 
     const angka = card.querySelector(".big-number");
     setTimeout(() => {
-      animateNumber(angka, total);
-    }, i * 450); // ⏱️ jalan bergantian
+  if (angka.offsetParent !== null) { // elemen benar2 tampil
+    animateNumber(angka, total);
+  }
+}, 300 + i * 500); // ⏱️ jalan bergantian
   });
 }
 
@@ -156,6 +167,37 @@ function renderPagePanen(page) {
     `;
   });
 
+
+/* Klik Tampilkan Thumb */
+
+function showImage(src) {
+  if (!src) return;
+
+  const overlay = document.createElement("div");
+  overlay.style = `
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+  `;
+
+  overlay.innerHTML = `
+    <img src="${src}" 
+         style="
+           max-width:90%;
+           max-height:90%;
+           border-radius:12px;
+           box-shadow:0 10px 30px rgba(0,0,0,.6)
+         ">
+  `;
+
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
+
   const totalPage = Math.ceil(dataGlobal.length / PER_PAGE);
   for (let i = 1; i <= totalPage; i++) {
     const btn = document.createElement("button");
@@ -169,6 +211,8 @@ function renderPagePanen(page) {
 /* ===============================
    INIT
 ================================ */
-const semuaPanen = ambilSemuaPanen();
-renderRingkasan(semuaPanen);
-renderRiwayatPanen(semuaPanen);
+document.addEventListener("DOMContentLoaded", () => {
+  const semuaPanen = ambilSemuaPanen();
+  renderRingkasan(semuaPanen);
+  renderRiwayatPanen(semuaPanen);
+});
