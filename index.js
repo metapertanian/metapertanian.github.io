@@ -4,7 +4,7 @@
 const rupiah = n => Number(n || 0).toLocaleString("id-ID");
 
 /* ===============================
-   AMBIL SEMUA PANEN
+   AMBIL SEMUA PANEN (AMAN)
 ================================ */
 function ambilSemuaPanen() {
   const lahanList = [
@@ -13,20 +13,26 @@ function ambilSemuaPanen() {
     window.UMI2,
     window.HORTI,
     window.PANGAN
-  ].filter(Boolean);
+  ].filter(l => l && l.musim);
 
   let semua = [];
 
   lahanList.forEach(lahan => {
-    Object.values(lahan.musim || {}).forEach(musim => {
-      (musim.panen || []).forEach(p => {
+    const namaLahan = lahan.nama || "Lahan Tidak Diketahui";
+
+    Object.values(lahan.musim).forEach(musim => {
+      if (!Array.isArray(musim.panen)) return;
+
+      musim.panen.forEach(p => {
+        if (!p || !p.tanggal || !p.komoditas) return;
+
         semua.push({
           tanggal: p.tanggal,
-          komoditas: p.komoditas,
+          komoditas: String(p.komoditas).toUpperCase(),
           qty: Number(p.qty || 0),
           satuan: p.satuan || "kg",
           nilai: Number(p.nilai || 0),
-          lahan: lahan.nama
+          lahan: namaLahan
         });
       });
     });
@@ -36,7 +42,7 @@ function ambilSemuaPanen() {
 }
 
 /* ===============================
-   ANIMASI ANGKA HALUS
+   ANIMASI ANGKA
 ================================ */
 function animateNumber(el, end, dur = 1200) {
   let start = 0;
@@ -45,25 +51,30 @@ function animateNumber(el, end, dur = 1200) {
   function step(t) {
     const p = Math.min((t - t0) / dur, 1);
     const eased = 1 - Math.pow(1 - p, 3);
-    const val = Math.floor(eased * end);
-    el.textContent = rupiah(val);
+    el.textContent = rupiah(Math.floor(eased * end));
     if (p < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
 /* ===============================
-   RINGKASAN TONASE PER KOMODITAS
+   RINGKASAN TONASE
 ================================ */
 function renderRingkasan(data) {
-  const map = {};
+  const box = document.getElementById("ringkasanTonase");
+  if (!box) return;
 
+  box.innerHTML = "";
+
+  if (!data.length) {
+    box.innerHTML = "<small class='muted'>Belum ada data panen</small>";
+    return;
+  }
+
+  const map = {};
   data.forEach(p => {
     map[p.komoditas] = (map[p.komoditas] || 0) + p.qty;
   });
-
-  const box = document.getElementById("ringkasanTonase");
-  box.innerHTML = "";
 
   Object.entries(map).forEach(([komoditas, total]) => {
     const card = document.createElement("div");
@@ -84,18 +95,25 @@ function renderRingkasan(data) {
 const PER_PAGE = 5;
 let dataGlobal = [];
 
-function renderRiwayat(data) {
-  dataGlobal = data.sort(
+function renderRiwayatPanen(data) {
+  dataGlobal = [...data].sort(
     (a, b) => new Date(b.tanggal) - new Date(a.tanggal)
   );
-  renderPage(1);
+  renderPagePanen(1);
 }
 
-function renderPage(page) {
+function renderPagePanen(page) {
   const box = document.getElementById("riwayatPanen");
   const pag = document.getElementById("pagination");
+  if (!box || !pag) return;
+
   box.innerHTML = "";
   pag.innerHTML = "";
+
+  if (!dataGlobal.length) {
+    box.innerHTML = "<small class='muted'>Belum ada riwayat panen</small>";
+    return;
+  }
 
   const start = (page - 1) * PER_PAGE;
   const slice = dataGlobal.slice(start, start + PER_PAGE);
@@ -121,8 +139,8 @@ function renderPage(page) {
   for (let i = 1; i <= totalPage; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
-    btn.className = i === page ? "active" : "";
-    btn.onclick = () => renderPage(i);
+    if (i === page) btn.classList.add("active");
+    btn.onclick = () => renderPagePanen(i);
     pag.appendChild(btn);
   }
 }
@@ -132,4 +150,4 @@ function renderPage(page) {
 ================================ */
 const semuaPanen = ambilSemuaPanen();
 renderRingkasan(semuaPanen);
-renderRiwayat(semuaPanen);
+renderRiwayatPanen(semuaPanen);
