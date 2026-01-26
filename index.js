@@ -91,17 +91,11 @@ function renderRingkasan(data) {
     const card = document.createElement("div");
     card.className = "card center";
 
-    // 🔥 PAKSA SELURUH ISI CARD RATA TENGAH
-    card.style.display = "flex";
-    card.style.flexDirection = "column";
-    card.style.alignItems = "center";
-    card.style.textAlign = "center";
-
     card.innerHTML = `
-      <h3>${komoditas}</h3>
-      <div class="big-number success">0</div>
-      <small>Total Panen (kg)</small>
-    `;
+  <h3>${komoditas}</h3>
+  <div class="big-number success">0</div>
+  <small>Total Panen (kg)</small>
+`;
 
     box.appendChild(card);
 
