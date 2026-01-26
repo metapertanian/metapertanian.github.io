@@ -7,33 +7,26 @@ const rupiah = n => Number(n || 0).toLocaleString("id-ID");
    AMBIL SEMUA PANEN (AMAN)
 ================================ */
 function ambilSemuaPanen() {
-  const lahanList = [
-    window.RISMA_FARM,
-    window.UMI,
-    window.UMI2,
-    window.HORTI,
-    window.PANGAN
+  const kandidat = [
+    typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
+    typeof UMI !== "undefined" ? UMI : null,
+    typeof UMI2 !== "undefined" ? UMI2 : null,
+    typeof HORTI !== "undefined" ? HORTI : null,
+    typeof PANGAN !== "undefined" ? PANGAN : null
   ].filter(l => l && l.musim);
 
   let semua = [];
 
-  lahanList.forEach(lahan => {
+  kandidat.forEach(lahan => {
     const namaLahan = lahan.nama || "Lahan Tidak Diketahui";
 
     Object.values(lahan.musim).forEach(musim => {
-      if (!musim.panen) return;
+      if (!Array.isArray(musim.panen)) return;
 
-      // 🔑 INI KUNCI UTAMANYA
-      const daftarPanen = Array.isArray(musim.panen)
-        ? musim.panen
-        : Object.values(musim.panen);
-
-      daftarPanen.forEach(p => {
-        if (!p || !p.tanggal || !p.komoditas) return;
-
+      musim.panen.forEach(p => {
         semua.push({
           tanggal: p.tanggal,
-          komoditas: String(p.komoditas).toUpperCase(),
+          komoditas: p.komoditas,
           qty: Number(p.qty || 0),
           satuan: p.satuan || "kg",
           nilai: Number(p.nilai || 0),
@@ -43,7 +36,7 @@ function ambilSemuaPanen() {
     });
   });
 
-  console.log("✅ Total panen terbaca:", semua.length);
+  console.log("✅ Panen terbaca:", semua);
   return semua;
 }
 
