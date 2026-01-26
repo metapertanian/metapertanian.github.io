@@ -47,6 +47,17 @@ function ambilSemuaPanen() {
 function animateNumber(el, end, dur = 1400) {
   if (!el) return;
 
+  // 🔥 Paksa posisi tengah (override CSS lama)
+  el.style.display = "flex";
+  el.style.justifyContent = "center";
+  el.style.alignItems = "center";
+  el.style.textAlign = "center";
+  el.style.width = "100%";
+
+  el.style.opacity = 1;
+  el.style.transform = "none";
+  el.style.visibility = "visible";
+
   const startTime = performance.now();
 
   function frame(now) {
@@ -54,9 +65,7 @@ function animateNumber(el, end, dur = 1400) {
     const eased = 1 - Math.pow(1 - progress, 3);
     el.textContent = rupiah(Math.floor(eased * end));
 
-    if (progress < 1) {
-      requestAnimationFrame(frame);
-    }
+    if (progress < 1) requestAnimationFrame(frame);
   }
 
   el.textContent = "0";
