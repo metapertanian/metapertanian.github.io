@@ -1,11 +1,18 @@
 /* ===============================
-   UTIL DATA PANEN
+   UTIL
+================================ */
+const rupiah = n => Number(n || 0).toLocaleString("id-ID");
+
+/* ===============================
+   AMBIL SEMUA PANEN
 ================================ */
 function ambilSemuaPanen() {
   const lahanList = [
-    typeof RISMA_FARM !== "undefined" ? RISMA_FARM : null,
-    typeof UMI !== "undefined" ? UMI : null,
-    typeof UMI2 !== "undefined" ? UMI2 : null,
+    window.RISMA_FARM,
+    window.UMI,
+    window.UMI2,
+    window.HORTI,
+    window.PANGAN
   ].filter(Boolean);
 
   let semua = [];
@@ -15,10 +22,10 @@ function ambilSemuaPanen() {
       (musim.panen || []).forEach(p => {
         semua.push({
           tanggal: p.tanggal,
-          nama: p.nama || p.komoditas,
-          qty: p.qty || 0,
+          komoditas: p.komoditas,
+          qty: Number(p.qty || 0),
           satuan: p.satuan || "kg",
-          nilai: p.nilai || 0,
+          nilai: Number(p.nilai || 0),
           lahan: lahan.nama
         });
       });
@@ -29,31 +36,30 @@ function ambilSemuaPanen() {
 }
 
 /* ===============================
-   ANIMASI ANGKA
+   ANIMASI ANGKA HALUS
 ================================ */
-function animateNumber(el, end) {
+function animateNumber(el, end, dur = 1200) {
   let start = 0;
-  const duration = 3000;
-  const startTime = performance.now();
+  const t0 = performance.now();
 
-  function step(now) {
-    const progress = Math.min((now - startTime) / duration, 1);
-    const value = Math.floor(progress * end);
-    el.textContent = value.toLocaleString("id-ID");
-    if (progress < 1) requestAnimationFrame(step);
+  function step(t) {
+    const p = Math.min((t - t0) / dur, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const val = Math.floor(eased * end);
+    el.textContent = rupiah(val);
+    if (p < 1) requestAnimationFrame(step);
   }
   requestAnimationFrame(step);
 }
 
 /* ===============================
-   RINGKASAN TONASE
+   RINGKASAN TONASE PER KOMODITAS
 ================================ */
-function renderRingkasan(panen) {
+function renderRingkasan(data) {
   const map = {};
 
-  panen.forEach(p => {
-    if (!map[p.nama]) map[p.nama] = 0;
-    map[p.nama] += p.qty;
+  data.forEach(p => {
+    map[p.komoditas] = (map[p.komoditas] || 0) + p.qty;
   });
 
   const box = document.getElementById("ringkasanTonase");
@@ -64,8 +70,8 @@ function renderRingkasan(panen) {
     card.className = "card center";
     card.innerHTML = `
       <h3>${komoditas}</h3>
-      <div class="big-number">0</div>
-      <small>kg</small>
+      <div class="big-number success">0</div>
+      <small>Total Panen (kg)</small>
     `;
     box.appendChild(card);
     animateNumber(card.querySelector(".big-number"), total);
@@ -73,13 +79,12 @@ function renderRingkasan(panen) {
 }
 
 /* ===============================
-   PAGINATION RIWAYAT PANEN
+   RIWAYAT PANEN + PAGINATION
 ================================ */
 const PER_PAGE = 5;
-let currentPage = 1;
 let dataGlobal = [];
 
-function renderRiwayatPagination(data) {
+function renderRiwayat(data) {
   dataGlobal = data.sort(
     (a, b) => new Date(b.tanggal) - new Date(a.tanggal)
   );
@@ -87,8 +92,6 @@ function renderRiwayatPagination(data) {
 }
 
 function renderPage(page) {
-  currentPage = page;
-
   const box = document.getElementById("riwayatPanen");
   const pag = document.getElementById("pagination");
   box.innerHTML = "";
@@ -101,39 +104,27 @@ function renderPage(page) {
     const div = document.createElement("div");
     div.className = "panen-card";
     div.innerHTML = `
-      <strong>${p.nama}</strong>
-      <div class="muted">
-        📆 ${p.tanggal} · ${p.qty} ${p.satuan} · ${p.lahan}
+      <div>
+        <strong>${p.komoditas}</strong>
+        <div class="muted">
+          📆 ${p.tanggal} · ${p.qty} ${p.satuan} · ${p.lahan}
+        </div>
       </div>
-      <div class="nilai">
-        Rp ${p.nilai.toLocaleString("id-ID")}
+      <div class="nilai success">
+        Rp ${rupiah(p.nilai)}
       </div>
     `;
     box.appendChild(div);
   });
 
   const totalPage = Math.ceil(dataGlobal.length / PER_PAGE);
-  if (totalPage <= 1) return;
-
-  if (page > 1) {
-    pag.innerHTML += `<button onclick="gotoPage(${page - 1})">‹</button>`;
-  }
-
   for (let i = 1; i <= totalPage; i++) {
-    pag.innerHTML += `
-      <button class="${i === page ? 'active' : ''}"
-        onclick="gotoPage(${i})">${i}</button>
-    `;
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = i === page ? "active" : "";
+    btn.onclick = () => renderPage(i);
+    pag.appendChild(btn);
   }
-
-  if (page < totalPage) {
-    pag.innerHTML += `<button onclick="gotoPage(${page + 1})">›</button>`;
-  }
-}
-
-function gotoPage(page) {
-  renderPage(page);
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 /* ===============================
@@ -141,4 +132,4 @@ function gotoPage(page) {
 ================================ */
 const semuaPanen = ambilSemuaPanen();
 renderRingkasan(semuaPanen);
-renderRiwayatPagination(semuaPanen);
+renderRiwayat(semuaPanen);
