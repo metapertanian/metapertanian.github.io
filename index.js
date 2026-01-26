@@ -82,10 +82,10 @@ function renderRingkasan(data) {
 
     const angka = card.querySelector(".big-number");
 
-    // 🔑 JEDA PER KOMODITAS (BIAR BERGANTIAN)
-    setTimeout(() => {
-      animateNumber(angka, total, 1500);
-    }, index * 400);
+setTimeout(() => {
+  angka.classList.add("show");      // ⬅️ INI KUNCI
+  animateNumber(angka, total, 1500);
+}, index * 400);
   });
 }
 
