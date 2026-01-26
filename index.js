@@ -21,9 +21,14 @@ function ambilSemuaPanen() {
     const namaLahan = lahan.nama || "Lahan Tidak Diketahui";
 
     Object.values(lahan.musim).forEach(musim => {
-      if (!Array.isArray(musim.panen)) return;
+      if (!musim.panen) return;
 
-      musim.panen.forEach(p => {
+      // 🔑 INI KUNCI UTAMANYA
+      const daftarPanen = Array.isArray(musim.panen)
+        ? musim.panen
+        : Object.values(musim.panen);
+
+      daftarPanen.forEach(p => {
         if (!p || !p.tanggal || !p.komoditas) return;
 
         semua.push({
@@ -38,6 +43,7 @@ function ambilSemuaPanen() {
     });
   });
 
+  console.log("✅ Total panen terbaca:", semua.length);
   return semua;
 }
 
