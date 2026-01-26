@@ -18,7 +18,7 @@ function ambilSemuaPanen() {
   let semua = [];
 
   kandidat.forEach(lahan => {
-    const namaLahan = lahan.nama || "Lahan Tidak Diketahui";
+    const namaLahan = lahan.nama || "LAHAN";
 
     Object.values(lahan.musim).forEach(musim => {
       if (!Array.isArray(musim.panen)) return;
@@ -30,21 +30,21 @@ function ambilSemuaPanen() {
           qty: Number(p.qty || 0),
           satuan: p.satuan || "kg",
           nilai: Number(p.nilai || 0),
+          bukti: p.bukti || null,
           lahan: namaLahan
         });
       });
     });
   });
 
-  console.log("✅ Panen terbaca:", semua);
+  console.log("✅ PANEN TERBACA:", semua);
   return semua;
 }
 
 /* ===============================
-   ANIMASI ANGKA
+   ANIMASI ANGKA HALUS
 ================================ */
-function animateNumber(el, end, dur = 1200) {
-  let start = 0;
+function animateNumber(el, end, dur = 1400) {
   const t0 = performance.now();
 
   function step(t) {
@@ -57,7 +57,7 @@ function animateNumber(el, end, dur = 1200) {
 }
 
 /* ===============================
-   RINGKASAN TONASE
+   RINGKASAN TONASE PER KOMODITAS
 ================================ */
 function renderRingkasan(data) {
   const map = {};
@@ -68,9 +68,10 @@ function renderRingkasan(data) {
   });
 
   const box = document.getElementById("ringkasanTonase");
+  if (!box) return;
   box.innerHTML = "";
 
-  Object.entries(map).forEach(([komoditas, total], index) => {
+  Object.entries(map).forEach(([komoditas, total], i) => {
     const card = document.createElement("div");
     card.className = "card center";
     card.innerHTML = `
@@ -81,16 +82,14 @@ function renderRingkasan(data) {
     box.appendChild(card);
 
     const angka = card.querySelector(".big-number");
-
-setTimeout(() => {
-  angka.classList.add("show");      // ⬅️ INI KUNCI
-  animateNumber(angka, total, 1500);
-}, index * 400);
+    setTimeout(() => {
+      animateNumber(angka, total);
+    }, i * 450); // ⏱️ jalan bergantian
   });
 }
 
 /* ===============================
-   RIWAYAT PANEN + PAGINATION
+   RIWAYAT PANEN (REUSE CSS RISMA FARM)
 ================================ */
 const PER_PAGE = 5;
 let dataGlobal = [];
@@ -111,7 +110,7 @@ function renderPagePanen(page) {
   pag.innerHTML = "";
 
   if (!dataGlobal.length) {
-    box.innerHTML = "<small class='muted'>Belum ada riwayat panen</small>";
+    box.innerHTML = `<small class="muted">Belum ada data panen</small>`;
     return;
   }
 
@@ -119,27 +118,49 @@ function renderPagePanen(page) {
   const slice = dataGlobal.slice(start, start + PER_PAGE);
 
   slice.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "panen-card";
-    div.innerHTML = `
-      <div>
-        <strong>${p.komoditas}</strong>
-        <div class="muted">
-          📆 ${p.tanggal} · ${p.qty} ${p.satuan} · ${p.lahan}
+    box.innerHTML += `
+      <div class="riwayat-item">
+
+        <div class="riwayat-thumb ${p.bukti ? "" : "empty"}">
+          ${
+            p.bukti
+              ? `<img
+                    src="${p.bukti}"
+                    class="bukti-img"
+                    loading="lazy"
+                    onclick="showImage(this.src)"
+                 >`
+              : `<span class="no-photo">NO FOTO</span>`
+          }
         </div>
-      </div>
-      <div class="nilai success">
-        Rp ${rupiah(p.nilai)}
+
+        <div>
+          <div class="riwayat-date success" style="opacity:.65;font-size:13px">
+            📅 ${p.tanggal}
+          </div>
+
+          <div class="riwayat-title">
+            ${p.komoditas}
+          </div>
+
+          <div class="riwayat-detail">
+            ${p.qty} ${p.satuan} · ${p.lahan}
+          </div>
+
+          <div class="riwayat-value success">
+            Rp ${rupiah(p.nilai)}
+          </div>
+        </div>
+
       </div>
     `;
-    box.appendChild(div);
   });
 
   const totalPage = Math.ceil(dataGlobal.length / PER_PAGE);
   for (let i = 1; i <= totalPage; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
-    if (i === page) btn.classList.add("active");
+    btn.className = i === page ? "active" : "";
     btn.onclick = () => renderPagePanen(i);
     pag.appendChild(btn);
   }
