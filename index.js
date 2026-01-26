@@ -60,22 +60,17 @@ function animateNumber(el, end, dur = 1200) {
    RINGKASAN TONASE
 ================================ */
 function renderRingkasan(data) {
-  const box = document.getElementById("ringkasanTonase");
-  if (!box) return;
-
-  box.innerHTML = "";
-
-  if (!data.length) {
-    box.innerHTML = "<small class='muted'>Belum ada data panen</small>";
-    return;
-  }
-
   const map = {};
+
   data.forEach(p => {
+    if (!p.komoditas) return;
     map[p.komoditas] = (map[p.komoditas] || 0) + p.qty;
   });
 
-  Object.entries(map).forEach(([komoditas, total]) => {
+  const box = document.getElementById("ringkasanTonase");
+  box.innerHTML = "";
+
+  Object.entries(map).forEach(([komoditas, total], index) => {
     const card = document.createElement("div");
     card.className = "card center";
     card.innerHTML = `
@@ -84,7 +79,13 @@ function renderRingkasan(data) {
       <small>Total Panen (kg)</small>
     `;
     box.appendChild(card);
-    animateNumber(card.querySelector(".big-number"), total);
+
+    const angka = card.querySelector(".big-number");
+
+    // 🔑 JEDA PER KOMODITAS (BIAR BERGANTIAN)
+    setTimeout(() => {
+      animateNumber(angka, total, 1500);
+    }, index * 400);
   });
 }
 
