@@ -354,21 +354,26 @@ function hitungRingkasanLahan(){
 
 /* ANIMASI ANGKA */
 
-function animateNumber(el, end){
+function animateNumber(el, end, dur = 1200) {
   if (!el) return;
 
-  el.classList.add("show"); // 🔥 INI KUNCINYA
+  el.classList.add("show");
 
-  let start = 0;
-  const dur = 800;
+  const start = 0;
   const t0 = performance.now();
 
-  function step(t){
+  function step(t) {
     const p = Math.min((t - t0) / dur, 1);
-    const val = Math.floor(p * end);
+
+    // easing lembut (easeOutCubic)
+    const eased = 1 - Math.pow(1 - p, 3);
+
+    const val = Math.floor(eased * end);
     el.textContent = rupiah(val);
-    if(p < 1) requestAnimationFrame(step);
+
+    if (p < 1) requestAnimationFrame(step);
   }
+
   requestAnimationFrame(step);
 }
 
@@ -486,26 +491,41 @@ function renderSemua(){
   renderLaba();
 
   // ===== HITUNG RINGKASAN =====
-  const ringkasan = hitungRingkasanLahan();
+const ringkasan = hitungRingkasanLahan();
 
-  // ===== AMBIL ELEMEN =====
-  const elOmzet = document.getElementById("animasiOmzet");
-  const elBiaya = document.getElementById("animasiBiaya");
-  const elLaba  = document.getElementById("animasiLaba");
+// ===== AMBIL ELEMEN =====
+const elOmzet = document.getElementById("animasiOmzet");
+const elBiaya = document.getElementById("animasiBiaya");
+const elLaba  = document.getElementById("animasiLaba");
 
-  if (elOmzet && elBiaya && elLaba) {
-    elOmzet.textContent = "0";
-    elBiaya.textContent = "0";
-    elLaba.textContent  = "0";
+if (elOmzet && elBiaya && elLaba) {
 
-    setTimeout(() => {
-      animateNumber(elOmzet, Number(ringkasan.omzet || 0));
-      animateNumber(elBiaya, Number(ringkasan.biaya || 0));
-      animateNumber(elLaba,  Number(ringkasan.laba  || 0));
-    }, 100);
-  }
+  // ===== RESET =====
+  elOmzet.textContent = "0";
+  elBiaya.textContent = "0";
+  elLaba.textContent  = "0";
 
-  kumpulkanRiwayat();
-  renderRiwayat(1);
+  elOmzet.classList.remove("show");
+  elBiaya.classList.remove("show");
+  elLaba.classList.remove("show");
+
+  // ===== ANIMASI BERGANTIAN (LEBIH HALUS) =====
+  setTimeout(() => {
+    animateNumber(elOmzet, Number(ringkasan.omzet || 0), 1400);
+  }, 150);
+
+  setTimeout(() => {
+    animateNumber(elBiaya, Number(ringkasan.biaya || 0), 1400);
+  }, 850);
+
+  const durasiLaba = Number(ringkasan.laba || 0) < 0 ? 1800 : 1600;
+  setTimeout(() => {
+    animateNumber(elLaba, Number(ringkasan.laba || 0), durasiLaba);
+  }, 1550);
+}
+
+// ===== RIWAYAT =====
+kumpulkanRiwayat();
+renderRiwayat(1);
 }
 renderSemua();
