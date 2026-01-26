@@ -27,8 +27,17 @@ function ambilSemuaPanen() {
         semua.push({
           tanggal: p.tanggal,
           komoditas: p.komoditas,
-          qty: Number(p.qty || 0),
-          satuan: p.satuan || "kg",
+          const qtyKg = normalisasiQty(p.qty, p.satuan);
+
+semua.push({
+  tanggal: p.tanggal,
+  komoditas: p.komoditas,
+  qty: qtyKg,          // SELALU KG
+  satuan: "kg",        // DISERAGAMKAN
+  nilai: Number(p.nilai || 0),
+  bukti: p.bukti || null,
+  lahan: namaLahan
+});
           nilai: Number(p.nilai || 0),
           bukti: p.bukti || null,
           lahan: namaLahan
@@ -39,6 +48,19 @@ function ambilSemuaPanen() {
 
   console.log("✅ PANEN TERBACA:", semua);
   return semua;
+}
+
+/* ===============
+KONVERSI KE KG
+================ */
+function normalisasiQty(qty, satuan) {
+  const q = Number(qty || 0);
+  const s = (satuan || "kg").toLowerCase();
+
+  if (s === "ton") return q * 1000;
+  if (s === "kw" || s === "kuintal") return q * 100;
+
+  return q; // default kg
 }
 
 /* ===============================
