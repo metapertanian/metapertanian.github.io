@@ -47,7 +47,6 @@ function ambilSemuaPanen() {
 function animateNumber(el, end, dur = 1400) {
   if (!el) return;
 
-  let start = 0;
   const startTime = performance.now();
 
   function frame(now) {
@@ -60,7 +59,6 @@ function animateNumber(el, end, dur = 1400) {
     }
   }
 
-  // pastikan angka terlihat dulu
   el.textContent = "0";
   requestAnimationFrame(frame);
 }
@@ -92,12 +90,41 @@ function renderRingkasan(data) {
 
     const angka = card.querySelector(".big-number");
     setTimeout(() => {
-  if (angka.offsetParent !== null) { // elemen benar2 tampil
-    animateNumber(angka, total);
-  }
-}, 300 + i * 500); // ⏱️ jalan bergantian
+  animateNumber(angka, total);
+}, 400 + i * 500); // ⏱️ jalan bergantian
   });
 }
+
+/* Klik Tampilkan Thumb */
+
+function showImage(src) {
+  if (!src) return;
+
+  const overlay = document.createElement("div");
+  overlay.style = `
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.8);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:9999;
+  `;
+
+  overlay.innerHTML = `
+    <img src="${src}" 
+         style="
+           max-width:90%;
+           max-height:90%;
+           border-radius:12px;
+           box-shadow:0 10px 30px rgba(0,0,0,.6)
+         ">
+  `;
+
+  overlay.onclick = () => overlay.remove();
+  document.body.appendChild(overlay);
+}
+
 
 /* ===============================
    RIWAYAT PANEN (REUSE CSS RISMA FARM)
@@ -168,35 +195,6 @@ function renderPagePanen(page) {
   });
 
 
-/* Klik Tampilkan Thumb */
-
-function showImage(src) {
-  if (!src) return;
-
-  const overlay = document.createElement("div");
-  overlay.style = `
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.8);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-  `;
-
-  overlay.innerHTML = `
-    <img src="${src}" 
-         style="
-           max-width:90%;
-           max-height:90%;
-           border-radius:12px;
-           box-shadow:0 10px 30px rgba(0,0,0,.6)
-         ">
-  `;
-
-  overlay.onclick = () => overlay.remove();
-  document.body.appendChild(overlay);
-}
 
   const totalPage = Math.ceil(dataGlobal.length / PER_PAGE);
   for (let i = 1; i <= totalPage; i++) {
