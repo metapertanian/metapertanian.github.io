@@ -24,20 +24,13 @@ function ambilSemuaPanen() {
       if (!Array.isArray(musim.panen)) return;
 
       musim.panen.forEach(p => {
+        const qtyKg = normalisasiQty(p.qty, p.satuan);
+
         semua.push({
           tanggal: p.tanggal,
           komoditas: p.komoditas,
-          const qtyKg = normalisasiQty(p.qty, p.satuan);
-
-semua.push({
-  tanggal: p.tanggal,
-  komoditas: p.komoditas,
-  qty: qtyKg,          // SELALU KG
-  satuan: "kg",        // DISERAGAMKAN
-  nilai: Number(p.nilai || 0),
-  bukti: p.bukti || null,
-  lahan: namaLahan
-});
+          qty: qtyKg,
+          satuan: "kg",
           nilai: Number(p.nilai || 0),
           bukti: p.bukti || null,
           lahan: namaLahan
