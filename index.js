@@ -62,13 +62,7 @@ function normalisasiQty(qty, satuan) {
 function animateNumber(el, end, dur = 1400) {
   if (!el) return;
 
-  // 🔥 Paksa posisi tengah (override CSS lama)
-  el.style.display = "flex";
-  el.style.justifyContent = "center";
-  el.style.alignItems = "center";
-  el.style.textAlign = "center";
-  el.style.width = "100%";
-
+  
   el.style.opacity = 1;
   el.style.transform = "none";
   el.style.visibility = "visible";
@@ -104,7 +98,11 @@ function renderRingkasan(data) {
 
   Object.entries(map).forEach(([komoditas, total], i) => {
     const card = document.createElement("div");
-    card.className = "card center";
+card.className = "card";
+card.style.display = "flex";
+card.style.flexDirection = "column";
+card.style.alignItems = "center";
+card.style.textAlign = "center";
 
     card.innerHTML = `
   <h3>${komoditas}</h3>
