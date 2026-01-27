@@ -277,7 +277,7 @@ function renderLaba(){
       <strong class="${laba>=0?'success':'danger'}">Laba Bersih : Rp ${rupiah(laba)}</strong>
     </div>
 
-    <hr style="margin:12px 0">
+    <hr style="margin:8px 0">
   `;
 
   /* ===============================
@@ -287,7 +287,7 @@ function renderLaba(){
     const hasil = laba * persen / 100;
     html += `
       <div class="stat">
-        <strong>${nama.toUpperCase()} ${persen}% : Rp ${rupiah(hasil)}</strong>
+        <strong>${nama.toUpperCase()} (${persen}%) : Rp ${rupiah(hasil)}</strong>
       </div>
     `;
   });
