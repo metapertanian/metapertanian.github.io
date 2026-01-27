@@ -159,8 +159,7 @@ const RISMA_FARM = {
         pembagian: {
           TENAGA: 40,
           RISMA: 30,
-          MANAJEMEN: 20,
-          SOSIAL: 10
+          MANAJEMEN: 20
         }
       }
     }
