@@ -268,13 +268,13 @@ function renderLaba(){
   <section class="card">
     <h2>📊 Bagi Hasil</h2>
 
-    <div class="stat"><small>Total Omzet :</small><strong>Rp ${rupiah(totalOmzet)}</strong></div>
-    <div class="stat"><small>Biaya Skincare :</small><strong>Rp ${rupiah(totalBiayaProduksi)}</strong></div>
-    <div class="stat"><small>Biaya Panen :</small><strong>Rp ${rupiah(totalBiayaPanen)}</strong></div>
+    <div class="stat"><strong>Total Omzet : Rp ${rupiah(totalOmzet)}</strong></div>
+    <div class="stat"><strong>Biaya Skincare : Rp ${rupiah(totalBiayaProduksi)}</strong></div>
+    <div class="stat"><strong>Biaya Panen : Rp ${rupiah(totalBiayaPanen)}</strong></div>
 
     <div class="stat">
-      <small>Laba Bersih :</small>
-      <strong class="${laba>=0?'success':'danger'}">Rp ${rupiah(laba)}</strong>
+      
+      <strong class="${laba>=0?'success':'danger'}">Laba Bersih : Rp ${rupiah(laba)}</strong>
     </div>
 
     <hr style="margin:12px 0">
@@ -287,8 +287,7 @@ function renderLaba(){
     const hasil = laba * persen / 100;
     html += `
       <div class="stat">
-        <small>${nama.toUpperCase()} ${persen}% :</small>
-        <strong>Rp ${rupiah(hasil)}</strong>
+        <strong>${nama.toUpperCase()} ${persen}% : Rp ${rupiah(hasil)}</strong>
       </div>
     `;
   });
