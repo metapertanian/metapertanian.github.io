@@ -7,6 +7,15 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-01-28",
+description: "Batu Jam",
+type: "expense",
+amount: 15000,
+note: "membeli 5 batu jam dinding sekalian untuk cadangan.",
+foto: "",
+video: ""
+},
+{
 date: "2026-01-27",
 description: "Ambulance Fania❤️",
 type: "expense",
