@@ -6,7 +6,24 @@ window.kasData = {
     periode: "Feb 2026 - Des 2026",  
     bendahara: "Pulung Riswanto",  
     transaksi: [  
-
+{
+date: "2026-02-01",
+description: "Gula Aren",
+type: "expense",
+amount: 6000
+},
+{
+date: "2026-02-01",
+description: "Gula Kopi",
+type: "expense",
+amount: 10000
+},
+{
+date: "2026-02-01",
+description: "Saldo Awal",
+type: "income",
+amount: 86000
+},
 ]
 }
 };  
