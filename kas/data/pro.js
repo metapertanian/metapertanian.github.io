@@ -2,8 +2,13 @@
 // Penyimpanan data arus kas per tahun
 
 window.kasData = {  
+  "Idul Fitri 1447H": {  
+    periode: "Agustus 2025 – Maret 2026",  
+    bendahara: "Pulung Riswanto",  
+    transaksi: [  
 
-
+]
+}
 };  
 
 // ================= Fungsi =================  
