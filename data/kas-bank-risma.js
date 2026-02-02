@@ -15,56 +15,8 @@ const KAS_BANK_RISMA = {
   2026: [
 
     
-{
-  "id": "KAS-2026-01-20-1768843120485",
-  "tanggal": "2026-01-20",
-  "tipe": "keluar",
-  "kategori": "Tabungan",
-  "sumber": "setoran bulan januari 2026",
-  "detail": {
-    "Faisol": 30000,
-    "Nadia": 32500,
-    "Pulung": 42500,
-    "Tama": 12500,
-    "Putri": 2500
-  }
-},
-{
-  "id": "KAS-2026-01-20-1768842965866",
-  "tanggal": "2026-01-19",
-  "tipe": "masuk",
-  "kategori": "Tabungan",
-  "sumber": "setoran bulan januari 2026",
-  "detail": {
-    "Faisol": 30000,
-    "Nadia": 32500,
-    "Pulung": 42500,
-    "Tama": 12500,
-    "Putri": 2500
-  }
-}
-
-  ],
-
-  /* =============================
-     TAHUN 2025
-  ============================= */
-  2025: [
-
-    {
-  "id": "KAS-2026-01-20-1768843264649",
-  "tanggal": "2025-11-15",
-  "tipe": "masuk",
-  "kategori": "Tabungan",
-  "sumber": "setoran bulan januari 2026",
-  "detail": {
-    "Pulung": 100000,
-    "Nadia": 50000
-  },
- bukti: "/img/pulung.jpg"
-}
-
   ]
+
 };
 
 
