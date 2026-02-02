@@ -92,66 +92,7 @@ const RISMA_FARM = {
       ],
 
       panen: [
-        {
-          tanggal: "2026-01-17",
-          komoditas: "TIMUN",
-          qty: 280,
-          satuan: "kg",
-          nilai: 780000,
-          biayaPanen: 150000,
-          bukti:
-            "https://res.cloudinary.com/deojvpzhv/image/upload/v1769016005/beli-ampli-masjid-2000watt-4channel_orqpqr.jpg"
-        },
-        {
-          tanggal: "2026-01-15",
-          komoditas: "TIMUN",
-          qty: 120,
-          satuan: "kg",
-          nilai: 450000,
-          biayaPanen: 60000,
-          bonusPanen: {
-            total: 60000,
-            anggota: ["Pulung", "Faisol", "Putri", "Nadia", "Anis", "Tama"]
-          },
-          bukti:
-            "https://drive.google.com/file/d/1kPQiJQegwaSKOWPPL2tdIHqvYfyf2gHa/view?usp=drivesdk"
-        },
-        {
-          tanggal: "2026-01-12",
-          komoditas: "TIMUN",
-          qty: 100,
-          satuan: "kg",
-          nilai: 400000,
-          biayaPanen: 50000,
-          bonusPanen: {
-            total: 40000,
-            anggota: ["Pulung", "Faisol", "Putri", "Nadia"]
-          }
-        },
-        {
-          tanggal: "2026-01-10",
-          komoditas: "CABAI",
-          qty: 10,
-          satuan: "kg",
-          nilai: 500000,
-          biayaPanen: 50000,
-          bonusPanen: {
-            total: 50000,
-            anggota: ["Pulung", "Faisol", "Putri", "Nadia"]
-          }
-        },
-        {
-          tanggal: "2026-01-16",
-          komoditas: "CABAI",
-          qty: 12,
-          satuan: "kg",
-          nilai: 600000,
-          biayaPanen: 100000,
-          bonusPanen: {
-            total: 50000,
-            anggota: ["Pulung", "Tama", "Putri", "Nadia"]
-          }
-        }
+        
       ],
 
       skema: {
