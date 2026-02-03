@@ -34,7 +34,7 @@ description: "Bensin"
 date: "2026-02-01",
 description: "Saldo Awal",
 type: "income",
-amount: 86000
+amount: 88000
 },
 {
 date: "2026-02-01",
