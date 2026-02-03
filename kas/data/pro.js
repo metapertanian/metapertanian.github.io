@@ -1,7 +1,7 @@
 // pro.js  
 // Penyimpanan data arus kas per tahun
 
-window.kasData = {  
+window.kasData.pro = {  
   "2026": {  
     periode: "Feb 2026 - Des 2026",  
     bendahara: "Pulung Riswanto",  
