@@ -16,7 +16,6 @@ function tambahNol() {
 // DATA TRANSAKSI
 // ================================
 let transaksiList = [];
-let editIndex = null;
 
 // ================================
 // AMBIL DATA FORM
@@ -58,7 +57,7 @@ function getFormData() {
 }
 
 // ================================
-// TAMBAH / UPDATE
+// TAMBAH TRANSAKSI
 // ================================
 function addTransaction() {
   const data = getFormData();
@@ -68,16 +67,16 @@ function addTransaction() {
 
   renderList();
   renderOutput();
+  renderTotal();
   resetForm();
 }
 
 // ================================
-// EDIT
+// EDIT (HAPUS + ISI FORM + SCROLL)
 // ================================
 function editTransaction(index) {
   const t = transaksiList[index];
 
-  // Isi form
   document.getElementById("tanggal").value = t.date;
   document.getElementById("type").value = t.type;
   document.getElementById("amount").value = t.amount;
@@ -86,14 +85,12 @@ function editTransaction(index) {
   document.getElementById("foto").value = t.foto || "";
   document.getElementById("video").value = t.video || "";
 
-  // ❗ HAPUS dari daftar agar tidak dobel
   transaksiList.splice(index, 1);
 
-  // Render ulang
   renderList();
   renderOutput();
+  renderTotal();
 
-  // ⬆️ Scroll ke atas agar fokus edit
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -108,10 +105,11 @@ function deleteTransaction(index) {
   transaksiList.splice(index, 1);
   renderList();
   renderOutput();
+  renderTotal();
 }
 
 // ================================
-// LIST TRANSAKSI (UI)
+// LIST TRANSAKSI
 // ================================
 function renderList() {
   let html = transaksiList
@@ -157,7 +155,33 @@ function renderOutput() {
 }
 
 // ================================
-// RESET
+// TOTAL PEMASUKAN / PENGELUARAN
+// ================================
+function renderTotal() {
+  const old = document.getElementById("totalBox");
+  if (old) old.remove();
+
+  let totalIncome = 0;
+  let totalExpense = 0;
+
+  transaksiList.forEach(t => {
+    if (t.type === "income") totalIncome += t.amount;
+    if (t.type === "expense") totalExpense += t.amount;
+  });
+
+  const html = `
+    <div id="totalBox" style="margin-top:12px;padding:10px;border:1px solid #555;border-radius:8px">
+      <p><strong>Total Pemasukan:</strong> Rp ${totalIncome.toLocaleString("id-ID")}</p>
+      <p><strong>Total Pengeluaran:</strong> Rp ${totalExpense.toLocaleString("id-ID")}</p>
+      <p><strong>Saldo:</strong> Rp ${(totalIncome - totalExpense).toLocaleString("id-ID")}</p>
+    </div>
+  `;
+
+  document.getElementById("result").insertAdjacentHTML("beforebegin", html);
+}
+
+// ================================
+// RESET FORM
 // ================================
 function resetForm() {
   document.getElementById("description").value = "";
