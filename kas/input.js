@@ -64,12 +64,7 @@ function addTransaction() {
   const data = getFormData();
   if (!data) return;
 
-  if (editIndex !== null) {
-    transaksiList[editIndex] = data;
-    editIndex = null;
-  } else {
-    transaksiList.push(data);
-  }
+  transaksiList.push(data);
 
   renderList();
   renderOutput();
@@ -81,8 +76,8 @@ function addTransaction() {
 // ================================
 function editTransaction(index) {
   const t = transaksiList[index];
-  editIndex = index;
 
+  // Isi form
   document.getElementById("tanggal").value = t.date;
   document.getElementById("type").value = t.type;
   document.getElementById("amount").value = t.amount;
@@ -90,6 +85,19 @@ function editTransaction(index) {
   document.getElementById("note").value = t.note || "";
   document.getElementById("foto").value = t.foto || "";
   document.getElementById("video").value = t.video || "";
+
+  // ❗ HAPUS dari daftar agar tidak dobel
+  transaksiList.splice(index, 1);
+
+  // Render ulang
+  renderList();
+  renderOutput();
+
+  // ⬆️ Scroll ke atas agar fokus edit
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 // ================================
