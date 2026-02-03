@@ -42,11 +42,7 @@ function getFormData() {
 
   const formattedDate = formatTanggal(new Date(dateInput));
 
-  let obj = {
-    date: formattedDate,
-    type,
-    amount
-  };
+  let obj = { date: formattedDate, type, amount };
 
   if (description) obj.description = description;
   if (note) obj.note = note;
@@ -67,7 +63,6 @@ function addTransaction() {
 
   renderList();
   renderOutput();
-  renderTotal();
   resetForm();
 }
 
@@ -89,12 +84,8 @@ function editTransaction(index) {
 
   renderList();
   renderOutput();
-  renderTotal();
 
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 // ================================
@@ -105,30 +96,63 @@ function deleteTransaction(index) {
   transaksiList.splice(index, 1);
   renderList();
   renderOutput();
-  renderTotal();
 }
 
 // ================================
-// LIST TRANSAKSI
+// HITUNG TOTAL
+// ================================
+function hitungTotal() {
+  let pemasukan = 0;
+  let pengeluaran = 0;
+
+  transaksiList.forEach(t => {
+    if (t.type === "income") pemasukan += t.amount;
+    if (t.type === "expense") pengeluaran += t.amount;
+  });
+
+  return { pemasukan, pengeluaran };
+}
+
+// ================================
+// LIST TRANSAKSI + TOTAL (PREVIEW)
 // ================================
 function renderList() {
-  let html = transaksiList
+  const preview = document.getElementById("preview");
+
+  if (!transaksiList.length) {
+    preview.innerHTML = "";
+    preview.style.display = "none";
+    return;
+  }
+
+  const { pemasukan, pengeluaran } = hitungTotal();
+  const saldo = pemasukan - pengeluaran;
+
+  const totalHTML = `
+    <div style="padding:10px;border:1px solid #555;border-radius:8px;margin-bottom:10px">
+      <strong>📊 Ringkasan</strong><br>
+      💰 Pemasukan: <b>Rp ${pemasukan.toLocaleString("id-ID")}</b><br>
+      💸 Pengeluaran: <b>Rp ${pengeluaran.toLocaleString("id-ID")}</b><br>
+      🧾 Saldo: <b>Rp ${saldo.toLocaleString("id-ID")}</b>
+    </div>
+  `;
+
+  const listHTML = transaksiList
     .map(
       (t, i) => `
       <div style="border:1px solid #444;padding:8px;border-radius:6px;margin-top:6px">
-        <strong>${t.date}</strong> — ${t.amount.toLocaleString("id-ID")}
+        <strong>${t.date}</strong> — Rp ${t.amount.toLocaleString("id-ID")}
         <div style="margin-top:6px">
           <button onclick="editTransaction(${i})">✏️ Edit</button>
-          <button onclick="deleteTransaction(${i})" style="background:#e53935">🗑 Hapus</button>
+          <button onclick="deleteTransaction(${i})" style="background:#e53935;color:#fff">🗑 Hapus</button>
         </div>
       </div>
     `
     )
     .join("");
 
-  document.getElementById("preview").innerHTML = html || "";
-  document.getElementById("preview").style.display =
-    transaksiList.length ? "block" : "none";
+  preview.innerHTML = totalHTML + listHTML;
+  preview.style.display = "block";
 }
 
 // ================================
@@ -155,32 +179,6 @@ function renderOutput() {
 }
 
 // ================================
-// TOTAL PEMASUKAN / PENGELUARAN
-// ================================
-function renderTotal() {
-  const old = document.getElementById("totalBox");
-  if (old) old.remove();
-
-  let totalIncome = 0;
-  let totalExpense = 0;
-
-  transaksiList.forEach(t => {
-    if (t.type === "income") totalIncome += t.amount;
-    if (t.type === "expense") totalExpense += t.amount;
-  });
-
-  const html = `
-    <div id="totalBox" style="margin-top:12px;padding:10px;border:1px solid #555;border-radius:8px">
-      <p><strong>Total Pemasukan:</strong> Rp ${totalIncome.toLocaleString("id-ID")}</p>
-      <p><strong>Total Pengeluaran:</strong> Rp ${totalExpense.toLocaleString("id-ID")}</p>
-      <p><strong>Saldo:</strong> Rp ${(totalIncome - totalExpense).toLocaleString("id-ID")}</p>
-    </div>
-  `;
-
-  document.getElementById("result").insertAdjacentHTML("beforebegin", html);
-}
-
-// ================================
 // RESET FORM
 // ================================
 function resetForm() {
@@ -195,7 +193,7 @@ function resetForm() {
 // COPY
 // ================================
 function copyToClipboard() {
-  navigator.clipboard.writeText(
-    document.getElementById("result").innerText
-  ).then(() => alert("Kode berhasil disalin!"));
+  navigator.clipboard
+    .writeText(document.getElementById("result").innerText)
+    .then(() => alert("Kode berhasil disalin!"));
 }
