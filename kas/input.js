@@ -12,6 +12,20 @@ function tambahNol() {
   amountInput.value = parseInt(val + "000");
 }
 
+// ================================
+// MODE FORM
+// ================================
+let mode = "add"; // add | edit
+
+function setMode(newMode) {
+  mode = newMode;
+  document.getElementById("formInputs").style.display =
+    newMode === "edit" ? "block" : "none";
+}
+
+// ================================
+// GENERATE CODE
+// ================================
 function generateCode() {
   let description = document.getElementById("description").value.trim();
   const jenisKas = document.getElementById("jenisKas").value;
@@ -34,6 +48,9 @@ function generateCode() {
 
   const formattedDate = formatTanggal(new Date(dateInput));
 
+  // ================================
+  // PREVIEW
+  // ================================
   document.getElementById("previewDate").innerText = formattedDate;
   document.getElementById("previewDesc").innerText = description || "-";
   document.getElementById("previewType").innerText =
@@ -43,11 +60,12 @@ function generateCode() {
   document.getElementById("previewNote").innerText = note || "-";
 
   // Foto
+  const imgWrap = document.getElementById("previewImageContainer");
   if (foto) {
     document.getElementById("previewImage").src = foto;
-    document.getElementById("previewImageContainer").style.display = "block";
+    imgWrap.style.display = "block";
   } else {
-    document.getElementById("previewImageContainer").style.display = "none";
+    imgWrap.style.display = "none";
   }
 
   // Video
@@ -61,19 +79,28 @@ function generateCode() {
 
   document.getElementById("preview").style.display = "block";
 
+  // ================================
+  // OUTPUT CODE (DINAMIS)
+  // ================================
+  let rows = [];
+  rows.push(`date: "${formattedDate}"`);
+  rows.push(`type: "${type}"`);
+  rows.push(`amount: ${amount}`);
+
+  if (description) rows.push(`description: "${description}"`);
+  if (note) rows.push(`note: "${note}"`);
+  if (foto) rows.push(`foto: "${foto}"`);
+  if (video) rows.push(`video: "${video}"`);
+
   const output = `{
-  date: "${formattedDate}",
-  description: "${description}",
-  type: "${type}",
-  amount: ${amount},
-  note: "${note}",
-  foto: "${foto}",
-  video: "${video}"
+  ${rows.join(",\n  ")}
 },`;
 
   document.getElementById("result").innerText = output;
   document.getElementById("result").style.display = "block";
   document.getElementById("copyBtn").style.display = "block";
+
+  setMode("add");
 }
 
 function copyToClipboard() {
