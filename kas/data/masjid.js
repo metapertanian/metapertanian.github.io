@@ -1,4 +1,4 @@
-// kas-masjid.js  
+// masjid.js  
 // Penyimpanan data arus kas per idul fitri
 
 window.kasData = {  
