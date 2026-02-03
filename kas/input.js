@@ -13,20 +13,15 @@ function tambahNol() {
 }
 
 // ================================
-// MODE FORM
+// DATA TRANSAKSI
 // ================================
-let mode = "add"; // add | edit
-
-function setMode(newMode) {
-  mode = newMode;
-  document.getElementById("formInputs").style.display =
-    newMode === "edit" ? "block" : "none";
-}
+let transaksiList = [];
+let editIndex = null;
 
 // ================================
-// GENERATE CODE
+// AMBIL DATA FORM
 // ================================
-function generateCode() {
+function getFormData() {
   let description = document.getElementById("description").value.trim();
   const jenisKas = document.getElementById("jenisKas").value;
 
@@ -43,69 +38,132 @@ function generateCode() {
 
   if (isNaN(amount) || !dateInput) {
     alert("Mohon isi tanggal dan jumlah dengan benar.");
-    return;
+    return null;
   }
 
   const formattedDate = formatTanggal(new Date(dateInput));
 
-  // ================================
-  // PREVIEW
-  // ================================
-  document.getElementById("previewDate").innerText = formattedDate;
-  document.getElementById("previewDesc").innerText = description || "-";
-  document.getElementById("previewType").innerText =
-    type === "income" ? "Pemasukan" : "Pengeluaran";
-  document.getElementById("previewAmount").innerText =
-    amount.toLocaleString("id-ID");
-  document.getElementById("previewNote").innerText = note || "-";
+  let obj = {
+    date: formattedDate,
+    type,
+    amount
+  };
 
-  // Foto
-  const imgWrap = document.getElementById("previewImageContainer");
-  if (foto) {
-    document.getElementById("previewImage").src = foto;
-    imgWrap.style.display = "block";
-  } else {
-    imgWrap.style.display = "none";
-  }
+  if (description) obj.description = description;
+  if (note) obj.note = note;
+  if (foto) obj.foto = foto;
+  if (video) obj.video = video;
 
-  // Video
-  const videoLink = document.getElementById("previewVideoLink");
-  if (video) {
-    videoLink.href = video;
-    videoLink.style.display = "inline-block";
-  } else {
-    videoLink.style.display = "none";
-  }
-
-  document.getElementById("preview").style.display = "block";
-
-  // ================================
-  // OUTPUT CODE (DINAMIS)
-  // ================================
-  let rows = [];
-  rows.push(`date: "${formattedDate}"`);
-  rows.push(`type: "${type}"`);
-  rows.push(`amount: ${amount}`);
-
-  if (description) rows.push(`description: "${description}"`);
-  if (note) rows.push(`note: "${note}"`);
-  if (foto) rows.push(`foto: "${foto}"`);
-  if (video) rows.push(`video: "${video}"`);
-
-  const output = `{
-  ${rows.join(",\n  ")}
-},`;
-
-  document.getElementById("result").innerText = output;
-  document.getElementById("result").style.display = "block";
-  document.getElementById("copyBtn").style.display = "block";
-
-  setMode("add");
+  return obj;
 }
 
+// ================================
+// TAMBAH / UPDATE
+// ================================
+function addTransaction() {
+  const data = getFormData();
+  if (!data) return;
+
+  if (editIndex !== null) {
+    transaksiList[editIndex] = data;
+    editIndex = null;
+  } else {
+    transaksiList.push(data);
+  }
+
+  renderList();
+  renderOutput();
+  resetForm();
+}
+
+// ================================
+// EDIT
+// ================================
+function editTransaction(index) {
+  const t = transaksiList[index];
+  editIndex = index;
+
+  document.getElementById("tanggal").value = t.date;
+  document.getElementById("type").value = t.type;
+  document.getElementById("amount").value = t.amount;
+  document.getElementById("description").value = t.description || "";
+  document.getElementById("note").value = t.note || "";
+  document.getElementById("foto").value = t.foto || "";
+  document.getElementById("video").value = t.video || "";
+}
+
+// ================================
+// HAPUS
+// ================================
+function deleteTransaction(index) {
+  if (!confirm("Hapus transaksi ini?")) return;
+  transaksiList.splice(index, 1);
+  renderList();
+  renderOutput();
+}
+
+// ================================
+// LIST TRANSAKSI (UI)
+// ================================
+function renderList() {
+  let html = transaksiList
+    .map(
+      (t, i) => `
+      <div style="border:1px solid #444;padding:8px;border-radius:6px;margin-top:6px">
+        <strong>${t.date}</strong> — ${t.amount.toLocaleString("id-ID")}
+        <div style="margin-top:6px">
+          <button onclick="editTransaction(${i})">✏️ Edit</button>
+          <button onclick="deleteTransaction(${i})" style="background:#e53935">🗑 Hapus</button>
+        </div>
+      </div>
+    `
+    )
+    .join("");
+
+  document.getElementById("preview").innerHTML = html || "";
+  document.getElementById("preview").style.display =
+    transaksiList.length ? "block" : "none";
+}
+
+// ================================
+// OUTPUT KODE
+// ================================
+function renderOutput() {
+  let text = transaksiList
+    .map(t => {
+      let rows = [];
+      for (let k in t) {
+        rows.push(
+          typeof t[k] === "string"
+            ? `${k}: "${t[k]}"`
+            : `${k}: ${t[k]}`
+        );
+      }
+      return `{\n  ${rows.join(",\n  ")}\n}`;
+    })
+    .join(",\n");
+
+  document.getElementById("result").innerText = text;
+  document.getElementById("result").style.display = "block";
+  document.getElementById("copyBtn").style.display = "block";
+}
+
+// ================================
+// RESET
+// ================================
+function resetForm() {
+  document.getElementById("description").value = "";
+  document.getElementById("amount").value = "";
+  document.getElementById("note").value = "";
+  document.getElementById("foto").value = "";
+  document.getElementById("video").value = "";
+}
+
+// ================================
+// COPY
+// ================================
 function copyToClipboard() {
-  const resultText = document.getElementById("result").innerText;
-  navigator.clipboard.writeText(resultText).then(() => {
-    alert("Kode berhasil disalin!");
-  });
+  navigator.clipboard.writeText(
+    document.getElementById("result").innerText
+  ).then(() => alert("Kode berhasil disalin!"));
 }
