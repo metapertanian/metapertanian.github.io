@@ -119,7 +119,7 @@
 
 
 
-  <div class="form-container" id="formInputs">
+  <div class="form-container">
     <label for="tanggal">Tanggal:</label>
     <input type="date" id="tanggal">
 
@@ -146,10 +146,7 @@
     <label for="video">Link Video Dokumentasi</label>
     <input type="url" id="video" placeholder="Contoh: https://youtube.com/...">
 
-    <button type="button" onclick="setMode('add')">➕ Tambahkan</button>
-<button type="button" onclick="setMode('edit')">✏️ Edit</button>
-
-<button onclick="generateCode()">Buat Kode</button>
+    <button type="button" onclick="addTransaction()">➕ Tambahkan Transaksi</button>
 
     <!-- Preview hasil input -->
     <div id="preview" style="display:none; margin-top:15px; padding:10px; border:1px solid #555; border-radius:8px;">
