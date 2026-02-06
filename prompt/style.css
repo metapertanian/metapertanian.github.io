@@ -1,67 +1,117 @@
-/* Reset ringan */
+/* =========================
+   Base
+========================= */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 16px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f4f6f8;
-  color: #222;
+  padding: 18px;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f5f7fa;
+  color: #1f2937;
 }
 
-/* Judul utama */
+/* =========================
+   Judul & Subjudul
+========================= */
 h1 {
-  font-size: 22px;
-  margin-bottom: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
 }
 
-/* Subjudul */
 h2 {
-  font-size: 16px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  color: #555;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 28px;
+  margin-bottom: 14px;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* Card scene */
+/* =========================
+   Scene Card
+========================= */
 .scene {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.04),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Judul scene */
+.scene:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.06),
+    0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* =========================
+   Scene Title
+========================= */
 .scene h3 {
-  font-size: 15px;
-  margin: 0 0 6px;
-  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px;
+  color: #111827;
 }
 
-/* Naskah / VO */
+/* =========================
+   Naskah / Voice Over
+========================= */
 .scene p {
   font-size: 14px;
-  line-height: 1.5;
-  margin: 0 0 12px;
-  color: #333;
+  line-height: 1.6;
+  margin: 0 0 14px;
+  color: #374151;
 }
 
-/* Tombol salin */
+/* =========================
+   Button
+========================= */
 .scene button {
   width: 100%;
-  padding: 10px;
+  padding: 11px;
   font-size: 14px;
+  font-weight: 600;
   border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: white;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
-/* Feedback saat disalin */
+.scene button:hover {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+}
+
 .scene button:active {
   transform: scale(0.98);
+}
+
+/* =========================
+   Desktop Enhancement
+========================= */
+@media (min-width: 768px) {
+  body {
+    max-width: 720px;
+    margin: auto;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  .scene p {
+    font-size: 15px;
+  }
 }
