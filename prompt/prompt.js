@@ -18,8 +18,8 @@ Voice over (Indonesian):
 
 AI note:
 Dialogue must remain in Indonesian.
-Prioritize clear character focus, school environment, Disney-style cartoon, and emotional opening hook.
-Aspect ratio 9:16.` },
+Prioritize clear character focus, school environment, and emotional opening hook.
+Aspect ratio 9:16, Disney-style cartoon.` },
           { title: "Scene 2", display: "Salsa: Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.", prompt: `Scene 2
 
 The camera pans across a slightly messy classroom: scattered papers, unaligned desks, a trash bin not emptied.
