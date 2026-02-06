@@ -68,7 +68,7 @@ AI note:
 Dialogue must remain in Indonesian.
 Highlight emotional connection between students and classroom space.
 Aspect ratio 9:16, Disney-style cartoon.` },
-          { title: "Scene 5", display: "Jesika: Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.", prompt: "Scene 5
+          { title: "Scene 5", display: "Jesika: Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.", prompt: `Scene 5
 
 JESIKA stands at the front of the classroom, looking directly toward the camera with a serious but gentle expression.
 Her uniform shows a large bold name text: "JESIKA".
