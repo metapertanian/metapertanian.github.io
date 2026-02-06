@@ -5,11 +5,84 @@ const prompts = [
       {
         subjudul: "Scene 1–5 (Hook Kuat & Kondisi Awal)",
         scenes: [
-          { title: "Scene 1", display: "Najwa: Setiap hari kita belajar di kelas ini, tapi pernah nggak kita benar-benar memperhatikan keadaannya?", prompt: "" },
-          { title: "Scene 2", display: "Salsa: Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.", prompt: "" },
-          { title: "Scene 3", display: "Diyah: Kalau kelas kayak gini, rasanya semangat belajar juga ikut turun.", prompt: "" },
-          { title: "Scene 4", display: "Angel: Padahal kelas ini tempat kita menghabiskan waktu hampir seharian.", prompt: "" },
-          { title: "Scene 5", display: "Jesika: Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.", prompt: "" }
+          { title: "Scene 1", display: "Najwa: Setiap hari kita belajar di kelas ini, tapi pernah nggak kita benar-benar memperhatikan keadaannya?", prompt: "Scene 1
+
+A bright Indonesian high school classroom in the morning. Five female students wear school uniforms with hijab. One student, NAJWA, stands near the window. 
+On her uniform, a large bold name text on the chest reads: "NAJWA".
+On the classroom wall, visible text reads: "SMA 2 Kotabumi" and "Kelas 10.6".
+
+Camera: slow cinematic push-in, soft natural lighting, calm and reflective mood.
+
+Voice over (Indonesian):
+“Setiap hari kita belajar di kelas ini, tapi pernah nggak kita benar-benar memperhatikan keadaannya?”
+
+AI note:
+Dialogue must remain in Indonesian.
+Prioritize clear character focus, school environment, and emotional opening hook.
+Aspect ratio 9:16." },
+          { title: "Scene 2", display: "Salsa: Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.", prompt: "Scene 2
+
+The camera pans across a slightly messy classroom: scattered papers, unaligned desks, a trash bin not emptied.
+SALSA enters the frame, looking around with a concerned expression.
+Her uniform shows a large bold name text: "SALSA".
+Background still shows: "SMA 2 Kotabumi" and "Kelas 10.6".
+
+Camera: gentle handheld feel, realistic school atmosphere.
+
+Voice over (Indonesian):
+“Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.”
+
+AI note:
+Dialogue must remain in Indonesian.
+Emphasize visual contrast between ideal and real classroom condition.
+Aspect ratio 9:16." },
+          { title: "Scene 3", display: "Diyah: Kalau kelas kayak gini, rasanya semangat belajar juga ikut turun.", prompt: "Scene 3
+
+DIYAH sits at her desk, resting her chin on her hand, looking unmotivated.
+The classroom feels dull and quiet.
+Her uniform has a large bold name text: "DIYAH".
+Class signs "SMA 2 Kotabumi" and "Kelas 10.6" remain visible.
+
+Camera: medium close-up, slightly muted colors to show low motivation.
+
+Voice over (Indonesian):
+“Kalau kelas kayak gini, rasanya semangat belajar juga ikut turun.”
+
+AI note:
+Dialogue must remain in Indonesian.
+Use facial expression and lighting to support emotional tone.
+Aspect ratio 9:16." },
+          { title: "Scene 4", display: "Angel: Padahal kelas ini tempat kita menghabiskan waktu hampir seharian.", prompt: "Scene 4
+
+ANGEL stands near the classroom door, looking around thoughtfully.
+Other students are visible in the background.
+Her uniform displays a large bold name text: "ANGEL".
+School identity text "SMA 2 Kotabumi" and "Kelas 10.6" is clearly shown.
+
+Camera: slow side tracking shot, thoughtful and calm mood.
+
+Voice over (Indonesian):
+“Padahal kelas ini tempat kita menghabiskan waktu hampir seharian.”
+
+AI note:
+Dialogue must remain in Indonesian.
+Highlight emotional connection between students and classroom space.
+Aspect ratio 9:16." },
+          { title: "Scene 5", display: "Jesika: Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.", prompt: "Scene 5
+
+JESIKA stands at the front of the classroom, looking directly toward the camera with a serious but gentle expression.
+Her uniform shows a large bold name text: "JESIKA".
+Classroom signage reads clearly: "SMA 2 Kotabumi" and "Kelas 10.6".
+
+Camera: steady frontal shot, building awareness and anticipation.
+
+Voice over (Indonesian):
+“Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.”
+
+AI note:
+Dialogue must remain in Indonesian.
+End the scene with a reflective pause to set up the next scenes.
+Aspect ratio 9:16." }
         ]
       },
       {
