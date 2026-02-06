@@ -18,7 +18,7 @@ Voice over (Indonesian):
 
 AI note:
 Dialogue must remain in Indonesian.
-Prioritize clear character focus, school environment, and emotional opening hook.
+Prioritize clear character focus, school environment, Disney-style cartoon, and emotional opening hook.
 Aspect ratio 9:16.` },
           { title: "Scene 2", display: "Salsa: Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.", prompt: `Scene 2
 
@@ -35,7 +35,7 @@ Voice over (Indonesian):
 AI note:
 Dialogue must remain in Indonesian.
 Emphasize visual contrast between ideal and real classroom condition.
-Aspect ratio 9:16.` },
+Aspect ratio 9:16, Disney-style cartoon.` },
           { title: "Scene 3", display: "Diyah: Kalau kelas kayak gini, rasanya semangat belajar juga ikut turun.", prompt: `Scene 3
 
 DIYAH sits at her desk, resting her chin on her hand, looking unmotivated.
@@ -51,7 +51,7 @@ Voice over (Indonesian):
 AI note:
 Dialogue must remain in Indonesian.
 Use facial expression and lighting to support emotional tone.
-Aspect ratio 9:16.` },
+Aspect ratio 9:16, Disney-style cartoon.` },
           { title: "Scene 4", display: "Angel: Padahal kelas ini tempat kita menghabiskan waktu hampir seharian.", prompt: `Scene 4
 
 ANGEL stands near the classroom door, looking around thoughtfully.
@@ -67,7 +67,7 @@ Voice over (Indonesian):
 AI note:
 Dialogue must remain in Indonesian.
 Highlight emotional connection between students and classroom space.
-Aspect ratio 9:16." },
+Aspect ratio 9:16, Disney-style cartoon." },
           { title: "Scene 5", display: "Jesika: Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.", prompt: "Scene 5
 
 JESIKA stands at the front of the classroom, looking directly toward the camera with a serious but gentle expression.
@@ -82,7 +82,7 @@ Voice over (Indonesian):
 AI note:
 Dialogue must remain in Indonesian.
 End the scene with a reflective pause to set up the next scenes.
-Aspect ratio 9:16.` }
+Aspect ratio 9:16, Disney-style cartoon.` }
         ]
       },
       {
