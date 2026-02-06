@@ -1,0 +1,175 @@
+Judul Scene [x] di PALING ATAS
+Prompt bahasa Inggris
+Voice over tetap Bahasa Indonesia
+Durasi ±8 detik / scene
+Nuansa sekolah, nilai piket kelas kuat
+Semua siswi memakai hijab
+Nama besar di dada depan
+Properti: “SMA 2 Kotabumi” & “Kelas 10.6”
+gambar video lembut seperti cartoon disney
+ada tombol salin prompt setiap scene
+
+kunci naskah ini:
+🎬 NASKAH VIDEO
+Judul: Bukan Sekadar Piket
+Lokasi: SMA 2 Kotabumi – Kelas 10.6
+Tokoh: Salsa, Diyah, Najwa, Angel, Jesika
+Durasi: ±4 menit
+🔥 SCENE 1–5 (HOOK KUAT & KONDISI AWAL)
+SCENE 1 – Najwa
+“Setiap hari kita belajar di kelas ini, tapi pernah nggak kita benar-benar memperhatikan keadaannya?”
+SCENE 2 – Salsa
+“Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.”
+SCENE 3 – Dyah
+“Kalau kelas kayak gini, rasanya semangat belajar juga ikut turun.”
+SCENE 4 – Angel
+“Padahal kelas ini tempat kita menghabiskan waktu hampir seharian.”
+SCENE 5 – Jesika
+“Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.”
+🧠 SCENE 6–10 (KESADARAN & KEPUTUSAN)
+SCENE 6 – Najwa
+“Hari ini jadwal piket kita, dan menurutku ini bukan cuma soal tugas.”
+SCENE 7 – Salsa
+“Iya, daripada nunggu atau saling berharap, lebih baik kita mulai sekarang.”
+SCENE 8 – Dyah
+“Kalau dikerjain bareng-bareng, pasti terasa lebih ringan.”
+SCENE 9 – Angel
+“Dan kelas juga bisa langsung dipakai dengan nyaman.”
+SCENE 10 – Jesika
+“Oke, kita bagi tugas biar lebih rapi dan cepat.”
+🧹 SCENE 11–15 (PEMBAGIAN TUGAS)
+SCENE 11 – Najwa
+“Kita kerjain sesuai bagian masing-masing, tapi tetap saling bantu.”
+SCENE 12 – Salsa
+“Aku bagian menyapu lantai dan membersihkan area depan kelas.”
+SCENE 13 – Dyah
+“Kalau aku akan merapikan meja dan kursi supaya tertata rapi.”
+SCENE 14 – Angel
+“Aku buang sampah dan bersihin sudut kelas yang sering terlewat.”
+SCENE 15 – Jesika
+“Papan tulis dan jendela biar aku yang urus.”
+🔄 SCENE 16–20 (PROSES & KERJA SAMA)
+SCENE 16 – Najwa
+“Kelihatan ya, kalau semua bergerak, suasana kelas mulai berubah.”
+SCENE 17 – Salsa
+“Ternyata nyapu nggak capek kalau dilakukan dengan niat.”
+SCENE 18 – Dyah
+“Meja yang rapi bikin kelas kelihatan lebih teratur.”
+SCENE 19 – Angel
+“Sampah kecil kalau dibersihkan sekarang, nggak akan jadi masalah besar.”
+SCENE 20 – Jesika
+“Papan tulis bersih bikin pelajaran nanti lebih jelas.”
+🌱 SCENE 21–25 (MAKNA PIKET KELAS)
+SCENE 21 – Najwa
+“Dari piket kelas, kita belajar melakukan sesuatu tanpa harus disuruh.”
+SCENE 22 – Salsa
+“Bukan karena takut ditegur, tapi karena sadar itu tanggung jawab.”
+SCENE 23 – Dyah
+“Kebiasaan kecil seperti ini membentuk sikap kita.”
+SCENE 24 – Angel
+“Kalau satu orang malas, yang lain akan merasa terbebani.”
+SCENE 25 – Jesika
+“Tapi kalau semua peduli, semuanya terasa adil.”
+🏫 SCENE 26–30 (DAMPAK & NILAI KEHIDUPAN)
+SCENE 26 – Najwa
+“Kelas yang bersih membuat suasana belajar lebih nyaman.”
+SCENE 27 – Salsa
+“Dan membuat kita lebih menghargai tempat ini.”
+SCENE 28 – Dyah
+“Karena sekolah bukan hanya tempat belajar pelajaran.”
+SCENE 29 – Angel
+“Tapi juga tempat belajar sikap dan tanggung jawab.”
+SCENE 30 – Jesika
+“Apa yang kita biasakan di sini, akan terbawa ke kehidupan nanti.”
+🔔 SCENE 31–33 (PENUTUP KUAT & FADE OUT)
+SCENE 31 – Najwa
+“Piket kelas memang terlihat sederhana.”
+SCENE 32 – Salsa
+“Tapi dari kebiasaan sederhana itulah karakter dibentuk.”
+SCENE 33 – Semua / VO (fade out, tenang & tegas)
+“Piket kelas adalah kebiasaan kecil yang membentuk karakter besar.”
+
+contoh prompt:
+
+Scene 1
+
+A bright Indonesian high school classroom in the morning. Five female students wear school uniforms with hijab. One student, NAJWA, stands near the window.
+On her uniform, a large bold name text on the chest reads: "NAJWA".
+On the classroom wall, visible text reads: "SMA 2 Kotabumi" and "Kelas 10.6".
+
+Camera: slow cinematic push-in, soft natural lighting, calm and reflective mood.
+
+Voice over (Indonesian):
+“Setiap hari kita belajar di kelas ini, tapi pernah nggak kita benar-benar memperhatikan keadaannya?”
+
+AI note:
+Dialogue must remain in Indonesian.
+Prioritize clear character focus, school environment, and emotional opening hook.
+Aspect ratio 9:16, Disney-style cartoon.
+
+Scene 2
+
+The camera pans across a slightly messy classroom: scattered papers, unaligned desks, a trash bin not emptied.
+SALSA enters the frame, looking around with a concerned expression.
+Her uniform shows a large bold name text: "SALSA".
+Background still shows: "SMA 2 Kotabumi" and "Kelas 10.6".
+
+Camera: gentle handheld feel, realistic school atmosphere.
+
+Voice over (Indonesian):
+“Kadang masuk kelas, meja berantakan, sampah masih ada, dan suasananya jadi nggak nyaman.”
+
+AI note:
+Dialogue must remain in Indonesian.
+Emphasize visual contrast between ideal and real classroom condition.
+Aspect ratio 9:16, Disney-style cartoon.
+
+Scene 3
+
+DIYAH sits at her desk, resting her chin on her hand, looking unmotivated.
+The classroom feels dull and quiet.
+Her uniform has a large bold name text: "DYAH".
+Class signs "SMA 2 Kotabumi" and "Kelas 10.6" remain visible.
+
+Camera: medium close-up, slightly muted colors to show low motivation.
+
+Voice over (Indonesian):
+“Kalau kelas kayak gini, rasanya semangat belajar juga ikut turun.”
+
+AI note:
+Dialogue must remain in Indonesian.
+Use facial expression and lighting to support emotional tone.
+Aspect ratio 9:16, Disney-style cartoon.
+
+Scene 4
+
+ANGEL stands near the classroom door, looking around thoughtfully.
+Other students are visible in the background.
+Her uniform displays a large bold name text: "ANGEL".
+School identity text "SMA 2 Kotabumi" and "Kelas 10.6" is clearly shown.
+
+Camera: slow side tracking shot, thoughtful and calm mood.
+
+Voice over (Indonesian):
+“Padahal kelas ini tempat kita menghabiskan waktu hampir seharian.”
+
+AI note:
+Dialogue must remain in Indonesian.
+Highlight emotional connection between students and classroom space.
+Aspect ratio 9:16, Disney-style cartoon.
+
+Scene 5
+
+JESIKA stands at the front of the classroom, looking directly toward the camera with a serious but gentle expression.
+Her uniform shows a large bold name text: "JESIKA".
+Classroom signage reads clearly: "SMA 2 Kotabumi" and "Kelas 10.6".
+
+Camera: steady frontal shot, building awareness and anticipation.
+
+Voice over (Indonesian):
+“Tapi sering kali kita lupa, siapa yang sebenarnya bertanggung jawab menjaga kelas ini.”
+
+AI note:
+Dialogue must remain in Indonesian.
+End the scene with a reflective pause to set up the next scenes.
+Aspect ratio 9:16, Disney-style cartoon.
