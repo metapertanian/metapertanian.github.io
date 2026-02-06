@@ -1,27 +1,67 @@
-body {
-  font-family: system-ui, sans-serif;
-  padding: 24px;
-  background: #f9f9f9;
+/* Reset ringan */
+* {
+  box-sizing: border-box;
 }
 
+body {
+  margin: 0;
+  padding: 16px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f6f8;
+  color: #222;
+}
+
+/* Judul utama */
+h1 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+/* Subjudul */
+h2 {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+/* Card scene */
 .scene {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  background: #ffffff;
+  border-radius: 12px;
   padding: 14px;
   margin-bottom: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
+/* Judul scene */
 .scene h3 {
+  font-size: 15px;
   margin: 0 0 6px;
+  color: #111;
 }
 
+/* Naskah / VO */
 .scene p {
-  margin: 0 0 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 12px;
   color: #333;
 }
 
-button {
-  padding: 6px 12px;
+/* Tombol salin */
+.scene button {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
   cursor: pointer;
+}
+
+/* Feedback saat disalin */
+.scene button:active {
+  transform: scale(0.98);
 }
