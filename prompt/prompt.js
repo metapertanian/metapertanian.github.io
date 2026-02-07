@@ -82,7 +82,22 @@ Voice over (Indonesian):
 AI note:
 Dialogue must remain in Indonesian.
 End the scene with a reflective pause to set up the next scenes.
-Aspect ratio 9:16, Disney-style cartoon.` }
+Aspect ratio 9:16, Disney-style cartoon.` },
+   { title: "VoiceOver INTRO", display: `Najwa (VO):
+“Hai teman-teman! Aku Najwa. Aku suka banget lihat hal-hal kecil di kelas… kayak meja yang kurang rapi atau teman yang lagi capek. Hal-hal kecil itu sering bikin hari-hari di kelas jadi lucu dan berkesan 😄
+Ini teman-temanku:
+Salsa, semangat banget kalau nyapu atau nge-lap, kadang heboh sampai kita ketawa… kayak lagi main game favoritnya terus menang combo! 🎮
+Dyah, paling jago bikin semua rapi… tapi kalau lagi ketawa sama kita, meja dan kursinya bisa miring sendiri, kayak habis naik roller coaster 😄
+Angel, jagonya lihat sudut-sudut kelas, nggak ada sampah yang lolos… kadang sampai kayak lagi main “temukan perbedaan” versi hidup 😆
+Jesika, urus papan tulis dan jendela biar bersih, tapi kalau ditanya hal random kadang dia bingung… kayak lagi main tebak-tebakan yang nyeleneh 😅
+Nah, itu dia kami—lima ciwi-ciwi kelas 10.6 SMA 2 Kotabumi. Siap bikin kelas rapi, nyaman, dan tetep seru… kayak hangout bareng teman di sela pelajaran!” 😄`, prompt: `Najwa (VO):
+“Hai teman-teman! Aku Najwa. Aku suka banget lihat hal-hal kecil di kelas… kayak meja yang kurang rapi atau teman yang lagi capek. Hal-hal kecil itu sering bikin hari-hari di kelas jadi lucu dan berkesan 😄
+Ini teman-temanku:
+Salsa, semangat banget kalau nyapu atau nge-lap, kadang heboh sampai kita ketawa… kayak lagi main game favoritnya terus menang combo! 🎮
+Dyah, paling jago bikin semua rapi… tapi kalau lagi ketawa sama kita, meja dan kursinya bisa miring sendiri, kayak habis naik roller coaster 😄
+Angel, jagonya lihat sudut-sudut kelas, nggak ada sampah yang lolos… kadang sampai kayak lagi main “temukan perbedaan” versi hidup 😆
+Jesika, urus papan tulis dan jendela biar bersih, tapi kalau ditanya hal random kadang dia bingung… kayak lagi main tebak-tebakan yang nyeleneh 😅
+Nah, itu dia kami—lima ciwi-ciwi kelas 10.6 SMA 2 Kotabumi. Siap bikin kelas rapi, nyaman, dan tetep seru… kayak hangout bareng teman di sela pelajaran!” 😄` }
         ]
       },
       {
