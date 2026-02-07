@@ -17,6 +17,7 @@ const RISMA_FARM = {
   keterangan: "TALI BELL",
   jumlah: 40000
 },
+{
   tanggal: "2026-02-06",
   keterangan: "TALI RAFIA",
   jumlah: 20000
