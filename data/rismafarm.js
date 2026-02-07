@@ -13,7 +13,6 @@ const RISMA_FARM = {
 
       biaya: [
 {
-{
   tanggal: "2026-02-07",
   keterangan: "TALI BELL",
   jumlah: 40000
