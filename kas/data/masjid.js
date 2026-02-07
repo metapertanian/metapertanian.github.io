@@ -7,6 +7,25 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-07",
+type: "expense",
+amount: 16000,
+description: "Ember",
+foto: "https://blogger.googleusercontent.com/img/a/AVvXsEiRknPlkizl1pltts37USjkaYlmbBZOEVG6ZdN_GrPGYIzButKDcGSgPtwlx7Yezi9OOvvnB9kfsbA8x9hD0omDGXWDW7acLWFZaAW4ni2PuidJdr3zHtVMG1x490PibyR3LDwXb0bvPkcTeunP_zBofxqES9KEa4q0SpdwunNw-8RY6G4ntSmPdWD7sfRR"
+},
+{
+date: "2026-02-07",
+type: "expense",
+amount: 15000,
+description: "Stop Kran"
+},
+{
+date: "2026-02-07",
+type: "expense",
+amount: 10000,
+description: "Lem Pipa"
+},
+{
 date: "2026-02-06",
 type: "income",
 amount: 10000,
