@@ -169,7 +169,7 @@ function renderOutput() {
             : `${k}: ${t[k]}`
         );
       }
-      return `{\n  ${rows.join(",\n  ")}\n}`;
+      return `{\n  ${rows.join(",\n  ")}\n},`;
     })
     .join(",\n");
 
