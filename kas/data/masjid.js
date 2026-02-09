@@ -7,6 +7,13 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-08",
+type: "expense",
+amount: 45000,
+description: "Obat Rumput",
+note: "beli obat pembakar merk Gosongin"
+},
+{
 date: "2026-02-07",
 type: "expense",
 amount: 16000,
@@ -180,7 +187,7 @@ video: ""
 },
 {
 date: "2025-11-02",
-description: "Obat Lulangan",
+description: "Obat Rumput",
 type: "expense",
 amount: 65000,
 note: "beli obat semprot khusus lulangan (pronate 200 SL)",
@@ -329,7 +336,7 @@ video: ""
       },  
       {  
         date: "2025-09-16",  
-        description: "Obat Lulangan",  
+        description: "Obat Rumput",  
         type: "expense",  
         amount: 70000,  
         note: "beli online Herbisida GluBest 65.000 + biaya admin brilink 5.000",  
