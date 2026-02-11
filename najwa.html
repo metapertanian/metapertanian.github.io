@@ -55,6 +55,27 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
 
+.video-preview {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  overflow: hidden;
+  border-radius: 16px;
+  background: #000;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+  margin-bottom: 16px;
+}
+
+.video-preview iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
     /* FOTO GRID */
     .photo-grid {
       display: grid;
@@ -186,28 +207,13 @@
 
   
 
-    <!-- PREVIEW VIDEO GOOGLE DRIVE -->
-    <div style="
-      position: relative;
-      padding-top: 56.25%;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 10px 24px rgba(0,0,0,0.15);
-      margin-bottom: 16px;
-    ">
-      <iframe 
-        src="https://drive.google.com/file/d/1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS/preview"
-        style="
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          border: none;
-        "
-        allow="autoplay">
-      </iframe>
-    </div>
+    <!-- PREVIEW VIDEO GOOGLE DRIVE (FIX POTONG KANAN) -->
+<div class="video-preview">
+  <iframe 
+    src="https://drive.google.com/file/d/1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS/preview"
+    allow="autoplay; fullscreen">
+  </iframe>
+</div>
 
     <div class="info">
       <div><b>Durasi:</b> 5 Menit 33 Detik</div>
