@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download File Piket Kelas 10.6 | Najwa</title>
+  <title>Dokumentasi Tugas Projek TIK : Piket Kelas 10.6</title>
 
   <style>
     body {
@@ -11,79 +11,106 @@
       font-family: "Segoe UI", sans-serif;
       background: linear-gradient(135deg, #f6f8fb, #e9ecf1);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .wrapper {
+      max-width: 900px;
+      margin: auto;
+      padding: 24px;
       text-align: center;
     }
 
-    /* GIF */
-    .gif {
-      width: 140px;
-      margin: 14px auto;
-      display: block;
+    h1 {
+      margin-bottom: 6px;
     }
 
-    /* CARD */
+    .subtitle {
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    /* SECTION */
+    .section {
+      background: #fff;
+      border-radius: 22px;
+      padding: 20px;
+      margin-bottom: 32px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+      animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* VIDEO */
+    video {
+      width: 100%;
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    /* FOTO GRID */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .photo-grid img {
+      width: 100%;
+      border-radius: 18px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      transition: transform 0.3s ease;
+    }
+
+    .photo-grid img:hover {
+      transform: scale(1.03);
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .lightbox img {
+      max-width: 95%;
+      max-height: 95%;
+      border-radius: 16px;
+    }
+
+    /* CARD DOWNLOAD */
     .card {
       background: #ffffff;
       width: 330px;
       border-radius: 22px;
       box-shadow: 0 20px 45px rgba(0,0,0,0.18);
       padding: 18px;
-      margin: 12px auto;
-
-      /* animasi masuk + memantul */
+      margin: auto;
       animation:
         fadeUp 0.8s ease forwards,
         float 3.5s ease-in-out infinite;
     }
 
-    /* animasi muncul */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(25px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* animasi memantul pelan */
     @keyframes float {
-      0% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
-      }
-      100% {
-        transform: translateY(0);
-      }
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
     }
 
-    /* THUMBNAIL */
     .thumbnail {
       width: 100%;
       border-radius: 16px;
       margin-bottom: 14px;
       box-shadow: 0 10px 24px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease;
-    }
-
-    .thumbnail:hover {
-      transform: scale(1.02);
-    }
-
-    h2 {
-      font-size: 18px;
-      margin: 8px 0 12px;
-      color: #222;
     }
 
     .info {
@@ -94,11 +121,7 @@
       margin-bottom: 18px;
     }
 
-    .info b {
-      color: #000;
-    }
-
-    /* TOMBOL DOWNLOAD */
+    /* DOWNLOAD BUTTON */
     .download-btn {
       display: flex;
       align-items: center;
@@ -110,7 +133,6 @@
       border-radius: 16px;
       text-decoration: none;
       font-weight: 600;
-      letter-spacing: 0.4px;
       box-shadow: 0 10px 25px rgba(67,160,71,0.5);
       transition: all 0.3s ease;
     }
@@ -119,47 +141,78 @@
       transform: translateY(-3px) scale(1.04);
       box-shadow: 0 14px 35px rgba(67,160,71,0.65);
     }
+
+    /* GIF */
+    .gif {
+      width: 160px;
+      margin: 24px auto;
+      display: block;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #666;
+      margin-top: 8px;
+    }
   </style>
 </head>
 <body>
 
-  <div class="wrapper">
+<div class="wrapper">
 
-    <!-- GIF ATAS (PASTI MUNCUL) -->
-    <center><div class="tenor-gif-embed" data-postid="12746029378470736239" data-share-method="host" data-aspect-ratio="0.991597" data-width="40%"></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script></center>
+  
+  <div class="subtitle">Dokumentasi Tugas Projek TIK</div>
 
-    <!-- CARD -->
-    <div class="card">
-
-      <!-- THUMBNAIL GOOGLE DRIVE -->
-      <img 
-        class="thumbnail" 
-        src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS"
-        alt="Thumbnail Google Drive"
-      >
-
-      
-
-      <div class="info">
-        <div><b>Durasi:</b> 5 Menit 33 Detik</div>
-        <div><b>Ukuran:</b> 315 MB</div>
-        <div><b>Resolusi:</b> 1080P</div>
-        <div><b>Pemilik:</b> Najwa</div>
-      </div>
-
-      <a 
-        class="download-btn"
-        href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download"
-        target="_blank"
-      >
-        🔽 Download File
-      </a>
-    </div>
-
-    <!-- GIF BAWAH (PASTI MUNCUL) -->
-    <center><div class="tenor-gif-embed" data-postid="6607412829752786122" data-share-method="host" data-aspect-ratio="1" data-width="40%"></div> <script type="text/javascript" async src="https://tenor.com/embed.js"></script></center>
-
+  <!-- VIDEO DOKUMENTASI -->
+  <div class="section">
+    <h2>🎥 Dokumentasi Video</h2>
+    <video controls>
+      <source src="data/VID-20260211-WA0006.mp4" type="video/mp4">
+      Browser tidak mendukung video.
+    </video>
+    <div class="hint">Video bukti proses pembuatan</div>
   </div>
+
+  <!-- FOTO DOKUMENTASI -->
+  <div class="section">
+    <h2>📸 Dokumentasi Foto</h2>
+    <div class="photo-grid">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEjbjRz_cEvW0j52Q89PTUAN_Y6LvWQx9fsA-Jveqdv4bHUF83kxbcrfgLDPLZUHBpTJyxB8R08e9tHIqjAHoEuGRKxe0MUOmll910nQ-_UPFEyBYMKbrjOTjx3uwqImtH0sXEvlcpsA3-o1_oG7kMZxa1mnrLVkCoMMvdInRVl7Ojk8vFWGX4MDl0T_ozVL" onclick="openLightbox(this.src)">
+      <img src="https://blogger.googleusercontent.com/img/a/AVvXsEiMvavNLoY4v9xESvUQCJvzrwk0mlti8rMJkS5Z3NLNjcEyJBE-Qoy778ItfTJ-mBI6bHi5M519ViT4qWYBUvAH6MZyeUADHXsQXYzZyhfIlSMzjiJQzpedpCA2eHGTyHYa4izhe2C30dwIN6BFyCFlFvz9zbKuv_QOgkQSmhwSfigOrykhkTNKFM631LtD" onclick="openLightbox(this.src)">
+    </div>
+    <div class="hint">Klik foto untuk melihat ukuran penuh</div>
+  </div>
+
+  <!-- CARD DOWNLOAD -->
+  <div class="card">
+    <img class="thumbnail" src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS">
+    <div class="info">
+      <div><b>Durasi:</b> 5 Menit 33 Detik</div>
+      <div><b>Ukuran:</b> 315 MB</div>
+      <div><b>Resolusi:</b> 1080P</div>
+      <div><b>Pemilik:</b> Najwa, Salsa, Dyah, Angel, Jesika</div>
+    </div>
+    <a class="download-btn" href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download" target="_blank">
+      🔽 Download File
+    </a>
+  </div>
+
+  <!-- GIF BAWAH -->
+  <img class="gif" src="https://media.tenor.com/h2gbslEm1CoAAAAC/bubu-dudu.gif">
+
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="this.style.display='none'">
+  <img id="lightbox-img">
+</div>
+
+<script>
+  function openLightbox(src) {
+    document.getElementById("lightbox-img").src = src;
+    document.getElementById("lightbox").style.display = "flex";
+  }
+</script>
 
 </body>
 </html>
