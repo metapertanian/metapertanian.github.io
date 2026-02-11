@@ -3,95 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download File Piket Kelas 10.6</title>
+  <title>Download File : Piket Kelas 10.6</title>
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #fdfbfb, #ebedee);
-      height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #f6f8fb, #e9ecf1);
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .card {
-      background: #ffffff;
-      width: 320px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      padding: 20px;
+    .wrapper {
       text-align: center;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0); }
     }
 
     .gif {
-      width: 120px;
-      margin-bottom: 10px;
+      width: 140px;
+      margin: 12px 0;
+    }
+
+    .card {
+      background: #fff;
+      width: 330px;
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+      padding: 18px;
+      margin: 10px auto;
+      animation: fadeUp 0.8s ease;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .thumbnail {
+      width: 100%;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
     h2 {
-      margin: 10px 0;
       font-size: 18px;
+      margin: 8px 0 12px;
+      color: #222;
     }
 
     .info {
       text-align: left;
       font-size: 14px;
-      margin: 15px 0;
-      line-height: 1.6;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 16px;
     }
 
     .info b {
-      color: #333;
+      color: #000;
     }
 
     .download-btn {
-      display: block;
-      background: #4CAF50;
-      color: white;
-      padding: 12px;
-      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #4caf50, #2e7d32);
+      color: #fff;
+      padding: 14px;
+      border-radius: 14px;
       text-decoration: none;
-      font-weight: bold;
-      transition: 0.3s;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      box-shadow: 0 8px 20px rgba(76,175,80,0.45);
+      transition: all 0.3s ease;
     }
 
     .download-btn:hover {
-      background: #43a047;
-      transform: scale(1.03);
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 12px 28px rgba(76,175,80,0.6);
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <!-- GIF Bubu Dudu -->
-    <img class="gif" src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif" alt="Bubu Dudu">
+  <div class="wrapper">
 
-    <h2>Piket Kelas 10.6</h2>
+    <!-- GIF ATAS -->
+    <img class="gif" src="https://media.tenor.com/plI6265LX99AAAAC/bubu-dudu.gif" alt="Bubu Dudu">
 
-    <div class="info">
-      <div><b>Nama File:</b> Piket Kelas 10.6</div>
-      <div><b>Ukuran:</b> 315 MB</div>
-      <div><b>Resolusi:</b> 1080 P</div>
-      <div><b>Pemilik:</b> Najwa</div>
+    <!-- CARD -->
+    <div class="card">
+
+      <!-- THUMBNAIL FILE -->
+      <img 
+  class="thumbnail" 
+  src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS"
+  alt="Thumbnail Google Drive"
+>
+
+      <h2>Piket Kelas 10.6</h2>
+
+      <div class="info">
+        <div><b>Nama File:</b> Piket Kelas 10.6</div>
+        <div><b>Ukuran:</b> 315 MB</div>
+        <div><b>Resolusi:</b> 1080P</div>
+        <div><b>Pemilik:</b> Najwa</div>
+      </div>
+
+      <a 
+        class="download-btn"
+        href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download"
+        target="_blank"
+      >
+        ⬇ Download File
+      </a>
     </div>
 
-    <a 
-      class="download-btn" 
-      href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download"
-      target="_blank"
-    >
-      ⬇ Download
-    </a>
+    <!-- GIF BAWAH -->
+    <img class="gif" src="https://media.tenor.com/h2gbslEm1CoAAAAC/bubu-dudu.gif" alt="Bubu Dudu">
+
   </div>
 
 </body>
