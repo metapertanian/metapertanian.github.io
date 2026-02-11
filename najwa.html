@@ -172,6 +172,83 @@
       color: #666;
       margin-top: 8px;
     }
+
+/* OVERLAY NOTICE */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.overlay-card {
+  background: #ffffff;
+  max-width: 520px;
+  width: 90%;
+  border-radius: 22px;
+  padding: 26px 24px;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+  animation: fadeScale 0.6s ease;
+}
+
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.overlay-card h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.overlay-card p {
+  color: #444;
+  line-height: 1.7;
+  font-size: 14.5px;
+}
+
+.judul-video {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 12px 0;
+  color: #1b5e20;
+}
+
+.nama {
+  margin-top: 14px;
+}
+
+.overlay-card button {
+  margin-top: 22px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #43a047, #1b5e20);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(67,160,71,0.45);
+  transition: all 0.3s ease;
+}
+
+.overlay-card button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(67,160,71,0.6);
+}
+
   </style>
 </head>
 <body>
@@ -247,6 +324,37 @@
   function openLightbox(src) {
     document.getElementById("lightbox-img").src = src;
     document.getElementById("lightbox").style.display = "flex";
+  }
+</script>
+
+<!-- OVERLAY PEMBERITAHUAN -->
+<div class="overlay" id="docNotice">
+  <div class="overlay-card">
+    <h2>📌 Dokumentasi Tugas Video</h2>
+
+    <p>
+      Halaman ini berisi dokumentasi tugas <b>Video Film Pendek</b> dengan judul:
+    </p>
+
+    <div class="judul-video">“Piket Kelas 10.6”</div>
+
+    <p>
+      Karya siswa kelas <b>10.6 SMA Negeri 2 Kotabumi</b>, diproduksi sebagai bagian
+      dari tugas Projek TIK.
+    </p>
+
+    <p class="nama">
+      Oleh:<br>
+      <b>Najwa, Salsa, Dyah, Angel, Jesika</b>
+    </p>
+
+    <button onclick="closeNotice()">Tutup & Lanjutkan</button>
+  </div>
+</div>
+
+<script>
+  function closeNotice() {
+    document.getElementById("docNotice").style.display = "none";
   }
 </script>
 
