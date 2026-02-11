@@ -7,6 +7,30 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-09",
+type: "income",
+amount: 250000,
+description: "Nyemprot"
+},,
+{
+date: "2026-02-09",
+type: "expense",
+amount: 59000,
+description: "Susu Etawa"
+},,
+{
+date: "2026-02-11",
+type: "expense",
+amount: 10000,
+description: "Gula Kopi"
+},,
+{
+date: "2026-02-11",
+type: "expense",
+amount: 5000,
+description: "Kuaci"
+},
+{
 date: "2026-02-08",
 type: "income",
 amount: 45000,
@@ -23,7 +47,8 @@ note: "Beli tali salaran Bell"
 date: "2026-02-06",
 type: "expense",
 amount: 20000,
-description: "Investasi RISMA"
+description: "Investasi RISMA",
+note: "Beli tali rafia"
 },
 {
 date: "2026-02-05",
