@@ -39,6 +39,10 @@
       animation: fadeUp 0.8s ease;
     }
 
+    .section h2 {
+      margin-top: 0;
+    }
+
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(25px); }
       to { opacity: 1; transform: translateY(0); }
@@ -90,20 +94,13 @@
     /* CARD DOWNLOAD */
     .card {
       background: #ffffff;
-      width: 330px;
-      border-radius: 22px;
-      box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+      max-width: 420px;
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.15);
       padding: 18px;
-      margin: auto;
-      animation:
-        fadeUp 0.8s ease forwards,
-        float 3.5s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
+      margin: 0 auto;
+      animation: fadeUp 0.8s ease forwards;
     }
 
     .thumbnail {
@@ -138,7 +135,7 @@
     }
 
     .download-btn:hover {
-      transform: translateY(-3px) scale(1.04);
+      transform: translateY(-3px);
       box-shadow: 0 14px 35px rgba(67,160,71,0.65);
     }
 
@@ -160,11 +157,10 @@
 
 <div class="wrapper">
 
-  
   <h1>Dokumentasi Tugas Projek TIK</h1>
   <div class="subtitle">Pembuatan Video Film Pendek – Piket Kelas 10.6</div>
 
-  <!-- VIDEO DOKUMENTASI -->
+  <!-- VIDEO -->
   <div class="section">
     <h2>🎥 Dokumentasi Video</h2>
     <video controls>
@@ -174,7 +170,7 @@
     <div class="hint">Video bukti proses pembuatan</div>
   </div>
 
-  <!-- FOTO DOKUMENTASI -->
+  <!-- FOTO -->
   <div class="section">
     <h2>📸 Dokumentasi Foto</h2>
     <div class="photo-grid">
@@ -184,22 +180,26 @@
     <div class="hint">Klik foto untuk melihat ukuran penuh</div>
   </div>
 
-  <!-- CARD DOWNLOAD -->
-  <div class="card">
-    <img class="thumbnail" src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS">
-    <div class="info">
-      <div><b>Durasi:</b> 5 Menit 33 Detik</div>
-      <div><b>Ukuran:</b> 315 MB</div>
-      <div><b>Resolusi:</b> 1080P</div>
-      <div><b>Pemilik:</b> Najwa, Salsa, Dyah, Angel, Jesika</div>
+  <!-- DOWNLOAD -->
+  <div class="section">
+    <h2>⬇️ Download File</h2>
+
+    <div class="card">
+      <img class="thumbnail" src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS">
+      <div class="info">
+        <div><b>Durasi:</b> 5 Menit 33 Detik</div>
+        <div><b>Ukuran:</b> 315 MB</div>
+        <div><b>Resolusi:</b> 1080P</div>
+        <div><b>Pemilik:</b> Najwa, Salsa, Dyah, Angel, Jesika</div>
+      </div>
+      <a class="download-btn" href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download" target="_blank">
+        🔽 Download File
+      </a>
     </div>
-    <a class="download-btn" href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download" target="_blank">
-      🔽 Download File
-    </a>
   </div>
 
-  <!-- GIF BAWAH -->
-  <img class="gif" src="https://media.tenor.com/h2gbslEm1CoAAAAC/bubu-dudu.gif">
+  <!-- GIF -->
+  <img class="gif" src="/img/happy-dance-cute.gif">
 
 </div>
 
