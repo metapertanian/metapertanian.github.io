@@ -156,12 +156,13 @@ function renderList() {
 }
 
 // ================================
-// OUTPUT KODE
+// OUTPUT KODE (SEMUA ADA KOMA)
 // ================================
 function renderOutput() {
   let text = transaksiList
     .map(t => {
       let rows = [];
+
       for (let k in t) {
         rows.push(
           typeof t[k] === "string"
@@ -169,9 +170,11 @@ function renderOutput() {
             : `${k}: ${t[k]}`
         );
       }
+
+      // selalu beri koma di akhir object
       return `{\n  ${rows.join(",\n  ")}\n},`;
     })
-    .join(",\n");
+    .join("\n"); // ⬅️ BUKAN ",\n"
 
   document.getElementById("result").innerText = text;
   document.getElementById("result").style.display = "block";
