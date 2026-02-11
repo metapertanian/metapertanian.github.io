@@ -45,6 +45,12 @@ note: "Beli tali salaran Bell"
 },
 {
 date: "2026-02-06",
+type: "income",
+amount: 70000,
+description: "Nanem Jagung"
+},
+{
+date: "2026-02-06",
 type: "expense",
 amount: 20000,
 description: "Investasi RISMA",
