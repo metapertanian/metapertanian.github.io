@@ -11,19 +11,19 @@ date: "2026-02-09",
 type: "income",
 amount: 250000,
 description: "Nyemprot"
-},,
+},
 {
 date: "2026-02-09",
 type: "expense",
 amount: 59000,
 description: "Susu Etawa"
-},,
+},
 {
 date: "2026-02-11",
 type: "expense",
 amount: 10000,
 description: "Gula Kopi"
-},,
+},
 {
 date: "2026-02-11",
 type: "expense",
