@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Download File : Piket Kelas 10.6</title>
+  <title>Download File Piket Kelas 10.6 | Najwa</title>
 
   <style>
     body {
@@ -20,25 +20,33 @@
       text-align: center;
     }
 
+    /* GIF */
     .gif {
       width: 140px;
-      margin: 12px 0;
+      margin: 14px auto;
+      display: block;
     }
 
+    /* CARD */
     .card {
-      background: #fff;
+      background: #ffffff;
       width: 330px;
-      border-radius: 20px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.15);
+      border-radius: 22px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.18);
       padding: 18px;
-      margin: 10px auto;
-      animation: fadeUp 0.8s ease;
+      margin: 12px auto;
+
+      /* animasi masuk + memantul */
+      animation:
+        fadeUp 0.8s ease forwards,
+        float 3.5s ease-in-out infinite;
     }
 
+    /* animasi muncul */
     @keyframes fadeUp {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(25px);
       }
       to {
         opacity: 1;
@@ -46,11 +54,30 @@
       }
     }
 
+    /* animasi memantul pelan */
+    @keyframes float {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    /* THUMBNAIL */
     .thumbnail {
       width: 100%;
-      border-radius: 14px;
+      border-radius: 16px;
       margin-bottom: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .thumbnail:hover {
+      transform: scale(1.02);
     }
 
     h2 {
@@ -64,32 +91,33 @@
       font-size: 14px;
       line-height: 1.7;
       color: #444;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .info b {
       color: #000;
     }
 
+    /* TOMBOL DOWNLOAD */
     .download-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: linear-gradient(135deg, #4caf50, #2e7d32);
-      color: #fff;
+      background: linear-gradient(135deg, #43a047, #1b5e20);
+      color: #ffffff;
       padding: 14px;
-      border-radius: 14px;
+      border-radius: 16px;
       text-decoration: none;
       font-weight: 600;
-      letter-spacing: 0.3px;
-      box-shadow: 0 8px 20px rgba(76,175,80,0.45);
+      letter-spacing: 0.4px;
+      box-shadow: 0 10px 25px rgba(67,160,71,0.5);
       transition: all 0.3s ease;
     }
 
     .download-btn:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 12px 28px rgba(76,175,80,0.6);
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 14px 35px rgba(67,160,71,0.65);
     }
   </style>
 </head>
@@ -97,23 +125,27 @@
 
   <div class="wrapper">
 
-    <!-- GIF ATAS -->
-    <img class="gif" src="https://media.tenor.com/plI6265LX99AAAAC/bubu-dudu.gif" alt="Bubu Dudu">
+    <!-- GIF ATAS (PASTI MUNCUL) -->
+    <img 
+      class="gif" 
+      src="https://media.tenor.com/plI6265LX99AAAAC/bubu-dudu.gif" 
+      alt="Bubu Dudu"
+    >
 
     <!-- CARD -->
     <div class="card">
 
-      <!-- THUMBNAIL FILE -->
+      <!-- THUMBNAIL GOOGLE DRIVE -->
       <img 
-  class="thumbnail" 
-  src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS"
-  alt="Thumbnail Google Drive"
->
+        class="thumbnail" 
+        src="https://drive.google.com/thumbnail?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS"
+        alt="Thumbnail Google Drive"
+      >
 
       <h2>Piket Kelas 10.6</h2>
 
       <div class="info">
-        <div><b>Nama File:</b> Piket Kelas 10.6</div>
+        <div><b>Nama:</b> Piket Kelas 10.6</div>
         <div><b>Ukuran:</b> 315 MB</div>
         <div><b>Resolusi:</b> 1080P</div>
         <div><b>Pemilik:</b> Najwa</div>
@@ -124,12 +156,16 @@
         href="https://drive.google.com/uc?id=1QSiPvla8hQzGbGbBZukpfDaxSCyMvXgS&export=download"
         target="_blank"
       >
-        ⬇ Download File
+        🔽 Download File
       </a>
     </div>
 
-    <!-- GIF BAWAH -->
-    <img class="gif" src="https://media.tenor.com/h2gbslEm1CoAAAAC/bubu-dudu.gif" alt="Bubu Dudu">
+    <!-- GIF BAWAH (PASTI MUNCUL) -->
+    <img 
+      class="gif" 
+      src="https://media.tenor.com/h2gbslEm1CoAAAAC/bubu-dudu.gif" 
+      alt="Bubu Dudu"
+    >
 
   </div>
 
