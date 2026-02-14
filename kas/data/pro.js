@@ -19,6 +19,12 @@ amount: 5000,
 description: "Infak Jumat"
 },
 {
+date: "2026-02-13",
+type: "expense",
+amount: 10000,
+description: "Martabak"
+},
+{
 date: "2026-02-09",
 type: "expense",
 amount: 20000,
