@@ -8,6 +8,12 @@ window.kasData = {
     transaksi: [  
 {
 date: "2026-02-14",
+type: "expense",
+amount: 56000,
+description: "Tandem"
+},
+{
+date: "2026-02-14",
 type: "income",
 amount: 50000,
 description: "Mama"
