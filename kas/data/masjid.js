@@ -7,6 +7,20 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-15",
+type: "expense",
+amount: 16000,
+description: "Gotong Royong"
+},
+{
+date: "2026-02-15",
+type: "expense",
+amount: 146000,
+description: "Lampu",
+note: "beli lampu merk sukaku 20Watt sebanyak 4 buah dengan garansi 18 bulan",
+foto: "https://blogger.googleusercontent.com/img/a/AVvXsEjBRkjaBuZFBmspT28T3LIhqMKzsPe-WMeea4tQiqO2veCyWuaDBL5RLEULR6B3-FX9g8fbU74rH4ILcWM_EJyrCtd2rH3xejwy73tRXfF7y2Aea6zWcyiPuHm8dIvXvDegeaS3nVGNjY-ekAN8BzxT7tyhZmkF_c53ONXkqBxSuNCXkjCa1HFl6vg0zsYo"
+},
+{
 date: "2026-02-13",
 type: "income",
 amount: 5000,
