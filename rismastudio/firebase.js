@@ -1,5 +1,3 @@
-<script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } 
 from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
@@ -48,5 +46,3 @@ onAuthStateChanged(auth, (user)=>{
 });
 
 window.db = db;
-
-</script>
