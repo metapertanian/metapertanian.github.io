@@ -1,26 +1,25 @@
-// LOADING MURNI TANPA IMPORT APAPUN
-
-window.addEventListener("load", function () {
+window.onload = function () {
 
   let persen = 0;
+
   const loadingText = document.getElementById("loadingPercent");
   const loadingPopup = document.getElementById("loadingPopup");
 
-  const interval = setInterval(() => {
+  if (!loadingText || !loadingPopup) {
+    console.log("Element loading tidak ditemukan");
+    return;
+  }
 
-    persen += 2;
+  const interval = setInterval(function () {
 
-    if (loadingText) {
-      loadingText.innerText = persen;
-    }
+    persen += 5;
+    loadingText.innerText = persen;
 
     if (persen >= 100) {
       clearInterval(interval);
-      if (loadingPopup) {
-        loadingPopup.style.display = "none";
-      }
+      loadingPopup.style.display = "none";
     }
 
-  }, 60);
+  }, 150);
 
-});
+};
