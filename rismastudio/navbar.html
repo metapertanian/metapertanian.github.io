@@ -1,0 +1,26 @@
+<div class="navbar">
+  <div>
+    <a href="index.html">Home</a> |
+    <a href="narasi.html">Narasi</a> |
+    <a href="gambar.html">Gambar</a> |
+    <a href="video.html">Video</a> |
+    <a href="naskah.html">Naskah</a>
+  </div>
+  <div id="userArea"></div>
+</div>
+
+<div id="loadingPopup" class="popup">
+  <h1>RISMA Studio</h1>
+  <p>Loading... <span id="loadingPercent">0</span>%</p>
+  <p>by PROxyz</p>
+</div>
+
+<div id="welcomePopup" class="popup" style="display:none;">
+  <h2>Selamat Datang 🚀</h2>
+  <button onclick="closeWelcome()">Masuk</button>
+</div>
+
+<script type="module">
+  import "./firebase.js";
+  import "./app.js";
+</script>
