@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="style.css">
+<div id="navbar"></div>
+
+<div class="menu">
+  <h2>Buat Naskah</h2>
+
+  <input type="text" id="judul" placeholder="Judul Naskah" style="width:100%;padding:10px;margin:10px 0;">
+
+  <div id="scenes"></div>
+
+  <button onclick="addScene()">+ Tambah Scene</button>
+  <button onclick="saveNaskah()">Simpan Naskah</button>
+
+  <h3>Naskah Tersimpan</h3>
+  <div id="naskahList"></div>
+</div>
+
+<script>
+fetch("navbar.html")
+  .then(r=>r.text())
+  .then(d=>{
+    document.getElementById("navbar").innerHTML=d;
+    setTimeout(()=>loadData("naskah","naskahList"),1500);
+  });
+
+let sceneCount = 0;
+
+function addScene(){
+  sceneCount++;
+  const div = document.createElement("div");
+  div.style.border="1px solid #444";
+  div.style.padding="10px";
+  div.style.margin="10px 0";
+
+  div.innerHTML=`
+    <h4>Scene ${sceneCount}</h4>
+    <input type="text" placeholder="Suasana" class="suasana" style="width:100%;margin:5px 0;">
+    <textarea placeholder="Narasi Scene" class="narasiScene"></textarea>
+  `;
+
+  document.getElementById("scenes").appendChild(div);
+}
+
+function saveNaskah(){
+  const judul = document.getElementById("judul").value;
+  if(!judul) return alert("Isi judul!");
+
+  const suasanaList = document.querySelectorAll(".suasana");
+  const narasiList = document.querySelectorAll(".narasiScene");
+
+  let result = "Judul: "+judul+"\n\n";
+
+  suasanaList.forEach((s,i)=>{
+    result += "Scene "+(i+1)+"\n";
+    result += "Suasana: "+s.value+"\n";
+    result += "Narasi: "+narasiList[i].value+"\n\n";
+  });
+
+  saveData("naskah", result);
+
+  document.getElementById("judul").value="";
+  document.getElementById("scenes").innerHTML="";
+  sceneCount=0;
+
+  setTimeout(()=>loadData("naskah","naskahList"),1000);
+}
+</script>
