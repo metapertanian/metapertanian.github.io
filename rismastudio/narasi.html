@@ -2,15 +2,31 @@
 <div id="navbar"></div>
 
 <div class="menu">
-  <h2>Buat Narasi</h2>
-  <textarea id="narasiText"></textarea>
-  <button onclick="saveData('narasi', document.getElementById('narasiText').value)">
-    Simpan Narasi
-  </button>
+  <h2>Generator Narasi</h2>
+
+  <textarea id="narasiInput" placeholder="Tulis ide narasi..."></textarea>
+  <button onclick="generateNarasi()">Generate & Simpan</button>
+
+  <h3>Narasi Tersimpan</h3>
+  <div id="narasiList"></div>
 </div>
 
 <script>
 fetch("navbar.html")
   .then(r=>r.text())
-  .then(d=>document.getElementById("navbar").innerHTML=d);
+  .then(d=>{
+    document.getElementById("navbar").innerHTML=d;
+    setTimeout(()=>loadData("narasi","narasiList"),1500);
+  });
+
+function generateNarasi(){
+  const text = document.getElementById("narasiInput").value;
+  if(!text) return alert("Isi dulu!");
+
+  const prompt = "Buatkan narasi berdasarkan ide berikut:\n\n" + text;
+
+  saveData("narasi", prompt);
+  document.getElementById("narasiInput").value="";
+  setTimeout(()=>loadData("narasi","narasiList"),1000);
+}
 </script>
