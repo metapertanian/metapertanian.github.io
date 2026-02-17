@@ -1,24 +1,42 @@
-let persen = 0;
+document.addEventListener("DOMContentLoaded", function () {
 
-const loadingText = document.getElementById("loadingPercent");
-const loadingScreen = document.getElementById("loadingScreen");
-const mainContent = document.getElementById("mainContent");
+  let persen = 0;
 
-const interval = setInterval(function(){
+  const loadingText = document.getElementById("loadingPercent");
+  const loadingScreen = document.getElementById("loadingScreen");
+  const mainContent = document.getElementById("mainContent");
 
-  persen += 5;
-  loadingText.innerText = persen;
+  const interval = setInterval(function () {
 
-  if(persen >= 100){
-    clearInterval(interval);
+    persen += 5;
 
-    loadingScreen.style.display = "none";
-    mainContent.style.display = "block";
+    if (loadingText) {
+      loadingText.innerText = persen;
+    }
 
-    // Load Navbar setelah loading selesai
-    fetch("navbar.html")
-      .then(r=>r.text())
-      .then(d=>document.getElementById("navbar").innerHTML=d);
-  }
+    if (persen >= 100) {
+      clearInterval(interval);
 
-}, 100);
+      // Tutup loading
+      if (loadingScreen) {
+        loadingScreen.style.display = "none";
+      }
+
+      // Tampilkan konten utama
+      if (mainContent) {
+        mainContent.style.display = "block";
+      }
+
+      // Load navbar (jangan bikin error kalau gagal)
+      fetch("navbar.html")
+        .then(r => r.text())
+        .then(d => {
+          const nav = document.getElementById("navbar");
+          if (nav) nav.innerHTML = d;
+        })
+        .catch(err => console.log("Navbar gagal load:", err));
+    }
+
+  }, 80);
+
+});
