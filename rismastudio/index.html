@@ -1,5 +1,10 @@
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
 <div id="navbar"></div>
 
@@ -10,12 +15,16 @@
 
 <script>
 fetch("navbar.html")
-  .then(r=>r.text())
-  .then(d=>document.getElementById("navbar").innerHTML=d);
+  .then(r => r.text())
+  .then(d => {
+    document.getElementById("navbar").innerHTML = d;
 
-const script = document.createElement("script");
-    script.type = "module";
-    script.src = "main.js";
+    // PANGGIL main.js SETELAH navbar ADA
+    const script = document.createElement("script");
+    script.src = "main.js";   // TANPA type="module"
     document.body.appendChild(script);
-  ;
+  });
 </script>
+
+</body>
+</html>
