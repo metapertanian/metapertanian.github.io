@@ -2,15 +2,31 @@
 <div id="navbar"></div>
 
 <div class="menu">
-  <h2>Buat Prompt Video</h2>
-  <textarea id="videoText"></textarea>
-  <button onclick="saveData('video', document.getElementById('videoText').value)">
-    Simpan Prompt
-  </button>
+  <h2>Generator Prompt Video (Veo)</h2>
+
+  <textarea id="videoInput" placeholder="Tulis konsep video..."></textarea>
+  <button onclick="generateVideo()">Generate & Simpan</button>
+
+  <h3>Prompt Video Tersimpan</h3>
+  <div id="videoList"></div>
 </div>
 
 <script>
 fetch("navbar.html")
   .then(r=>r.text())
-  .then(d=>document.getElementById("navbar").innerHTML=d);
+  .then(d=>{
+    document.getElementById("navbar").innerHTML=d;
+    setTimeout(()=>loadData("video","videoList"),1500);
+  });
+
+function generateVideo(){
+  const text = document.getElementById("videoInput").value;
+  if(!text) return alert("Isi dulu!");
+
+  const prompt = "Buatkan prompt video cinematic detail untuk Veo berdasarkan konsep:\n\n" + text;
+
+  saveData("video", prompt);
+  document.getElementById("videoInput").value="";
+  setTimeout(()=>loadData("video","videoList"),1000);
+}
 </script>
