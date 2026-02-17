@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="style.css">
+<div id="navbar"></div>
+
+<div class="menu">
+  <h2>Buat Narasi</h2>
+  <textarea id="narasiText"></textarea>
+  <button onclick="saveData('narasi', document.getElementById('narasiText').value)">
+    Simpan Narasi
+  </button>
+</div>
+
+<script>
+fetch("navbar.html")
+  .then(r=>r.text())
+  .then(d=>document.getElementById("navbar").innerHTML=d);
+</script>
