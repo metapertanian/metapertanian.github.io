@@ -2,15 +2,31 @@
 <div id="navbar"></div>
 
 <div class="menu">
-  <h2>Buat Prompt Gambar</h2>
-  <textarea id="gambarText"></textarea>
-  <button onclick="saveData('gambar', document.getElementById('gambarText').value)">
-    Simpan Prompt
-  </button>
+  <h2>Generator Prompt Gambar</h2>
+
+  <textarea id="gambarInput" placeholder="Tulis ide gambar..."></textarea>
+  <button onclick="generateGambar()">Generate & Simpan</button>
+
+  <h3>Prompt Gambar Tersimpan</h3>
+  <div id="gambarList"></div>
 </div>
 
 <script>
 fetch("navbar.html")
   .then(r=>r.text())
-  .then(d=>document.getElementById("navbar").innerHTML=d);
+  .then(d=>{
+    document.getElementById("navbar").innerHTML=d;
+    setTimeout(()=>loadData("gambar","gambarList"),1500);
+  });
+
+function generateGambar(){
+  const text = document.getElementById("gambarInput").value;
+  if(!text) return alert("Isi dulu!");
+
+  const prompt = "Buatkan prompt gambar detail sinematik berdasarkan ide:\n\n" + text;
+
+  saveData("gambar", prompt);
+  document.getElementById("gambarInput").value="";
+  setTimeout(()=>loadData("gambar","gambarList"),1000);
+}
 </script>
