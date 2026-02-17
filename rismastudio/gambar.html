@@ -17,6 +17,12 @@ fetch("navbar.html")
   .then(r=>r.text())
   .then(d=>{
     document.getElementById("navbar").innerHTML=d;
+
+const script = document.createElement("script");
+    script.type = "module";
+    script.src = "main.js";
+    document.body.appendChild(script);
+  
     setTimeout(()=>loadData("gambar","gambarList"),1500);
   });
 
