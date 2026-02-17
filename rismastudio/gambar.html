@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="style.css">
+<div id="navbar"></div>
+
+<div class="menu">
+  <h2>Buat Prompt Gambar</h2>
+  <textarea id="gambarText"></textarea>
+  <button onclick="saveData('gambar', document.getElementById('gambarText').value)">
+    Simpan Prompt
+  </button>
+</div>
+
+<script>
+fetch("navbar.html")
+  .then(r=>r.text())
+  .then(d=>document.getElementById("navbar").innerHTML=d);
+</script>
