@@ -9,15 +9,47 @@ window.kasData = {
 {
 date: "2026-02-20",
 type: "income",
+amount: 5000000,
+description: "Panen Jagung",
+note: "laba bersih ±9.500.000 dibagi 2, bagian masjid dibulatkan mendapat 5 juta."
+},
+{
+date: "2026-02-20",
+type: "income",
 amount: 57000,
 description: "Infak Jumat"
 },
 {
 date: "2026-02-20",
-type: "income",
-amount: 5000000,
-description: "Panen Jagung",
-note: "laba bersih ±9.500.000 dibagi 2, bagian masjid dibulatkan mendapat 5 juta."
+type: "expense",
+amount: 66000,
+description: "Keset"
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 20000,
+description: "Sapu"
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 13000,
+description: "Gelas"
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 11000,
+description: "Sikat WC"
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 410000,
+description: "Kipas Angin",
+note: "2 kipas angin infico 18 inch + paku 5 ribu",
+foto: "/kas/bukti/kipas-angin.jpg"
 },
 {
 date: "2026-02-20",
