@@ -15,6 +15,20 @@ note: "laba bersih ±9.500.000 dibagi 2, bagian masjid dibulatkan mendapat 5 jut
 },
 {
 date: "2026-02-20",
+type: "expense",
+amount: 1500000,
+description: "Pasang Kaca",
+foto: "/kas/bukti/IMG-20260219-WA0000.jpg"
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 330000,
+description: "Utang Makan2",
+note: "utang makan2 gotong royong dimasjid bulan agustus 2025 kepada ibu eli."
+},
+{
+date: "2026-02-20",
 type: "income",
 amount: 57000,
 description: "Infak Jumat"
@@ -50,20 +64,6 @@ amount: 410000,
 description: "Kipas Angin",
 note: "2 kipas angin infico 18 inch + paku 5 ribu",
 foto: "/kas/bukti/kipas-angin.jpg"
-},
-{
-date: "2026-02-20",
-type: "expense",
-amount: 1500000,
-description: "Pasang Kaca",
-foto: "/kas/bukti/IMG-20260219-WA0000.jpg"
-},
-{
-date: "2026-02-20",
-type: "expense",
-amount: 330000,
-description: "Utang Makan2",
-note: "utang makan2 gotong royong dimasjid bulan agustus 2025 kepada ibu eli."
 },
 {
 date: "2026-02-19",
