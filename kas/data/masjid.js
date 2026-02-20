@@ -7,10 +7,37 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-20",
+type: "income",
+amount: 5000000,
+description: "Panen Jagung",
+note: "laba bersih ±9.500.000 dibagi 2, bagian masjid dibulatkan mendapat 5 juta."
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 1500000,
+description: "Pasang Kaca",
+foto: "kas/bukti/IMG-20260219-WA0000.jpg"
+},
+{
+date: "2026-02-20",
+type: "expense",
+amount: 330000,
+description: "Utang Makan2",
+note: "utang makan2 gotong royong dimasjid bulan agustus 2025 kepada ibu eli."
+},
+{
+date: "2026-02-19",
+type: "expense",
+amount: 10000,
+description: "Gula Kopi"
+},
+{
 date: "2026-02-18",
 type: "expense",
 amount: 38000,
-description: "Air Gelas",
+description: "Air Minum",
 note: "beli air gelas 2 dus untuk makan2 awal tarawih."
 },
 {
