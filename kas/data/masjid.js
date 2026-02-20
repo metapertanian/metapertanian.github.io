@@ -405,7 +405,7 @@ video: ""
       },  
       {  
         date: "2025-08-22",  
-        description: "Beli Mic",  
+        description: "Mic Toa",  
         type: "expense",  
         amount: 235000,  
         note: "Harga mic 225.000 dan untuk beli bensin motor bapak RT Suhdi 10.000",  
@@ -414,7 +414,7 @@ video: ""
       },  
       {  
         date: "2025-08-23",  
-        description: "Beli Amplifier",  
+        description: "Amplifier",  
         type: "expense",  
         amount: 514000,  
         note: "Pembelian amplifier 2000watt 4 channel",  
