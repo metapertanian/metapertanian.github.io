@@ -62,7 +62,7 @@ date: "2026-02-20",
 type: "expense",
 amount: 410000,
 description: "Kipas Angin",
-note: "2 kipas angin infico 18 inch + paku 5 ribu",
+note: "2 kipas angin infico 18 inch + paku 10 ribu",
 foto: "/kas/bukti/kipas-angin.jpg"
 },
 {
