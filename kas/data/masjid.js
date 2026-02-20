@@ -9,6 +9,12 @@ window.kasData = {
 {
 date: "2026-02-20",
 type: "income",
+amount: 57000,
+description: "Infak Jumat"
+},
+{
+date: "2026-02-20",
+type: "income",
 amount: 5000000,
 description: "Panen Jagung",
 note: "laba bersih ±9.500.000 dibagi 2, bagian masjid dibulatkan mendapat 5 juta."
