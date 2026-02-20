@@ -18,7 +18,7 @@ date: "2026-02-20",
 type: "expense",
 amount: 1500000,
 description: "Pasang Kaca",
-foto: "kas/bukti/IMG-20260219-WA0000.jpg"
+foto: "/kas/bukti/IMG-20260219-WA0000.jpg"
 },
 {
 date: "2026-02-20",
