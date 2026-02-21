@@ -7,6 +7,13 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-21",
+type: "expense",
+amount: 50000,
+description: "Instalasi Lampu",
+note: "pasang lampu penerangan dan benerin kabel-kabel yg putus nyuruh RT Ucok"
+},
+{
 date: "2026-02-20",
 type: "income",
 amount: 5000000,
