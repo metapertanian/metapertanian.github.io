@@ -1,39 +1,49 @@
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Generator Narasi - RISMA Studio</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
+<!-- NAVBAR -->
 <div id="navbar"></div>
 
-<div class="menu">
-  <h2>Generator Narasi</h2>
+<div class="container">
 
-  <textarea id="narasiInput" placeholder="Tulis ide narasi..."></textarea>
-  <button onclick="generateNarasi()">Generate & Simpan</button>
+  <div class="card">
+    <h2>Generator Narasi Profesional</h2>
 
-  <h3>Narasi Tersimpan</h3>
-  <div id="narasiList"></div>
+    <textarea id="narasiInput" rows="6"
+      placeholder="Tulis ide narasi atau prompt di sini..."></textarea>
+
+    <button class="btn-primary" onclick="generateAI()">
+      Generate AI (Gratis)
+    </button>
+
+    <button class="btn-primary" onclick="saveData()">
+      Simpan
+    </button>
+
+  </div>
+
+  <div id="dataList"></div>
+  <div class="pagination" id="pagination"></div>
+
 </div>
 
+<!-- Load Navbar -->
 <script>
 fetch("navbar.html")
-  .then(r=>r.text())
-  .then(d=>{
-    document.getElementById("navbar").innerHTML=d;
-
-const script = document.createElement("script");
-    script.type = "module";
-    script.src = "main.js";
-    document.body.appendChild(script);
-    setTimeout(()=>loadData("narasi","narasiList"),1500);
-  });
-
-function generateNarasi(){
-  const text = document.getElementById("narasiInput").value;
-  if(!text) return alert("Isi dulu!");
-
-  const prompt = "Buatkan narasi berdasarkan ide berikut:\n\n" + text;
-
-  saveData("narasi", prompt);
-  document.getElementById("narasiInput").value="";
-  setTimeout(()=>loadData("narasi","narasiList"),1000);
-}
+.then(res => res.text())
+.then(data => {
+  document.getElementById("navbar").innerHTML = data;
+});
 </script>
+
+<script type="module" src="js/firebase.js"></script>
+<script type="module" src="js/narasi.js"></script>
+
+</body>
+</html>
