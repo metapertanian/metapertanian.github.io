@@ -9,6 +9,14 @@ window.kasData = {
 {
 date: "2026-02-21",
 type: "expense",
+amount: 257000,
+description: "Clip On",
+note: "beli clip on shorush m1 + biaya admin BRILink 5 rb",
+foto: "/kas/bukti/clip-on-m1.jpg"
+},
+{
+date: "2026-02-21",
+type: "expense",
 amount: 50000,
 description: "Instalasi Lampu",
 note: "pasang lampu penerangan dan benerin kabel-kabel yg putus nyuruh RT Ucok"
