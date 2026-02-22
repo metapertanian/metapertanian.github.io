@@ -26,6 +26,12 @@ description: "Bensin"
 },
 {
 date: "2026-02-20",
+type: "income",
+amount: 10000,
+description: "Bapak"
+},
+{
+date: "2026-02-20",
 type: "expense",
 amount: 5000,
 description: "Infak Jumat"
