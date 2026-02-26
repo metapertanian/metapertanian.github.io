@@ -32,6 +32,12 @@ description: "Susu"
 },
 {
 date: "2026-02-22",
+type: "expense",
+amount: 20000,
+description: "Bapak"
+},
+{
+date: "2026-02-22",
 type: "income",
 amount: 20000,
 description: "Timun Suri"
