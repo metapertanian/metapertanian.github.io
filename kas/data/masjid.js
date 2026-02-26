@@ -9,7 +9,7 @@ window.kasData = {
 {
 date: "2026-02-26",
 type: "expense",
-amount: 18000,
+amount: 17000,
 description: "Gula Kopi",
 note: "2 sachet kopi ibu anak + 1 box teh sarimurni"
 },
