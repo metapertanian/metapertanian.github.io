@@ -7,6 +7,21 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-02-26",
+type: "expense",
+amount: 18000,
+description: "Gula Kopi",
+note: "2 sachet kopi ibu anak + 1 box teh sarimurni"
+},
+{
+date: "2026-02-26",
+type: "expense",
+amount: 214000,
+description: "Papan Tulis",
+note: "biaya admin BRILINK + 5000",
+foto: "/kas/bukti/papan tulis.jpg"
+},
+{
 date: "2026-02-25",
 type: "expense",
 amount: 48000,
