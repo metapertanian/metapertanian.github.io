@@ -13,6 +13,12 @@ const RISMA_FARM = {
 
       biaya: [
 {
+  tanggal: "2026-02-24",
+  keterangan: "PHONSKA",
+  jumlah: 50000
+},
+
+{
   tanggal: "2026-02-07",
   keterangan: "TALI BELL",
   jumlah: 40000
@@ -39,8 +45,8 @@ const RISMA_FARM = {
 },
 {
   tanggal: "2026-01-22",
-  keterangan: "ABACEL",
-  jumlah: 30000
+  keterangan: "EMACEL",
+  jumlah: 40000
 },
 {
   tanggal: "2026-01-22",
@@ -80,7 +86,7 @@ const RISMA_FARM = {
 },
 {
   tanggal: "2026-01-15",
-  keterangan: "PONSKA",
+  keterangan: "PHONSKA",
   jumlah: 25000
 },
 
