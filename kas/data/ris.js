@@ -3,7 +3,30 @@
 
 window.kasData = {  
 
+  "2026": {  
+    periode: "Januari 2026 – Desember 2026",  
+    bendahara: "Pulung Riswanto",  
+    transaksi: [  
 
+{
+date: "2026-02-28",
+type: "income",
+amount: 1000000
+},
+{
+date: "2026-02-28",
+type: "expense",
+amount: 500000,
+description: "Mbamar"
+},
+{
+date: "2026-02-28",
+type: "expense",
+amount: 500000,
+description: "Mama"
+},
+]
+},
 };  
 
 // ================= Fungsi =================  
