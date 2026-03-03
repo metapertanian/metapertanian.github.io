@@ -25,7 +25,7 @@ amount: 60000,
 description: "Pulung"
 },
 {
-date: "2026-02-05",
+date: "2026-02-20",
 type: "expense",
 amount: 700000,
 description: "Setoran"
