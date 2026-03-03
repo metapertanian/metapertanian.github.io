@@ -9,6 +9,13 @@ window.kasData = {
 {
 date: "2026-03-03",
 type: "expense",
+amount: 477000,
+description: "Rompi Kurban",
+foto: "/kas/bukti/rompi kurban.png"
+},
+{
+date: "2026-03-03",
+type: "expense",
 amount: 50000,
 description: "Listrik + Air"
 },
