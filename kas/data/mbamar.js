@@ -6,6 +6,35 @@ window.kasData = {
     periode: "Januari 2026 – Desember 2026",  
     bendahara: "Pulung Riswanto",  
     transaksi: [  
+{
+date: "2026-03-01",
+type: "income",
+amount: 1000000
+},
+{
+date: "2026-03-01",
+type: "expense",
+amount: 200000,
+description: "Bapak"
+},
+{
+date: "2026-03-01",
+type: "expense",
+amount: 350000,
+description: "Sogi"
+},
+{
+date: "2026-03-01",
+type: "expense",
+amount: 260000,
+description: "Maya"
+},
+{
+date: "2026-03-01",
+type: "expense",
+amount: 100000,
+description: "Pulung"
+},
 
 {
 date: "2026-02-05",
@@ -40,7 +69,7 @@ description: "Bapak"
 date: "2026-02-05",
 type: "expense",
 amount: 140000,
-description: "Sasa"
+description: "Wahyu"
 },
 {
 date: "2026-01-05",
