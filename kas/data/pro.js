@@ -31,6 +31,12 @@ amount: 50000,
 description: "Amplop THR"
 },
 {
+date: "2026-03-04",
+type: "expense",
+amount: 62000,
+description: "Ayam"
+},
+{
 date: "2026-03-03",
 type: "income",
 amount: 165000,
