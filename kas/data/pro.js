@@ -91,6 +91,12 @@ amount: 100000,
 description: "Mbamar"
 },
 {
+date: "2026-02-27",
+type: "income",
+amount: 200000,
+description: "Cabai"
+},
+{
 date: "2026-02-26",
 type: "expense",
 amount: 20000,
