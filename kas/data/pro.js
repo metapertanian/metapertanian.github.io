@@ -15,6 +15,12 @@ description: "Infak Jumat"
 {
 date: "2026-03-06",
 type: "expense",
+amount: 80000,
+description: "KNO3 Putih"
+},
+{
+date: "2026-03-06",
+type: "expense",
 amount: 33000,
 description: "Bahan Nastar"
 },
