@@ -90,7 +90,7 @@ const RISMA_FARM = {
   jumlah: 25000
 },
 
-        {
+{
           tanggal: "2026-01-15",
           keterangan: "TELEK AYAM",
           jumlah: 90000,
