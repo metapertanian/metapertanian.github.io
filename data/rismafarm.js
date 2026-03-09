@@ -109,6 +109,14 @@ const RISMA_FARM = {
 
       panen: [
 {
+  tanggal: "2026-03-09",
+  komoditas: "TIMUN",
+  qty: 52,
+  satuan: "kg",
+  nilai: 170000,
+  biayaPanen: 25000
+},
+{
   tanggal: "2026-03-07",
   komoditas: "TIMUN",
   qty: 53,
