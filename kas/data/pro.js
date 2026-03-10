@@ -32,12 +32,6 @@ description: "Sosis"
 },
 {
 date: "2026-03-10",
-type: "income",
-amount: 300000,
-description: "RISMA Farm"
-},
-{
-date: "2026-03-10",
 type: "expense",
 amount: 120000,
 description: "Baju Lebaran"
