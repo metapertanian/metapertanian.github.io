@@ -7,6 +7,13 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-03-11",
+type: "expense",
+amount: 68000,
+description: "Kotak Amal",
+foto: "/kas/bukti/kotak amal.png"
+},
+{
 date: "2026-03-07",
 type: "expense",
 amount: 7000,
