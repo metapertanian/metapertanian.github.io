@@ -155,9 +155,9 @@ const RISMA_FARM = {
       skema: {
         tipe: "laba_bersih",
         pembagian: {
-          TENAGA: 50,
-          RISMA: 30,
-          MANAJEMEN: 20
+          TENAGA: 30,
+          RISMA: 40,
+          MANAJEMEN: 30
         }
       }
     }
