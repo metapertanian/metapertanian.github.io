@@ -51,7 +51,7 @@ amount: 1600000
 date: "2026-02-05",
 type: "expense",
 amount: 500000,
-description: "Ris"
+description: "Diutang Ris"
 },
 {
 date: "2026-02-05",
@@ -87,7 +87,7 @@ note: "di pinjam wahyu 300 dibalikin 250, dikasih wahyu 100. sisa 150"
 date: "2026-01-05",
 type: "expense",
 amount: 300000,
-description: "Dipinjam Wahyu"
+description: "Diutang Wahyu"
 },
 {
 date: "2026-01-15",
