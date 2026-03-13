@@ -9,6 +9,12 @@ window.kasData = {
 {
 date: "2026-03-13",
 type: "expense",
+amount: 20000,
+description: "Potong Celana"
+},
+{
+date: "2026-03-13",
+type: "expense",
 amount: 5000,
 description: "Infak Jumat"
 },
