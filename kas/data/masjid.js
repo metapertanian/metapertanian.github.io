@@ -7,11 +7,54 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-03-16",
+type: "expense",
+amount: 100000,
+description: "Cat Emas",
+foto: "/kas/bukti/cat tembok.jpg"
+},
+{
+date: "2026-03-16",
+type: "expense",
+amount: 12000,
+description: "Kuas"
+},
+{
+date: "2026-03-16",
+type: "expense",
+amount: 10000,
+description: "Tiner"
+},
+{
+date: "2026-03-16",
+type: "expense",
+amount: 10000,
+description: "Paku"
+},
+{
+date: "2026-03-16",
+type: "expense",
+amount: 7000,
+description: "Air Minum"
+},
+{
+date: "2026-03-16",
+type: "expense",
+amount: 70000,
+description: "Lampu"
+},
+{
 date: "2026-03-15",
 type: "expense",
-amount: 550000,
-description: "Cat Tembok",
+amount: 500000,
+description: "Cat Biru",
 foto: "/kas/bukti/cat tembok.jpg"
+},
+{
+date: "2026-03-16",
+type: "expense",
+amount: 50000,
+description: "Kuas"
 },
 {
 date: "2026-03-15",
