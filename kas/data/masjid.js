@@ -11,7 +11,7 @@ date: "2026-03-16",
 type: "expense",
 amount: 100000,
 description: "Cat Emas",
-foto: "/kas/bukti/cat tembok.jpg"
+foto: "/kas/bukti/cat emas.jpg"
 },
 {
 date: "2026-03-16",
