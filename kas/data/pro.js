@@ -13,6 +13,18 @@ amount: 10000,
 description: "Sempol"
 },
 {
+date: "2026-03-16",
+type: "income",
+amount: 223000,
+description: "Cabai"
+},
+{
+date: "2026-03-15",
+type: "expense",
+amount: 82000,
+description: "Pulsa"
+},
+{
 date: "2026-03-15",
 type: "expense",
 amount: 51000,
