@@ -10,7 +10,8 @@ window.kasData = {
 date: "2026-03-15",
 type: "expense",
 amount: 550000,
-description: "Cat Tembok"
+description: "Cat Tembok",
+foto: "/kas/bukti/cat tembok.jpg"
 },
 {
 date: "2026-03-15",
