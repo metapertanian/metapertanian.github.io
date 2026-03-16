@@ -51,7 +51,7 @@ description: "Cat Biru",
 foto: "/kas/bukti/cat tembok.jpg"
 },
 {
-date: "2026-03-16",
+date: "2026-03-15",
 type: "expense",
 amount: 50000,
 description: "Kuas"
