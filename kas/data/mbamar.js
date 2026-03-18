@@ -9,7 +9,8 @@ window.kasData = {
 {
 date: "2026-03-18",
 type: "expense",
-amount: 90000
+amount: 90000,
+description: "Ambil"
 },
 {
 date: "2026-03-18",
@@ -26,7 +27,8 @@ description: "Wahyu"
 {
 date: "2026-03-01",
 type: "income",
-amount: 1000000
+amount: 1000000,
+description: "Nabung"
 },
 {
 date: "2026-03-01",
@@ -56,7 +58,8 @@ description: "Pulung"
 {
 date: "2026-02-05",
 type: "income",
-amount: 1600000
+amount: 1600000,
+description: "Nabung"
 },
 {
 date: "2026-02-05",
@@ -92,6 +95,7 @@ description: "Wahyu"
 date: "2026-01-05",
 type: "income",
 amount: 1000000,
+description: "Nabung",
 note: "di pinjam wahyu 300 dibalikin 250, dikasih wahyu 100. sisa 150"
 },
 {
