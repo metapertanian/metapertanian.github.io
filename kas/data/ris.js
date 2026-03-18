@@ -11,7 +11,8 @@ window.kasData = {
 {
 date: "2026-02-28",
 type: "income",
-amount: 1000000
+amount: 1000000,
+description: "Nabung"
 },
 {
 date: "2026-02-28",
