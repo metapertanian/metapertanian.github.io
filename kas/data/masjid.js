@@ -2,6 +2,24 @@
 // Penyimpanan data arus kas per idul fitri
 
 window.kasData = {  
+
+
+  "Idul Fitri 1448H": {  
+    periode: "April 2026 – Maret 2027",  
+    bendahara: "Pulung Riswanto",  
+    transaksi: [  
+
+{
+date: "2026-03-27",
+type: "income",
+amount: 739500,
+description: "Saldo Awal"
+},
+
+]
+},
+
+
   "Idul Fitri 1447H": {  
     periode: "Agustus 2025 – Maret 2026",  
     bendahara: "Pulung Riswanto",  
