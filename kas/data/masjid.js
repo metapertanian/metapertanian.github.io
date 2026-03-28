@@ -10,7 +10,7 @@ window.kasData = {
     transaksi: [  
 
 {
-date: "2026-03-27",
+date: "2026-04-01",
 type: "income",
 amount: 739500,
 description: "Saldo Awal"
