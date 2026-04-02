@@ -26,6 +26,12 @@ description: "Nyemprot"
 },
 {
 date: "2026-03-31",
+type: "income",
+amount: 800000,
+description: "Ris By.utang"
+},
+{
+date: "2026-03-31",
 type: "expense",
 amount: 10000,
 description: "Gula Kopi"
