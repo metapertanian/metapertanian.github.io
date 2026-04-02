@@ -7,6 +7,12 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-04-03",
+type: "expense",
+amount: 82000,
+description: "Pulsa"
+},
+{
 date: "2026-04-02",
 type: "expense",
 amount: 15000,
