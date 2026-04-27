@@ -31,6 +31,12 @@ amount: 175000,
 description: "Mupuk"
 },
 {
+date: "2026-04-25",
+type: "expense",
+amount: 46000,
+description: "NPK Pak Tani"
+},
+{
 date: "2026-04-24",
 type: "expense",
 amount: 15000,
@@ -38,7 +44,7 @@ description: "Bensin"
 },
 {
 date: "2026-04-24",
-type: "income",
+type: "expense",
 amount: 5000,
 description: "Infak Jumat"
 },
