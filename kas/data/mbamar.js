@@ -7,6 +7,35 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
+date: "2026-05-17",
+type: "expense",
+amount: 700000,
+description: "Setoran 18"
+},
+{
+date: "2026-05-06",
+type: "expense",
+amount: 150000,
+description: "Bapa"
+},
+{
+date: "2026-05-06",
+type: "expense",
+amount: 100000,
+description: "Mas Carto"
+},
+{
+date: "2026-05-06",
+type: "expense",
+amount: 50000,
+description: "Pulung"
+},
+{
+date: "2026-05-05",
+type: "income",
+amount: 1000000
+},
+{
 date: "2026-03-18",
 type: "expense",
 amount: 90000,
@@ -77,7 +106,7 @@ description: "Pulung"
 date: "2026-02-20",
 type: "expense",
 amount: 700000,
-description: "Setoran"
+description: "Setoran 17"
 },
 {
 date: "2026-02-05",
@@ -114,7 +143,7 @@ description: "Dibalikin Wahyu"
 date: "2026-01-21",
 type: "expense",
 amount: 700000,
-description: "Setoran"
+description: "Setoran Mas Carto"
 },
 {
 date: "2026-01-25",
