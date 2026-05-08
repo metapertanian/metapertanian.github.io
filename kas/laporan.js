@@ -323,29 +323,51 @@ function printReport() {
 // =========================================================
 function selectLastMonth() {
 
-  const options = periodeSelect.options;
-
-  if (options.length === 0) return;
-
-  let currentIndex = periodeSelect.selectedIndex;
-
-  // pindah ke bulan sebelumnya
-  if (currentIndex > 0) {
-    periodeSelect.selectedIndex = currentIndex - 1;
-  } else {
-    periodeSelect.selectedIndex = options.length - 1;
-  }
-
-  // refresh checklist bulan tersebut
-  populateChecklist();
-
-  // otomatis checklist semua transaksi
+  // reset semua checklist
   const checkboxes =
     checklist.querySelectorAll('input[type="checkbox"]');
 
   checkboxes.forEach(cb => {
-    cb.checked = true;
+    cb.checked = false;
   });
+
+  const periode = periodeSelect.value;
+  const txs = kasData[periode]?.transaksi || [];
+
+  // bulan sebelumnya dari hari ini
+  const now = new Date();
+
+  let prevMonth = now.getMonth(); // karena Januari=0
+  let prevYear = now.getFullYear();
+
+  // jika sekarang Januari
+  if (prevMonth === 0) {
+    prevMonth = 12;
+    prevYear--;
+  }
+
+  // loop transaksi
+  txs.forEach((t, i) => {
+
+    const txDate = new Date(t.date);
+
+    const txMonth = txDate.getMonth() + 1;
+    const txYear = txDate.getFullYear();
+
+    // cocok bulan sebelumnya
+    if (txMonth === prevMonth && txYear === prevYear) {
+
+      const checkbox =
+        checklist.querySelector(`input[value="${i}"]`);
+
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+
+    }
+
+  });
+
 }
 
 
