@@ -322,28 +322,30 @@ function printReport() {
 // ⏪ Pilih bulan sebelumnya
 // =========================================================
 function selectLastMonth() {
+
   const options = periodeSelect.options;
 
   if (options.length === 0) return;
 
-  // Ambil index sekarang
   let currentIndex = periodeSelect.selectedIndex;
 
-  // Jika belum memilih apa pun
-  if (currentIndex === -1) {
-    currentIndex = options.length - 1;
-  }
-
-  // Pindah ke bulan sebelumnya
+  // pindah ke bulan sebelumnya
   if (currentIndex > 0) {
     periodeSelect.selectedIndex = currentIndex - 1;
   } else {
-    // Jika sudah paling awal, pilih paling akhir
     periodeSelect.selectedIndex = options.length - 1;
   }
 
-  // Refresh checklist
+  // refresh checklist bulan tersebut
   populateChecklist();
+
+  // otomatis checklist semua transaksi
+  const checkboxes =
+    checklist.querySelectorAll('input[type="checkbox"]');
+
+  checkboxes.forEach(cb => {
+    cb.checked = true;
+  });
 }
 
 
