@@ -6,14 +6,19 @@ const output = document.getElementById("reportOutput");
 // 🗓 Populate periode options
 // =========================================================
 function populatePeriodeOptions() {
-  const periodeKeys = Object.keys(kasData);
+  const periodeKeys = Object.keys(kasData).sort();
+
   periodeSelect.innerHTML = "";
+
   periodeKeys.forEach(p => {
     const option = document.createElement("option");
     option.value = p;
     option.textContent = p;
     periodeSelect.appendChild(option);
   });
+
+  // otomatis pilih bulan terbaru
+  periodeSelect.selectedIndex = periodeKeys.length - 1;
 }
 
 // =========================================================
@@ -307,6 +312,36 @@ function printReport() {
   `);
   win.document.close();
 }
+
+
+// =========================================================
+// ⏪ Pilih bulan sebelumnya
+// =========================================================
+function selectLastMonth() {
+  const options = periodeSelect.options;
+
+  if (options.length === 0) return;
+
+  // Ambil index sekarang
+  let currentIndex = periodeSelect.selectedIndex;
+
+  // Jika belum memilih apa pun
+  if (currentIndex === -1) {
+    currentIndex = options.length - 1;
+  }
+
+  // Pindah ke bulan sebelumnya
+  if (currentIndex > 0) {
+    periodeSelect.selectedIndex = currentIndex - 1;
+  } else {
+    // Jika sudah paling awal, pilih paling akhir
+    periodeSelect.selectedIndex = options.length - 1;
+  }
+
+  // Refresh checklist
+  populateChecklist();
+}
+
 
 // =========================================================
 // 🔔 Inisialisasi event listener
