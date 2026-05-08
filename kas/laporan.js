@@ -57,6 +57,25 @@ selectAllBtn.onclick = (e) => {
   });
 }
 
+
+// tombol buat laporan melayang
+
+function generateAndScroll() {
+
+  // buat laporan
+  generateReport();
+
+  // scroll ke hasil
+  const target = document.getElementById("reportOutput");
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+
+}
+
+
 // =========================================================
 // 🔑 Generate laporan
 // =========================================================
