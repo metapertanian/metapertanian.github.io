@@ -31,12 +31,16 @@ function populateChecklist() {
 
   // Tombol pilih semua
   const selectAllBtn = document.createElement("button");
-  selectAllBtn.textContent = "Pilih Semua Transaksi";
-  selectAllBtn.style.margin = "6px 0";
-  selectAllBtn.onclick = () => {
-    const checkboxes = checklist.querySelectorAll("input[type=checkbox]");
-    checkboxes.forEach(cb => cb.checked = true);
-  };
+selectAllBtn.type = "button";
+selectAllBtn.textContent = "Pilih Semua Transaksi";
+selectAllBtn.style.margin = "6px 0";
+
+selectAllBtn.onclick = (e) => {
+  e.preventDefault();
+
+  const checkboxes = checklist.querySelectorAll("input[type=checkbox]");
+  checkboxes.forEach(cb => cb.checked = true);
+};
   checklist.appendChild(selectAllBtn);
   checklist.appendChild(document.createElement("hr"));
 
