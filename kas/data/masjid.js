@@ -9,16 +9,6 @@ window.kasData = {
     bendahara: "Pulung Riswanto",  
     transaksi: [  
 {
-date: "2026-05-24",
-type: "expense",
-amount: 90000,
-description: "Gotong Royong",
-note: "air minum 20 k
-gorengan 50 k
-gula 10 k
-kopi 10 k"
-},
-{
 date: "2026-05-27",
 type: "expense",
 amount: 81000,
@@ -27,6 +17,16 @@ note: "plastik 40 k
 air minum 21 k
 gula aren 15 k
 kopi 5 k"
+},
+{
+date: "2026-05-24",
+type: "expense",
+amount: 90000,
+description: "Gotong Royong",
+note: "air minum 20 k
+gorengan 50 k
+gula 10 k
+kopi 10 k"
 },
 {
 date: "2026-05-22",
