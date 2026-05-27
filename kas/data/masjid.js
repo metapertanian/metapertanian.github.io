@@ -10,10 +10,22 @@ window.kasData = {
     transaksi: [  
 {
 date: "2026-05-27",
+type: "income",
+amount: 480000,
+description: "Idul Adha"
+},
+{
+date: "2026-05-27",
+type: "income",
+amount: 320000,
+description: "Infak Karet"
+},
+{
+date: "2026-05-27",
 type: "expense",
-amount: 81000,
+amount: 50000,
 description: "Konsumsi Kurban",
-note: "plastik 40 k, air minum 21 k, gula aren 15 k, kopi 5 k"
+note: "plastik 40 k, kopi 10 k"
 },
 {
 date: "2026-05-24",
