@@ -27,6 +27,12 @@ description: "Nabung"
 },
 {
 date: "2026-03-31",
+type: "income",
+amount: 1000000,
+description: "Nabung"
+},
+{
+date: "2026-03-31",
 type: "expense",
 amount: 800000,
 description: "Bayar Pulung"
@@ -38,7 +44,7 @@ amount: 200000,
 description: "Mama"
 },
 {
-date: "2026-03-31",
+date: "2026-02-28",
 type: "income",
 amount: 1000000,
 description: "Nabung"
@@ -54,12 +60,6 @@ date: "2026-02-28",
 type: "expense",
 amount: 500000,
 description: "Mama"
-},
-{
-date: "2026-02-28",
-type: "income",
-amount: 1000000,
-description: "Nabung"
 },
 ]
 },
