@@ -45,12 +45,6 @@ description: "Nabung"
 },
 {
 date: "2026-02-28",
-type: "income",
-amount: 1000000,
-description: "Nabung"
-},
-{
-date: "2026-02-28",
 type: "expense",
 amount: 500000,
 description: "Mbamar"
@@ -60,6 +54,12 @@ date: "2026-02-28",
 type: "expense",
 amount: 500000,
 description: "Mama"
+},
+{
+date: "2026-02-28",
+type: "income",
+amount: 1000000,
+description: "Nabung"
 },
 ]
 },
