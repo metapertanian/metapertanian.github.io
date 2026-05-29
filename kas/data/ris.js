@@ -39,7 +39,6 @@ description: "Mama"
 date: "2026-03-31",
 type: "income",
 amount: 1000000,
-description: "Infak Jumat"
 },
 {
 date: "2026-02-28",
