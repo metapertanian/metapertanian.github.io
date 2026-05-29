@@ -10,7 +10,8 @@ window.kasData = {
 {
 date: "2026-05-29",
 type: "income",
-amount: 2000000
+amount: 2000000,
+description: "Nabung"
 },
 {
 date: "2026-05-07",
@@ -21,7 +22,8 @@ description: "Kulkas"
 {
 date: "2026-04-30",
 type: "income",
-amount: 1000000
+amount: 1000000,
+description: "Nabung"
 },
 {
 date: "2026-03-31",
@@ -39,6 +41,7 @@ description: "Mama"
 date: "2026-03-31",
 type: "income",
 amount: 1000000,
+description: "Nabung"
 },
 {
 date: "2026-02-28",
