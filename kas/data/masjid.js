@@ -29,9 +29,8 @@ description: "Infak Karet"
 {
 date: "2026-05-27",
 type: "expense",
-amount: 50000,
+amount: 57000,
 description: "Konsumsi Kurban",
-note: "plastik 40 k, kopi 10 k"
 },
 {
 date: "2026-05-24",
