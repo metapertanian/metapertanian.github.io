@@ -10,15 +10,15 @@ window.kasData = {
     transaksi: [  
 {
 date: "2026-07-12",
-type: "income",
-amount: 1370000,
-description: "Infak ibu²"
-},
-{
-date: "2026-07-12",
 type: "expense",
 amount: 300000,
 description: "Pengajian Annisa"
+},
+{
+date: "2026-07-12",
+type: "income",
+amount: 1370000,
+description: "Infak ibu²"
 },
 {
 date: "2026-07-10",
